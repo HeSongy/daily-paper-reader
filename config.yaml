@@ -25,3 +25,60 @@ subscriptions:
     stage: A
     diff_threshold_pct: 15
   keyword_recall_mode: or
+  intent_profiles:
+    - tag: NavWM
+      description: 隐空间、导航与世界模型相关论文检索
+      enabled: true
+      paper_sources:
+        - arxiv
+      keywords:
+        - keyword: latent space
+          keyword_cn: 隐空间
+          query: 研究隐空间表示及其在智能系统中的作用
+        - keyword: navigation
+          keyword_cn: 导航
+          query: 智能体在复杂环境中的导航策略与学习方法
+        - keyword: world model
+          keyword_cn: 世界模型
+          query: 世界模型的结构与在自主系统中的应用
+        - keyword: representation learning
+          keyword_cn: 表示学习
+          query: 探索表示学习在构建世界模型与导航中的运用
+        - keyword: planning
+          keyword_cn: 规划
+          query: 基于隐空间表示的规划与决策模型
+        - keyword: spatial representation
+          keyword_cn: 空间表示
+          query: 空间表示与认知映射的算法及模型
+      intent_queries:
+        - query: 检索关于隐空间表示在世界模型和导航中的研究论文
+          query_cn: 隐空间表示与世界模型及导航研究论文检索
+          enabled: true
+          source: manual
+          note: ''
+        - query: 寻找利用世界模型进行强化学习或规划的最新研究
+          query_cn: 世界模型与强化学习或规划相关研究
+          enabled: true
+          source: manual
+          note: ''
+        - query: 探索智能体如何利用隐空间进行导航与环境理解
+          query_cn: 智能体隐空间导航与环境理解研究
+          enabled: true
+          source: manual
+          note: ''
+      updated_at: '2026-04-08T03:07:01.424Z'
+source_backends:
+  arxiv:
+    papers_table: arxiv_papers
+    use_vector_rpc: true
+    vector_rpc: match_arxiv_papers
+    vector_rpc_exact: match_arxiv_papers_exact
+    use_bm25_rpc: true
+    bm25_rpc: match_arxiv_papers_bm25
+    sync_table: arxiv_sync_status
+    sync_success_value: success
+    schema: public
+    kind: supabase
+    enabled: true
+    url: https://lyucdwgefyfbmaiopjbk.supabase.co
+    anon_key: sb_publishable_lX-oi64Uxyd7SIVv3_w2Uw_MTOojeKq
