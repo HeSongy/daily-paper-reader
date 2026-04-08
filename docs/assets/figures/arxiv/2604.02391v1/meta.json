@@ -1,0 +1,46 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.02391v1/fig-001.webp",
+      "caption": "Fig. 1. Paradigm comparison. (a) naive deterministic fusion vs. (b) our reliability-aware RAVN framework.",
+      "page": 1,
+      "index": 1,
+      "width": 446,
+      "height": 370
+    },
+    {
+      "url": "assets/figures/arxiv/2604.02391v1/fig-002.webp",
+      "caption": "Fig. 2. The RAVN Framework. Multi-modal observations ot are encoded into fa and fv . The AGR module estimates geometric embeddings gt and predictive uncertainty (µt, σt), supervised by Ground Truth (GT) labels via an auxiliary loss. The RAGM module then uses gt to dynamically modulate visual features into f ′ v . A recurrent policy (GRU) aggregates these components into the hidden state st for end-to-end action (at) selection.",
+      "page": 2,
+      "index": 2,
+      "width": 964,
+      "height": 471
+    },
+    {
+      "url": "assets/figures/arxiv/2604.02391v1/fig-003.webp",
+      "caption": "Fig. 3. RAGM module architecture. Geometric features are transformed into a reliability mask, which applies element-wise modulation to visual features to produce modified visual representations.",
+      "page": 3,
+      "index": 3,
+      "width": 466,
+      "height": 392
+    },
+    {
+      "url": "assets/figures/arxiv/2604.02391v1/fig-004.webp",
+      "caption": "TABLE I QUANTITATIVE COMPARISON ON REPLICA AND MATTERPORT3D DATASETS. WE REPORT SUCCESS RATE (SR), SUCCESS WEIGHTED BY PATH LENGTH (SPL), AND SUCCESS WEIGHTED BY NUMBER OF ACTIONS (SNA). BEST RESULTS ARE HIGHLIGHTED IN BOLD.",
+      "page": 4,
+      "index": 4,
+      "width": 1064,
+      "height": 257
+    },
+    {
+      "url": "assets/figures/arxiv/2604.02391v1/fig-005.webp",
+      "caption": "Fig. 4. Qualitative results. (a) Top-down trajectory comparisons between the AV-NaV baseline and our RAVN in representative Replica and Mp3D episodes, with SPL shown for each run. (b) Additional rollouts of RAVN across various layouts and start-goal configurations.",
+      "page": 5,
+      "index": 5,
+      "width": 962,
+      "height": 410
+    }
+  ]
+}
