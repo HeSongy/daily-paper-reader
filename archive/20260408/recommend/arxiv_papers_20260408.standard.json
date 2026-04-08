@@ -1,0 +1,796 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-04-08T19:50:45.745746+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 14,
+    "deep_cap": 6,
+    "deep_selected": 9,
+    "quick_candidates": 24,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2604.01346v2",
+      "source": "arxiv",
+      "title": "Safety, Security, and Cognitive Risks in World Models",
+      "abstract": "World models - learned internal simulators of environment dynamics - are rapidly becoming foundational to autonomous decision-making in robotics, autonomous vehicles, and agentic AI. By predicting future states in compressed latent spaces, they enable sample-efficient planning and long-horizon imagination without direct environment interaction. Yet this predictive power introduces a distinctive set of safety, security, and cognitive risks. Adversaries can corrupt training data, poison latent representations, and exploit compounding rollout errors to cause significant degradation in safety-critical deployments. At the alignment layer, world model-equipped agents are more capable of goal misgeneralisation, deceptive alignment, and reward hacking. At the human layer, authoritative world model predictions foster automation bias, miscalibrated trust, and planning hallucination.   This paper surveys the world model landscape; introduces formal definitions of trajectory persistence and representational risk; presents a five-profile attacker taxonomy; and develops a unified threat model drawing on MITRE ATLAS and the OWASP LLM Top 10. We provide an empirical proof-of-concept demonstrating trajectory-persistent adversarial attacks on a GRU-based RSSM ($\\mathcal{A}_1 = 2.26\\times$ amplification, $-59.5\\%$ reward reduction under adversarial fine-tuning), validate architecture-dependence via a stochastic RSSM proxy ($\\mathcal{A}_1 = 0.65\\times$), and probe a real DreamerV3 checkpoint (non-zero action drift confirmed). We propose interdisciplinary mitigations spanning adversarial hardening, alignment engineering, NIST AI RMF and EU AI Act governance, and human-factors design, arguing that world models require the same rigour as flight-control software or medical devices.",
+      "authors": [
+        "Manoj Parmar"
+      ],
+      "primary_category": "cs.CR",
+      "categories": [
+        "cs.CR",
+        "cs.AI",
+        "cs.LG",
+        "cs.RO"
+      ],
+      "published": "2026-04-01T19:57:33+00:00",
+      "link": "https://arxiv.org/pdf/2604.01346v2",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "world models as internal simulators in compressed latent spaces",
+      "llm_evidence_cn": "作为压缩隐空间内部模拟器的世界模型",
+      "llm_evidence": "作为压缩隐空间内部模拟器的世界模型",
+      "canonical_evidence": "作为压缩隐空间内部模拟器的世界模型",
+      "llm_tldr_en": "Analyzes safety and cognitive risks of world models used for planning and imagination in autonomous systems.",
+      "llm_tldr_cn": "分析了自主系统中用于规划和想象的世界模型的安全、安全性和认知风险。",
+      "llm_tldr": "分析了自主系统中用于规划和想象的世界模型的安全、安全性和认知风险。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.01765v1",
+      "source": "arxiv",
+      "title": "DriveDreamer-Policy: A Geometry-Grounded World-Action Model for Unified Generation and Planning",
+      "abstract": "Recently, world-action models (WAM) have emerged to bridge vision-language-action (VLA) models and world models, unifying their reasoning and instruction-following capabilities and spatio-temporal world modeling. However, existing WAM approaches often focus on modeling 2D appearance or latent representations, with limited geometric grounding-an essential element for embodied systems operating in the physical world. We present DriveDreamer-Policy, a unified driving world-action model that integrates depth generation, future video generation, and motion planning within a single modular architecture. The model employs a large language model to process language instructions, multi-view images, and actions, followed by three lightweight generators that produce depth, future video, and actions. By learning a geometry-aware world representation and using it to guide both future prediction and planning within a unified framework, the proposed model produces more coherent imagined futures and more informed driving actions, while maintaining modularity and controllable latency. Experiments on the Navsim v1 and v2 benchmarks demonstrate that DriveDreamer-Policy achieves strong performance on both closed-loop planning and world generation tasks. In particular, our model reaches 89.2 PDMS on Navsim v1 and 88.7 EPDMS on Navsim v2, outperforming existing world-model-based approaches while producing higher-quality future video and depth predictions. Ablation studies further show that explicit depth learning provides complementary benefits to video imagination and improves planning robustness.",
+      "authors": [
+        "Yang Zhou",
+        "Xiaofeng Wang",
+        "Hao Shao",
+        "Letian Wang",
+        "Guosheng Zhao",
+        "Jiangnan Shao",
+        "Jiagang Zhu",
+        "Tingdong Yu",
+        "Zheng Zhu",
+        "Guan Huang",
+        "Steven L. Waslander"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.RO"
+      ],
+      "published": "2026-04-02T08:33:18+00:00",
+      "link": "https://arxiv.org/pdf/2604.01765v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "world-action model for unified generation and planning in driving",
+      "llm_evidence_cn": "用于驾驶生成与规划的统一世界动作模型",
+      "llm_evidence": "用于驾驶生成与规划的统一世界动作模型",
+      "canonical_evidence": "用于驾驶生成与规划的统一世界动作模型",
+      "llm_tldr_en": "Presents DriveDreamer-Policy, a geometry-grounded world-action model for autonomous driving planning.",
+      "llm_tldr_cn": "提出DriveDreamer-Policy，一种基于几何约束的自动驾驶世界动作模型。",
+      "llm_tldr": "提出DriveDreamer-Policy，一种基于几何约束的自动驾驶世界动作模型。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.00320v1",
+      "source": "arxiv",
+      "title": "Hierarchical Motion Planning and Control under Unknown Nonlinear Dynamics via Predicted Reachability",
+      "abstract": "Autonomous motion planning under unknown nonlinear dynamics requires learning system properties while navigating toward a target. In this work, we develop a hierarchical planning-control framework that enables online motion synthesis with limited prior system knowledge. The state space is partitioned into polytopes and approximates the unknown nonlinear system using a piecewise-affine (PWA) model. The local affine models are identified once the agent enters the corresponding polytopes. To reduce computational complexity, we introduce a non-uniform adaptive state space partition strategy that refines the partition only in task-relevant regions. The resulting PWA system is abstracted into a directed weighted graph, whose edge existence is incrementally verified using reach control theory and predictive reachability conditions. Certified edges are weighted using provable time-to-reach bounds, while uncertain edges are assigned information-theoretic weights to guide exploration. The graph is updated online as new data becomes available, and high-level planning is performed by graph search, while low-level affine feedback controllers are synthesized to execute the plan. Furthermore, the conditions of classical reach control theory are often difficult to satisfy in underactuated settings. We therefore introduce relaxed reachability conditions to extend the framework to such systems. Simulations demonstrate effective exploration-exploitation trade-offs with formal reachability guarantees.",
+      "authors": [
+        "Zhiquan Zhang",
+        "Melkior Ornik"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "eess.SY"
+      ],
+      "published": "2026-03-31T23:36:11+00:00",
+      "link": "https://arxiv.org/pdf/2604.00320v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Autonomous motion planning and state space partitioning for navigation",
+      "llm_evidence_cn": "用于导航的自主运动规划与状态空间划分",
+      "llm_evidence": "用于导航的自主运动规划与状态空间划分",
+      "canonical_evidence": "用于导航的自主运动规划与状态空间划分",
+      "llm_tldr_en": "Develops a hierarchical planning-control framework for navigation under unknown nonlinear dynamics.",
+      "llm_tldr_cn": "开发了一种分层规划控制框架，用于在未知非线性动力学下进行导航。",
+      "llm_tldr": "开发了一种分层规划控制框架，用于在未知非线性动力学下进行导航。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.01659v1",
+      "source": "arxiv",
+      "title": "AURA: Multimodal Shared Autonomy for Real-World Urban Navigation",
+      "abstract": "Long-horizon navigation in complex urban environments relies heavily on continuous human operation, which leads to fatigue, reduced efficiency, and safety concerns. Shared autonomy, where a Vision-Language AI agent and a human operator collaborate on maneuvering the mobile machine, presents a promising solution to address these issues. However, existing shared autonomy methods often require humans and AI to operate within the same action space, leading to high cognitive overhead. We present Assistive Urban Robot Autonomy (AURA), a new multi-modal framework that decomposes urban navigation into high-level human instruction and low-level AI control. AURA incorporates a Spatial-Aware Instruction Encoder to align various human instructions with visual and spatial context. To facilitate training, we construct MM-CoS, a large-scale dataset comprising teleoperation and vision-language descriptions. Experiments in simulation and the real world demonstrate that AURA effectively follows human instructions, reduces manual operation effort, and improves navigation stability, while enabling online adaptation. Moreover, under similar takeover conditions, our shared autonomy framework reduces the frequency of takeovers by more than 44%. Demo video and more detail are provided in the project page.",
+      "authors": [
+        "Yukai Ma",
+        "Honglin He",
+        "Selina Song",
+        "Wayne Wu",
+        "Bolei Zhou"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-04-02T05:59:31+00:00",
+      "link": "https://arxiv.org/pdf/2604.01659v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "urban navigation and spatial-aware instruction encoder",
+      "llm_evidence_cn": "城市导航与空间感知指令编码器",
+      "llm_evidence": "城市导航与空间感知指令编码器",
+      "canonical_evidence": "城市导航与空间感知指令编码器",
+      "llm_tldr_en": "A multimodal framework for urban navigation using spatial-aware instruction alignment.",
+      "llm_tldr_cn": "一种利用空间感知指令对齐进行城市导航的多模态框架。",
+      "llm_tldr": "一种利用空间感知指令对齐进行城市导航的多模态框架。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.02829v1",
+      "source": "arxiv",
+      "title": "STRNet: Visual Navigation with Spatio-Temporal Representation through Dynamic Graph Aggregation",
+      "abstract": "Visual navigation requires the robot to reach a specified goal such as an image, based on a sequence of first-person visual observations. While recent learning-based approaches have made significant progress, they often focus on improving policy heads or decision strategies while relying on simplistic feature encoders and temporal pooling to represent visual input. This leads to the loss of fine-grained spatial and temporal structure, ultimately limiting accurate action prediction and progress estimation. In this paper, we propose a unified spatio-temporal representation framework that enhances visual encoding for robotic navigation. Our approach extracts features from both image sequences and goal observations, and fuses them using the designed spatio-temporal fusion module. This module performs spatial graph reasoning within each frame and models temporal dynamics using a hybrid temporal shift module combined with multi-resolution difference-aware convolution. Experimental results demonstrate that our approach consistently improves navigation performance and offers a generalizable visual backbone for goal-conditioned control. Code is available at \\href{https://github.com/hren20/STRNet}{https://github.com/hren20/STRNet}.",
+      "authors": [
+        "Hao Ren",
+        "Zetong Bi",
+        "Yiming Zeng",
+        "Zhaoliang Wan",
+        "Lu Qi",
+        "Hui Cheng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-04-03T07:50:53+00:00",
+      "link": "https://arxiv.org/pdf/2604.02829v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "spatio-temporal representation for visual navigation",
+      "llm_evidence_cn": "视觉导航中的时空表示学习",
+      "llm_evidence": "视觉导航中的时空表示学习",
+      "canonical_evidence": "视觉导航中的时空表示学习",
+      "llm_tldr_en": "Proposes STRNet, a framework using dynamic graph aggregation to enhance spatio-temporal features for navigation.",
+      "llm_tldr_cn": "提出STRNet框架，通过动态图聚合增强导航中的时空表示编码。",
+      "llm_tldr": "提出STRNet框架，通过动态图聚合增强导航中的时空表示编码。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索表示学习在构建世界模型与导航中的运用",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.03139v1",
+      "source": "arxiv",
+      "title": "FSUNav: A Cerebrum-Cerebellum Architecture for Fast, Safe, and Universal Zero-Shot Goal-Oriented Navigation",
+      "abstract": "Current vision-language navigation methods face substantial bottlenecks regarding heterogeneous robot compatibility, real-time performance, and navigation safety. Furthermore, they struggle to support open-vocabulary semantic generalization and multimodal task inputs. To address these challenges, this paper proposes FSUNav: a Cerebrum-Cerebellum architecture for fast, safe, and universal zero-shot goal-oriented navigation, which innovatively integrates vision-language models (VLMs) with the proposed architecture. The cerebellum module, a high-frequency end-to-end module, develops a universal local planner based on deep reinforcement learning, enabling unified navigation across heterogeneous platforms (e.g., humanoid, quadruped, wheeled robots) to improve navigation efficiency while significantly reducing collision risk. The cerebrum module constructs a three-layer reasoning model and leverages VLMs to build an end-to-end detection and verification mechanism, enabling zero-shot open-vocabulary goal navigation without predefined IDs and improving task success rates in both simulation and real-world environments. Additionally, the framework supports multimodal inputs (e.g., text, target descriptions, and images), further enhancing generalization, real-time performance, safety, and robustness. Experimental results on MP3D, HM3D, and OVON benchmarks demonstrate that FSUNav achieves state-of-the-art performance on object, instance image, and task navigation, significantly outperforming existing methods. Real-world deployments on diverse robotic platforms further validate its robustness and practical applicability.",
+      "authors": [
+        "Mingao Tan",
+        "Yiyang Li",
+        "Shanze Wang",
+        "Xinming Zhang",
+        "Wei Zhang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-04-03T16:01:58+00:00",
+      "link": "https://arxiv.org/pdf/2604.03139v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Cerebrum-Cerebellum architecture for zero-shot goal-oriented navigation",
+      "llm_evidence_cn": "用于零样本目标导向导航的大脑-小脑架构",
+      "llm_evidence": "用于零样本目标导向导航的大脑-小脑架构",
+      "canonical_evidence": "用于零样本目标导向导航的大脑-小脑架构",
+      "llm_tldr_en": "Proposes FSUNav, a dual-module architecture for fast and safe robot navigation across heterogeneous platforms.",
+      "llm_tldr_cn": "提出FSUNav，一种用于跨异构平台快速安全机器人导航的双模块架构。",
+      "llm_tldr": "提出FSUNav，一种用于跨异构平台快速安全机器人导航的双模块架构。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.03623v1",
+      "source": "arxiv",
+      "title": "Towards Edge Intelligence via Autonomous Navigation: A Robot-Assisted Data Collection Approach",
+      "abstract": "With the growing demand for large-scale and high-quality data in edge intelligence systems, mobile robots are increasingly deployed to collect data proactively, particularly in complex environments. However, existing robot-assisted data collection methods face significant challenges in achieving reliable and efficient performance, especially in non-line-of-sight (NLoS) environments. This paper proposes a communication-and-learning dual-driven (CLD) autonomous navigation scheme that incorporates region-aware propagation characteristics and a non-point-mass robot representation. This scheme enables simultaneous optimization of navigation, communication, and learning performance. An efficient algorithm based on majorization-minimization (MM) is proposed to solve the non-convex and non-smooth CLD problem. Simulation results demonstrate that the proposed scheme achieves superior performance in collision-avoidance navigation, data collection, and model training compared to benchmark methods. It is also shown that CLD can adapt to different scenarios by flexibly adjusting the weight factor among navigation, communication and learning objectives.",
+      "authors": [
+        "Tingting Huang",
+        "Yingyang Chen",
+        "Sixian Qin",
+        "Zhijian Lin",
+        "Jun Li",
+        "Li Wang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "eess.SP"
+      ],
+      "published": "2026-04-04T07:40:26+00:00",
+      "link": "https://arxiv.org/pdf/2604.03623v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "autonomous navigation scheme for robot-assisted data collection in complex environments",
+      "llm_evidence_cn": "复杂环境下机器人辅助数据采集的自主导航方案",
+      "llm_evidence": "复杂环境下机器人辅助数据采集的自主导航方案",
+      "canonical_evidence": "复杂环境下机器人辅助数据采集的自主导航方案",
+      "llm_tldr_en": "Proposes a dual-driven autonomous navigation scheme for mobile robots to collect data in NLoS environments.",
+      "llm_tldr_cn": "提出一种双驱动自主导航方案，用于移动机器人在非视距环境下进行数据采集。",
+      "llm_tldr": "提出一种双驱动自主导航方案，用于移动机器人在非视距环境下进行数据采集。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.05014v1",
+      "source": "arxiv",
+      "title": "StarVLA: A Lego-like Codebase for Vision-Language-Action Model Developing",
+      "abstract": "Building generalist embodied agents requires integrating perception, language understanding, and action, which are core capabilities addressed by Vision-Language-Action (VLA) approaches based on multimodal foundation models, including recent advances in vision-language models and world models. Despite rapid progress, VLA methods remain fragmented across incompatible architectures, codebases, and evaluation protocols, hindering principled comparison and reproducibility. We present StarVLA, an open-source codebase for VLA research. StarVLA addresses these challenges in three aspects. First, it provides a modular backbone--action-head architecture that supports both VLM backbones (e.g., Qwen-VL) and world-model backbones (e.g., Cosmos) alongside representative action-decoding paradigms, all under a shared abstraction in which backbone and action head can each be swapped independently. Second, it provides reusable training strategies, including cross-embodiment learning and multimodal co-training, that apply consistently across supported paradigms. Third, it integrates major benchmarks, including LIBERO, SimplerEnv, RoboTwin~2.0, RoboCasa-GR1, and BEHAVIOR-1K, through a unified evaluation interface that supports both simulation and real-robot deployment. StarVLA also ships simple, fully reproducible single-benchmark training recipes that, despite minimal data engineering, already match or surpass prior methods on multiple benchmarks with both VLM and world-model backbones. To our best knowledge, StarVLA is one of the most comprehensive open-source VLA frameworks available, and we expect it to lower the barrier for reproducing existing methods and prototyping new ones. StarVLA is being actively maintained and expanded; we will update this report as the project evolves. The code and documentation are available at https://github.com/starVLA/starVLA.",
+      "authors": [
+        "StarVLA Community"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI",
+        "cs.CV"
+      ],
+      "published": "2026-04-06T17:59:21+00:00",
+      "link": "https://arxiv.org/pdf/2604.05014v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "integrating world models and latent representations for embodied agents",
+      "llm_evidence_cn": "整合世界模型与隐空间表示用于具身智能体",
+      "llm_evidence": "整合世界模型与隐空间表示用于具身智能体",
+      "canonical_evidence": "整合世界模型与隐空间表示用于具身智能体",
+      "llm_tldr_en": "Provides a modular codebase supporting world models and latent representations for vision-language-action agents.",
+      "llm_tldr_cn": "提供了一个支持世界模型和隐空间表示的模块化代码库，用于视言行智能体开发。",
+      "llm_tldr": "提供了一个支持世界模型和隐空间表示的模块化代码库，用于视言行智能体开发。",
+      "llm_tags": [
+        "query:navwm:composite"
+      ],
+      "matched_query_tag": "query:navwm:composite",
+      "matched_query_text": "Papers central to 隐空间、导航与世界模型相关论文检索, especially work that connects or combines: 研究隐空间表示及其在智能系统中的作用; 智能体在复杂环境中的导航策略与学习方法; 世界模型的结构与在自主系统中的应用; 探索表示学习在构建世界模型与导航中的运用; 基于隐空间表示的规划与决策模型; 空间表示与认知映射的算法及模型; 检索关于隐空间表示在世界模型和导航中的研究论文; 寻找利用世界模型进行强化学习或规划的最新研究; 探索智能体如何利用隐空间进行导航与环境理解.",
+      "matched_requirement_id": "req-composite-navwm",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.06155v1",
+      "source": "arxiv",
+      "title": "Toward Consistent World Models with Multi-Token Prediction and Latent Semantic Enhancement",
+      "abstract": "Whether Large Language Models (LLMs) develop coherent internal world models remains a core debate. While conventional Next-Token Prediction (NTP) focuses on one-step-ahead supervision, Multi-Token Prediction (MTP) has shown promise in learning more structured representations. In this work, we provide a theoretical perspective analyzing the gradient inductive bias of MTP, supported by empirical evidence, showing that MTP promotes the convergence toward internal belief states by inducing representational contractivity via gradient coupling. However, we reveal that standard MTP often suffers from structural hallucinations, where discrete token supervision encourages illegal shortcuts in latent space that violate environmental constraints. To address this, we propose a novel method Latent Semantic Enhancement MTP (LSE-MTP), which anchors predictions to ground-truth hidden state trajectories. Experiments on synthetic graphs and real-world Manhattan Taxi Ride show that LSE-MTP effectively bridges the gap between discrete tokens and continuous state representations, enhancing representation alignment, reducing structural hallucinations, and improving robustness to perturbations.",
+      "authors": [
+        "Qimin Zhong",
+        "Hao Liao",
+        "Haiming Qin",
+        "Mingyang Zhou",
+        "Rui Mao",
+        "Wei Chen",
+        "Naipeng Chao"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.CL"
+      ],
+      "published": "2026-04-07T17:54:22+00:00",
+      "link": "https://arxiv.org/pdf/2604.06155v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Analyzing internal world models and latent semantic enhancement in LLMs",
+      "llm_evidence_cn": "分析大语言模型中的内部世界模型与隐语义增强",
+      "llm_evidence": "分析大语言模型中的内部世界模型与隐语义增强",
+      "canonical_evidence": "分析大语言模型中的内部世界模型与隐语义增强",
+      "llm_tldr_en": "Investigates how multi-token prediction helps LLMs develop consistent internal world models and latent states.",
+      "llm_tldr_cn": "研究多标记预测如何帮助大语言模型构建一致的内部世界模型和隐状态。",
+      "llm_tldr": "研究多标记预测如何帮助大语言模型构建一致的内部世界模型和隐状态。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2604.01477v1",
+      "source": "arxiv",
+      "title": "Soft MPCritic: Amortized Model Predictive Value Iteration",
+      "abstract": "Reinforcement learning (RL) and model predictive control (MPC) offer complementary strengths, yet combining them at scale remains computationally challenging. We propose soft MPCritic, an RL-MPC framework that learns in (soft) value space while using sample-based planning for both online control and value target generation. soft MPCritic instantiates MPC through model predictive path integral control (MPPI) and trains a terminal Q-function with fitted value iteration, aligning the learned value function with the planner and implicitly extending the effective planning horizon. We introduce an amortized warm-start strategy that recycles planned open-loop action sequences from online observations when computing batched MPPI-based value targets. This makes soft MPCritic computationally practical, while preserving solution quality. soft MPCritic plans in a scenario-based fashion with an ensemble of dynamic models trained for next-step prediction accuracy. Together, these ingredients enable soft MPCritic to learn effectively through robust, short-horizon planning on classic and complex control tasks. These results establish soft MPCritic as a practical and scalable blueprint for synthesizing MPC policies in settings where policy extraction and direct, long-horizon planning may fail.",
+      "authors": [
+        "Thomas Banker",
+        "Nathan P. Lawrence",
+        "Ali Mesbah"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "eess.SY"
+      ],
+      "published": "2026-04-01T23:35:00+00:00",
+      "link": "https://arxiv.org/pdf/2604.01477v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "RL-MPC framework for planning and value iteration",
+      "llm_evidence_cn": "用于规划和价值迭代的RL-MPC框架",
+      "llm_evidence": "用于规划和价值迭代的RL-MPC框架",
+      "canonical_evidence": "用于规划和价值迭代的RL-MPC框架",
+      "llm_tldr_en": "Proposes soft MPCritic, combining reinforcement learning and model predictive control for efficient planning.",
+      "llm_tldr_cn": "提出soft MPCritic，结合强化学习与模型预测控制以实现高效规划。",
+      "llm_tldr": "提出soft MPCritic，结合强化学习与模型预测控制以实现高效规划。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "寻找利用世界模型进行强化学习或规划的最新研究",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2603.29634v1",
+      "source": "arxiv",
+      "title": "MacTok: Robust Continuous Tokenization for Image Generation",
+      "abstract": "Continuous image tokenizers enable efficient visual generation, and those based on variational frameworks can learn smooth, structured latent representations through KL regularization. Yet this often leads to posterior collapse when using fewer tokens, where the encoder fails to encode informative features into the compressed latent space. To address this, we introduce \\textbf{MacTok}, a \\textbf{M}asked \\textbf{A}ugmenting 1D \\textbf{C}ontinuous \\textbf{Tok}enizer that leverages image masking and representation alignment to prevent collapse while learning compact and robust representations. MacTok applies both random masking to regularize latent learning and DINO-guided semantic masking to emphasize informative regions in images, forcing the model to encode robust semantics from incomplete visual evidence. Combined with global and local representation alignment, MacTok preserves rich discriminative information in a highly compressed 1D latent space, requiring only 64 or 128 tokens. On ImageNet, MacTok achieves a competitive gFID of 1.44 at 256$\\times$256 and a state-of-the-art 1.52 at 512$\\times$512 with SiT-XL, while reducing token usage by up to 64$\\times$. These results confirm that masking and semantic guidance together prevent posterior collapse and achieve efficient, high-fidelity tokenization.",
+      "authors": [
+        "Hengyu Zeng",
+        "Xin Gao",
+        "Guanghao Li",
+        "Yuxiang Yan",
+        "Jiaoyang Ruan",
+        "Junpeng Ma",
+        "Haoyu Albert Wang",
+        "Jian Pu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-03-31T12:00:11+00:00",
+      "link": "https://arxiv.org/pdf/2603.29634v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Structured latent representations and compressed latent space",
+      "llm_evidence_cn": "结构化隐空间表示与压缩隐空间",
+      "llm_evidence": "结构化隐空间表示与压缩隐空间",
+      "canonical_evidence": "结构化隐空间表示与压缩隐空间",
+      "llm_tldr_en": "Introduces MacTok to learn robust continuous latent representations for image generation without collapse.",
+      "llm_tldr_cn": "引入MacTok以学习鲁棒的连续隐空间表示，防止图像生成中的后验崩溃。",
+      "llm_tldr": "引入MacTok以学习鲁棒的连续隐空间表示，防止图像生成中的后验崩溃。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.00779v1",
+      "source": "arxiv",
+      "title": "Using predefined vector systems to speed up neural network multimillion class classification",
+      "abstract": "Label prediction in neural networks (NNs) has O(n) complexity proportional to the number of classes. This holds true for classification using fully connected layers and cosine similarity with some set of class prototypes. In this paper we show that if NN latent space (LS) geometry is known and possesses specific properties, label prediction complexity can be significantly reduced. This is achieved by associating label prediction with the O(1) complexity closest cluster center search in a vector system used as target for latent space configuration (LSC). The proposed method only requires finding indexes of several largest and lowest values in the embedding vector making it extremely computationally efficient. We show that the proposed method does not change NN training accuracy computational results. We also measure the time required by different computational stages of NN inference and label prediction on multiple datasets. The experiments show that the proposed method allows to achieve up to 11.6 times overall acceleration over conventional methods. Furthermore, the proposed method has unique properties which allow to predict the existence of new classes.",
+      "authors": [
+        "Nikita Gabdullin",
+        "Ilya Androsov"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CV"
+      ],
+      "published": "2026-04-01T11:42:02+00:00",
+      "link": "https://arxiv.org/pdf/2604.00779v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "latent space geometry and configuration for efficient classification",
+      "llm_evidence_cn": "用于高效分类的隐空间几何与配置",
+      "llm_evidence": "用于高效分类的隐空间几何与配置",
+      "canonical_evidence": "用于高效分类的隐空间几何与配置",
+      "llm_tldr_en": "Explores how latent space geometry can be leveraged to reduce computational complexity in neural networks.",
+      "llm_tldr_cn": "探索如何利用隐空间几何结构来降低神经网络的计算复杂度。",
+      "llm_tldr": "探索如何利用隐空间几何结构来降低神经网络的计算复杂度。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.02190v1",
+      "source": "arxiv",
+      "title": "UniDriveVLA: Unifying Understanding, Perception, and Action Planning for Autonomous Driving",
+      "abstract": "Vision-Language-Action (VLA) models have recently emerged in autonomous driving, with the promise of leveraging rich world knowledge to improve the cognitive capabilities of driving systems. However, adapting such models for driving tasks currently faces a critical dilemma between spatial perception and semantic reasoning. Consequently, existing VLA systems are forced into suboptimal compromises: directly adopting 2D Vision-Language Models yields limited spatial perception, whereas enhancing them with 3D spatial representations often impairs the native reasoning capacity of VLMs. We argue that this dilemma largely stems from the coupled optimization of spatial perception and semantic reasoning within shared model parameters. To overcome this, we propose UniDriveVLA, a Unified Driving Vision-Language-Action model based on Mixture-of-Transformers that addresses the perception-reasoning conflict via expert decoupling. Specifically, it comprises three experts for driving understanding, scene perception, and action planning, which are coordinated through masked joint attention. In addition, we combine a sparse perception paradigm with a three-stage progressive training strategy to improve spatial perception while maintaining semantic reasoning capability. Extensive experiments show that UniDriveVLA achieves state-of-the-art performance in open-loop evaluation on nuScenes and closed-loop evaluation on Bench2Drive. Moreover, it demonstrates strong performance across a broad range of perception, prediction, and understanding tasks, including 3D detection, online mapping, motion forecasting, and driving-oriented VQA, highlighting its broad applicability as a unified model for autonomous driving. Code and model have been released at https://github.com/xiaomi-research/unidrivevla",
+      "authors": [
+        "Yongkang Li",
+        "Lijun Zhou",
+        "Sixu Yan",
+        "Bencheng Liao",
+        "Tianyi Yan",
+        "Kaixin Xiong",
+        "Long Chen",
+        "Hongwei Xie",
+        "Bing Wang",
+        "Guang Chen",
+        "Hangjun Ye",
+        "Wenyu Liu",
+        "Haiyang Sun",
+        "Xinggang Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-04-02T15:48:45+00:00",
+      "link": "https://arxiv.org/pdf/2604.02190v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Unifying perception and action planning for autonomous driving",
+      "llm_evidence_cn": "统一自动驾驶的感知与动作规划",
+      "llm_evidence": "统一自动驾驶的感知与动作规划",
+      "canonical_evidence": "统一自动驾驶的感知与动作规划",
+      "llm_tldr_en": "Proposes UniDriveVLA to resolve the conflict between spatial perception and semantic reasoning in driving.",
+      "llm_tldr_cn": "提出UniDriveVLA，旨在解决自动驾驶中空间感知与语义推理之间的冲突。",
+      "llm_tldr": "提出UniDriveVLA，旨在解决自动驾驶中空间感知与语义推理之间的冲突。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2604.00531v1",
+      "source": "arxiv",
+      "title": "Learning Shared Representations for Multi-Task Linear Bandits",
+      "abstract": "Multi-task representation learning is an approach that learns shared latent representations across related tasks, facilitating knowledge transfer and improving sample efficiency. This paper introduces a novel approach to multi-task representation learning in linear bandits. We consider a setting with T concurrent linear bandit tasks, each with feature dimension d, that share a common latent representation of dimension r \\ll min{d,T}$, capturing their underlying relatedness. We propose a new Optimism in the Face of Uncertainty Linear (OFUL) algorithm that leverages shared low-rank representations to enhance decision-making in a sample-efficient manner. Our algorithm first collects data through an exploration phase, estimates the shared model via spectral initialization, and then conducts OFUL based learning over a newly constructed confidence set. We provide theoretical guarantees for the confidence set and prove that the unknown reward vectors lie within the confidence set with high probability. We derive cumulative regret bounds and show that the proposed approach achieves \\tilde{O}(\\sqrt{drNT}), a significant improvement over solving the T tasks independently, resulting in a regret of \\tilde{O}(dT\\sqrt{N}). We performed numerical simulations to validate the performance of our algorithm for different problem sizes.",
+      "authors": [
+        "Jiabin Lin",
+        "Shana Moothedath"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-04-01T06:18:17+00:00",
+      "link": "https://arxiv.org/pdf/2604.00531v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "shared latent representations for multi-task decision-making",
+      "llm_evidence_cn": "用于多任务决策的共享隐空间表示",
+      "llm_evidence": "用于多任务决策的共享隐空间表示",
+      "canonical_evidence": "用于多任务决策的共享隐空间表示",
+      "llm_tldr_en": "Learns shared low-rank latent representations to improve sample efficiency in multi-task bandit problems.",
+      "llm_tldr_cn": "学习共享的低秩隐空间表示，以提高多任务老虎机问题的样本效率。",
+      "llm_tldr": "学习共享的低秩隐空间表示，以提高多任务老虎机问题的样本效率。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.00779v2",
+      "source": "arxiv",
+      "title": "Using predefined vector systems to speed up neural network multimillion class classification",
+      "abstract": "Label prediction in neural networks (NNs) has O(n) complexity proportional to the number of classes. This holds true for classification using fully connected layers and cosine similarity with some set of class prototypes. In this paper we show that if NN latent space (LS) geometry is known and possesses specific properties, label prediction complexity can be significantly reduced. This is achieved by associating label prediction with the O(1) complexity closest cluster center search in a vector system used as target for latent space configuration (LSC). The proposed method only requires finding indexes of several largest and lowest values in the embedding vector making it extremely computationally efficient. We show that the proposed method does not change NN training accuracy computational results. We also measure the time required by different computational stages of NN inference and label prediction on multiple datasets. The experiments show that the proposed method allows to achieve up to 11.6 times overall acceleration over conventional methods. Furthermore, the proposed method has unique properties which allow to predict the existence of new classes.",
+      "authors": [
+        "Nikita Gabdullin",
+        "Ilya Androsov"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CV"
+      ],
+      "published": "2026-04-01T11:42:02+00:00",
+      "link": "https://arxiv.org/pdf/2604.00779v2",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "latent space geometry and configuration for efficient classification",
+      "llm_evidence_cn": "用于高效分类的隐空间几何与配置",
+      "llm_evidence": "用于高效分类的隐空间几何与配置",
+      "canonical_evidence": "用于高效分类的隐空间几何与配置",
+      "llm_tldr_en": "Exploits latent space geometry to reduce neural network classification complexity to O(1).",
+      "llm_tldr_cn": "利用隐空间几何特性将神经网络分类复杂度降低至O(1)。",
+      "llm_tldr": "利用隐空间几何特性将神经网络分类复杂度降低至O(1)。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.04357v1",
+      "source": "arxiv",
+      "title": "Spatially-Weighted CLIP for Street-View Geo-localization",
+      "abstract": "This paper proposes Spatially-Weighted CLIP (SW-CLIP), a novel framework for street-view geo-localization that explicitly incorporates spatial autocorrelation into vision-language contrastive learning. Unlike conventional CLIP-based methods that treat all non-matching samples as equally negative, SW-CLIP leverages Tobler's First Law of Geography to model geographic relationships through distance-aware soft supervision. Specifically, we introduce a location-as-text representation to encode geographic positions and replace one-hot InfoNCE targets with spatially weighted soft labels derived from geodesic distance. Additionally, a neighborhood-consistency regularization is employed to preserve local spatial structure in the embedding space. Experiments on a multi-city dataset demonstrate that SW-CLIP significantly improves geo-localization accuracy, reduces long-tail errors, and enhances spatial coherence compared to standard CLIP. The results highlight the importance of shifting from semantic alignment to geographic alignment for robust geo-localization and provide a general paradigm for integrating spatial principles into multimodal representation learning.",
+      "authors": [
+        "Ting Han",
+        "Fengjiao Li",
+        "Chunsong Chen",
+        "Haoling Huang",
+        "Yiping Chen",
+        "Meiliu Wu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-04-06T02:10:36+00:00",
+      "link": "https://arxiv.org/pdf/2604.04357v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Spatial structure in embedding space and geo-localization",
+      "llm_evidence_cn": "嵌入空间中的空间结构与地理定位",
+      "llm_evidence": "嵌入空间中的空间结构与地理定位",
+      "canonical_evidence": "嵌入空间中的空间结构与地理定位",
+      "llm_tldr_en": "Incorporates spatial autocorrelation into vision-language models to preserve local structure in embeddings.",
+      "llm_tldr_cn": "将空间自相关引入视觉语言模型，以保留嵌入空间中的局部空间结构。",
+      "llm_tldr": "将空间自相关引入视觉语言模型，以保留嵌入空间中的局部空间结构。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2604.01644v1",
+      "source": "arxiv",
+      "title": "TOL: Textual Localization with OpenStreetMap",
+      "abstract": "Natural language provides an intuitive way to express spatial intent in geospatial applications. While existing localization methods often rely on dense point cloud maps or high-resolution imagery, OpenStreetMap (OSM) offers a compact and freely available map representation that encodes rich semantic and structural information, making it well suited for large-scale localization. However, text-to-OSM (T2O) localization remains largely unexplored. In this paper, we formulate the T2O global localization task, which aims to estimate accurate 2 degree-of-freedom (DoF) positions in urban environments from textual scene descriptions without relying on geometric observations or GNSS-based initial location. To support the proposed task, we introduce TOL, a large-scale benchmark spanning multiple continents and diverse urban environments. TOL contains approximately 121K textual queries paired with OSM map tiles and covers about 316 km of road trajectories across Boston, Karlsruhe, and Singapore. We further propose TOLoc, a coarse-to-fine localization framework that explicitly models the semantics of surrounding objects and their directional information. In the coarse stage, direction-aware features are extracted from both textual descriptions and OSM tiles to construct global descriptors, which are used to retrieve candidate locations for the query. In the fine stage, the query text and top-1 retrieved tile are jointly processed, where a dedicated alignment module fuses textual descriptor and local map features to regress the 2-DoF pose. Experimental results demonstrate that TOLoc achieves strong localization performance, outperforming the best existing method by 6.53%, 9.93%, and 8.31% at 5m, 10m, and 25m thresholds, respectively, and shows strong generalization to unseen environments. Dataset, code and models will be publicly available at: https://github.com/WHU-USI3DV/TOL.",
+      "authors": [
+        "Youqi Liao",
+        "Shuhao Kang",
+        "Jingyu Xu",
+        "Olaf Wysocki",
+        "Yan Xia",
+        "Jianping Li",
+        "Zhen Dong",
+        "Bisheng Yang",
+        "Xieyuanli Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.MM"
+      ],
+      "published": "2026-04-02T05:43:07+00:00",
+      "link": "https://arxiv.org/pdf/2604.01644v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "textual localization and spatial intent in urban environments",
+      "llm_evidence_cn": "城市环境中的文本定位与空间意图表达",
+      "llm_evidence": "城市环境中的文本定位与空间意图表达",
+      "canonical_evidence": "城市环境中的文本定位与空间意图表达",
+      "llm_tldr_en": "Formulates text-to-OSM global localization to estimate positions from textual scene descriptions.",
+      "llm_tldr_cn": "制定了文本到OSM的全球定位任务，通过文本描述估计城市位置。",
+      "llm_tldr": "制定了文本到OSM的全球定位任务，通过文本描述估计城市位置。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.01843v1",
+      "source": "arxiv",
+      "title": "Investigating Permutation-Invariant Discrete Representation Learning for Spatially Aligned Images",
+      "abstract": "Vector quantization approaches (VQ-VAE, VQ-GAN) learn discrete neural representations of images, but these representations are inherently position-dependent: codes are spatially arranged and contextually entangled, requiring autoregressive or diffusion-based priors to model their dependencies at sample time. In this work, we ask whether positional information is necessary for discrete representations of spatially aligned data. We propose the permutation-invariant vector-quantized autoencoder (PI-VQ), in which latent codes are constrained to carry no positional information. We find that this constraint encourages codes to capture global, semantic features, and enables direct interpolation between images without a learned prior. To address the reduced information capacity of permutation-invariant representations, we introduce matching quantization, a vector quantization algorithm based on optimal bipartite matching that increases effective bottleneck capacity by $3.5\\times$ relative to naive nearest-neighbour quantization. The compositional structure of the learned codes further enables interpolation-based sampling, allowing synthesis of novel images in a single forward pass. We evaluate PI-VQ on CelebA, CelebA-HQ and FFHQ, obtaining competitive precision, density and coverage metrics for images synthesised with our approach. We discuss the trade-offs inherent to position-free representations, including separability and interpretability of the latent codes, pointing to numerous directions for future work.",
+      "authors": [
+        "Jamie S. J. Stirling",
+        "Noura Al-Moubayed",
+        "Hubert P. H. Shum"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-04-02T09:56:59+00:00",
+      "link": "https://arxiv.org/pdf/2604.01843v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Explores latent space representations and semantic feature extraction in neural networks",
+      "llm_evidence_cn": "探索神经网络中的隐空间表示与语义特征提取",
+      "llm_evidence": "探索神经网络中的隐空间表示与语义特征提取",
+      "canonical_evidence": "探索神经网络中的隐空间表示与语义特征提取",
+      "llm_tldr_en": "Proposes a permutation-invariant VQ-VAE to learn global semantic latent representations from images.",
+      "llm_tldr_cn": "提出一种置换不变的VQ-VAE，旨在从图像中学习全局语义隐空间表示。",
+      "llm_tldr": "提出一种置换不变的VQ-VAE，旨在从图像中学习全局语义隐空间表示。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.05062v1",
+      "source": "arxiv",
+      "title": "GaussFly: Contrastive Reinforcement Learning for Visuomotor Policies in 3D Gaussian Fields",
+      "abstract": "Learning visuomotor policies for Autonomous Aerial Vehicles (AAVs) relying solely on monocular vision is an attractive yet highly challenging paradigm. Existing end-to-end learning approaches directly map high-dimensional RGB observations to action commands, which frequently suffer from low sample efficiency and severe sim-to-real gaps due to the visual discrepancy between simulation and physical domains. To address these long-standing challenges, we propose GaussFly, a novel framework that explicitly decouples representation learning from policy optimization through a cohesive real-to-sim-to-real paradigm. First, to achieve a high-fidelity real-to-sim transition, we reconstruct training scenes using 3D Gaussian Splatting (3DGS) augmented with explicit geometric constraints. Second, to ensure robust sim-to-real transfer, we leverage these photorealistic simulated environments and employ contrastive representation learning to extract compact, noise-resilient latent features from the rendered RGB images. By utilizing this pre-trained encoder to provide low-dimensional feature inputs, the computational burden on the visuomotor policy is significantly reduced while its resistance against visual noise is inherently enhanced. Extensive experiments in simulated and real-world environments demonstrate that GaussFly achieves superior sample efficiency and asymptotic performance compared to baselines. Crucially, it enables robust and zero-shot policy transfer to unseen real-world environments with complex textures, effectively bridging the sim-to-real gap.",
+      "authors": [
+        "Yuhang Zhang",
+        "Mingsheng Li",
+        "Yujing Shang",
+        "Zhuoyuan Yu",
+        "Chao Yan",
+        "Jiaping Xiao",
+        "Mir Feroskhan"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-04-06T18:10:52+00:00",
+      "link": "https://arxiv.org/pdf/2604.05062v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "decoupling representation learning from policy optimization for aerial navigation",
+      "llm_evidence_cn": "将表示学习与策略优化解耦用于空中导航",
+      "llm_evidence": "将表示学习与策略优化解耦用于空中导航",
+      "canonical_evidence": "将表示学习与策略优化解耦用于空中导航",
+      "llm_tldr_en": "A framework using 3D Gaussian Splatting to bridge the sim-to-real gap in visuomotor policy learning.",
+      "llm_tldr_cn": "一种利用3D高斯泼溅技术弥合视觉运动策略学习中虚实差异的框架。",
+      "llm_tldr": "一种利用3D高斯泼溅技术弥合视觉运动策略学习中虚实差异的框架。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2604.02021v1",
+      "source": "arxiv",
+      "title": "Bridging Discrete Planning and Continuous Execution for Redundant Robot",
+      "abstract": "Voxel-grid reinforcement learning is widely adopted for path planning in redundant manipulators due to its simplicity and reproducibility. However, direct execution through point-wise numerical inverse kinematics on 7-DoF arms often yields step-size jitter, abrupt joint transitions, and instability near singular configurations. This work proposes a bridging framework between discrete planning and continuous execution without modifying the discrete planner itself. On the planning side, step-normalized 26-neighbor Cartesian actions and a geometric tie-breaking mechanism are introduced to suppress unnecessary turns and eliminate step-size oscillations. On the execution side, a task-priority damped least-squares (TP-DLS) inverse kinematics layer is implemented. This layer treats end-effector position as a primary task, while posture and joint centering are handled as subordinate tasks projected into the null space, combined with trust-region clipping and joint velocity constraints. On a 7-DoF manipulator in random sparse, medium, and dense environments, this bridge raises planning success in dense scenes from about 0.58 to 1.00, shortens representative path length from roughly 1.53 m to 1.10 m, and while keeping end-effector error below 1 mm, reduces peak joint accelerations by over an order of magnitude, substantially improving the continuous execution quality of voxel-based RL paths on redundant manipulators.",
+      "authors": [
+        "Teng Yan",
+        "Yue Yu",
+        "Yihan Liu",
+        "Bingzhuo Zhong"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-04-02T13:23:54+00:00",
+      "link": "https://arxiv.org/pdf/2604.02021v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "path planning for redundant manipulators and discrete-to-continuous execution",
+      "llm_evidence_cn": "冗余机械臂的路径规划以及离散到连续的执行转换",
+      "llm_evidence": "冗余机械臂的路径规划以及离散到连续的执行转换",
+      "canonical_evidence": "冗余机械臂的路径规划以及离散到连续的执行转换",
+      "llm_tldr_en": "Proposes a framework to bridge discrete path planning and continuous execution for stable robot control.",
+      "llm_tldr_cn": "提出了一种连接离散路径规划与连续执行的框架，以实现稳定的机器人控制。",
+      "llm_tldr": "提出了一种连接离散路径规划与连续执行的框架，以实现稳定的机器人控制。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

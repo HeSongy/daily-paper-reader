@@ -1,0 +1,797 @@
+Title: TOL: Textual Localization with OpenStreetMap
+
+URL Source: https://arxiv.org/pdf/2604.01644v1
+
+Published Time: Fri, 03 Apr 2026 00:36:00 GMT
+
+Number of Pages: 14
+
+Markdown Content:
+> JOURNAL OF L ATEX CLASS FILES, VOL. XXX, NO. XXX, XXX XXX 1
+
+# TOL: Textual Localization with OpenStreetMap 
+
+Youqi Liao, Shuhao Kang, Jingyu Xu, Olaf Wysocki, Yan Xia, Jianping Li †, Zhen Dong, Bisheng Yang, Xieyuanli Chen 
+
+Abstract —Natural language provides an intuitive way to ex-press spatial intent in geospatial applications. While existing localization methods often rely on dense point cloud maps or high-resolution imagery, OpenStreetMap (OSM) offers a com-pact and freely available map representation that encodes rich semantic and structural information, making it well suited for large-scale localization. However, text-to-OSM (T2O) localization remains largely unexplored. In this paper, we formulate the T2O global localization task, which aims to estimate accurate 2 degree-of-freedom (DoF) positions in urban environments from textual scene descriptions without relying on geometric observations or GNSS-based initial location. To support the proposed task, we introduce TOL, a large-scale benchmark spanning multiple continents and diverse urban environments. TOL contains approximately 121K textual queries paired with OSM map tiles and covers about 316 km of road trajectories across Boston, Karlsruhe, and Singapore. We further propose TOLoc, a coarse-to-fine localization framework that explicitly models the semantics of surrounding objects and their directional information. In the coarse stage, direction-aware features are extracted from both textual descriptions and OSM tiles to construct global descriptors, which are used to retrieve candidate locations for the query. In the fine stage, the query text and top-1 retrieved tile are jointly processed, where a dedicated alignment module fuses textual descriptor and local map features to regress the 2-DoF pose. Experimental results demonstrate that TOLoc achieves strong localization performance, outperforming the best existing method by 6.53%, 9.93%, and 8.31% at 5m, 10m, and 25m thresholds, respectively, and shows strong generalization to unseen environments. Dataset, code and models will be publicly available at: https://github.com/WHU-USI3DV/TOL. 
+
+Index Terms —Textual localization, OpenStreetMap, Urban Scene Understanding 
+
+I. I NTRODUCTION 
+
+# TEXT-based descriptions offer an intuitive way to ex-press spatial information in large-scale geospatial appli-cations [1, 2, 3]. The task of localization from text involves aligning semantic cues in descriptions with map representa-tions [4, 5, 6]. In real-world situations, such as when an elderly person becomes lost or encounters difficulties in an unfamiliar 
+
+This research was supported by the National Natural Science Foundation Project (No. 42201477, No. 42130105). (Corresponding author: Jianping Li) Youqi Liao, Zhen Dong and Bisheng Yang are with the Wuhan University, China (e-mail: {martin liao, dongzhenwhu, bshyang }@whu.edu.cn). Shuhao Kang is with the Technical University of Munich (e-mail: shuhao.kang@tum.de). Jingyu Xu is with the Institute of Artificial Intelligence (TeleAI), China Telecom, China. (e-mail: xujy70@chinatelecom.cn) Olaf Wysocki is with the University of Cambridge, CV4DT, UK (e-mail: okw24@cam.ac.uk) Yan Xia is with the University of Science and Technology of China, China. (e-mail: yan.xia@ustc.edu.cn) Jianping Li is with the Nanyang Technological University, Singapore. (e-mail: jianping.li@ntu.edu.sg). Xieyuanli Chen is with the National University of Defense Technology, China. (e-mail: chenxieyuanli@hotmail.com) (a) Motivation    
+
+> Retrieval Regression
+> OpenStreetMap Top-1 OSM Tile
+> (49.0177 °, 8.4420 °)
+> GNSS Coordinates HELP! I am standing on top of parking,
+> north of: building, south of: road…
+> Don’t worry! We
+> will help you.
+> Area: 1.6 𝐀 𝐀 𝐀
+> Size: 6.5Mb
+
+Point cloud map-based   
+
+> Area: 1.6 𝐀 𝐀 𝐀
+> Size: 24.1Gb
+> (b) Difference with existing methods
+> Text OSM
+> PR Head
+> Top-Ktiles
+
+Ours    
+
+> Text OSM
+> PR Head
+> 𝐀 = ( 𝐀 ,𝐀 )
+> PE Head
+
+OSM-based Retrieval 
+
+Fig. 1. (a) Motivation. Text-to-OSM localization retrieves the most similar OSM tile from the database first, and then estimates the accurate 2-DoF position later. (b) shows the difference with existing methods. Compared with text-to-point-cloud localization methods, OSM data is much lighter in data construction, storage, and updates. Compared with existing text-driven place recognition methods, our approach focuses on global localization with meter-level accuracy, instead of simply retrieving OSM tiles from textual queries. This enables finer-grained spatial understanding and more precise localization beyond tile-level retrieval. 
+
+environment (as shown in Fig. 1(a)), location information is often communicated through simple textual descriptions of the surrounding scene, which provide a straightforward and accessible way to convey spatial context. Rescue personnel can interpret such descriptions and match them against a map to determine the person’s location and provide timely assistance [7]. Enabling geospatial models to infer accurate locations from textual descriptions provides a complementary capability for human–machine interaction, particularly in applications such as emergency response and urban mobility, where reliable automatic localization is essential. To date, most localization research has focused on image-based [8, 9, 10, 11] or point cloud-based queries [12, 13, 14, 15, 16], with text-driven localization receiving limited atten-tion and remaining largely underexplored. Text2Pos [17] is the pioneering work to formulate the text-to-point-cloud (T2P) localization task. It introduces the KITTI360Pose dataset and a two-stage network for text-based pose estimation. Subsequent efforts [18, 19, 20, 21] further improved accuracy through stronger models and enhanced training strategies. GOTPR [22] replaces the point cloud maps with OSM tiles, and represents both the textual descriptions and map objects as scene graphs. Text-to-OSM (T2O) place recognition (PR) is then performed via graph matching to identify the most similar OSM tile for  
+
+> arXiv:2604.01644v1 [cs.CV] 2 Apr 2026 JOURNAL OF L ATEX CLASS FILES, VOL. XXX, NO. XXX, XXX XXX 2
+
+each textual description. CVG-Text [23] proposes a unified framework for jointly addressing text-to-aerial (T2A) image and T2O retrieval, together with a corresponding dataset. To support the T2O retrieval task, CVG-Text collects GNSS-tagged images from the Mapillary platform 1 and uses their geo-tags to retrieve the corresponding OSM map tiles. Open-world segmentation is then applied to the images to extract semantic keywords, which are subsequently used by the large language model (LLM) GPT-4o [24] to synthesize textual descriptions. In this way, the original image–OSM matching pairs are transformed into text–OSM matching pairs. To the best of our knowledge, GOTPR [22] and CVG-Text [23] are the only existing works that explicitly consider the T2O PR task. However, their frameworks and datasets suffer from several major limitations: 1) Both methods are primarily designed for the T2O PR task and do not explicitly address the fine-grained pose estimation required for meter-level localization accuracy. 2) GOTPR models relationships in textual descriptions using a scene graph with nodes and edges. However, its reliance on the graph matching limits its ability to capture complex scene structures. As the subgraph size grows, balancing computational efficiency and retrieval accuracy becomes increasingly challenging. 3) For the CVG-Text, text construction pipelines rely on LLMs and manual post-processing, which increases the overall cost and makes it challenging to scale to large-scale regions. As a result, these methods face challenges in practical local-ization systems and are difficult to deploy at scale in diverse environments. To address above limitations, we introduce the T2O global localization task, which aims to estimate the 2-DoF position of a textual query from city-scale OSM maps. To fully study the problem, we introduce a corresponding T2O localiza-tion benchmark, namely TOL . TOL comprises approximately 121K textual descriptions paired with corresponding OSM map tiles, covering diverse urban scenes in Singapore, Boston and Karlsruhe. Textual descriptions are generated by detecting visible objects around the query position in each direction from OSM data, and encoding their semantics and directions using predefined templates. Notably, the entire data construction pipeline is fully automated and scene-agnostic, requiring no manual annotation, per-instance verification, or reliance on LLMs. To address the T2O localization task, we propose 
+
+TOLoc , a two-stage framework that first retrieves candidate map tiles and then estimates the precise location by leveraging the semantic and directional information from the text and OSM data. We use widely used text–image contrastive learning models [25, 26] as feature extractors to derive global textual descriptors and map representations. The textual input is en-coded into a direction-aware global descriptor by aggregating features from descriptions in different directions. Similarly, each OSM tile is represented by a local feature map partitioned into directional regions to construct direction-aware OSM descriptors. Based on these representations, similarity scores 
+
+> 1https://www.mapillary.com/
+
+between text and map descriptors are computed for retrieval. The local feature map of the top-1 retrieved tile, together with the text descriptor, is then fed into the proposed text-to-OSM alignment (TOA) module to enable cross-modal fusion and long-range interaction, from which the accurate 2-DoF pose is predicted. Experimental results show that our method achieves a localization success rate exceeding 28% within a 25-meter threshold, outperforming the state-of-the-art (SoTA) method, CVG-Text, by 9.87%. Generalization experiments demonstrate that our method maintains strong performance on geographi-cally distant and previously unseen scenes, indicating robust generalization ability. Our contributions are summarized as follows:  
+
+> •
+
+We introduce the T2O global localization task and present TOL, a large-scale benchmark that enables systematic evaluation in diverse scenes.  
+
+> •
+
+We propose TOLoc, a two-stage framework for T2O global localization. By fully exploiting direction-aware semantic cues from both map and textual modalities, TOLoc constructs more robust and discriminative repre-sentations for localization.  
+
+> •
+
+Compared with existing baselines, TOLoc achieves higher recall in place recognition, more accurate local-ization, and better generalization performance. Data, code and models will be released. The remainder of this paper is organized as follows. Sec. II reviews existing approaches of text-driven localization and OSM-based localization fields. Sec. III introduces the TOL dataset and details its construction process. Sec. IV presents the proposed TOLoc method. Sec. V presents the experimen-tal results, including quantitative and qualitative evaluations across diverse scenes, as well as ablation studies on key components and failure cases analysis. Sec. VI concludes the paper and discusses future directions for T2O localization. II. R ELATED WORK 
+
+A. Text-driven localization 
+
+Text-driven localization aligns with the way humans under-stand spatial positions through language-based interaction [27, 28]. Text2Pos [17] introduces the task of T2P localization and adopts a two-stage paradigm that performs retrieval followed by pose estimation to estimate accurate poses. RET [18] and Text2Loc [19] leverage transformer-based encoders to better align textual and point cloud features. MNCL [29] utilizes multi-level contrastive learning to enhance object boundary perception. CMMLoc [20] incorporates Cauchy Mixture Model priors with integrated cardinal direction cues for more precise fine localization. PMSH [30] identifies po-tential visibility inconsistencies between textual descriptions and point cloud submaps, and introduced an uncertainty-aware partial matching mechanism to mitigate this challenge. VLM-Loc [21] introduces the visual-language model (VLM) as the agent for textual localization in the point cloud submaps. However, constructing and maintaining large-scale point cloud maps is extremely costly, and such maps are difficult to update frequently to reflect real-world changes. JOURNAL OF L ATEX CLASS FILES, VOL. XXX, NO. XXX, XXX XXX 3
+
+GeoText-1652 [31] introduces a T2A localization bench-mark by augmenting the University-1652 dataset [32] with spatially aware textual descriptions generated by LLMs, cap-turing both scene-level and object-level information. Building upon this benchmark, HCCM [33] observes the limitations of relying solely on object-level feature matching and proposes a hierarchical multi-scale feature matching framework for T2A geo-localization. Extending the scope of GeoText-1652, CVG-Text [23] incorporates panoramic imagery and OSM map tiles, while substantially expanding the dataset scale for text-driven geo-localization. MMGeo [34] further advances this line of work by introducing additional data modalities, including depth maps and point clouds, to support multimodal fusion for localization. Despite these advances, aerial or UAV imagery, while more accessible than point cloud maps, is not entirely free to acquire, remains relatively costly to store and process, and is often affected by seasonal and environmental variations. In contrast, OSM is lightweight, freely available, and con-tinuously updated by a global community, making it a more practical foundation for scalable text-based localization. 
+
+B. OSM-based localization 
+
+Most OSM-based localization methods utilize images or point clouds as query data. For image-to-OSM (I2O) local-ization, early work such as OpenStreetSLAM [35] integrates visual odometry with OSM data to reduce drift during ve-hicle motion. Specifically, it extracts road line segments from OSM tiles and incorporates them as geo-referenced constraints within a Monte Carlo Localization (MCL) framework. Sub-sequent methods reformulate I2O localization as a retrieval problem. For example, Samano et al. [36] retrieves the most similar OSM patch from a database given an input image. Zhou et al. [37] extracts deep features from both images and maps and performs sequential localization by modeling these features as visual observations within a probabilistic localization framework. However, these methods often rely on sequential observations or are limited to predefined routes or constrained areas, restricting their applicability in large-scale, open-world scenarios. For I2O localization with single image, OrienterNet [6] proposed the first end-to-end framework for I2O localization. MapLocNet [38] introduces a two-stage pose regression approach for I2O localization, while OSMLoc [39] improves I2O localization by incorporating geometric and semantic guidance. For point cloud-to-OSM (P2O) localization, early ap-proaches [40, 41] focus on extracting road- or building-related features from sequential point clouds and aligning them with OSM data. Building on this line of work, Suger and Burgard [42] extracts semantic features from both point clouds and OSM data and incorporates them into an MCL framework for navigation in unstructured environments. Lee and Ryu [43] integrates a learning-based P2O PR module into a LiDAR–inertial odometry framework, achieving strong localization performance. In parallel, several studies have ex-plored localizing single-scan LiDAR point clouds using OSM data. Cho et al. [44] proposed a hand-crafted cross-modality descriptor by computing shortest distances to surrounding buildings at multiple orientations, which was later improved by Li et al. [45] through the incorporation of directional information. More recently, OPAL [14] introduces a learning-based framework for matching LiDAR scans with OSM tiles, achieving powerful performance. Overall, P2O localization methods rely on dense visual or geometric observations that are difficult for humans to provide in human–machine interac-tion scenarios. In contrast, textual descriptions offer a natural and intuitive way to convey spatial and semantic information, capturing high-level semantics and relational cues that are difficult to represent with images or point clouds, highlighting the importance of T2O localization. To the best of our knowledge, CVG-Text [23] and GOTPR [22] are the only works that explicitly explore the T2O place recognition task. CVG-Text [23] formulates T2O PR problem as a text–map tile retrieval task and learns correspondences between textual descriptions and map tiles through contrastive learning. GOTPR [22] represents both textual descriptions and OSM data as scene graphs and aligns them via GNNs, which generate graph-level representations for matching. In this work, we further investigate the full pipeline of T2O global localization, aiming to achieve meter-level localization beyond coarse place recognition. III. T EXT -TO -OSM LOCALIZATION AND TOL 
+
+> BENCHMARK
+
+A. Task Definition 
+
+This paper studies the T2O localization task. Given a textual description T of a query location, the objective is to estimate its precise 2-DoF position ξ = ( x, y ) within a city-scale OSM map. The description T = {hi}Ni=1 consists of N linguistic hints hi that characterize the semantics and relative directions of surrounding visible objects with respect to ξ. Following the standard global localization paradigm, we tackle this task with a two-stage approach: (1) the place recognition (PR) stage, which retrieves the top-K most similar OSM tiles from the database; and (2) the pose estimation (PE) stage, which refines the localization to estimate the precise 2-DoF position within the retrieved top-1 OSM tile. 
+
+B. TOL benchmark 
+
+To the best of our knowledge, no existing benchmark explicitly supports T2O global localization. GOTPR [22] con-structs a scene-graph-based dataset for T2O PR. However, it is specifically designed for place recognition and lacks the flexibility to support other application settings, and its data construction pipeline is not publicly available. The bench-mark introduced in CVG-Text [23] supports cross-view geo-localization, but currently only provides text-image pairs for retrieval and does not enable meter-level pose estimation. CVG-Text adopts a multi-stage pipeline involving keyword extraction via open-world segmentation, text generation using LLMs, and manual post-inspection for quality assurance. Such a pipeline is inherently complex and labor-intensive, leading to high annotation costs and limited scalability in large-scale scenarios. JOURNAL OF L ATEX CLASS FILES, VOL. XXX, NO. XXX, XXX XXX 4(a) Trajectory of TOL-N set, Boston part.   
+
+> (b) Trajectory of TOL-N set, Singapore part. (c) Trajectory of TOL-K360 set.
+> Fig. 2. Data distribution of TOL dataset. (a) and (b) show Boston and Singapore parts of the TOL-N set, respectively. (c) shows the trajectory of TOL-K360 set in Karsluhe.
+
+To fill this gap, we introduce TOL, a novel large-scale benchmark for T2O global localization. TOL is designed to directly support this task at scale. All map data and textual descriptions in TOL are obtained from the publicly available OSM platform 2 and are generated through a fully automated processing pipeline. Following the vehicle trajectories pro-vided by widely used autonomous driving datasets, namely NuScenes [46] and KITTI-360 [47], we collect city-scale OSM base maps covering urban environments in Singapore, Boston, and Karlsruhe. Based on these maps, we generate tens of thousands of query locations sampled along road networks and associate each location with a corresponding spatially grounded textual description. The resulting data are organized into two subsets, TOL-N and TOL-K360, as illustrated in Fig. 2. In the following, we describe the construction of the TOL benchmark in detail, including the OSM tiles, textual descriptions, and data statistics. 
+
+1) Map construction: Based on the GNSS coordinates of each scene provided by the NuScenes [46] and KITTI-360 [47] datasets, we retrieve OSM base maps from the OSM platform that cover the full spatial extent of the scenes and project them into the local Cartesian coordinate systems. For each keyframe in NuScenes and each frame in KITTI-   
+
+> 2https://www.openstreetmap.org/ Nodes OSM Tile
+> Stack
+> Stack
+> Areas Ways
+> Fig. 3. Illustration rasterized OSM tiles.
+
+360, we crop a H × H meters map tile centered at the corresponding position. All geographic elements of interest listed in Tab. I that fall within the tile are collected and rendered at their corresponding locations. Following previous approaches [6, 14], we categorize the geographic objects into node, way, and area channels, and rasterize each map tile into a 3-channel grid image O ∈ R H    
+
+> ∆×H
+> ∆×3
+
+with a fixed sampling distance ∆, as illustrated in Fig. 3. Using all constructed OSM tiles of each sequence, we build a large-scale OSM database that fully covers the entire vehicle trajectory. In our dataset, the spatial extent of each tile is set to H = 50 with a sampling resolution of ∆ = 0 .25 m/pixel. 
+
+2) Text query construction: For each sampled OSM tile 
+
+O, we determine a text-query position within a square region of side length H 
+
+> 2
+
+around the tile center, and construct a multi-sentence textual description based on the visible objects around the query location and along the four cardinal direc-tions (north, south, west, and east). Due to the sparsity of OSM data, many grid cells are empty, and the query position and its neighborhood may lack valid semantic objects. To improve query discriminability, we select the query position as follows: if there exist grid cells within the square region that contain valid semantic objects, we randomly select one such cell as the query position; otherwise, we uniformly sample a grid cell within the region. Based on the selected query position, we construct atextual description consisting of N = 5 sentences, T =
+
+{Tt, T n, T s, T w, T e}. Here, Tt describes the textual hint around the query position, while the remaining four sentences describe the visible elements in the north, south, west, and east direc-tions. To determine these elements, we define a circular region centered at the query position with a radius of H 
+
+> 2
+
+meters as the maximum visible range, and collect all semantic objects within this region as candidates. Objects within the maximum visible range may still be in-visible due to occlusion caused by foreground structures [48]. In urban environments, foreground structures, particularly buildings, can block the line of sight along a given viewing JOURNAL OF L ATEX CLASS FILES, VOL. XXX, NO. XXX, XXX XXX 5     
+
+> TABLE I DETAILS OF OSM ELEMENTS .
+> Type Element Areas building, parking, playground, grass, park, forest, water Ways Fence, wall, hedge, kerb, cycleway, path, road, busway, tree row Nodes parking entrance, street lamp, junction, traffic signal, stop sign, give way sign, bus stop, stop area, crossing, gate, bollard, gas station, bicycle parking, charging station, shop, restaurant, bar, vending machine, pharmacy, tree, stone, ATM, toilets, water fountain, bench, waste basket, post box, artwork, recycling station, clock, fire hydrant, pole, street cabinet
+
+direction, rendering objects behind them invisible. Inspired by the visibility mask generation in OPAL [14], we treat “building” elements as the primary occluding structures and compute a visibility mask over the maximum visible range. Along each viewing direction, objects located behind “build-ing” elements are considered occluded and are filtered out. To estimate visibility, the circular region centered at the query position is discretized into a polar grid with U radial rings and V angular sectors. The radial and angular resolutions are defined as ∆r = H 
+
+> 2U
+
+and ∆a = 2πV . For each cell (u, v ), the radial distance ru,v and azimuth angle ϕu,v are computed as Eq. (1): 
+
+ru,v = ( u + 0 .5)∆ r , u ∈ { 0, . . . , U − 1},ϕu,v = ( v + 0 .5)∆ α, v ∈ { 0, . . . , V − 1}. (1) Through ray casting along each angular sector, we compute the visibility mask M, where cells located behind the nearest building element are marked as occluded (False), while the remaining cells are marked as visible (True), according to Eq. (2): 
+
+M(u, v ) = 
+
+(
+
+False , u > min( u′) if ∃O (u′, v ) = “building” ,
+
+True , otherwise. (2) Objects contained in the visible cells are then collected to form the visible object set: 
+
+Xvis = {x(u, v ) | M (u, v ) = True }. (3) After obtaining the visible objects Xvis , we group them into the center region and four cardinal directions (“top”, “north”, “south”, “east”, and “west”) based on their relative positions with respect to the query location. For a visible object x ∈ X vis 
+
+contained in the grid cell (u, v ) in the polar coordinate system, the directional assignment follows Eq. (4): direction (u, v ) = 
+
+
+
+top , if ru,v ≤ σ, 
+
+north , if ru,v > σ and − π 
+
+> 4
+
+≤ ϕu,v < π 
+
+> 4
+
+,
+
+east , if ru,v > σ and π 
+
+> 4
+
+≤ ϕu,v < 3π 
+
+> 4
+
+,
+
+south , if ru,v > σ and 3π 
+
+> 4
+
+≤ ϕu,v < 5π 
+
+> 4
+
+,
+
+west , if ru,v > σ and 5π 
+
+> 4
+
+≤ ϕu,v < 7π 
+
+> 4
+
+.
+
+(4) Here, σ is a predefined threshold that separates the center region from the surrounding directional regions. Finally, we construct the textual description by inserting the semantic attributes of objects and their orientations relative to the query position into predefined sentence templates. For the central region around the query position, we generate the sen-tence "The pose is on top of <semantic>." . For each direction, the template takes the form "The pose is <direction> of <semantic>." . If no valid object is found in a given direction, the corresponding <semantic> 
+
+field is filled with None to indicate the absence of objects in that direction. In total, five sentences are generated for each query position to describe its location and the spatial distribution of surrounding objects. In our implementation, 
+
+U, V, σ are set to H 
+
+> 2
+
+, 360 , 3, respectively. 
+
+3) Data statistics: Using the above pipeline, we construct the TOL dataset spanning multiple cities and regions. TOL-N split comprises 34,149 textual queries paired with OSM tiles across four scenes in Singapore and Boston, covering approx-imately 242 km of road trajectories. TOL-K360 split contains 11 sequences in Karlsruhe, yielding 87,108 textual queries and corresponding OSM tiles, and covering approximately 74 km of road trajectories. For training, we use three scenes (30722 text-OSM pairs) from TOL-N, reserving the remaining scene (3427 pairs) for validation. Global generalization is evaluated on each sequence of the TOL-K360 set. IV. M ETHODOLOGY 
+
+To tackle the challenging T2O global localization task, we introduce TOLoc, as illustrated in Fig. 4. TOLoc follows a two-stage localization pipeline. Given a city-scale OSM map database O = {O j }Zj=1 , TOLoc encodes the query textual description T and OSM tiles using a dual image-text encoder, respectively, producing text features and map features. In the place recognition stage (Sec. IV-A), feature map of each OSM tile is divided into five spatial regions, namely “top”, “north”, “south”, “west”, and “east”, according to the spatial distribution of features relative to the query position. Within each region, features are aggregated via mask fusion into a one-dimensional feature vector, and the vector from all regions are concatenated to construct a global map descriptor. Directional textual features are concatenated in a fixed order to form the text descriptor. The text descriptor is compared with all map descriptors in the database, and the top-K map tiles with the highest similarity scores are retrieved. In the subsequent PE stage (Sec. IV-B), the textual features and the top-1 retrieved map features are fed into the TOA module for cross-modal fusion, from which the 2-DoF pose is directly regressed. Sec. IV-C details the two-stage training strategy, end-to-end inference procedure, and loss functions. JOURNAL OF L ATEX CLASS FILES, VOL. XXX, NO. XXX, XXX XXX 6Text description 𝐀      
+
+> 𝐀 𝐀 :The pose is on top of: forest
+> 𝐀 𝐀 :The pose is north of: forest
+> 𝐀 𝐀 :The pose is south of: forest path road
+> 𝐀 𝐀 :The pose is west of: forest
+> 𝐀 𝐀 :The pose is east of: forest path road
+
+𝐀 𝐀 :
+
+OSM database {𝐀 }
+
+…
+
+Similarity 
+
+Map 
+
+Encoder 
+
+Text 
+
+encoder 
+
+𝐀 𝐀 
+
+TOA 𝐀 = ( 𝐀 , 𝐀 )
+
+Top-1 tile 
+
+2. Pose estimation 
+
+1. Place recognition 
+
+𝐀 𝐀 :
+
+> 𝐀 1:
+> 𝐀 2:
+> 𝐀 3:
+> 𝐀 𝐀 :
+
+𝐀 𝐀 1
+
+𝐀 𝐀 2
+
+𝐀 𝐀 3
+
+… …
+
+𝐀 𝐀 𝐀 
+
+𝐀 𝐀 
+
+𝐀 𝐀 
+
+𝐀 𝐀 
+
+𝐀 𝐀 
+
+𝐀 𝐀 
+
+…
+
+𝐀 𝐀 
+
+𝐀 𝐀 
+
+AP & 
+
+Flatten 
+
+SA & Norm CA & Norm 
+
+MLP 
+
+𝐀 𝐀    
+
+> SA Self-attention
+> CA Cross-attention
+> AP Adaptive Pooling
+
+Proj 
+
+TOA               
+
+> Fig. 4. Pipeline of TOLoc. With the query text Tand OSM database O={O j}Zj=1 , TOLoc performs global localization in two stages. Place recognition stage first learns text–map correspondences via contrastive learning. Pose estimation stage then aligns the text descriptor dTwith the features of the top-1 retrieved map tile FOto regress the precise location within the local map. TOA module employs self-attention and cross-attention mechanisms to effectively integrate local OSM features with textual information and estimate the 2-DoF position ξ= ( x, y ).
+
+A. Place recognition 
+
+Goal of the place recognition stage is to narrow the search space by retrieving top-K map tiles that are most similar to the query text, which serve as candidates for the subsequent 2-DoF pose refinement stage. The query text and each map tile are encoded into high-dimensional descriptors, and their similarities are computed for retrieval. Formally, given atextual description T = {ht, h n, h s, h w, h e}, we first encode each hint using the text encoder ET to obtain its feature representation f rt = E t(hr ) ∈ Rd, r ∈ { t, n, s, w, e }. All sentence features are then concatenated and passed through a multi-layer perceptron (MLP) to map them into the designated feature space, producing the final text descriptor dT :
+
+dT = MLP  [f tt; f nt ; f st ; f wt ; f et ; ]  ∈ Rd. (5) On the other hand, for each map tile Oj in the map database, we employ a map encoder EO to extract the feature map F Oj :
+
+F Oj = E O (Oj ), (6) where F Oj ∈ RQ×Q×C denotes a spatial feature map composed of CLIP-style patch tokens. To construct the direction-aware descriptor, each grid cell is assigned a di-rectional label based on its relative position to the query using the polar-coordinate partition in Eq. (4), and local features within each direction are then aggregated to form the descriptor. Based on this, we construct five binary masks M = {M t, M n, M s, M w, M e}, where each mask 
+
+M r ∈ { 0, 1}Q×Q corresponds to a directional region r ∈{t, n, s, w, e }, representing top, north, south, west, and east, respectively. Let (u, v ) denotes the polar coordinates of a grid location (x, y ) in the Cartesian coordinate system, each mask is defined as: 
+
+M r (x, y ) = 
+
+(
+
+1, if direction (u, v ) = r, 
+
+0, otherwise . (7) The directional map feature is then obtained by masked average pooling: 
+
+f r 
+
+> Oj
+
+= 1
+
+P 
+
+> x,y
+
+M r (x, y )
+
+> Q
+
+X
+
+> x=1
+> Q
+
+X
+
+> y=1
+
+M r (x, y ) F Oj (x, y ), (8) 
+
+r ∈ { t, n, s, w, e }, (9) where f r 
+
+> Oj
+
+∈ RC denotes the aggregated feature of the 
+
+r-th directional region. Similar to the text descriptor dT ,we concatenate the map feature together as the final map descriptor dOj :
+
+dOj = MLP  [f t 
+
+> Oj
+
+; f n 
+
+> Oj
+
+; f s 
+
+> Oj
+
+; f w 
+
+> Oj
+
+; f e 
+
+> Oj
+
+] ∈ Rd. (10) Given the extracted query text descriptor dT and the map descriptors dOj , the PR stage computes the cosine similarity between the text descriptor and each map descriptor as 
+
+ST →O j = sim( dT , dOj ), j = 1 , . . . , Z, (11) where sim( ·, ·) denotes the cosine similarity between feature vectors, and ST →O j denotes the similarity score between the query text T and the j-th map tile Oj in the database. The top-K candidate map tiles K are then selected based on their similarity scores: 
+
+K = argmax K
+
+ sim( dT , dOj ) Zj=1 
+
+
+
+, (12) where K represents the set of top-K candidate map tiles for the query text T .As our framework is backbone-agnostic, in our implemen-tation, we adopt CLIP [25] and SigLIP [26], two widely used visual and language learning models as the backbone for extracting image and text features. 
+
+B. Pose estimation 
+
+In the PE stage, the objective is to estimate the 2-DoF position within the top-1 retrieved OSM tile. Unlike the JOURNAL OF L ATEX CLASS FILES, VOL. XXX, NO. XXX, XXX XXX 7
+
+PR stage, which focuses on global reasoning to identify the approximate region of the query text, PE stage exploits fine-grained local structures inside the selected map tile to achieve precise localization. To this end, we employ the TOA module (shown in the last column of Fig. 4) to fuse patch-level local map features with the text descriptor, enabling effective cross-modal fusion and accurate regression of the query position within the tile. 
+
+1) TOA module: The TOA module leverages attention mechanisms to interpret local map features and align them with the textual description. Specifically, given the patch-level map features F O ∈ RQ×Q×C of top-1 candidate map tile and text descriptor dT ∈ Rd, we first project them into a shared 
+
+C-dimensional feature space using MLP layers: 
+
+F ′O = MLP O (F O ), d′T = MLP T (dT ). (13) The projected map features F O′ are flattened into a (Q2) ×
+
+C vector and then fed into a self-attention layer to capture long-range spatial dependencies within the map tile: 
+
+F sa  
+
+> O
+
+= softmax 
+
+ F ′O (F ′O )T
+
+√C
+
+
+
+F ′O . (14) Subsequently, cross-attention fusion is applied between the refined patch features F sa  
+
+> O
+
+and the projected text descriptor d′T
+
+to aggregate local map structures with semantic and directional cues in the text: 
+
+F f = softmax 
+
+ F sa  
+
+> O
+
+(d′T )T
+
+√C
+
+
+
+F sa  
+
+> O
+
+. (15) Finally, the fully fused representation F f ∈ RQ2×C is passed through a projection head to regress the 2-DoF position 
+
+∆t = ( δx, δ y ) ∈ R2 within the map tile. 
+
+C. Two-stage training and end-to-end inference 1) Two-stage training: During training, we adopt a two-stage learning strategy. In the first stage, the PR module is trained to retrieve the map tile that best matches each textual description, establishing global text–map correspondence. In the second stage, the top-1 retrieved tile is fed into the PE module for fine-grained pose estimation, where both modules are jointly optimized to align the textual query with the map tile and regress the 2-DoF pose. 
+
+2) Loss function: For the PR stage, we train the retrieval network using a symmetric cross-entropy loss to maximize the probability of correctly matching each textual description with its corresponding OSM map tile. Given a batch of B
+
+paired samples {(Tk, Ol)}Bk,l =1 , we first compute the similarity matrix S ∈ RB×B between the text and map descriptors as in Eq. (11). Symmetric matching probabilities for both text-to-map and map-to-text directions are defined as: 
+
+PTk →O l = exp( Skl /τ )
+
+> B
+
+P
+
+> l=1
+
+exp( Skl /τ )
+
+,POl→T k = exp( Slk /τ )
+
+> B
+
+P
+
+> k=1
+
+exp( Slk /τ )
+
+,
+
+(16) where τ is a temperature hyperparameter. The PR objective maximizes the matching probability of the ground-truth (GT) text–map pairs in both directions, leading to the following loss: 
+
+LPR = Lt→m + Lm→t, (17) 
+
+Lt→m = − 1
+
+B
+
+> B
+
+X
+
+> j=1
+
+log PTj →O j ,
+
+Lm→t = − 1
+
+B
+
+> B
+
+X
+
+> k=1
+
+log POk →T k .
+
+(18) In the PE stage, the model estimates a 2-DoF position 
+
+∆t = ( δx, δ y ) relative to the coordinates of top-1 candidate map ξtop-1  
+
+> O
+
+= ( xO , y O ) of the top-1 retrieved map tile. The final predicted position in the Cartesian coordinate system is given by: 
+
+ξ = ξtop-1  
+
+> O
+
++ ∆ t. (19) The pose estimation loss is defined as an L1 loss between the predicted and GT position: 
+
+LPE = 1
+
+PBk=1 IkBX
+
+> k=1
+
+Ik ˆξk − ξk 1
+
+, (20) where δk and ˆδk denote the predicted and GT 2-DoF position of the k-th text query in the corresponding top-1 map tile, respectively. The binary indicator Ik ∈ { 0, 1} is defined as a validity mask: 
+
+Ik =
+
+(1, if ξtop-1  
+
+> Ok
+
+− ˆξk 1
+
+< ϵ, 
+
+0, otherwise . (21) Only samples with Ik = 1 , i.e., those for which the Euclidean distance between the retrieved top-1 tile and GT query position is smaller than a predefined threshold ϵ, are used to train the PE module. 
+
+3) End-to-end inference: TOLoc performs inference in an end-to-end manner. In the PR stage, the textual query and all OSM map tiles are encoded by the text and map encoders, respectively. For each map tile, both global descriptors and patch-level features are precomputed and stored. The similarity between the query text descriptor and each map descriptor is computed using Eq. (11), and the top-K tiles with the highest similarity scores are selected. In the subsequent PE stage, the patch-level features of the top-1 retrieved tile are fused with the text descriptor via the TOA module. The PE module predicts a 2-DoF position relative to the center of the top-1 retrieved map tile, and the global position is obtained accordingly, as defined in Eq. (19). V. E XPERIMENTS 
+
+A. Experimental setup 1) Dataset setup: All experiments are conducted on the TOL benchmark, comprising two subsets: TOL-N and TOL-K360 (see Sec. III for details). Both baseline methods and our approach are trained on TOL-N and evaluated on its validation set, with generalization further assessed on TOL-K360. JOURNAL OF L ATEX CLASS FILES, VOL. XXX, NO. XXX, XXX XXX 8
+
+2) Implementation details: We adopt CLIP [25] and SigLIP [26] as the dual text and OSM feature extraction backbones. For CLIP, we use the ViT-based [49] variants, “ViT-B/16” and “ViT-B/32” variants. Here “B” denotes the base model and “16”/“32” indicates the patch size. Smaller patch sizes yield finer-grained visual representations. We de-note the corresponding variants as “TOL-C-B16” and “TOL-C-B32”. For SigLIP, we adopt “SigLIP-base-Patch16-224” and “SigLIP-base-Patch16-384” variants, where “base” de-notes the model size, “Patch16” specifies the patch size, and “224”/“384” indicate the input resolutions. Higher resolutions enable capturing more detailed local structures at the cost of increased computation. These variants are denoted as “TOL-S-B224” and “TOL-S-B384”, respectively. We initialize our model with pretrained weights from the official implementation, and then fine-tune it on the proposed TOL dataset for T2O localization. We first train the PR module for 20 epochs to retrieve the Top-K tiles that most similar to the query text. After that, the entire pipeline is jointly optimized for an additional 20 epochs, enabling the PE module to regress the 2-DoF position. We use the Adam [50] optimizer with the learning rate of 1 × 10 −5 and batch size of 64. All experiments are conducted on a server equipped with two NVIDIA RTX 4090 GPUs. Additional implementation details are available in our open-source code. 
+
+B. Evaluation of place recognition 1) Metrics: For place recognition evaluation, we report recall@K under a revisit threshold η, where a query is consid-ered correctly retrieved if at least one of the top-K retrieved OSM tiles lies within η meters of the ground truth. We evaluate R@ K for K ∈ { 1, 5, 10 } with η ∈ { 10 , 25 }.
+
+2) Baselines: Two recent T2O PR methods, GOTPR [22] and CrossText2Loc of CVG-Text [23] (refered as CT2Loc in the following), are adopted as baselines. For fair comparison, both methods are trained using their official implementations, except that we set the batch size to 64 during training to match our configuration.  
+
+> •
+
+GOTPR [22]: is a scene-graph-based T2O place recog-nition method that models objects, their attributes, and pairwise spatial relationships from textual descriptions and OSM maps. A GNN is applied to generate scene-level descriptors for retrieval. Since the scene graph construction code is not publicly available, we reproduce the process based on the methodology described in the original paper and apply it to our TOL dataset under the observer-centric setting.  
+
+> •
+
+CT2Loc [23]: is most closely related to our method, as it adopts a contrastive learning framework to model the correspondence between complex textual descriptions and satellite images or OSM tiles. In our implementation, multiple hint sentences within each query are concate-nated into a single paragraph as input. 
+
+3) Results: As shown in Tab. II, our method achieves substantial improvements over existing approaches on the T2O place recognition task. GOTPR shows relatively limited performance, which may be attributed to its simple GNN architecture and limited capacity to encode complex scene objects and spatial configurations in challenging environments. Moreover, the place recognition module of TOLoc consistently outperforms that of CT2Loc, even when both methods adopt the same CLIP backbone. This indicates that sentence-wise encoding of directional text, combined with direction-aware feature matching, yields more discriminative representations for T2O place recognition. For CLIP-based backbones, “CLIP-B16” variant outperforms “CLIP-B32”, which can be at-tributed to its smaller patch size and the resulting higher spatial resolution. This is crucial for T2O place recognition, as larger patches tend to lose fine-grained spatial details required for accurate reasoning over local object arrangements and spatial relationships. A similar trend is observed for SigLIP-based backbones, where “SigLIP-384” consistently outperforms “SigLIP-224”, mainly due to the higher input resolution that preserves finer spatial details. Overall, SigLIP-based variants achieve slightly better performance than CLIP-based ones, reaching SoTA results. We attribute this to the stronger pretrained representations of SigLIP, which provide informative priors for T2O PR task. 
+
+4) Generalization: Results in Tab. III demonstrate that both our method and the baselines achieve robust performance, indicating strong generalization in semantic- and topology-based T2O PR task. Notably, models trained on data from limited geographic regions generalize well to entirely unseen cities located thousands of kilometers away. Our method consistently outperforms all baselines across all sequences, highlighting its superior accuracy and generalization. Fig. 5 further shows the recall curves of top-K candidates under 
+
+η = 25 meters, where our method consistently achieves higher recall across different values of K.
+
+C. Evaluation of global localization 1) Metrics: For global localization, we regress the local 2-DoF coordinates within the retrieved top-1 OSM map tile. We evaluate the performance using two metrics: success rate (SR) and localization error (LE). SR represents the percentage of queries with localization error smaller than predefined thresholds of 5, 10, and 25 meters. LE reports the 5%, 10%, and 25% of the localization error over the test set. 
+
+2) Baselines: To the best of our knowledge, our work is the first to investigate pose estimation from textual descriptions to OSM maps. Accordingly, we design two baseline variants for the PE stage to evaluate different localization strategies:  
+
+> •
+
+CLS.: Text descriptor and map features from the PR stage are matched in a token-wise manner to generate a similarity heatmap, which is then used to estimate a spatial probability distribution over the map. In our implementation, the model predicts a 7 × 7 heatmap for each map tile in the “TOL-C-B32” variant, and is trained to maximize the likelihood of the ground-truth cell.  
+
+> •
+
+MLP.: Text and map descriptors from the PR stage are concatenated and passed to an MLP to regress the 2-DoF position. For GOTPR and CT2Loc, which are originally designed for place recognition, we use the center pixel coordinates of the JOURNAL OF L ATEX CLASS FILES, VOL. XXX, NO. XXX, XXX XXX 9  
+
+> TABLE II PLACE RECOGNITION RESULTS ON TOL OC -N SET .
+
+Method Backbone η = 25 m η = 10 mR@1 R@5 R@10 R@1 R@5 R@10 GOTPR GNN 11.53 22.91 29.91 6.39 14.36 18.91 CVG-Text CLIP-B32 13.92 31.28 38.87 6.77 17.60 24.31 CLIP-B16 18.24 35.34 44.50 8.75 20.02 27.63 TOL(Ours) CLIP-B32 24.80 37.61 45.00 12.11 23.78 28.95 CLIP-B16 26.29 40.06 45.93 15.87 26.79 32.21 SigLIP-224 26.76 40.44 46.60 14.15 27.11 32.62 SigLIP-384 27.60 39.33 47.86 17.25 27.52 32.68        
+
+> TABLE III GENERALIZATION OF PLACE RECOGNITION PERFORMANCE (R@1 UNDER 25 M THRESHOLD )ON THE TOL OC -K360 SET .
+
+Method Backbone 00 02 03 04 05 06 07 08 09 10 18 GOTPR GNN 2.11 4.16 30.20 4.94 9.28 5.21 12.91 7.04 4.33 11.27 7.60 CVG-Text CLIP-B32 4.54 5.64 30.79 5.75 11.60 7.62 9.41 10.56 6.33 12.79 13.19 CLIP-B16 6.21 5.46 32.28 6.81 12.00 7.52 9.00 12.66 10.77 15.43 12.87 TOL(Ours) CLIP-B32 6.22 7.86 31.98 9.44 13.43 10.53 14.01 12.11 11.07 21.81 19.44 CLIP-B16 10.12 9.84 36.63 10.22 13.81 11.28 16.99 17.26 11.91 23.93 16.67 SigLIP-224 13.26 9.83 35.35 10.41 14.37 11.04 16.44 16.19 13.92 26.07 20.01 
+
+SigLIP-384 9.81 11.15 40.69 12.72 15.29 11.64 17.47 17.68 14.19 25.88 19.55 “00” denotes the 00 sequence of the TOLoc-K360 set, and the other sequences follow the same naming convention.   
+
+> Fig. 5. Recall curve @25m threshold of top-Kcandidates on TOLoc-N and TOLoc-K360 sets.
+
+top-1 retrieved OSM map tile as the predicted position and report the corresponding localization accuracy. 
+
+3) Results: Tab. IV reports the localization results of our framework and its variants. All PR methods, including TOLoc using only the PR module, exhibit limited localization accu-racy and relatively large localization errors, indicating that the PR module alone is insufficient for high-precision localization. Among the variants that incorporate the PE module, the CLS. variant directly predicts a spatial probability distribution from the fused features. However, it struggles to model the correspondence between textual descriptions and their precise locations on the map, leading to a degenerate solution that predicts the map center for most samples. This results in poor localization accuracy under strict 5/10 meters thresholds. This observation suggests that directly predicting a fine-grained spatial distribution from the descriptors is highly challenging, as the model lacks an explicit mechanism to align textual cues with the corresponding local map regions. The MLP. variant achieves comparatively better performance and is able to regress reasonable positional offsets in several scenes. Finally, the full model with the proposed TOA module achieves the best overall performance across all metrics. 
+
+4) Generalization: As shown in Tab. V, all baseline meth-ods trained on the TOLoc-N set, together with our proposed TOL approach, are directly transferred to the TOLoc-K360 set to evaluate their generalization performance. For PR methods JOURNAL OF L ATEX CLASS FILES, VOL. XXX, NO. XXX, XXX XXX 10 GT Localization Top-1 Top-2 Top-3 Text Query 
+
+> TOLoc -N  TOLoc-K360
+
+The pose is on top of: park 
+
+The pose is north of: building parking grass path road 
+
+The pose is south of: parking grass park path road 
+
+The pose is west of: building parking park path road 
+
+The pose is east of: parking grass park path road 5.31 
+
+The pose is on top of: building 
+
+The pose is north of: building road 
+
+The pose is south of: building 
+
+The pose is west of: building 
+
+The pose is east of: building 
+
+744.50 5.16 
+
+The pose is on top of: path 
+
+The pose is north of: building path road 
+
+The pose is south of: building path road 
+
+The pose is west of: building path road crossing 
+
+The pose is east of: building grass fence path road 11.18 
+
+The pose is on top of: path 
+
+The pose is north of: path road 
+
+The pose is south of: path road 
+
+The pose is west of: path road crossing 
+
+The pose is east of: None 5.57 
+
+The pose is on top of: building 
+
+The pose is north of: building 
+
+The pose is south of: building path road crossing 
+
+The pose is west of: building 
+
+The pose is east of: building road 7.55 
+
+The pose is on top of: road 
+
+The pose is north of: building path road 
+
+The pose is south of: path road 
+
+The pose is west of: building path 
+
+The pose is east of: path road crossing 1327.44 3.73 
+
+The pose is on top of: grass 
+
+The pose is north of: grass park path road tree lamp 
+
+The pose is south of: building grass park path tree 
+
+The pose is west of: grass path road tree 
+
+The pose is east of: building grass park path road 6.58 
+
+The pose is on top of: road 
+
+The pose is north of: path 
+
+The pose is south of: path 
+
+The pose is west of: building path road 
+
+The pose is east of: path road 7.86 14.66 15.02 14.58 
+
+10.20 9.90 10.49 
+
+6.21 1.71 
+
+16.71 15.43 16.01 
+
+12.45 13.54 11.77 
+
+13.09 746.18 
+
+15.30 15.76 15.53 
+
+9.97 10.21 10.51 
+
+Fig. 6. Qualitative place recognition and localization results of our method on the TOL dataset. Column 1 shows the query text. Column 2 shows the GT map tiles. Columns 3–5 show retrieval results, and last column shows the localization results. For columns 3-5, green boxes indicate correct retrievals ( error ≤ 25 m) and red boxes indicate failures. For columns 2 and 6, black dots • denote GT query locations and red dots • denote the estimated positions. Retrieval/Localization error (in meters) is reported in the lower-left corner of each sample. 
+
+without a fine-grained localization module, the center pixel coordinates of the top-1 retrieved OSM tile are used as the final localization results. Experimental results suggest that achieving meter-level ac-curate T2O localization in previously unseen scenes remains highly challenging. Interestingly, GOTPR demonstrates rel-atively strong generalization ability in the cross-city gener-alization experiments on TOLoc-K360. We hypothesize that this behavior can be attributed to the explicit injection of map topology and semantic information into the scene graph, which JOURNAL OF L ATEX CLASS FILES, VOL. XXX, NO. XXX, XXX XXX 11                                                                                               
+
+> TABLE IV LOCALIZATION RESULTS ON TOL OC -N SET .Method PE SR ↑LE ↓
+> @5m @10m @25m @5% @10% @25%
+> GOTPR ×2.42 6.39 11.53 8.42 17.97 178.03 CT2Loc-B32 ×2.16 7.32 15.35 8.67 13.51 111.95 CT2Loc-B16 ×2.19 8.75 18.23 7.17 11.02 76.67 TOL-C-B32 ×3.74 12.11 24.80 5.99 8.62 26.16 TOL-C-B16 ×5.19 15.87 26.29 4.94 6.92 19.40 TOL-S-B224 ×4.76 14.15 26.76 5.14 7.88 20.29 TOL-S-B384 ×6.22 17.25 27.60 4.50 6.97 17.25 TOL-C-B32 CLS. 3.36 11.79 21.97 6.19 9.02 46.54 MLP. 7.00 13.74 21.59 4.26 6.84 45.85 TOA 7.21 17.01 24.63 4.07 6.58 26.44 TOL-C-B16 TOA 8.72 18.68 26.55 3.51 5.38 18.53 TOL-S-B224 TOA 6.42 17.30 26.82 4.35 6.56 18.59 TOL-S-B384 TOA 6.83 18.65 28.10 4.30 6.43 15.75
+
+may improve robustness when transferring across different en-vironments. Nevertheless, by incorporating the proposed TOA module for fine-grained localization, the full version of our TOL method achieves a substantial performance improvement and consistently outperforms all baseline approaches. Fig. 6 presents qualitative results of place recognition and global localization of our method on the TOL dataset. 
+
+D. Discussion 
+
+In this section, we conduct ablation studies and analyze failure cases on the TOLoc-N split to evaluate the impact of the TOL model design on place recognition and localization accuracy. “TOL-C-B32” variant is selected as the baseline in this subsection. 
+
+1) Text offset: Since the text query position does not coincide with center of the GT OSM tile, a spatial offset is introduced, leading to a mismatch between the textual description and the GT map tile. This bias can significantly affect place recognition performance. Therefore, we analyze the impact of the distance between the query position and the center of the GT tile, with results reported in Tab. VI. As expected, increasing the perturbation range leads to greater inconsistency between the textual description and the map, resulting in a gradual decline in retrieval accuracy. 
+
+2) Text fusion order: Since multiple textual descriptions are fused at the feature level, the resulting representation may depend on the fusion order. To investigate this effect, we vary the ordering of textual description features during fusion, and report the results in Tab. VII. The experimental results indicate that different ordering strategies have a negligible impact on the overall performance, as the PR recall remains largely consistent across permutations. Based on these observations, we adopt the “TNSWE” ordering for feature fusion, as it yields the highest top-1 recall among all text orderings. 
+
+3) Runtime Performance: Tab. VIII reports the number of parameters, computational cost, and runtime performance of TOL-C-B32 variant of our proposed method. All performance evaluations are conducted on a desktop equipped with an NVIDIA GeForce RTX 4090 GPU and an Intel Core i9-Text query GT tile Top-1 Tile  
+
+> The pose is on top of: path
+> The pose is north of: building path road
+> The pose is south of: building path bus_stop
+> The pose is west of: building path road
+> The pose is east of: building
+
+(a) 
+
+> The pose is on top of: path
+> The pose is north of: path road
+> The pose is south of: road
+> The pose is west of: path road crossing
+> The pose is east of: path road crossing
+
+(b)     
+
+> 13.9
+> 7
+> 849.54
+> 9.58 391.15
+> Fig. 7. Failure cases of place recognition stage. black dots •denote GT query locations. Place recognition errors (in meters) are shown in the lower-left corner.
+
+Text query Top-1 tile 
+
+(a) 
+
+(b) 
+
+The pose is on top of: path 
+
+The pose is north of: path road 
+
+The pose is south of: path road traffic_signal 
+
+The pose is west of: path road crossing traffic_signal 
+
+The pose is east of: path 11.70/17.25 
+
+The pose is on top of: park 
+
+The pose is north of: playground park path 
+
+The pose is south of: building park path road 
+
+The pose is west of: playground park path road 
+
+The pose is east of: park path 1.54/5.38      
+
+> Fig. 8. Failure cases of pose estimation stage. black dots •denote GT query locations and red dots •denote the estimated positions. Place recognition and localization errors (in meters) are shown in the lower-left corner, in the order of place recognition error followed by localization error.
+
+13900K CPU, with the computational cost and model pa-rameters measured using the fvcore profiling library. The majority of model parameters and computational cost are concentrated in the PR module, which is responsible for con-structing feature representations of both OSM map tiles and textual descriptions. Despite this, encoding a single image–text feature pair takes approximately 70 ms, enabling descriptor construction at over 14 FPS. The subsequent PE module is lightweight, requiring only 2.80 ms per inference for feature alignment and offset prediction. 
+
+4) Failure cases: Although our method achieves significant improvements over the baselines in both place recognition and global localization, it still has several limitations. It may strug-gle in scenes lacking distinctive landmarks, with ambiguous textual descriptions, or under high spatial uncertainty, where identifying the correct map tile and accurately regressing the pose becomes challenging. As shown in Fig. 7(a), although the GT OSM tile and the retrieved top-1 tile appear to be substantially different, both are consistent with the given textual description. This ambiguity arises from the combined effects of sparse map rep-JOURNAL OF L ATEX CLASS FILES, VOL. XXX, NO. XXX, XXX XXX 12      
+
+> TABLE V GENERALIZATION PERFORMANCE OF GLOBAL LOCALIZATION ON THE TOL OC -K360 S ET @10 M THRESHOLD .
+
+Method PE Seq 00 Seq 02 Seq 03 Seq 04 Seq 05 Seq 06 Seq 07 Seq 08 Seq 09 Seq 10 Seq 18 GOTPR ×0.88 2.57 15.45 2.26 4.12 2.41 7.13 2.77 1.54 4.60 2.51 CT2Loc-C-B32 1.32 2.86 12.87 2.15 4.80 3.35 3.74 4.70 2.12 5.09 4.15 CT2Loc-C-B16 2.33 2.51 15.25 2.67 4.59 3.15 3.36 5.40 3.40 5.22 4.12 TOL-C-B32 2.37 4.46 13.86 3.97 4.16 5.86 5.71 6.16 4.40 8.23 7.49 TOL-C-B16 4.20 5.96 18.91 4.86 6.18 7.01 7.96 9.70 4.64 9.48 6.13 TOL-S-B224 6.42 6.02 20.30 5.17 6.85 7.07 7.20 9.41 6.56 12.69 7.17 TOL-S-B384 3.99 9.08 22.38 6.55 8.09 6.95 7.22 10.30 6.21 11.34 7.95 TOL-C-B32 
+
+✓
+
+2.63 5.04 19.41 5.36 7.30 6.32 8.03 8.26 6.61 12.76 12.09 
+
+TOL-C-B16 5.50 6.45 22.97 6.13 9.38 8.35 8.30 11.61 7.26 14.84 9.42 TOL-S-B224 7.41 6.87 20.50 6.31 8.50 7.82 8.20 11.06 9.19 16.09 11.46 TOL-S-B384 4.46 7.49 26.73 7.95 10.00 8.07 9.52 12.16 10.89 13.62 8.93     
+
+> TABLE VI ABLATION STUDY ON TEXT OFFSET RANGE ON THE TOL OC -N SPLIT .RECALL @1,5,10 IS REPORTED UNDER 25 M THRESHOLD .
+
+Text offset R@1 R@5 R@10 1/12S 53.55 73.33 82.29 1/6S 40.53 60.23 70.06 1/3S 28.83 49.75 59.94 1/2S 21.59 36.10 43.92 Text offset: displacement between the textual query position and center of the ground-truth map tile.     
+
+> TABLE VII ABLATION STUDY ON TEXT OFFSET RANGE ON TOL OC -N SPLIT .RECALL @1,5,10 IS REPORTED UNDER 25 M THRESHOLD .
+
+Text order R@1 R@5 R@10 NESWT 21.45 33.91 42.69 TNESW 20.72 36.77 43.82 TNWSE 18.12 35.80 42.82 TNSWE 21.59 36.10 43.92 
+
+resentations and underspecified textual descriptions. Fig. 7(b) shows another failure case, where the network retrieves a geographically distant tile that closely resembles the ground-truth tile in semantic layout, resulting in a hard negative. This is mainly due to regions with simple OSM object distributions and lack of distinctive landmarks. For pose estimation, even when the PR module successfully retrieves a nearby map tile, localization errors may still occur. As illustrated in Fig. 8(a), ambiguous semantic descriptions may correspond to multiple plausible locations on the map, making them difficult for the model to distinguish. In Fig. 8(b), the described location lies within a large park area, where a relatively broad region satisfies the textual description. In such cases, the lack of fine-grained discriminative cues prevents the model from precisely identifying the exact position referred to by the textual description. VI. C ONCLUSION 
+
+In this work, we formulate the text-to-OSM global localiza-tion task and introduce TOL, a large-scale benchmark specifi-
+
+> TABLE VIII RUNTIME PERFORMANCE ANALYSIS .
+
+Module Param. Com. Run. PR Text encoder 64.74M 14.52G 52.35 Map encoder 91.39M 4.54G 18.01 PE 19.94M 0.36G 2.80 Total 176.07M 19.42G 73.16 Param.: Number of parameters. Com.: computational complexity. Run.: runtime (ms). 
+
+cally designed for this problem. TOL provides approximately 121K textual descriptions paired with OSM map data across diverse regions, enabling systematic evaluation of text-based global localization. To address this task, we further propose TOLoc, a two-stage localization framework that follows a coarse-to-fine paradigm, combining text–map place recogni-tion with fine-grained pose estimation through cross-modal alignment. Experimental results show that TOLoc achieves accurate localization and strong generalization, outperforming baseline methods by a large margin. We hope our work could benefit related communities. In future work, we will explore improving localization accu-racy and reliability through sequential or dialog-based textual interactions, as well as extending text-driven localization from passive estimation to active decision-making in navigation scenarios. REFERENCES 
+
+[1] H. Chen, Z. Qi, and Z. Shi, “Remote sensing image change detection with transformers,” IEEE Transactions on Geoscience and Remote Sensing , vol. 60, pp. 1–14, 2021. [2] G. Hu, Z. Wen, Y. Lv, J. Zhang, and Q. Wu, “Global– local information soft-alignment for cross-modal remote-sensing image–text retrieval,” IEEE Transactions on Geo-science and Remote Sensing , vol. 62, pp. 1–15, 2024. [3] J. Li, H. Wang, J. Chen, Y. Liu, Z. Dou, Y. Ma, S. Yang, Y. Li, W. Wang, Z. Dong et al. , “Cityanchor: City-scale 3d visual grounding with multi-modality llms.” in ICLR ,2025. JOURNAL OF L ATEX CLASS FILES, VOL. XXX, NO. XXX, XXX XXX 13 
+
+[4] M. Denis, “The description of routes: A cognitive ap-proach to the production of spatial discourse,” Current psychology of cognition , vol. 16, pp. 409–458, 1997. [5] K. L. Lovelace, M. Hegarty, and D. R. Montello, “Ele-ments of good route directions in familiar and unfamiliar environments,” in International conference on spatial information theory . Springer, 1999, pp. 65–82. [6] P.-E. Sarlin, D. DeTone, T.-Y. Yang, A. Avetisyan, J. Straub, T. Malisiewicz, S. R. Bulo, R. Newcombe, P. Kontschieder, and V. Balntas, “Orienternet: Visual localization in 2d public maps with neural matching,” in 
+
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2023, pp. 21 632–21 642. [7] J. Li, X. Xu, Z. Liu, S. Yuan, M. Cao, and L. Xie, “Aeos: Active environment-aware optimal scanning control for uav lidar-inertial odometry in complex scenes,” ISPRS Journal of Photogrammetry and Remote Sensing , vol. 232, pp. 476–491, 2026. [8] J. L. Sch¨ onberger, M. Pollefeys, A. Geiger, and T. Sat-tler, “Semantic visual localization,” in Proceedings of the IEEE conference on computer vision and pattern recognition , 2018, pp. 6896–6906. [9] S. Hausler, S. Garg, M. Xu, M. Milford, and T. Fischer, “Patch-netvlad: Multi-scale fusion of locally-global de-scriptors for place recognition,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 2021, pp. 14 141–14 152. [10] P. Yin, I. Cisneros, S. Zhao, J. Zhang, H. Choset, and S. Scherer, “isimloc: Visual global localization for previously unseen environments with simulated images,” 
+
+IEEE Transactions on Robotics , vol. 39, no. 3, pp. 1893– 1909, 2023. [11] Y. Li, J. Li, Z. Dong, Y. Wang, and B. Yang, “Salien-cyi2ploc: Saliency-guided image–point cloud localization using contrastive learning,” Information Fusion , vol. 118, p. 103015, 2025. [12] S. Lu, X. Xu, D. Zhang, Y. Wu, H. Lu, X. Chen, R. Xiong, and Y. Wang, “Ring#: Pr-by-pe global local-ization with roto-translation equivariant gram learning,” 
+
+IEEE Transactions on Robotics , 2025. [13] L. Luo, S.-Y. Cao, X. Li, J. Xu, R. Ai, Z. Yu, and X. Chen, “Bevplace++: Fast, robust, and lightweight lidar global localization for unmanned ground vehicles,” IEEE Transactions on Robotics , 2025. [14] S. Kang, M. Y. Liao, Y. Xia, O. Wysocki, B. Jutzi, and D. Cremers, “Opal: Visibility-aware lidar-to-openstreetmap place recognition via adaptive radial fu-sion,” arXiv preprint arXiv:2504.19258 , 2025. [15] J. Li, S. Yuan, M. Cao, T.-M. Nguyen, K. Cao, and L. Xie, “Hcto: Optimality-aware lidar inertial odome-try with hybrid continuous time optimization for com-pact wearable mapping system,” ISPRS Journal of Pho-togrammetry and Remote Sensing , vol. 211, pp. 228–243, 2024. [16] J. Li, W. Wu, B. Yang, X. Zou, Y. Yang, X. Zhao, and Z. Dong, “Whu-helmet: A helmet-based multisensor slam dataset for the evaluation of real-time 3-d mapping in large-scale gnss-denied environments,” IEEE Trans-actions on Geoscience and Remote Sensing , vol. 61, pp. 1–16, 2023. [17] M. Kolmet, Q. Zhou, A. Oˇ sep, and L. Leal-Taix´ e, “Text2pos: Text-to-point-cloud cross-modal localization,” in Proceedings of the IEEE/CVF Conference on Com-puter Vision and Pattern Recognition , 2022, pp. 6687– 6696. [18] G. Wang, H. Fan, and M. Kankanhalli, “Text to point cloud localization with relation-enhanced transformer,” in Proceedings of the AAAI Conference on Artificial Intelligence , vol. 37, no. 2, 2023, pp. 2501–2509. [19] Y. Xia, L. Shi, Z. Ding, J. F. Henriques, and D. Cre-mers, “Text2loc: 3d point cloud localization from natural language,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 2024, pp. 14 958–14 967. [20] Y. Xu, H. Qu, J. Liu, W. Zhang, and X. Yang, “Cmmloc: Advancing text-to-pointcloud localization with cauchy-mixture-model based framework,” in Proceedings of the Computer Vision and Pattern Recognition Conference ,2025, pp. 6637–6647. [21] S. Kang, Y. Liao, P. Wang, W. Liao, Q. Zhang, B. Busam, X. Chen, and Y. Liu, “Vlm-loc: Localization in point cloud maps via vision-language models,” arXiv preprint arXiv:2603.09826 , 2026. [22] D. Jung, K. Kim, and S.-W. Kim, “Gotpr: General outdoor text-based place recognition using scene graph retrieval with openstreetmap,” IEEE Robotics and Au-tomation Letters , 2025. [23] J. Ye, H. Lin, L. Ou, D. Chen, Z. Wang, Q. Zhu, C. He, and W. Li, “Where am i? cross-view geo-localization with natural language descriptions,” in Proceedings of the IEEE/CVF International Conference on Computer Vision , 2025, pp. 5890–5900. [24] A. Hurst, A. Lerer, A. P. Goucher, A. Perelman, A. Ramesh, A. Clark, A. Ostrow, A. Welihinda, A. Hayes, A. Radford et al. , “Gpt-4o system card,” arXiv preprint arXiv:2410.21276 , 2024. [25] A. Radford, J. W. Kim, C. Hallacy, A. Ramesh, G. Goh, S. Agarwal, G. Sastry, A. Askell, P. Mishkin, J. Clark 
+
+et al. , “Learning transferable visual models from natural language supervision,” in International conference on machine learning . PmLR, 2021, pp. 8748–8763. [26] X. Zhai, B. Mustafa, A. Kolesnikov, and L. Beyer, “Sigmoid loss for language image pre-training,” in Pro-ceedings of the IEEE/CVF international conference on computer vision , 2023, pp. 11 975–11 986. [27] M. Hahn, J. Krantz, D. Batra, D. Parikh, J. Rehg, S. Lee, and P. Anderson, “Where are you? localization from embodied dialog,” in Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP) , 2020, pp. 806–822. [28] C. Zhang, M. Li, I. Budvytis, and S. Liwicki, “Dialoc: An iterative approach to embodied dialog localization,” in 
+
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2024, pp. 12 585–12 593. [29] D. Liu, S. Huang, W. Li, S. Shen, and C. Wang, “Text to point cloud localization with multi-level negative con-JOURNAL OF L ATEX CLASS FILES, VOL. XXX, NO. XXX, XXX XXX 14 
+
+trastive learning,” in Proceedings of the AAAI Conference on Artificial Intelligence , vol. 39, no. 5, 2025, pp. 5397– 5405. [30] M. Feng, L. Mei, Z. Wu, J. Luo, F. Tian, J. Feng, W. Dong, and Y. Wang, “Partially matching submap helps: Uncertainty modeling and propagation for text to point cloud localization,” in Proceedings of the IEEE/CVF International Conference on Computer Vi-sion , 2025, pp. 8296–8305. [31] M. Chu, Z. Zheng, W. Ji, T. Wang, and T.-S. Chua, “Towards natural language-guided drones: Geotext-1652 benchmark with spatial relation matching,” in European Conference on Computer Vision . Springer, 2024, pp. 213–231. [32] Z. Zheng, Y. Wei, and Y. Yang, “University-1652: A multi-view multi-source benchmark for drone-based geo-localization,” in Proceedings of the 28th ACM interna-tional conference on Multimedia , 2020, pp. 1395–1403. [33] H. Ruan, J. Lin, Y. Lai, Z. Luo, and S. Li, “Hccm: Hierarchical cross-granularity contrastive and matching learning for natural language-guided drones,” in Pro-ceedings of the 33rd ACM International Conference on Multimedia , 2025, pp. 4524–4533. [34] Y. Ji, B. He, Z. Tan, and L. Wu, “Mmgeo: Multimodal compositional geo-localization for uavs,” in Proceedings of the IEEE/CVF International Conference on Computer Vision , 2025, pp. 25 165–25 175. [35] G. Floros, B. Van Der Zander, and B. Leibe, “Openstreet-slam: Global vehicle localization using openstreetmaps,” in 2013 IEEE international conference on robotics and automation . IEEE, 2013, pp. 1054–1059. [36] N. Samano, M. Zhou, and A. Calway, “You are here: Geolocation by embedding maps and images,” in Euro-pean Conference on Computer Vision . Springer, 2020, pp. 502–518. [37] M. Zhou, X. Chen, N. Samano, C. Stachniss, and A. Calway, “Efficient localisation using images and open-streetmaps,” in 2021 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) . IEEE, 2021, pp. 5507–5513. [38] H. Wu, Z. Zhang, S. Lin, X. Mu, Q. Zhao, M. Yang, and T. Qin, “Maplocnet: Coarse-to-fine feature registration for visual re-localization in navigation maps,” in 2024 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) . IEEE, 2024, pp. 13 198–13 205. [39] Y. Liao, X. Chen, S. Kang, J. Li, Z. Dong, H. Fan, and B. Yang, “Osmloc: Single image-based visual localiza-tion in openstreetmap with fused geometric and semantic guidance,” arXiv preprint arXiv:2411.08665 , 2024. [40] P. Ruchti, B. Steder, M. Ruhnke, and W. Burgard, “Local-ization on openstreetmap data using a 3d laser scanner,” in 2015 IEEE international conference on robotics and automation (ICRA) . IEEE, 2015, pp. 5260–5265. [41] O. Vysotska and C. Stachniss, “Exploiting building in-formation from publicly available maps in graph-based slam,” in 2016 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) . IEEE, 2016, pp. 4511–4516. [42] B. Suger and W. Burgard, “Global outer-urban navigation with openstreetmap,” in 2017 IEEE International Confer-ence on Robotics and Automation (ICRA) . IEEE, 2017, pp. 1417–1422. [43] S. Lee and J.-H. Ryu, “Autonomous vehicle localization without prior high-definition map,” IEEE Transactions on Robotics , vol. 40, pp. 2888–2906, 2024. [44] Y. Cho, G. Kim, S. Lee, and J.-H. Ryu, “Openstreetmap-based lidar global localization in urban environment without a prior lidar map,” IEEE Robotics and Automa-tion Letters , vol. 7, no. 2, pp. 4999–5006, 2022. [45] Z. Li, Y. Wang, R. Zhang, F. Ding, C. Wei, and J.-G. Lu, “A lidar-openstreetmap matching method for vehicle global position initialization based on boundary directional feature extraction,” IEEE Transactions on Intelligent Vehicles , 2024. [46] H. Caesar, V. Bankiti, A. H. Lang, S. Vora, V. E. Liong, Q. Xu, A. Krishnan, Y. Pan, G. Baldan, and O. Bei-jbom, “nuscenes: A multimodal dataset for autonomous driving,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 2020, pp. 11 621–11 631. [47] Y. Liao, J. Xie, and A. Geiger, “Kitti-360: A novel dataset and benchmarks for urban scene understanding in 2d and 3d,” IEEE Transactions on Pattern Analysis and Machine Intelligence , vol. 45, no. 3, pp. 3292–3310, 2022. [48] T. Y. Tang, D. De Martini, and P. Newman, “Get to the point: Learning lidar place recognition and metric localisation using overhead imagery,” Proceedings of Robotics: Science and Systems, 2021 , 2021. [49] A. Dosovitskiy, “An image is worth 16x16 words: Trans-formers for image recognition at scale,” arXiv preprint arXiv:2010.11929 , 2020. [50] D. P. Kingma and J. Ba, “Adam: A method for stochastic optimization,” arXiv preprint arXiv:1412.6980 , 2014.

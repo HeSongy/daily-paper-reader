@@ -1,0 +1,94 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.01644v1/fig-001.webp",
+      "caption": "Fig. 1. (a) Motivation. Text-to-OSM localization retrieves the most similar OSM tile from the database first, and then estimates the accurate 2-DoF position later. (b) shows the difference with existing methods. Compared with text-to-point-cloud localization methods, OSM data is much lighter in data construction, storage, and updates. Compared with existing text-driven place recognition methods, our approach focuses on global localization with meterlevel accuracy, instead of simply retrieving OSM tiles from textual queries. This enables finer-grained spatial understanding and more precise localization beyond tile-level retrieval.",
+      "page": 1,
+      "index": 1,
+      "width": 512,
+      "height": 407
+    },
+    {
+      "url": "assets/figures/arxiv/2604.01644v1/fig-002.webp",
+      "caption": "Fig. 4. Pipeline of TOLoc. With the query text T and OSM database O = {Oj}Zj=1, TOLoc performs global localization in two stages. Place recognition stage first learns text–map correspondences via contrastive learning. Pose estimation stage then aligns the text descriptor dT with the features of the top-1 retrieved map tile FO to regress the precise location within the local map. TOA module employs self-attention and cross-attention mechanisms to effectively integrate local OSM features with textual information and estimate the 2-DoF position ξ = (x, y).",
+      "page": 6,
+      "index": 2,
+      "width": 1072,
+      "height": 396
+    },
+    {
+      "url": "assets/figures/arxiv/2604.01644v1/fig-003.webp",
+      "caption": "Fig. 8. Failure cases of pose estimation stage. black dots • denote GT query locations and red dots • denote the estimated positions. Place recognition and localization errors (in meters) are shown in the lower-left corner, in the order of place recognition error followed by localization error.",
+      "page": 11,
+      "index": 3,
+      "width": 522,
+      "height": 350
+    },
+    {
+      "url": "assets/figures/arxiv/2604.01644v1/fig-004.webp",
+      "caption": "TABLE IV LOCALIZATION RESULTS ON TOLOC-N SET.",
+      "page": 11,
+      "index": 4,
+      "width": 464,
+      "height": 343
+    },
+    {
+      "url": "assets/figures/arxiv/2604.01644v1/fig-005.webp",
+      "caption": "Fig. 7. Failure cases of place recognition stage. black dots • denote GT query locations. Place recognition errors (in meters) are shown in the lowerleft corner.",
+      "page": 11,
+      "index": 5,
+      "width": 524,
+      "height": 304
+    },
+    {
+      "url": "assets/figures/arxiv/2604.01644v1/fig-006.webp",
+      "caption": "Fig. 6. Qualitative place recognition and localization results of our method on the TOL dataset. Column 1 shows the query text. Column 2 shows the GT map tiles. Columns 3–5 show retrieval results, and last column shows the localization results. For columns 3-5, green boxes indicate correct retrievals ( error ≤ 25 m) and red boxes indicate failures. For columns 2 and 6, black dots • denote GT query locations and red dots • denote the estimated positions. Retrieval/Localization error (in meters) is reported in the lower-left corner of each sample.",
+      "page": 10,
+      "index": 6,
+      "width": 1070,
+      "height": 1167
+    },
+    {
+      "url": "assets/figures/arxiv/2604.01644v1/fig-007.webp",
+      "caption": "Fig. 3. Illustration rasterized OSM tiles.",
+      "page": 4,
+      "index": 7,
+      "width": 494,
+      "height": 412
+    },
+    {
+      "url": "assets/figures/arxiv/2604.01644v1/fig-008.webp",
+      "caption": "TABLE V GENERALIZATION PERFORMANCE OF GLOBAL LOCALIZATION ON THE TOLOC-K360 SET @10M THRESHOLD.",
+      "page": 12,
+      "index": 8,
+      "width": 944,
+      "height": 304
+    },
+    {
+      "url": "assets/figures/arxiv/2604.01644v1/fig-009.webp",
+      "caption": "TABLE III GENERALIZATION OF PLACE RECOGNITION PERFORMANCE (R@1 UNDER 25 M THRESHOLD) ON THE TOLOC-K360 SET.",
+      "page": 9,
+      "index": 9,
+      "width": 962,
+      "height": 245
+    },
+    {
+      "url": "assets/figures/arxiv/2604.01644v1/fig-010.webp",
+      "caption": "Fig. 5. Recall curve @25m threshold of top-K candidates on TOLoc-N and TOLoc-K360 sets.",
+      "page": 9,
+      "index": 10,
+      "width": 1054,
+      "height": 356
+    },
+    {
+      "url": "assets/figures/arxiv/2604.01644v1/fig-011.webp",
+      "caption": "TABLE II PLACE RECOGNITION RESULTS ON TOLOC-N SET.",
+      "page": 9,
+      "index": 11,
+      "width": 775,
+      "height": 249
+    }
+  ]
+}
