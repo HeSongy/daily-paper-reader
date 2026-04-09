@@ -1,0 +1,46 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.05799v1/fig-001.webp",
+      "caption": "Fig. 2: 3D gate passage comparison on the HARD scenario. SET (blue) passes safely; POINT (red) results in load collision at the gate.",
+      "page": 6,
+      "index": 1,
+      "width": 1002,
+      "height": 535
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05799v1/fig-002.webp",
+      "caption": "Fig. 3: Certificate traces hpoint (dashed) and hmin = minz∈Z h(z) (solid) for the vertical clearance head hz on the HARD scenario. The shaded region marks the blind spot where point evaluation reports safe but set evaluation detects danger.",
+      "page": 6,
+      "index": 2,
+      "width": 511,
+      "height": 294
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05799v1/fig-003.webp",
+      "caption": "Fig. 1: Overview of point-valued vs. set-valued latent safety evaluation. Both tracks encode the same physical state x. Top (gray): point evaluation ignores state uncertainty, reports “Safe” at a dangerous moment (blind spot), and causes the CBF to intervene too late to prevent collision. Bottom (blue): set evaluation covers all uncertainty via minz∈Z h(z), correctly reports “Unsafe” at the dangerous moment and triggers µsafe early enough for safe passage.",
+      "page": 2,
+      "index": 3,
+      "width": 1021,
+      "height": 260
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05799v1/fig-004.webp",
+      "caption": "Fig. 4: Per-head certificate spread (gap between point and set evaluation) across all five scenarios as a function of position px. Gray band: min–max range over the five scenarios; black line: mean. Red dashed line: fixed margin δ = 0.031 used by PT MARGIN. The vertical dotted line marks the gate plane at px = 10m. The spread is highly anisotropic: δ falls below most of the hz spread, indicating insufficient coverage, while exceeding the hE spread by 5×, wasting control authority. Curves are interpolated onto a common px grid and lightly smoothed for visualization; all reported metrics use unsmoothed data.",
+      "page": 7,
+      "index": 4,
+      "width": 1051,
+      "height": 339
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05799v1/fig-005.webp",
+      "caption": "TABLE I: Directed vs. box dynamics error bounds.",
+      "page": 4,
+      "index": 5,
+      "width": 491,
+      "height": 280
+    }
+  ]
+}

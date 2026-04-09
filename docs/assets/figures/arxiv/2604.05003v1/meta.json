@@ -1,0 +1,158 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.05003v1/fig-001.webp",
+      "caption": "TABLE III COMPARISON OF UNDERWATER COMMUNICATION TECHNOLOGIES",
+      "page": 6,
+      "index": 1,
+      "width": 1036,
+      "height": 259
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05003v1/fig-002.webp",
+      "caption": "TABLE II WIDELY USED PLANNING AND CONTROL METHODS IN UUVS",
+      "page": 6,
+      "index": 2,
+      "width": 1064,
+      "height": 483
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05003v1/fig-003.webp",
+      "caption": "Fig. 8. Scenario 1 : Underwater Environment with non-uniformly distributed unknown static obstacles",
+      "page": 11,
+      "index": 3,
+      "width": 488,
+      "height": 250
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05003v1/fig-004.webp",
+      "caption": "TABLE I APPLICATIONS OF UUVS:",
+      "page": 2,
+      "index": 4,
+      "width": 1000,
+      "height": 267
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05003v1/fig-005.webp",
+      "caption": "Fig. 1. UUV Navigation Stack Hierarchy",
+      "page": 2,
+      "index": 5,
+      "width": 968,
+      "height": 550
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05003v1/fig-006.webp",
+      "caption": "Fig. 6. Illustrative model outlining the typical Decoupled Architecture",
+      "page": 10,
+      "index": 6,
+      "width": 324,
+      "height": 460
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05003v1/fig-007.webp",
+      "caption": "Fig. 7. Illustrative model outlining the typical Coupled Architecture",
+      "page": 10,
+      "index": 7,
+      "width": 542,
+      "height": 394
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05003v1/fig-008.webp",
+      "caption": "TABLE VII COMPARISON OF CONTROLLERS FOR UUV NAVIGATION",
+      "page": 14,
+      "index": 8,
+      "width": 1099,
+      "height": 569
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05003v1/fig-009.webp",
+      "caption": "TABLE VI PERFORMANCE METRICS OF CONTROLLERS ON FIGURE-OF-EIGHT SHAPE CURVE",
+      "page": 13,
+      "index": 9,
+      "width": 1068,
+      "height": 204
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05003v1/fig-010.webp",
+      "caption": "TABLE V PERFORMANCE METRICS ACROSS NAVIGATION SCENARIOS",
+      "page": 13,
+      "index": 10,
+      "width": 1070,
+      "height": 489
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05003v1/fig-011.webp",
+      "caption": "TABLE IV COMPARISON OF UUVS LOCALISATION TECHNIQUES",
+      "page": 8,
+      "index": 11,
+      "width": 1044,
+      "height": 225
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05003v1/fig-012.webp",
+      "caption": "Fig. 2. Path Planning Techniques",
+      "page": 4,
+      "index": 12,
+      "width": 968,
+      "height": 352
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05003v1/fig-013.webp",
+      "caption": "Fig. 12. Scenario 5 : Underwater Environment with Temporally Varying Dynamic Obstacles in the Vehicle’s Field of View .",
+      "page": 12,
+      "index": 13,
+      "width": 488,
+      "height": 252
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05003v1/fig-014.webp",
+      "caption": "Fig. 14. Tracked Path visualization of Figure-Of-Eight curve using PID controller",
+      "page": 12,
+      "index": 14,
+      "width": 542,
+      "height": 342
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05003v1/fig-015.webp",
+      "caption": "Fig. 13. Tracked Path visualization of Figure-Of-Eight curve using Invariantset controller",
+      "page": 12,
+      "index": 15,
+      "width": 542,
+      "height": 317
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05003v1/fig-016.webp",
+      "caption": "Fig. 11. Scenario 4 : Underwater Environment with a infinitely long static column ahead of the vehicle.",
+      "page": 12,
+      "index": 16,
+      "width": 488,
+      "height": 281
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05003v1/fig-017.webp",
+      "caption": "Fig. 10. Scenario 3 : Underwater Environment with a infinitely wide static column ahead of the vehicle.",
+      "page": 12,
+      "index": 17,
+      "width": 488,
+      "height": 266
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05003v1/fig-018.webp",
+      "caption": "Fig. 5. Illustrative model outlining the typical UUV operational setting in an underwater setting",
+      "page": 9,
+      "index": 18,
+      "width": 541,
+      "height": 441
+    },
+    {
+      "url": "assets/figures/arxiv/2604.05003v1/fig-019.webp",
+      "caption": "Fig. 3. A chronological view of Major Technological Breakthroughs in Sensor-based Autonomous Underwater Navigation, its evolution from the 1970s to the 2025.",
+      "page": 5,
+      "index": 19,
+      "width": 1076,
+      "height": 402
+    }
+  ]
+}

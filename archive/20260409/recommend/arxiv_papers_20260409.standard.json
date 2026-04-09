@@ -1,0 +1,695 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-04-09T20:34:00.617639+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 7,
+    "deep_cap": 6,
+    "deep_selected": 6,
+    "quick_candidates": 13,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2604.07209v1",
+      "source": "arxiv",
+      "title": "INSPATIO-WORLD: A Real-Time 4D World Simulator via Spatiotemporal Autoregressive Modeling",
+      "abstract": "Building world models with spatial consistency and real-time interactivity remains a fundamental challenge in computer vision. Current video generation paradigms often struggle with a lack of spatial persistence and insufficient visual realism, making it difficult to support seamless navigation in complex environments. To address these challenges, we propose INSPATIO-WORLD, a novel real-time framework capable of recovering and generating high-fidelity, dynamic interactive scenes from a single reference video. At the core of our approach is a Spatiotemporal Autoregressive (STAR) architecture, which enables consistent and controllable scene evolution through two tightly coupled components: Implicit Spatiotemporal Cache aggregates reference and historical observations into a latent world representation, ensuring global consistency during long-horizon navigation; Explicit Spatial Constraint Module enforces geometric structure and translates user interactions into precise and physically plausible camera trajectories. Furthermore, we introduce Joint Distribution Matching Distillation (JDMD). By using real-world data distributions as a regularizing guide, JDMD effectively overcomes the fidelity degradation typically caused by over-reliance on synthetic data. Extensive experiments demonstrate that INSPATIO-WORLD significantly outperforms existing state-of-the-art (SOTA) models in spatial consistency and interaction precision, ranking first among real-time interactive methods on the WorldScore-Dynamic benchmark, and establishing a practical pipeline for navigating 4D environments reconstructed from monocular videos.",
+      "authors": [
+        "InSpatio Team",
+        "Donghui Shen",
+        "Guofeng Zhang",
+        "Haomin Liu",
+        "Haoyu Ji",
+        "Hujun Bao",
+        "Hongjia Zhai",
+        "Jialin Liu",
+        "Jing Guo",
+        "Nan Wang",
+        "Siji Pan",
+        "Weihong Pan",
+        "Weijian Xie",
+        "Xianbin Liu",
+        "Xiaojun Xiang",
+        "Xiaoyu Zhang",
+        "Xinyu Chen",
+        "Yifu Wang",
+        "Yipeng Chen",
+        "Zhenzhou Fan",
+        "Zhewen Le",
+        "Zhichao Ye",
+        "Ziqiang Zhao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-04-08T15:31:22+00:00",
+      "link": "https://arxiv.org/pdf/2604.07209v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "world simulator for seamless navigation in complex environments",
+      "llm_evidence_cn": "支持复杂环境无缝导航的世界模拟器",
+      "llm_evidence": "支持复杂环境无缝导航的世界模拟器",
+      "canonical_evidence": "支持复杂环境无缝导航的世界模拟器",
+      "llm_tldr_en": "A real-time 4D world simulator using spatiotemporal modeling to support interactive navigation.",
+      "llm_tldr_cn": "一种基于时空自回归模型的实时4D世界模拟器，支持复杂环境下的交互式导航。",
+      "llm_tldr": "一种基于时空自回归模型的实时4D世界模拟器，支持复杂环境下的交互式导航。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.01213v1",
+      "source": "arxiv",
+      "title": "Collaborative Task and Path Planning for Heterogeneous Robotic Teams using Multi-Agent PPO",
+      "abstract": "Efficient robotic extraterrestrial exploration requires robots with diverse capabilities, ranging from scientific measurement tools to advanced locomotion. A robotic team enables the distribution of tasks over multiple specialized subsystems, each providing specific expertise to complete the mission. The central challenge lies in efficiently coordinating the team to maximize utilization and the extraction of scientific value. Classical planning algorithms scale poorly with problem size, leading to long planning cycles and high inference costs due to the combinatorial growth of possible robot-target allocations and possible trajectories. Learning-based methods are a viable alternative that move the scaling concern from runtime to training time, setting a critical step towards achieving real-time planning. In this work, we present a collaborative planning strategy based on Multi-Agent Proximal Policy Optimization (MAPPO) to coordinate a team of heterogeneous robots to solve a complex target allocation and scheduling problem. We benchmark our approach against single-objective optimal solutions obtained through exhaustive search and evaluate its ability to perform online replanning in the context of a planetary exploration scenario.",
+      "authors": [
+        "Matthias Rubio",
+        "Julia Richter",
+        "Hendrik Kolvenbach",
+        "Marco Hutter"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.MA"
+      ],
+      "published": "2026-04-01T17:53:51+00:00",
+      "link": "https://arxiv.org/pdf/2604.01213v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "collaborative task and path planning for robotic teams using reinforcement learning",
+      "llm_evidence_cn": "利用强化学习进行机器人团队的协作任务与路径规划",
+      "llm_evidence": "利用强化学习进行机器人团队的协作任务与路径规划",
+      "canonical_evidence": "利用强化学习进行机器人团队的协作任务与路径规划",
+      "llm_tldr_en": "Uses Multi-Agent PPO for efficient coordination and path planning in complex exploration missions.",
+      "llm_tldr_cn": "使用多智能体 PPO 在复杂的探测任务中进行高效的协调和路径规划。",
+      "llm_tldr": "使用多智能体 PPO 在复杂的探测任务中进行高效的协调和路径规划。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.03096v1",
+      "source": "arxiv",
+      "title": "An Open-Source LiDAR and Monocular Off-Road Autonomous Navigation Stack",
+      "abstract": "Off-road autonomous navigation demands reliable 3D perception for robust obstacle detection in challenging unstructured terrain. While LiDAR is accurate, it is costly and power-intensive. Monocular depth estimation using foundation models offers a lightweight alternative, but its integration into outdoor navigation stacks remains underexplored. We present an open-source off-road navigation stack supporting both LiDAR and monocular 3D perception without task-specific training. For the monocular setup, we combine zero-shot depth prediction (Depth Anything V2) with metric depth rescaling using sparse SLAM measurements (VINS-Mono). Two key enhancements improve robustness: edge-masking to reduce obstacle hallucination and temporal smoothing to mitigate the impact of SLAM instability. The resulting point cloud is used to generate a robot-centric 2.5D elevation map for costmap-based planning. Evaluated in photorealistic simulations (Isaac Sim) and real-world unstructured environments, the monocular configuration matches high-resolution LiDAR performance in most scenarios, demonstrating that foundation-model-based monocular depth estimation is a viable LiDAR alternative for robust off-road navigation. By open-sourcing the navigation stack and the simulation environment, we provide a complete pipeline for off-road navigation as well as a reproducible benchmark. Code available at https://github.com/LARIAD/Offroad-Nav.",
+      "authors": [
+        "Rémi Marsal",
+        "Quentin Picard",
+        "Adrien Poiré",
+        "Sébastien Kerbourc'h",
+        "Thibault Toralba",
+        "Clément Yver",
+        "Alexandre Chapoutot",
+        "David Filliat"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-04-03T15:19:20+00:00",
+      "link": "https://arxiv.org/pdf/2604.03096v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "autonomous navigation stack for off-road environments using 3D perception",
+      "llm_evidence_cn": "用于越野环境自主导航的3D感知导航栈",
+      "llm_evidence": "用于越野环境自主导航的3D感知导航栈",
+      "canonical_evidence": "用于越野环境自主导航的3D感知导航栈",
+      "llm_tldr_en": "Presents an open-source navigation stack for off-road environments using LiDAR and monocular depth estimation.",
+      "llm_tldr_cn": "介绍了一个结合激光雷达和单目深度估计的开源越野自主导航系统。",
+      "llm_tldr": "介绍了一个结合激光雷达和单目深度估计的开源越野自主导航系统。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.05003v1",
+      "source": "arxiv",
+      "title": "A Survey on Sensor-based Planning and Control for Unmanned Underwater Vehicles",
+      "abstract": "This survey examines recent sensor-based planning and control methods for Unmanned Underwater Vehicles (UUVs). In complex, uncertain underwater environments, UUVs require advanced planning and control strategies for effective navigation. These vehicles face significant challenges including drifting and noisy sensor measurements, absence of Global Navigation Satellite System (GNSS) signals, and low-bandwidth, high-latency underwater acoustic communications. The focus is on reactive local planning layers that adapt to real-time sensor inputs such as SONAR and Inertial Measurement Units (IMU) to improve localization accuracy and autonomy in dynamic ocean conditions, enabling dynamic obstacle avoidance and on-the-fly re-planning. The survey categorizes the existing literature into decoupled and coupled architectures for sensor-based planning and control. The decoupled architecture sequentially addresses planning and control stages, whereas coupled architectures offer tighter feedback loops for more immediate responsiveness. A comparative analysis of coupled planning and control methods reveals that while PID controllers are simple, they lack predictive capability for complex maneuvers. Model Predictive Control (MPC) offers superior path optimization but can be computationally intensive, and invariant-set controllers provide strong safety guarantees at the potential cost of agility in confined environments. Key contributions include a taxonomy of architectures combining planning and control, a focus on adaptive local planning, and an analysis of controller roles in integrated planning frameworks for autonomous navigation of UUVs.",
+      "authors": [
+        "Shivam Vishwakarma",
+        "Tejal Bedmutha",
+        "Dharmendra Kumar Patel",
+        "Vijay Bhaskar Semwal",
+        "Leena Vachhani"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-04-06T00:40:37+00:00",
+      "link": "https://arxiv.org/pdf/2604.05003v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Sensor-based planning and control for navigation in complex underwater environments",
+      "llm_evidence_cn": "复杂水下环境导航中的传感器规划与控制",
+      "llm_evidence": "复杂水下环境导航中的传感器规划与控制",
+      "canonical_evidence": "复杂水下环境导航中的传感器规划与控制",
+      "llm_tldr_en": "Surveys reactive local planning and navigation strategies for unmanned underwater vehicles in uncertain environments.",
+      "llm_tldr_cn": "综述了无人水下航行器在不确定环境中的反应式局部规划与导航策略。",
+      "llm_tldr": "综述了无人水下航行器在不确定环境中的反应式局部规划与导航策略。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.05014v1",
+      "source": "arxiv",
+      "title": "StarVLA: A Lego-like Codebase for Vision-Language-Action Model Developing",
+      "abstract": "Building generalist embodied agents requires integrating perception, language understanding, and action, which are core capabilities addressed by Vision-Language-Action (VLA) approaches based on multimodal foundation models, including recent advances in vision-language models and world models. Despite rapid progress, VLA methods remain fragmented across incompatible architectures, codebases, and evaluation protocols, hindering principled comparison and reproducibility. We present StarVLA, an open-source codebase for VLA research. StarVLA addresses these challenges in three aspects. First, it provides a modular backbone--action-head architecture that supports both VLM backbones (e.g., Qwen-VL) and world-model backbones (e.g., Cosmos) alongside representative action-decoding paradigms, all under a shared abstraction in which backbone and action head can each be swapped independently. Second, it provides reusable training strategies, including cross-embodiment learning and multimodal co-training, that apply consistently across supported paradigms. Third, it integrates major benchmarks, including LIBERO, SimplerEnv, RoboTwin~2.0, RoboCasa-GR1, and BEHAVIOR-1K, through a unified evaluation interface that supports both simulation and real-robot deployment. StarVLA also ships simple, fully reproducible single-benchmark training recipes that, despite minimal data engineering, already match or surpass prior methods on multiple benchmarks with both VLM and world-model backbones. To our best knowledge, StarVLA is one of the most comprehensive open-source VLA frameworks available, and we expect it to lower the barrier for reproducing existing methods and prototyping new ones. StarVLA is being actively maintained and expanded; we will update this report as the project evolves. The code and documentation are available at https://github.com/starVLA/starVLA.",
+      "authors": [
+        "StarVLA Community"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI",
+        "cs.CV"
+      ],
+      "published": "2026-04-06T17:59:21+00:00",
+      "link": "https://arxiv.org/pdf/2604.05014v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "integrating world-model backbones for embodied agents",
+      "llm_evidence_cn": "为具身智能体集成世界模型后端",
+      "llm_evidence": "为具身智能体集成世界模型后端",
+      "canonical_evidence": "为具身智能体集成世界模型后端",
+      "llm_tldr_en": "StarVLA is a modular codebase for developing Vision-Language-Action models using world model backbones.",
+      "llm_tldr_cn": "StarVLA是一个用于开发视觉-语言-动作模型的模块化代码库，支持集成世界模型后端。",
+      "llm_tldr": "StarVLA是一个用于开发视觉-语言-动作模型的模块化代码库，支持集成世界模型后端。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.05799v1",
+      "source": "arxiv",
+      "title": "From Points to Sets: Set-Based Safety Verification in the Latent Space",
+      "abstract": "We extend latent representation methods for safety control design to set-valued states. Recent work has shown that barrier functions designed in a learned latent space can transfer safety guarantees back to the original system, but these methods evaluate certificates at single state points, ignoring state uncertainty. A fixed safety margin can partially address this but cannot adapt to the anisotropic and time-varying nature of the uncertainty gap across different safety constraints. We instead represent the system state as a zonotope, propagate it through the encoder to obtain a latent zonotope, and evaluate certificates over the worst case of the entire set. On a 16-dimensional quadrotor suspended-load gate passage task, set-valued evaluation achieves 5/5 collision-free passages, compared to 1/5 for point-based evaluation and 2/5 for a fixed-margin baseline. Set evaluation reports safety in 44.4% of per-head evaluations versus 48.5% for point-based, and this greater conservatism detects 4.1% blind spots where point evaluation falsely certifies safety, enabling earlier corrective control. The safety gap between point and set evaluation varies up to $12\\times$ across certificate heads, explaining why no single fixed margin suffices and confirming the need for per-head, per-timestep adaptation, which set evaluation provides by construction.",
+      "authors": [
+        "Wenyuan Wu",
+        "Peng Xie",
+        "Zhen Zhang",
+        "Yanliang Huang",
+        "Karl H. Johansson",
+        "Amr Alanwar"
+      ],
+      "primary_category": "eess.SY",
+      "categories": [
+        "eess.SY"
+      ],
+      "published": "2026-04-07T12:35:23+00:00",
+      "link": "https://arxiv.org/pdf/2604.05799v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "safety verification in learned latent space",
+      "llm_evidence_cn": "学习隐空间中的安全性验证",
+      "llm_evidence": "学习隐空间中的安全性验证",
+      "canonical_evidence": "学习隐空间中的安全性验证",
+      "llm_tldr_en": "Extends latent representation methods for safety control design to set-valued states and uncertainty.",
+      "llm_tldr_cn": "将用于安全控制设计的隐空间表示方法扩展到集值状态和不确定性处理。",
+      "llm_tldr": "将用于安全控制设计的隐空间表示方法扩展到集值状态和不确定性处理。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2604.06882v1",
+      "source": "arxiv",
+      "title": "Telecom World Models: Unifying Digital Twins, Foundation Models, and Predictive Planning for 6G",
+      "abstract": "The integration of machine learning tools into telecom networks, has led to two prevailing paradigms, namely, language-based systems, such as Large Language Models (LLMs), and physics-based systems, such as Digital Twins (DTs). While LLM-based approaches enable flexible interaction and automation, they lack explicit representations of network dynamics. DTs, in contrast, offer a high-fidelity network simulation, but remain scenario-specific and are not designed for learning or decision-making under uncertainty. This gap becomes critical for 6G systems, where decisions must take into account the evolving network states, uncertainty, and the cascading effects of control actions across multiple layers. In this article, we introduce the {Telecom World Model}~(TWM) concept, an architecture for learned, action-conditioned, uncertainty-aware modeling of telecom system dynamics. We decompose the problem into two interacting worlds, a controllable system world consisting of operator-configurable settings and an external world that captures propagation, mobility, traffic, and failures. We propose a three-layer architecture, comprising a field world model for spatial environment prediction, a control/dynamics world model for action-conditioned Key Performance Indicator (KPI) trajectory prediction, and a telecom foundation model layer for intent translation and orchestration. We showcase a comparative analysis between existing paradigms, which demonstrates that TWM jointly provides telecom state grounding, fast action-conditioned roll-outs, calibrated uncertainty, multi-timescale dynamics, model-based planning, and LLM-integrated guardrails. Furthermore, we present a proof-of-concept on network slicing to validate the proposed architecture, showing that the full three-layer pipeline outperforms single-world baselines and accurately predicts KPI trajectories.",
+      "authors": [
+        "Hang Zou",
+        "Yuzhi Yang",
+        "Lina Bariah",
+        "Yu Tian",
+        "Yuhuan Lu",
+        "Bohao Wang",
+        "Anis Bara",
+        "Brahim Mefgouda",
+        "Hao Liu",
+        "Yiwei Tao",
+        "Sergy Petrov",
+        "Salma Cheour",
+        "Nassim Sehad",
+        "Sumudu Samarakoon",
+        "Chongwen Huang",
+        "Samson Lasaulce",
+        "Mehdi Bennis",
+        "Mérouane Debbah"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "eess.SP",
+        "eess.SY"
+      ],
+      "published": "2026-04-08T09:41:58+00:00",
+      "link": "https://arxiv.org/pdf/2604.06882v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "world models for predictive planning and network dynamics",
+      "llm_evidence_cn": "用于预测规划和网络动态的世界模型",
+      "llm_evidence": "用于预测规划和网络动态的世界模型",
+      "canonical_evidence": "用于预测规划和网络动态的世界模型",
+      "llm_tldr_en": "Introduces Telecom World Models to unify digital twins and predictive planning for 6G networks.",
+      "llm_tldr_cn": "引入电信世界模型，统一数字孪生与6G网络的预测性规划。",
+      "llm_tldr": "引入电信世界模型，统一数字孪生与6G网络的预测性规划。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2604.02073v1",
+      "source": "arxiv",
+      "title": "PLUME: Latent Reasoning Based Universal Multimodal Embedding",
+      "abstract": "Universal multimodal embedding (UME) maps heterogeneous inputs into a shared retrieval space with a single model. Recent approaches improve UME by generating explicit chain-of-thought (CoT) rationales before extracting embeddings, enabling multimodal large language models to better infer complex query intent. However, explicit CoT incurs substantial inference overhead and can compress rich multimodal evidence into a narrow textual bottleneck. We propose PLUME, a latent reasoning framework that advances UME by replacing verbalized CoT with a short autoregressive rollout of continuous latent states. To support diverse multimodal queries, PLUME further introduces a semantic-anchor-guided transition adapter that steers latent rollout along different reasoning trajectories under the same fixed computation budget. To stabilize training, PLUME adopts a progressive explicit-to-latent curriculum that uses verbalized reasoning only as a temporary training scaffold and gradually transfers this behavior into hidden-state computation, eliminating explicit CoT at inference. On the 78-task MMEB-v2 benchmark, PLUME outperforms strong explicit-CoT UME baselines while reducing reasoning from hundreds of generated tokens to fewer than 10 latent steps, delivering over 30x faster inference. PLUME is especially well suited to retrieval settings where relevant evidence is dense, structurally complex, and difficult to organize through verbalized intermediate rationales, such as video and visual document retrieval. These results show that structured latent computation can preserve the benefits of intermediate reasoning without the overhead of explicit rationale generation, providing a stronger and more efficient paradigm for practical retrieval systems.",
+      "authors": [
+        "Chenwei He",
+        "Xiangzhao Hao",
+        "Tianyu Yang",
+        "Yuxiang Ma",
+        "Yuheng Jia",
+        "Lingxiang Wu",
+        "Chaoyang Zhao",
+        "Haiyun Guo",
+        "Jinqiao Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-04-02T14:04:53+00:00",
+      "link": "https://arxiv.org/pdf/2604.02073v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "latent reasoning framework using continuous latent states",
+      "llm_evidence_cn": "使用连续隐状态的隐式推理框架",
+      "llm_evidence": "使用连续隐状态的隐式推理框架",
+      "canonical_evidence": "使用连续隐状态的隐式推理框架",
+      "llm_tldr_en": "PLUME uses latent reasoning and continuous latent states to improve multimodal embedding performance.",
+      "llm_tldr_cn": "PLUME利用隐式推理和连续隐状态来提高多模态嵌入性能。",
+      "llm_tldr": "PLUME利用隐式推理和连续隐状态来提高多模态嵌入性能。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.02739v1",
+      "source": "arxiv",
+      "title": "Quotient-Based Posterior Analysis for Euclidean Latent Space Models",
+      "abstract": "Latent space models are widely used in statistical network analysis and are often fit by Markov chain Monte Carlo. However, posterior summaries of latent coordinates are not canonical because the likelihood depends only on pairwise distances and is invariant under rigid motions of the latent space. Standard post hoc alignment can aid visualization, but the resulting summaries depend on an arbitrary reference configuration. We propose a quotient-based posterior analysis for Euclidean latent space models using the centered Gram map, which represents identifiable latent structure while removing nonidentifiability. This yields intrinsic posterior summaries of mean structure and uncertainty that can be computed directly from posterior samples, together with basic theoretical guarantees including canonicality, existence, and stability. Through simulations and analyses of the Florentine marriage network and a statisticians' coauthorship network, the proposed framework clarifies when alignment-based summaries are stable, when they become reference-sensitive, and which nodes or relationships are weakly identified. These results show how coherent posterior analysis can reveal latent relational structure beyond a single embedding.",
+      "authors": [
+        "Kisung You",
+        "Mauro Giuffrè"
+      ],
+      "primary_category": "stat.ME",
+      "categories": [
+        "stat.ME",
+        "stat.ML"
+      ],
+      "published": "2026-04-03T05:21:10+00:00",
+      "link": "https://arxiv.org/pdf/2604.02739v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "analysis of Euclidean latent space models and identifiable structure",
+      "llm_evidence_cn": "欧几里得隐空间模型及可识别结构的分析",
+      "llm_evidence": "欧几里得隐空间模型及可识别结构的分析",
+      "canonical_evidence": "欧几里得隐空间模型及可识别结构的分析",
+      "llm_tldr_en": "Proposes a quotient-based method for analyzing identifiable structures in Euclidean latent space models.",
+      "llm_tldr_cn": "提出了一种基于商的方法，用于分析欧几里得隐空间模型中的可识别结构。",
+      "llm_tldr": "提出了一种基于商的方法，用于分析欧几里得隐空间模型中的可识别结构。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.02097v1",
+      "source": "arxiv",
+      "title": "LatentUM: Unleashing the Potential of Interleaved Cross-Modal Reasoning via a Latent-Space Unified Model",
+      "abstract": "Unified models (UMs) hold promise for their ability to understand and generate content across heterogeneous modalities. Compared to merely generating visual content, the use of UMs for interleaved cross-modal reasoning is more promising and valuable, e.g., for solving understanding problems that require dense visual thinking, improving visual generation through self-reflection, or modeling visual dynamics of the physical world guided by stepwise action interventions. However, existing UMs necessitate pixel decoding as a bridge due to their disjoint visual representations for understanding and generation, which is both ineffective and inefficient. In this paper, we introduce LatentUM, a novel unified model that represents all modalities within a shared semantic latent space, eliminating the need for pixel-space mediation between visual understanding and generation. This design naturally enables flexible interleaved cross-modal reasoning and generation. Beyond improved computational efficiency, the shared representation substantially alleviates codec bias and strengthens cross-modal alignment, allowing LatentUM to achieve state-of-the-art performance on the Visual Spatial Planning benchmark, push the limits of visual generation through self-reflection, and support world modeling by predicting future visual states within the shared semantic latent space.",
+      "authors": [
+        "Jiachun Jin",
+        "Zetong Zhou",
+        "Xiao Yang",
+        "Hao Zhang",
+        "Pengfei Liu",
+        "Jun Zhu",
+        "Zhijie Deng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-04-02T14:22:29+00:00",
+      "link": "https://arxiv.org/pdf/2604.02097v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "modeling visual dynamics of the physical world via a latent-space unified model",
+      "llm_evidence_cn": "通过隐空间统一模型模拟物理世界的视觉动力学",
+      "llm_evidence": "通过隐空间统一模型模拟物理世界的视觉动力学",
+      "canonical_evidence": "通过隐空间统一模型模拟物理世界的视觉动力学",
+      "llm_tldr_en": "Introduces a latent-space unified model for cross-modal reasoning and modeling physical world dynamics.",
+      "llm_tldr_cn": "引入了一种用于跨模态推理和模拟物理世界动力学的隐空间统一模型。",
+      "llm_tldr": "引入了一种用于跨模态推理和模拟物理世界动力学的隐空间统一模型。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.03371v1",
+      "source": "arxiv",
+      "title": "Surrogate Model-Based Near-Optimal Gain Selection for Approach-Angle-Constrained Two-Phase Pure Proportional Navigation",
+      "abstract": "In guidance literature, Pure Proportional Navigation (PPN) guidance is widely used for aerodynamically driven vehicles. A two-phase extension of PPN (2pPPN), which uses different navigation gains for an orientation phase and a final phase, has been presented to achieve any desired approach angle within an angular half-space. Recent studies show that the orientation phase can be realized through multiple feasible trajectories, creating an opportunity to select navigation gains that minimize overall guidance effort. This paper addresses the problem of near-optimal gain selection for given initial and desired terminal engagement geometries. Two optimization problems are considered: i) determination of the optimal orientation-phase gain for a specified final-phase gain, and ii) simultaneously determining the optimal gain pair for both phases that minimizes the total guidance effort. Determining the optimal gains analytically for arbitrary engagement geometries is intractable. Numerical simulations further reveal that these optimal gains vary smoothly with respect to the engagement conditions. Exploiting this property, a neural network (NN)-based regression model is developed in this paper to learn the nonlinear mapping between optimal gains and initial and desired terminal engagement geometries. The trained NN serves as a computationally efficient surrogate for generating the optimal gains manifold, enabling near-optimal realization of 2pPPN guidance. Numerical simulation studies demonstrate that the developed NN-based architecture predicts optimal gains with high accuracy, achieving very high (close to 0.9) value of coefficient of determination.",
+      "authors": [
+        "Abhigyan Roy",
+        "Shreeya Padte",
+        "Abel Viji George",
+        "Vivek A",
+        "Satadal Ghosh"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-04-03T18:04:06+00:00",
+      "link": "https://arxiv.org/pdf/2604.03371v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "navigation gains for orientation and final phases",
+      "llm_evidence_cn": "定向和最终阶段的导航增益",
+      "llm_evidence": "定向和最终阶段的导航增益",
+      "canonical_evidence": "定向和最终阶段的导航增益",
+      "llm_tldr_en": "Optimizes navigation gains for two-phase pure proportional navigation in aerodynamically driven vehicles.",
+      "llm_tldr_cn": "优化了气动驱动车辆两阶段纯比例导航的导航增益。",
+      "llm_tldr": "优化了气动驱动车辆两阶段纯比例导航的导航增益。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.02751v1",
+      "source": "arxiv",
+      "title": "Understanding Latent Diffusability via Fisher Geometry",
+      "abstract": "Diffusion models often degrade when trained in latent spaces (e.g., VAEs), yet the formal causes remain poorly understood. We quantify latent-space diffusability through the rate of change of the Minimum Mean Squared Error (MMSE) along the diffusion trajectory. Our framework decomposes this MMSE rate into contributions from Fisher Information (FI) and Fisher Information Rate (FIR). We demonstrate that while global isometry ensures FI alignment, FIR is governed by the encoder's local geometric properties. Our analysis explicitly decouples latent geometric distortion into three measurable penalties: dimensional compression, tangential distortion, and curvature injection. We derive theoretical conditions for FIR preservation across spaces, ensuring maintained diffusability. Experiments across diverse autoencoding architectures validate our framework and establish these efficient FI and FIR metrics as a robust diagnostic suite for identifying and mitigating latent diffusion failure.",
+      "authors": [
+        "Jing Gu",
+        "Morteza Mardani",
+        "Wonjun Lee",
+        "Dongmian Zou",
+        "Gilad Lerman"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-04-03T05:52:09+00:00",
+      "link": "https://arxiv.org/pdf/2604.02751v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "quantifying latent-space properties and geometric distortion",
+      "llm_evidence_cn": "量化隐空间属性与几何失真",
+      "llm_evidence": "量化隐空间属性与几何失真",
+      "canonical_evidence": "量化隐空间属性与几何失真",
+      "llm_tldr_en": "Analyzes how latent space geometry affects the performance of diffusion models via Fisher Information.",
+      "llm_tldr_cn": "通过费舍尔信息分析隐空间几何如何影响扩散模型的性能。",
+      "llm_tldr": "通过费舍尔信息分析隐空间几何如何影响扩散模型的性能。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.06382v1",
+      "source": "arxiv",
+      "title": "Designing Privacy-Preserving Visual Perception for Robot Navigation Based on User Privacy Preferences",
+      "abstract": "Visual navigation is a fundamental capability of mobile service robots, yet the onboard cameras required for such navigation can capture privacy-sensitive information and raise user privacy concerns. Existing approaches to privacy-preserving navigation-oriented visual perception have largely been driven by technical considerations, with limited grounding in user privacy preferences. In this work, we propose a user-centered approach to designing privacy-preserving visual perception for robot navigation. To investigate how user privacy preferences can inform such design, we conducted two user studies. The results show that users prefer privacy-preserving visual abstractions and capture-time low-resolution preservation mechanisms: their preferred RGB resolution depends both on the desired privacy level and robot proximity during navigation. Based on these findings, we further derive a user-configurable distance-to-resolution privacy policy for privacy-preserving robot visual navigation.",
+      "authors": [
+        "Xuying Huang",
+        "Sicong Pan",
+        "Delphine Reinhardt",
+        "Maren Bennewitz"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-04-07T19:12:19+00:00",
+      "link": "https://arxiv.org/pdf/2604.06382v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Visual perception and abstractions for robot navigation",
+      "llm_evidence_cn": "机器人导航中的视觉感知与抽象表示",
+      "llm_evidence": "机器人导航中的视觉感知与抽象表示",
+      "canonical_evidence": "机器人导航中的视觉感知与抽象表示",
+      "llm_tldr_en": "Explores privacy-preserving visual abstractions for mobile robot navigation based on user preferences.",
+      "llm_tldr_cn": "基于用户偏好探索移动机器人导航中保护隐私的视觉抽象表示方法。",
+      "llm_tldr": "基于用户偏好探索移动机器人导航中保护隐私的视觉抽象表示方法。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.03891v1",
+      "source": "arxiv",
+      "title": "Provable Multi-Task Reinforcement Learning: A Representation Learning Framework with Low Rank Rewards",
+      "abstract": "Multi-task representation learning (MTRL) is an approach that learns shared latent representations across related tasks, facilitating collaborative learning that improves the overall learning efficiency. This paper studies MTRL for multi-task reinforcement learning (RL), where multiple tasks have the same state-action space and transition probabilities, but different rewards. We consider T linear Markov Decision Processes (MDPs) where the reward functions and transition dynamics admit linear feature embeddings of dimension d. The relatedness among the tasks is captured by a low-rank structure on the reward matrices. Learning shared representations across multiple RL tasks is challenging due to the complex and policy-dependent nature of data that leads to a temporal progression of error. Our approach adopts a reward-free reinforcement learning framework to first learn a data-collection policy. This policy then informs an exploration strategy for estimating the unknown reward matrices. Importantly, the data collected under this well-designed policy enable accurate estimation, which ultimately supports the learning of an near-optimal policy. Unlike existing approaches that rely on restrictive assumptions such as Gaussian features, incoherence conditions, or access to optimal solutions, we propose a low-rank matrix estimation method that operates under more general feature distributions encountered in RL settings. Theoretical analysis establishes that accurate low-rank matrix recovery is achievable under these relaxed assumptions, and we characterize the relationship between representation error and sample complexity. Leveraging the learned representation, we construct near-optimal policies and prove a regret bound. Experimental results demonstrate that our method effectively learns robust shared representations and task dynamics from finite data.",
+      "authors": [
+        "Yaoze Guo",
+        "Shana Moothedath"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-04-04T23:08:35+00:00",
+      "link": "https://arxiv.org/pdf/2604.03891v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "shared latent representations for multi-task reinforcement learning",
+      "llm_evidence_cn": "多任务强化学习中的共享隐空间表示",
+      "llm_evidence": "多任务强化学习中的共享隐空间表示",
+      "canonical_evidence": "多任务强化学习中的共享隐空间表示",
+      "llm_tldr_en": "Develops a representation learning framework for multi-task RL using low-rank reward structures.",
+      "llm_tldr_cn": "开发了一个基于低秩奖励结构的多任务强化学习表示学习框架。",
+      "llm_tldr": "开发了一个基于低秩奖励结构的多任务强化学习表示学习框架。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索表示学习在构建世界模型与导航中的运用",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.05668v1",
+      "source": "arxiv",
+      "title": "A BEV-Fusion Based Framework for Sequential Multi-Modal Beam Prediction in mmWave Systems",
+      "abstract": "Beam prediction is critical for reducing beam-training overhead in millimeter-wave (mmWave) systems, especially in high-mobility vehicular scenarios. This paper presents a BEV-Fusion based framework that unifies camera, LiDAR, radar, and GPS modalities in a shared bird's-eye-view (BEV) representation for spatially consistent multi-modal fusion. Unlike priorapproaches that fuse globally pooled one-dimensional features, the proposed method performs fusion in BEV space to preservecross-modal geometric structure and visual semantic density. A learned camera-to-BEV module based on cross-attention is adopted to generate BEV-aligned visual features without relying on precise camera calibration, and a temporal transformer is used to aggregate five-step sequential observations for motion-aware beam prediction. Experiments on the DeepSense 6G benchmark show that BEV-Fusion achieves approximately 87% distance- based accuracy (DBA) on scenarios 32, 33 and 34, outperforming the TransFuser baseline. These results indicate that BEV-space fusion provides an effective spatial abstraction for sensing-assisted beam prediction.",
+      "authors": [
+        "Jiaming Zeng",
+        "Cunhua Pan",
+        "Haoyang Weng",
+        "Ruijing Liu",
+        "Hong Ren",
+        "Jiangzhou Wang"
+      ],
+      "primary_category": "eess.SP",
+      "categories": [
+        "eess.SP"
+      ],
+      "published": "2026-04-07T10:09:03+00:00",
+      "link": "https://arxiv.org/pdf/2604.05668v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "BEV representation for spatial consistency",
+      "llm_evidence_cn": "用于空间一致性的鸟瞰图表示",
+      "llm_evidence": "用于空间一致性的鸟瞰图表示",
+      "canonical_evidence": "用于空间一致性的鸟瞰图表示",
+      "llm_tldr_en": "Proposes a BEV-fusion framework for multi-modal spatial representation in vehicular scenarios.",
+      "llm_tldr_cn": "提出了一种用于车辆场景中多模态空间表示的鸟瞰图融合框架。",
+      "llm_tldr": "提出了一种用于车辆场景中多模态空间表示的鸟瞰图融合框架。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.06972v1",
+      "source": "arxiv",
+      "title": "Differentiable Environment-Trajectory Co-Optimization for Safe Multi-Agent Navigation",
+      "abstract": "The environment plays a critical role in multi-agent navigation by imposing spatial constraints, rules, and limitations that agents must navigate around. Traditional approaches treat the environment as fixed, without exploring its impact on agents' performance. This work considers environment configurations as decision variables, alongside agent actions, to jointly achieve safe navigation. We formulate a bi-level problem, where the lower-level sub-problem optimizes agent trajectories that minimize navigation cost and the upper-level sub-problem optimizes environment configurations that maximize navigation safety. We develop a differentiable optimization method that iteratively solves the lower-level sub-problem with interior point methods and the upper-level sub-problem with gradient ascent. A key challenge lies in analytically coupling these two levels. We address this by leveraging KKT conditions and the Implicit Function Theorem to compute gradients of agent trajectories w.r.t. environment parameters, enabling differentiation throughout the bi-level structure. Moreover, we propose a novel metric that quantifies navigation safety as a criterion for the upper-level environment optimization, and prove its validity through measure theory. Our experiments validate the effectiveness of the proposed framework in a variety of safety-critical navigation scenarios, inspired from warehouse logistics to urban transportation. The results demonstrate that optimized environments provide navigation guidance, improving both agents' safety and efficiency.",
+      "authors": [
+        "Zhan Gao",
+        "Gabriele Fadini",
+        "Stelian Coros",
+        "Amanda Prorok"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.MA"
+      ],
+      "published": "2026-04-08T11:43:38+00:00",
+      "link": "https://arxiv.org/pdf/2604.06972v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "multi-agent navigation and trajectory optimization in constrained environments",
+      "llm_evidence_cn": "复杂环境下的多智能体导航与轨迹优化",
+      "llm_evidence": "复杂环境下的多智能体导航与轨迹优化",
+      "canonical_evidence": "复杂环境下的多智能体导航与轨迹优化",
+      "llm_tldr_en": "Proposes a differentiable co-optimization method for environment configuration and agent trajectories in navigation.",
+      "llm_tldr_cn": "提出了一种环境配置与智能体轨迹协同优化的微分方法，用于提升导航安全性。",
+      "llm_tldr": "提出了一种环境配置与智能体轨迹协同优化的微分方法，用于提升导航安全性。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.07084v1",
+      "source": "arxiv",
+      "title": "Flow Motion Policy: Manipulator Motion Planning with Flow Matching Models",
+      "abstract": "Open-loop end-to-end neural motion planners have recently been proposed to improve motion planning for robotic manipulators. These methods enable planning directly from sensor observations without relying on a privileged collision checker during planning. However, many existing methods generate only a single path for a given workspace across different runs, and do not leverage their open-loop structure for inference-time optimization. To address this limitation, we introduce Flow Motion Policy, an open-loop, end-to-end neural motion planner for robotic manipulators that leverages the stochastic generative formulation of flow matching methods to capture the inherent multi-modality of planning datasets. By modeling a distribution over feasible paths, Flow Motion Policy enables efficient inference-time best-of-$N$ sampling. The method generates multiple end-to-end candidate paths, evaluates their collision status after planning, and executes the first collision-free solution. We benchmark the Flow Motion Policy against representative sampling-based and neural motion planning methods. Evaluation results demonstrate that Flow Motion Policy improves planning success and efficiency, highlighting the effectiveness of stochastic generative policies for end-to-end motion planning and inference-time optimization. Experimental evaluation videos are available via this \\href{https://zh.engr.tamu.edu/wp-content/uploads/sites/310/2026/03/FMP-Website.mp4}{link}.",
+      "authors": [
+        "Davood Soleymanzadeh",
+        "Xiao Liang",
+        "Minghui Zheng"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-04-08T13:38:58+00:00",
+      "link": "https://arxiv.org/pdf/2604.07084v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "neural motion planning for robotic manipulators from sensor observations",
+      "llm_evidence_cn": "基于传感器观测的机器人机械臂神经运动规划",
+      "llm_evidence": "基于传感器观测的机器人机械臂神经运动规划",
+      "canonical_evidence": "基于传感器观测的机器人机械臂神经运动规划",
+      "llm_tldr_en": "Introduces Flow Motion Policy for multi-modal manipulator motion planning using flow matching models.",
+      "llm_tldr_cn": "引入流运动策略，利用流匹配模型实现机械臂的多模态运动规划。",
+      "llm_tldr": "引入流运动策略，利用流匹配模型实现机械臂的多模态运动规划。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

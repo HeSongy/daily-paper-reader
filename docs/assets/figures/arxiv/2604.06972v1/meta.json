@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.06972v1/fig-001.webp",
+      "caption": "Figure 1. Environment configurations can impact the safety and efficiency of agent trajectories. Moving obstacle regions further apart in the environment of Fig. 1b allows to generate agent trajectories that are less likely to collide and exhibit improved path efficiency, compared to those in the environment of Fig. 1a.",
+      "page": 1,
+      "index": 1,
+      "width": 523,
+      "height": 265
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06972v1/fig-002.webp",
+      "caption": "Figure 5. (a) Multi-agent navigation in a poorly-designed environment. While two agents may navigate from si, si′ to gi,gi′ without collisions, there are higher collision risks and they are more likely to collide around the intersection of their trajectories (red circle). (b) Multi-agent navigation in a well-designed environment. By refining the spatial constraint of the obstacle region, it implicitly de-conflicts agents by guiding agent A1 to move faster than A2. This avoids potential collisions of two agents and improves the safety level of the environment, while not compromising their navigation performance.",
+      "page": 7,
+      "index": 2,
+      "width": 523,
+      "height": 315
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06972v1/fig-003.webp",
+      "caption": "Figure 6. The six scenarios considered in our experiments. (a) Optimization of shelf positions in a warehouse for safe multi-robot navigation. (b) Optimization of the radius of a roundabout in an urban transportation system for safe multi-vehicle driving. (c) Optimization of narrow passage angles to facilitate vehicles safely passing through the narrow passage. (d) Optimization of the exit angle of a highway to facilitate vehicles safely leaving the highway. (e) Optimization of the intersection angle of two roads for safe multi-vehicle driving. (f) Optimization of the track centerline to facilitate vehicles safely driving on the track.",
+      "page": 8,
+      "index": 3,
+      "width": 1074,
+      "height": 191
+    }
+  ]
+}

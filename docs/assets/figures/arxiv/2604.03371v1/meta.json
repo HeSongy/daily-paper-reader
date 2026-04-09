@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.03371v1/fig-001.webp",
+      "caption": "Fig. 4: Total cost variation v/s Nori for different αP0 , αd Pf , and Nf values.",
+      "page": 4,
+      "index": 1,
+      "width": 740,
+      "height": 476
+    }
+  ]
+}
