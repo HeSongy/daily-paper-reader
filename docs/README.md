@@ -6,73 +6,73 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-04-09
-- 运行时间：2026-04-09 20:36:23 UTC
+- 最新运行日期：2026-04-10
+- 运行时间：2026-04-10 20:11:39 UTC
 - 运行状态：成功
 - 本次总论文数：17
 - 精读区：6
 - 速读区：11
 
 ### 今日简报（AI）
-今天重点研读了 17 篇前沿论文，聚焦于多智能体机器人协作与实时 4D 世界建模。  
-最值得关注的是异构机器人团队的任务规划算法创新，以及可实时模拟时空动态的世界生成框架。  
-建议普通读者关注人工智能在物理环境理解与多模态协同上的新突破。
-- 详情：[/202604/09/README](/202604/09/README)
+聚焦视觉语言导航新突破与多模态推理模型最新进展。  
+重点关注大型语言模型在无人机导航及生成式世界建模中的应用潜力。  
+建议读者持续关注多模态推理与机器人自主决策方向的融合趋势。
+- 详情：[/202604/10/README](/202604/10/README)
 
 ### 精读区论文标签
-1. [INSPATIO-WORLD: A Real-Time 4D World Simulator via Spatiotemporal Autoregressive Modeling](/202604/09/2604.07209v1-inspatio-world-a-real-time-4d-world-simulator-via-spatiotemporal-autoregressive-modeling)  
-   标签：评分：9.0/10、query:navwm
-   evidence：支持复杂环境无缝导航的世界模拟器
-2. [Collaborative Task and Path Planning for Heterogeneous Robotic Teams using Multi-Agent PPO](/202604/09/2604.01213v1-collaborative-task-and-path-planning-for-heterogeneous-robotic-teams-using-multi-agent-ppo)  
+1. [Vision-Language Navigation for Aerial Robots: Towards the Era of Large Language Models](/202604/10/2604.07705v1-vision-language-navigation-for-aerial-robots-towards-the-era-of-large-language-models)  
+   标签：评分：10.0/10、query:navwm
+   evidence：无人机在三维环境中的视觉语言导航
+2. [WorldMAP: Bootstrapping Vision-Language Navigation Trajectory Prediction with Generative World Models](/202604/10/2604.07957v1-worldmap-bootstrapping-vision-language-navigation-trajectory-prediction-with-generative-world-models)  
+   标签：评分：10.0/10、query:navwm
+   evidence：用于视觉语言导航轨迹预测的生成式世界模型
+3. [MotionScape: A Large-Scale Real-World Highly Dynamic UAV Video Dataset for World Models](/202604/10/2604.07991v1-motionscape-a-large-scale-real-world-highly-dynamic-uav-video-dataset-for-world-models)  
+   标签：评分：10.0/10、query:navwm
+   evidence：用于世界模型和自主导航的无人机视频数据集
+4. [Not All Agents Matter: From Global Attention Dilution to Risk-Prioritized Game Planning](/202604/10/2604.05449v1-not-all-agents-matter-from-global-attention-dilution-to-risk-prioritized-game-planning)  
    标签：评分：8.0/10、query:navwm
-   evidence：利用强化学习进行机器人团队的协作任务与路径规划
-3. [An Open-Source LiDAR and Monocular Off-Road Autonomous Navigation Stack](/202604/09/2604.03096v1-an-open-source-lidar-and-monocular-off-road-autonomous-navigation-stack)  
+   evidence：用于自动驾驶规划与决策的统一表示空间
+5. [Multimodal Latent Reasoning via Predictive Embeddings](/202604/10/2604.08065v1-multimodal-latent-reasoning-via-predictive-embeddings)  
    标签：评分：8.0/10、query:navwm
-   evidence：用于越野环境自主导航的3D感知导航栈
-4. [A Survey on Sensor-based Planning and Control for Unmanned Underwater Vehicles](/202604/09/2604.05003v1-a-survey-on-sensor-based-planning-and-control-for-unmanned-underwater-vehicles)  
+   evidence：通过隐空间中的预测嵌入进行隐式推理
+6. [Dead Weights, Live Signals: Feedforward Graphs of Frozen Language Models](/202604/10/2604.08335v1-dead-weights-live-signals-feedforward-graphs-of-frozen-language-models)  
    标签：评分：8.0/10、query:navwm
-   evidence：复杂水下环境导航中的传感器规划与控制
-5. [StarVLA: A Lego-like Codebase for Vision-Language-Action Model Developing](/202604/09/2604.05014v1-starvla-a-lego-like-codebase-for-vision-language-action-model-developing)  
-   标签：评分：8.0/10、query:navwm
-   evidence：为具身智能体集成世界模型后端
-6. [From Points to Sets: Set-Based Safety Verification in the Latent Space](/202604/09/2604.05799v1-from-points-to-sets-set-based-safety-verification-in-the-latent-space)  
-   标签：评分：8.0/10、query:navwm
-   evidence：学习隐空间中的安全性验证
+   evidence：模型图中通过共享连续隐空间进行通信
 
 ### 速读区论文标签
-1. [Telecom World Models: Unifying Digital Twins, Foundation Models, and Predictive Planning for 6G](/202604/09/2604.06882v1-telecom-world-models-unifying-digital-twins-foundation-models-and-predictive-planning-for-6g)  
-   标签：评分：8.0/10、query:navwm
-   evidence：用于预测规划和网络动态的世界模型
-2. [PLUME: Latent Reasoning Based Universal Multimodal Embedding](/202604/09/2604.02073v1-plume-latent-reasoning-based-universal-multimodal-embedding)  
+1. [PLUME: Latent Reasoning Based Universal Multimodal Embedding](/202604/10/2604.02073v2-plume-latent-reasoning-based-universal-multimodal-embedding)  
    标签：评分：7.0/10、query:navwm
-   evidence：使用连续隐状态的隐式推理框架
-3. [LatentUM: Unleashing the Potential of Interleaved Cross-Modal Reasoning via a Latent-Space Unified Model](/202604/09/2604.02097v1-latentum-unleashing-the-potential-of-interleaved-cross-modal-reasoning-via-a-latent-space-unified-model)  
+   evidence：基于连续隐状态的隐式推理
+2. [PRO-SPECT: Probabilistically Safe Scalable Planning for Energy-Aware Coordinated UAV-UGV Teams in Stochastic Environments](/202604/10/2604.02142v1-pro-spect-probabilistically-safe-scalable-planning-for-energy-aware-coordinated-uav-ugv-teams-in-stochastic-environments)  
    标签：评分：7.0/10、query:navwm
-   evidence：通过隐空间统一模型模拟物理世界的视觉动力学
-4. [Understanding Latent Diffusability via Fisher Geometry](/202604/09/2604.02751v1-understanding-latent-diffusability-via-fisher-geometry)  
+   evidence：随机环境下的无人机-无人车团队能耗感知规划
+3. [Enabling Intrinsic Reasoning over Dense Geospatial Embeddings with DFR-Gemma](/202604/10/2604.07490v1-enabling-intrinsic-reasoning-over-dense-geospatial-embeddings-with-dfr-gemma)  
    标签：评分：7.0/10、query:navwm
-   evidence：量化隐空间属性与几何失真
-5. [Provable Multi-Task Reinforcement Learning: A Representation Learning Framework with Low Rank Rewards](/202604/09/2604.03891v1-provable-multi-task-reinforcement-learning-a-representation-learning-framework-with-low-rank-rewards)  
+   evidence：实现对地理空间稠密嵌入的推理，用于地理空间智能
+4. [RoboAgent: Chaining Basic Capabilities for Embodied Task Planning](/202604/10/2604.07774v1-roboagent-chaining-basic-capabilities-for-embodied-task-planning)  
    标签：评分：7.0/10、query:navwm
-   evidence：多任务强化学习中的共享隐空间表示
-6. [A BEV-Fusion Based Framework for Sequential Multi-Modal Beam Prediction in mmWave Systems](/202604/09/2604.05668v1-a-bev-fusion-based-framework-for-sequential-multi-modal-beam-prediction-in-mmwave-systems)  
+   evidence：具身任务规划与环境交互
+5. [AgiPIX: Bridging Simulation and Reality in Indoor Aerial Inspection](/202604/10/2604.08009v1-agipix-bridging-simulation-and-reality-in-indoor-aerial-inspection)  
    标签：评分：7.0/10、query:navwm
-   evidence：用于空间一致性的鸟瞰图表示
-7. [Differentiable Environment-Trajectory Co-Optimization for Safe Multi-Agent Navigation](/202604/09/2604.06972v1-differentiable-environment-trajectory-co-optimization-for-safe-multi-agent-navigation)  
+   evidence：自主室内飞行规划与自主系统栈
+6. [Beyond Static Forecasting: Unleashing the Power of World Models for Mobile Traffic Extrapolation](/202604/10/2604.08199v1-beyond-static-forecasting-unleashing-the-power-of-world-models-for-mobile-traffic-extrapolation)  
    标签：评分：7.0/10、query:navwm
-   evidence：复杂环境下的多智能体导航与轨迹优化
-8. [Flow Motion Policy: Manipulator Motion Planning with Flow Matching Models](/202604/09/2604.07084v1-flow-motion-policy-manipulator-motion-planning-with-flow-matching-models)  
-   标签：评分：7.0/10、query:navwm
-   evidence：基于传感器观测的机器人机械臂神经运动规划
-9. [Quotient-Based Posterior Analysis for Euclidean Latent Space Models](/202604/09/2604.02739v1-quotient-based-posterior-analysis-for-euclidean-latent-space-models)  
+   evidence：提出移动网络世界模型，建模状态与动作间的动力学
+7. [PanopticQuery: Unified Query-Time Reasoning for 4D Scenes](/202604/10/2604.05638v1-panopticquery-unified-query-time-reasoning-for-4d-scenes)  
    标签：评分：6.0/10、query:navwm
-   evidence：欧几里得隐空间模型及可识别结构的分析
-10. [Surrogate Model-Based Near-Optimal Gain Selection for Approach-Angle-Constrained Two-Phase Pure Proportional Navigation](/202604/09/2604.03371v1-surrogate-model-based-near-optimal-gain-selection-for-approach-angle-constrained-two-phase-pure-proportional-navigation)  
+   evidence：4D场景中跨越空间与时间的语义对齐
+8. [LiftFormer: Lifting and Frame Theory Based Monocular Depth Estimation Using Depth and Edge Oriented Subspace Representation](/202604/10/2604.06576v1-liftformer-lifting-and-frame-theory-based-monocular-depth-estimation-using-depth-and-edge-oriented-subspace-representation)  
    标签：评分：6.0/10、query:navwm
-   evidence：定向和最终阶段的导航增益
-11. [Designing Privacy-Preserving Visual Perception for Robot Navigation Based on User Privacy Preferences](/202604/09/2604.06382v1-designing-privacy-preserving-visual-perception-for-robot-navigation-based-on-user-privacy-preferences)  
+   evidence：用于 3D 场景结构的子空间表示
+9. [CubeGraph: Efficient Retrieval-Augmented Generation for Spatial and Temporal Data](/202604/10/2604.06616v1-cubegraph-efficient-retrieval-augmented-generation-for-spatial-and-temporal-data)  
    标签：评分：6.0/10、query:navwm
-   evidence：机器人导航中的视觉感知与抽象表示
+   evidence：带有空间和时间约束的向量搜索
+10. [What's in the latent space? Exploring coupled tropical Pacific variability within a Multi-branch $β$-Variational Autoencoder](/202604/10/2604.07137v1-whats-in-the-latent-space-exploring-coupled-tropical-pacific-variability-within-a-multi-branch--variational-autoencoder)  
+   标签：评分：6.0/10、query:navwm
+   evidence：探索隐空间内的变率与物理可解释性
+11. [Aligning Agents via Planning: A Benchmark for Trajectory-Level Reward Modeling](/202604/10/2604.08178v1-aligning-agents-via-planning-a-benchmark-for-trajectory-level-reward-modeling)  
+   标签：评分：6.0/10、query:navwm
+   evidence：智能体系统轨迹级奖励建模的基准测试
 
 
 <div class="dpr-home-promo-card">

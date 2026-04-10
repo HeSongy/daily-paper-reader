@@ -1,0 +1,78 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.08009v1/fig-001.webp",
+      "caption": "Fig. 5: This is the complete overview of the AgiUI where the user can see different perspectives of the robots it is controlling, including a top view, a side view, and a third-person view.",
+      "page": 6,
+      "index": 1,
+      "width": 1052,
+      "height": 441
+    },
+    {
+      "url": "assets/figures/arxiv/2604.08009v1/fig-002.webp",
+      "caption": "Fig. 6: Trajectory-tracking comparison of Ground Truth, AgiSIM, and AgiREAL in two trajectories at 6 m/s maximum velocity; Up down spiral and lemniscate: (1) spiral in the x–y plane, (2) spiral in the y–z plane, and (3) lemniscate in the x–y plane.",
+      "page": 6,
+      "index": 2,
+      "width": 504,
+      "height": 473
+    },
+    {
+      "url": "assets/figures/arxiv/2604.08009v1/fig-003.webp",
+      "caption": "TABLE III: Average system utilisation on Jetson Orin NX Super 16 GB by AgiAUTO.",
+      "page": 7,
+      "index": 3,
+      "width": 512,
+      "height": 271
+    },
+    {
+      "url": "assets/figures/arxiv/2604.08009v1/fig-004.webp",
+      "caption": "Fig. 8: Representative ENRICH 2025 mapping output.",
+      "page": 7,
+      "index": 4,
+      "width": 504,
+      "height": 254
+    },
+    {
+      "url": "assets/figures/arxiv/2604.08009v1/fig-005.webp",
+      "caption": "Fig. 7: Left: AKW Zwentendorf, Right: AgiPIXduring the various stages of the trial.",
+      "page": 7,
+      "index": 5,
+      "width": 508,
+      "height": 350
+    },
+    {
+      "url": "assets/figures/arxiv/2604.08009v1/fig-006.webp",
+      "caption": "Fig. 10: Drone trajectory relative to the mapping trajectory when controlled by FAINT [27], a learning-based visual navigation method. The drone successfully reached the goal on the left trajectory, but missed it on the right.",
+      "page": 7,
+      "index": 6,
+      "width": 514,
+      "height": 510
+    },
+    {
+      "url": "assets/figures/arxiv/2604.08009v1/fig-007.webp",
+      "caption": "Fig. 2: Comparison of consumer and research platforms by onboard compute, agility, and sensing. Criteria include openness, ROS 2 support, simulation (double ticks denote photorealism), UI, CPU performance (https://www.cpubenchmark.net), and GPU availability. Agility is measured by thrust-to-weight; diagonal span is in flight configuration. (*conditionally open-source)",
+      "page": 3,
+      "index": 7,
+      "width": 1052,
+      "height": 858
+    },
+    {
+      "url": "assets/figures/arxiv/2604.08009v1/fig-008.webp",
+      "caption": "TABLE I: Overview of the components of the flight hardware design.",
+      "page": 4,
+      "index": 8,
+      "width": 512,
+      "height": 471
+    },
+    {
+      "url": "assets/figures/arxiv/2604.08009v1/fig-009.webp",
+      "caption": "Fig. 3: System overview of the AgiPIX stack. AgiAUTO runs modular ROS 2 components on the companion computer. Flight-state and setpoint topics are bridged to PX4 via native DDS in both simulation and real flights. An external ROS 2 logger records system telemetry. AgiUI provides operator interaction, logging, and mission commands over a MQTT [36].",
+      "page": 4,
+      "index": 9,
+      "width": 1044,
+      "height": 595
+    }
+  ]
+}
