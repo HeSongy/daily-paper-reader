@@ -1,0 +1,379 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-04-11T19:29:09.361307+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 4,
+    "deep_cap": 6,
+    "deep_selected": 4,
+    "quick_candidates": 5,
+    "quick_skim_target": 11,
+    "quick_selected": 5
+  },
+  "deep_dive": [
+    {
+      "id": "2604.07957v1",
+      "source": "arxiv",
+      "title": "WorldMAP: Bootstrapping Vision-Language Navigation Trajectory Prediction with Generative World Models",
+      "abstract": "Vision-language models (VLMs) and generative world models are opening new opportunities for embodied navigation. VLMs are increasingly used as direct planners or trajectory predictors, while world models support look-ahead reasoning by imagining future views. Yet predicting a reliable trajectory from a single egocentric observation remains challenging. Current VLMs often generate unstable trajectories, and world models, though able to synthesize plausible futures, do not directly provide the grounded signals needed for navigation learning. This raises a central question: how can generated futures be turned into supervision for grounded trajectory prediction? We present WorldMAP, a teacher--student framework that converts world-model-generated futures into persistent semantic-spatial structure and planning-derived supervision. Its world-model-driven teacher builds semantic-spatial memory from generated videos, grounds task-relevant targets and obstacles, and produces trajectory pseudo-labels through explicit planning. A lightweight student with a multi-hypothesis trajectory head is then trained to predict navigation trajectories directly from vision-language inputs. On Target-Bench, WorldMAP achieves the best ADE and FDE among compared methods, reducing ADE by 18.0% and FDE by 42.1% relative to the best competing baseline, while lifting a small open-source VLM to DTW performance competitive with proprietary models. More broadly, the results suggest that, in embodied navigation, the value of world models may lie less in supplying action-ready imagined evidence than in synthesizing structured supervision for navigation learning.",
+      "authors": [
+        "Hongjin Chen",
+        "Shangyun Jiang",
+        "Tonghua Su",
+        "Chen Gao",
+        "Xinlei Chen",
+        "Yong Li",
+        "Zhibo Chen"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-04-09T08:21:58+00:00",
+      "link": "https://arxiv.org/pdf/2604.07957v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "generative world models for vision-language navigation trajectory prediction",
+      "llm_evidence_cn": "用于视觉语言导航轨迹预测的生成式世界模型",
+      "llm_evidence": "用于视觉语言导航轨迹预测的生成式世界模型",
+      "canonical_evidence": "用于视觉语言导航轨迹预测的生成式世界模型",
+      "llm_tldr_en": "Uses generative world models to provide supervision for grounded trajectory prediction in navigation.",
+      "llm_tldr_cn": "利用生成式世界模型为导航中的接地轨迹预测提供监督信号。",
+      "llm_tldr": "利用生成式世界模型为导航中的接地轨迹预测提供监督信号。",
+      "llm_tags": [
+        "query:navwm:composite"
+      ],
+      "matched_query_tag": "query:navwm:composite",
+      "matched_query_text": "Papers central to 隐空间、导航与世界模型相关论文检索, especially work that connects or combines: 研究隐空间表示及其在智能系统中的作用; 智能体在复杂环境中的导航策略与学习方法; 世界模型的结构与在自主系统中的应用; 探索表示学习在构建世界模型与导航中的运用; 基于隐空间表示的规划与决策模型; 空间表示与认知映射的算法及模型; 检索关于隐空间表示在世界模型和导航中的研究论文; 寻找利用世界模型进行强化学习或规划的最新研究; 探索智能体如何利用隐空间进行导航与环境理解.",
+      "matched_requirement_id": "req-composite-navwm",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.07991v1",
+      "source": "arxiv",
+      "title": "MotionScape: A Large-Scale Real-World Highly Dynamic UAV Video Dataset for World Models",
+      "abstract": "Recent advances in world models have demonstrated strong capabilities in simulating physical reality, making them an increasingly important foundation for embodied intelligence. For UAV agents in particular, accurate prediction of complex 3D dynamics is essential for autonomous navigation and robust decision-making in unconstrained environments. However, under the highly dynamic camera trajectories typical of UAV views, existing world models often struggle to maintain spatiotemporal physical consistency. A key reason lies in the distribution bias of current training data: most existing datasets exhibit restricted 2.5D motion patterns, such as ground-constrained autonomous driving scenes or relatively smooth human-centric egocentric videos, and therefore lack realistic high-dynamic 6-DoF UAV motion priors. To address this gap, we present MotionScape, a large-scale real-world UAV-view video dataset with highly dynamic motion for world modeling. MotionScape contains over 30 hours of 4K UAV-view videos, totaling more than 4.5M frames. This novel dataset features semantically and geometrically aligned training samples, where diverse real-world UAV videos are tightly coupled with accurate 6-DoF camera trajectories and fine-grained natural language descriptions. To build the dataset, we develop an automated multi-stage processing pipeline that integrates CLIP-based relevance filtering, temporal segmentation, robust visual SLAM for trajectory recovery, and large-language-model-driven semantic annotation. Extensive experiments show that incorporating such semantically and geometrically aligned annotations effectively improves the ability of existing world models to simulate complex 3D dynamics and handle large viewpoint shifts, thereby benefiting decision-making and planning for UAV agents in complex environments. The dataset is publicly available at https://github.com/Thelegendzz/MotionScape",
+      "authors": [
+        "Zile Guo",
+        "Zhan Chen",
+        "Enze Zhu",
+        "Kan Wei",
+        "Yongkang Zou",
+        "Xiaoxuan Liu",
+        "Lei Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.MM"
+      ],
+      "published": "2026-04-09T08:59:40+00:00",
+      "link": "https://arxiv.org/pdf/2604.07991v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "UAV autonomous navigation and world models for 3D dynamics",
+      "llm_evidence_cn": "无人机自主导航与3D动力学世界模型",
+      "llm_evidence": "无人机自主导航与3D动力学世界模型",
+      "canonical_evidence": "无人机自主导航与3D动力学世界模型",
+      "llm_tldr_en": "A large-scale UAV video dataset designed to improve world models for navigation in dynamic environments.",
+      "llm_tldr_cn": "一个大规模无人机视频数据集，旨在改进动态环境导航中的世界模型。",
+      "llm_tldr": "一个大规模无人机视频数据集，旨在改进动态环境导航中的世界模型。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.08232v1",
+      "source": "arxiv",
+      "title": "HiRO-Nav: Hybrid ReasOning Enables Efficient Embodied Navigation",
+      "abstract": "Embodied navigation agents built upon large reasoning models (LRMs) can handle complex, multimodal environmental input and perform grounded reasoning per step to improve sequential decision-making for long-horizon tasks. However, a critical question remains: \\textit{how can the reasoning capabilities of LRMs be harnessed intelligently and efficiently for long-horizon navigation tasks?} In simple scenes, agents are expected to act reflexively, while in complex ones they should engage in deliberate reasoning before acting.To achieve this, we introduce \\textbf{H}ybr\\textbf{i}d \\textbf{R}eas\\textbf{O}ning \\textbf{Nav}igation (\\textbf{HiRO-Nav}) agent, the first kind of agent capable of adaptively determining whether to perform thinking at every step based on its own action entropy. Specifically, by examining how the agent's action entropy evolves over the navigation trajectories, we observed that only a small fraction of actions exhibit high entropy, and these actions often steer the agent toward novel scenes or critical objects. Furthermore, studying the relationship between action entropy and task completion (i.e., Q-value) reveals that improving high-entropy actions contributes more positively to task success.Hence, we propose a tailored training pipeline comprising hybrid supervised fine-tuning as a cold start, followed by online reinforcement learning with the proposed hybrid reasoning strategy to explicitly activate reasoning only for high-entropy actions, significantly reducing computational overhead while improving decision quality. Extensive experiments on the \\textsc{CHORES}-$\\mathbb{S}$ ObjectNav benchmark showcases that HiRO-Nav achieves a better trade-off between success rates and token efficiency than both dense-thinking and no-thinking baselines.",
+      "authors": [
+        "He Zhao",
+        "Yijun Yang",
+        "Zichuan Lin",
+        "Deheng Ye",
+        "Chunyan Miao"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-04-09T13:22:24+00:00",
+      "link": "https://arxiv.org/pdf/2604.08232v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "efficient embodied navigation using hybrid reasoning",
+      "llm_evidence_cn": "利用混合推理实现高效的具身导航",
+      "llm_evidence": "利用混合推理实现高效的具身导航",
+      "canonical_evidence": "利用混合推理实现高效的具身导航",
+      "llm_tldr_en": "Introduces HiRO-Nav for adaptive reasoning in long-horizon embodied navigation tasks.",
+      "llm_tldr_cn": "引入了HiRO-Nav，用于在长程具身导航任务中进行自适应推理。",
+      "llm_tldr": "引入了HiRO-Nav，用于在长程具身导航任务中进行自适应推理。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.02546v1",
+      "source": "arxiv",
+      "title": "Contrastive Language-Colored Pointmap Pretraining for Unified 3D Scene Understanding",
+      "abstract": "Pretraining 3D encoders by aligning with Contrastive Language Image Pretraining (CLIP) has emerged as a promising direction to learn generalizable representations for 3D scene understanding. In this paper, we propose UniScene3D, a transformer-based encoder that learns unified scene representations from multi-view colored pointmaps, jointly modeling image appearance and geometry. For robust colored pointmap representation learning, we introduce novel cross-view geometric alignment and grounded view alignment to enforce cross-view geometry and semantic consistency. Extensive low-shot and task-specific fine-tuning evaluations on viewpoint grounding, scene retrieval, scene type classification, and 3D VQA demonstrate our state-of-the-art performance. These results highlight the effectiveness of our approach for unified 3D scene understanding. https://yebulabula.github.io/UniScene3D/",
+      "authors": [
+        "Ye Mao",
+        "Weixun Luo",
+        "Ranran Huang",
+        "Junpeng Jing",
+        "Krystian Mikolajczyk"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-04-02T21:54:43+00:00",
+      "link": "https://arxiv.org/pdf/2604.02546v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Unified scene representations from pointmaps for 3D understanding",
+      "llm_evidence_cn": "基于点图的统一场景表示用于3D理解",
+      "llm_evidence": "基于点图的统一场景表示用于3D理解",
+      "canonical_evidence": "基于点图的统一场景表示用于3D理解",
+      "llm_tldr_en": "Learns unified 3D scene representations by aligning pointmaps with CLIP for improved environment understanding.",
+      "llm_tldr_cn": "通过将点图与 CLIP 对齐来学习统一的 3D 场景表示，提升环境理解能力。",
+      "llm_tldr": "通过将点图与 CLIP 对齐来学习统一的 3D 场景表示，提升环境理解能力。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索表示学习在构建世界模型与导航中的运用",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2604.02965v1",
+      "source": "arxiv",
+      "title": "Open-Loop Planning, Closed-Loop Verification: Speculative Verification for VLA",
+      "abstract": "Vision-Language-Action (VLA) models, as large foundation models for embodied control, have shown strong performance in manipulation tasks. However, their performance comes at high inference cost. To improve efficiency, recent methods adopt action chunking, which predicts a sequence of future actions for open-loop execution. Although effective for reducing computation, open-loop execution is sensitive to environmental changes and prone to error accumulation due to the lack of close-loop feedback. To address this limitation, we propose Speculative Verification for VLA Control (SV-VLA), a framework that combines efficient open-loop long-horizon planning with lightweight closed-loop online verification. Specifically, SV-VLA uses a heavy VLA as a low-frequency macro-planner to generate an action chunk together with a planning context, while a lightweight verifier continuously monitors execution based on the latest observations. Conditioned on both the current observation and the planning context, the verifier compares the planned action against a closed-loop reference action and triggers replanning only when necessary. Experiments demonstrate that SV-VLA combines the efficiency of chunked prediction with the robustness of closed-loop control, enabling efficient and reliable VLA-based control in dynamic environments. Code is available: https://github.com/edsad122/SV-VLA.",
+      "authors": [
+        "Zihua Wang",
+        "Zhitao Lin",
+        "Ruibo Li",
+        "Yu Zhang",
+        "Xu Yang",
+        "Siya Mi",
+        "Xiu-Shen Wei"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CL"
+      ],
+      "published": "2026-04-03T10:55:51+00:00",
+      "link": "https://arxiv.org/pdf/2604.02965v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "open-loop planning and closed-loop verification for embodied control",
+      "llm_evidence_cn": "具身控制中的开环规划与闭环验证",
+      "llm_evidence": "具身控制中的开环规划与闭环验证",
+      "canonical_evidence": "具身控制中的开环规划与闭环验证",
+      "llm_tldr_en": "Combines long-horizon planning with online verification to improve the reliability of embodied agents.",
+      "llm_tldr_cn": "结合长程规划与在线验证，提升具身智能体执行任务的可靠性。",
+      "llm_tldr": "结合长程规划与在线验证，提升具身智能体执行任务的可靠性。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.07019v1",
+      "source": "arxiv",
+      "title": "ConceptTracer: Interactive Analysis of Concept Saliency and Selectivity in Neural Representations",
+      "abstract": "Neural networks deliver impressive predictive performance across a variety of tasks, but they are often opaque in their decision-making processes. Despite a growing interest in mechanistic interpretability, tools for systematically exploring the representations learned by neural networks in general, and tabular foundation models in particular, remain limited. In this work, we introduce ConceptTracer, an interactive application for analyzing neural representations through the lens of human-interpretable concepts. ConceptTracer integrates two information-theoretic measures that quantify concept saliency and selectivity, enabling researchers and practitioners to identify neurons that respond strongly to individual concepts. We demonstrate the utility of ConceptTracer on representations learned by TabPFN and show that our approach facilitates the discovery of interpretable neurons. Together, these capabilities provide a practical framework for investigating how neural networks like TabPFN encode concept-level information. ConceptTracer is available at https://github.com/ml-lab-htw/concept-tracer.",
+      "authors": [
+        "Ricardo Knauer",
+        "Andre Beinrucker",
+        "Erik Rodner"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-04-08T12:37:39+00:00",
+      "link": "https://arxiv.org/pdf/2604.07019v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "analyzing neural representations and concept saliency",
+      "llm_evidence_cn": "分析神经表示与概念显著性",
+      "llm_evidence": "分析神经表示与概念显著性",
+      "canonical_evidence": "分析神经表示与概念显著性",
+      "llm_tldr_en": "ConceptTracer is a tool for analyzing neural representations through human-interpretable concepts.",
+      "llm_tldr_cn": "ConceptTracer是一个通过人类可解释概念分析神经表示的交互式工具。",
+      "llm_tldr": "ConceptTracer是一个通过人类可解释概念分析神经表示的交互式工具。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.08226v1",
+      "source": "arxiv",
+      "title": "Grounding Clinical AI Competency in Human Cognition Through the Clinical World Model and Skill-Mix Framework",
+      "abstract": "The competency of any intelligent agent is bounded by its formal account of the world in which it operates. Clinical AI lacks such an account. Existing frameworks address evaluation, regulation, or system design in isolation, without a shared model of the clinical world to connect them. We introduce the Clinical World Model, a framework that formalizes care as a tripartite interaction among Patient, Provider, and Ecosystem. To formalize how any agent, whether human or artificial, transforms information into clinical action, we develop parallel decision-making architectures for providers, patients, and AI agents, grounded in validated principles of clinical cognition.   The Clinical AI Skill-Mix operationalizes competency through eight dimensions. Five define the clinical competency space (condition, phase, care setting, provider role, and task) and three specify how AI engages human reasoning (assigned authority, agent facing, and anchoring layer). The combinatorial product of these dimensions yields a space of billions of distinct competency coordinates. A central structural implication is that validation within one coordinate provides minimal evidence for performance in another, rendering the competency space irreducible. The framework supplies a common grammar through which clinical AI can be specified, evaluated, and bounded across stakeholders. By making this structure explicit, the Clinical World Model reframes the field's central question from whether AI works to in which competency coordinates reliability has been demonstrated, and for whom.",
+      "authors": [
+        "Seyed Amir Ahmad Safavi-Naini",
+        "Elahe Meftah",
+        "Josh Mohess",
+        "Pooya Mohammadi Kazaj",
+        "Georgios Siontis",
+        "Zahra Atf",
+        "Peter R. Lewis",
+        "Mauricio Reyes",
+        "Girish Nadkarni",
+        "Roland Wiest",
+        "Stephan Windecker",
+        "Christoph Grani",
+        "Ali Soroush",
+        "Isaac Shiri"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.HC",
+        "eess.SY"
+      ],
+      "published": "2026-04-09T13:20:13+00:00",
+      "link": "https://arxiv.org/pdf/2604.08226v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Clinical World Model for decision-making architectures",
+      "llm_evidence_cn": "用于决策架构的临床世界模型",
+      "llm_evidence": "用于决策架构的临床世界模型",
+      "canonical_evidence": "用于决策架构的临床世界模型",
+      "llm_tldr_en": "Formalizes a world model for clinical AI to ground information transformation into clinical action.",
+      "llm_tldr_cn": "为临床人工智能形式化了一个世界模型，将信息转化映射为临床行动。",
+      "llm_tldr": "为临床人工智能形式化了一个世界模型，将信息转化映射为临床行动。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.07415v1",
+      "source": "arxiv",
+      "title": "SubSearch: Intermediate Rewards for Unsupervised Guided Reasoning in Complex Retrieval",
+      "abstract": "Large language models (LLMs) are probabilistic in nature and perform more reliably when augmented with external information. As complex queries often require multi-step reasoning over the retrieved information, with no clear or predetermined reasoning path, they remain challenging. Recent approaches train models using reinforcement learning on the model's outcome, showing promise in improving how models handle complex information. We introduce SubSearch, a specialized framework that shifts from outcome-only supervision to intermediate reward signals that incentivize planning high-quality reasoning. Unlike previous work on process reward modeling, which focuses on training a separate reward model with annotated trajectories by either human annotators or large LLM judges, SubSearch directly optimizes the generator using intrinsic process rewards, which we define as internally-derived rewards, eliminating the need for external supervision, and moving towards autonomous information-intensive reasoning. Experiments on seven benchmarks show that rewarding intermediate reasoning steps with intrinsic rewards leads to more robust reasoning traces in both QA and multi-hop QA datasets over using only outcome rewards. SubSearch can help in building reasoning traces that allow agents to better integrate search engines for complex query answering, while offering a data-efficient alternative to supervised process modeling.",
+      "authors": [
+        "Roxana Petcu",
+        "Evangelos Kanoulas",
+        "Maarten de Rijke"
+      ],
+      "primary_category": "cs.IR",
+      "categories": [
+        "cs.IR",
+        "cs.AI",
+        "cs.CL"
+      ],
+      "published": "2026-04-08T13:09:47+00:00",
+      "link": "https://arxiv.org/pdf/2604.07415v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "intermediate reward signals for planning and reasoning",
+      "llm_evidence_cn": "用于规划与推理的中间奖励信号",
+      "llm_evidence": "用于规划与推理的中间奖励信号",
+      "canonical_evidence": "用于规划与推理的中间奖励信号",
+      "llm_tldr_en": "A framework using intermediate rewards to incentivize high-quality reasoning and planning in LLMs.",
+      "llm_tldr_cn": "一种利用中间奖励激励大语言模型进行高质量推理与规划的框架。",
+      "llm_tldr": "一种利用中间奖励激励大语言模型进行高质量推理与规划的框架。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.08147v1",
+      "source": "arxiv",
+      "title": "Semantic Noise Reduction via Teacher-Guided Dual-Path Audio-Visual Representation Learning",
+      "abstract": "Recent advances in audio-visual representation learning have shown the value of combining contrastive alignment with masked reconstruction. However, jointly optimizing these objectives in a single forward pass forces the contrastive branch to rely on randomly visible patches designed for reconstruction rather than cross-modal alignment, introducing semantic noise and optimization interference. We propose TG-DP, a Teacher-Guided Dual-Path framework that decouples reconstruction and alignment into separate optimization paths. By disentangling the masking regimes of the two branches, TG-DP enables the contrastive pathway to use a visibility pattern better suited to cross-modal alignment. A teacher model further provides auxiliary guidance for organizing visible tokens in this branch, helping reduce interference and stabilize cross-modal representation learning. TG-DP achieves state-of-the-art performance in zero-shot retrieval. On AudioSet, it improves R@1 from 35.2\\% to 37.4\\% for video-to-audio retrieval and from 27.9\\% to 37.1\\% for audio-to-video retrieval. The learned representations also remain semantically robust, achieving state-of-the-art linear-probe performance on AS20K and VGGSound. Taken together, our results suggest that decoupling multimodal objectives and introducing teacher-guided structure into the contrastive pathway provide an effective framework for improving large-scale audio-visual pretraining. Code is available at https://github.com/wanglg20/TG-DP.",
+      "authors": [
+        "Linge Wang",
+        "Yingying Chen",
+        "Bingke Zhu",
+        "Lu Zhou",
+        "Jinqiao Wang"
+      ],
+      "primary_category": "cs.SD",
+      "categories": [
+        "cs.SD",
+        "cs.CV"
+      ],
+      "published": "2026-04-09T12:08:40+00:00",
+      "link": "https://arxiv.org/pdf/2604.08147v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Decoupling reconstruction and alignment for better semantic representation learning",
+      "llm_evidence_cn": "解耦重建与对齐任务以优化语义表示学习",
+      "llm_evidence": "解耦重建与对齐任务以优化语义表示学习",
+      "canonical_evidence": "解耦重建与对齐任务以优化语义表示学习",
+      "llm_tldr_en": "Proposes a dual-path framework to reduce noise in audio-visual representation learning.",
+      "llm_tldr_cn": "提出双路径框架解耦重建与对齐，减少视听表示学习中的语义噪声。",
+      "llm_tldr": "提出双路径框架解耦重建与对齐，减少视听表示学习中的语义噪声。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索表示学习在构建世界模型与导航中的运用",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

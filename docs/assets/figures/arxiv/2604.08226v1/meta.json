@@ -1,0 +1,78 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.08226v1/fig-001.webp",
+      "caption": "Figure 7. Care Phase and Care Setting dimensions of the Clinical Competency Space. The upper timeline depicts seven Care Phases spanning health to outcome: at-risk, pre-symptomatic, diagnostic work-up, treatment planning, post-treatment care, follow-up, and coping. The lower section maps 12 Care Settings to the timeline, with blue lines indicating each setting's temporal relevance across phases. Abbreviations: Dx, diagnostic; Tx, treatment.",
+      "page": 25,
+      "index": 1,
+      "width": 876,
+      "height": 822
+    },
+    {
+      "url": "assets/figures/arxiv/2604.08226v1/fig-002.webp",
+      "caption": "Figure 2. The Clinical World Model framework to situate clinical AI within healthcare delivery. (a) Tripartite architecture of the Clinical World Model, comprising the Patient, Provider, and Ecosystem. Preference and action arrows indicate the bidirectional exchange between Patient and Provider, with both drawing upon the Ecosystem. Five Skill-Mix dimensions characterize the clinical encounter: Condition, Care Phase, Care Task, Care Provider Role, and Care Setting. The Ecosystem is further structured by a Function-by-Substrate matrix (Services, Data, Mind × Human, Digital, Physical), with clinical AI occupying the Mind × Digital cell (see Supplementary Figure 1 for detail of Ecosystem components). (b)",
+      "page": 10,
+      "index": 2,
+      "width": 902,
+      "height": 793
+    },
+    {
+      "url": "assets/figures/arxiv/2604.08226v1/fig-003.webp",
+      "caption": "Figure 6. The Clinical AI Skill-mix Cube for comprehensive competency specification. The upper section shows the eight dimensions that define a clinical AI competency cell. The Clinical Competency Space comprises five dimensions (Condition, Care Phase, Care Setting, Care Task, Care Provider Role, shown in red and green). The AI Cognitive Engagement comprises three dimensions (Agent Facing, Anchoring Layer, and Assigned Authority, shown in yellow). The product of cardinalities across combinations (NC × NCP × NCS × NCT × NCR × NAF × NAL × NAA) yields the total number of possible competency cells (NTotal), represented as the Clinical AI Skill-mix Cube. The lower section illustrates a concrete example: an AI competency cell [5C × 3A] specification, along with an example Clinical AI instance with this competency.",
+      "page": 23,
+      "index": 3,
+      "width": 885,
+      "height": 1042
+    },
+    {
+      "url": "assets/figures/arxiv/2604.08226v1/fig-004.webp",
+      "caption": "Table 2. Anchoring Layer Mapping Across Different Agent-Facings with Examples. Rows represent the seven anchoring layers; columns map each layer to provider-facing (interacts with CDM), patient-facing (interacts with PDM), and encounter-facing applications. Ecosystem-facing, introduced in this framework, is omitted because its layer mappings do not follow a cognitive architecture and require future elaboration.",
+      "page": 28,
+      "index": 4,
+      "width": 972,
+      "height": 515
+    },
+    {
+      "url": "assets/figures/arxiv/2604.08226v1/fig-005.webp",
+      "caption": "Figure 3. The architecture of the Clinical Decision Making (CDM) Model. Architecture of a CDM cognitive cycle. A mandate triggers each iteration (top left). Input integrates four data streams: Encounter Data drawn from direct interaction (verbal communication, clinician sense, physical interaction), Patient Context (patient preference), Encounter Context (resources, routines, and legal authority), and Recorded Data from clinical systems (notes, imaging, therapeutics, pathology and labs, procedures). Input flows into the Recurrent Processing Sphere, where the Data Processor extracts cues that generate and refine hypotheses. Two reasoning pathways operate over these hypotheses: Analytical Reasoning (System II) and Clinical Intuition (System I), with Reflection providing metacognitive oversight. Gating mechanisms (depicted as switches) regulate information flow between processing components. Priors, comprising official knowledge, unofficial knowledge, clinical experience, and provider context, feed into the processing sphere through three pathways: Retrieve, Analysis, and Calibrate, with Bias acknowledged as an influence on prior integration. Processing resolves into Action, which takes one of two forms: Finalize Planning (diagnosis, treatment, monitoring, referral, or assurance) or Share or Collect Information (interacting with the patient, consulting the system, requesting investigations, or seeking knowledge). Each action produces a change in the world state and is logged for future adaptation.",
+      "page": 13,
+      "index": 5,
+      "width": 844,
+      "height": 991
+    },
+    {
+      "url": "assets/figures/arxiv/2604.08226v1/fig-006.webp",
+      "caption": "Figure 1. Dimensions of the World. Conceptual diagram illustrating the thirteen dimensions taxonomies that constitute the clinical world. Normativity and Authority form overarching regulatory arcs that govern all elements below. Context, Actors, Cognition, and Representation are nested within the clinical scene, where multiple actors (providers, patients, AI systems, and ecosystem components) interact through cognitive processes grounded in internal representations. Mandate mediates between the cognitive layer and the informational substrate, defining the scope of permissible action. Information and Aiophysical together form the material foundation of clinical care, with Codex representing the enacted practices through which knowledge is applied to the world. Temporality runs along the base axis, situating all dimensions within a temporal frame. An action arc (left) connects cognition to change in world state. Outcome and Adaptation (right) close the loop: outcomes feed back into the system through re-calibrating (adjusting within existing parameters) and re-defining (altering the parameters themselves), enabling the clinical world to evolve over time.",
+      "page": 8,
+      "index": 6,
+      "width": 732,
+      "height": 766
+    },
+    {
+      "url": "assets/figures/arxiv/2604.08226v1/fig-007.webp",
+      "caption": "Table 1. Framework Traditions in Clinical AI and Their Foundational Contributions. Four established traditions and three contributions introduced in this work are compared across foundational questions, key contributions, theoretical grounding, and dimensional topology. Each tradition addresses a subset of the thirteen dimensions defined in Section 2.1; Dimension coverage is expressed as topology using four edge types: causal (→), constraining (⊣), constitutive (↔), and temporal (over Temporality). The \"Introduced in this work\" rows represent the three primary contributions of this paper.",
+      "page": 4,
+      "index": 7,
+      "width": 979,
+      "height": 822
+    },
+    {
+      "url": "assets/figures/arxiv/2604.08226v1/fig-008.webp",
+      "caption": "Figure 5. Temporality in the Clinical World Model. Sequence diagram showing alternating PDM (red) and CDM (green) cycles across a clinical episode. In the pre-encounter phase, the patient consults a peer and requests a visit, both mediated through the clinical ecosystem. Within the encounter, an ITERATE loop captures the characteristic alternation of clinical interaction: the patient shares information or expresses a preference, the provider retrieves data from the ecosystem, and the provider responds by sharing information or finalizing a plan. This cycle repeats until both parties reach sufficient closure. In the postencounter phase, the provider requests further investigation through the ecosystem. Each node represents a complete cognitive cycle as formalized in earlier sections, with the action output of one cycle becoming the input state for the next.",
+      "page": 20,
+      "index": 8,
+      "width": 706,
+      "height": 1008
+    },
+    {
+      "url": "assets/figures/arxiv/2604.08226v1/fig-009.webp",
+      "caption": "Figure 4. The architecture of the Patient Decision Making (PDM) Model. Architecture of a PDM cognitive cycle. A mandate triggers each iteration. Input integrates four data streams: Encounter Data (diagnosis, disease course, available options), Encounter Context (trust, communication, digital and official sources), Recorded Data (community and peer sources), and two patient-specific streams, Patient Context (situated self, including supports, resources, and constraints) and Patient Lifeworld (lived self, including bodily experience, emotional state, and goals and values). Input flows into the Recurrent Processing Sphere, where the dual-process architecture comprises Analytical Reasoning (System II), Clinical Intuition (System I), and Reflection. Priors reflect the patient's cognitive resources: health literacy, decision competence and autonomy, previous encounter experience, and embodied identity. Processing resolves into Action, either Finalize Planning or Share and Collect Information, with each action producing a change in the world state, an action consequence, and a log for future adaptation.",
+      "page": 16,
+      "index": 9,
+      "width": 902,
+      "height": 1058
+    }
+  ]
+}
