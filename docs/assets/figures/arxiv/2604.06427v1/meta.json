@@ -1,0 +1,94 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.06427v1/fig-001.webp",
+      "caption": "Figure 7: Training loss under explicit chain-of-thought supervision. All models are trained with dense supervision that provides the full backtracking trace from vtarget to vsource. Under this setting, all LLMs converge within approximately 20 training updates across all configurations, confirming that the task itself is not inherently difficult.",
+      "page": 25,
+      "index": 1,
+      "width": 484,
+      "height": 324
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06427v1/fig-002.webp",
+      "caption": "Figure 9: Attention visualization for failed configurations (m = 3 with k = 10, and m = 4 with k ∈ {2, 3, 4, 5, 10}), following the same convention as Figure 8: orange denotes the target node and violet denotes the predicted node. No structured attention pattern emerges across any of these configurations, confirming that the model has not discovered a strategy.",
+      "page": 30,
+      "index": 2,
+      "width": 828,
+      "height": 914
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06427v1/fig-003.webp",
+      "caption": "Figure 1: (Right) We study latent planning using path-finding on star graphs. Shown is an example of a star graph G(3,3) together with the corresponding input tokens and target label for training the transformer. (Left) Latent planning capacity across models and evaluation settings. Despite scaling from a 1.6M-parameter transformer to GPT-4o, the maximum LPC discovered during training increases by only two steps. However, LLMs can then generalize this strategy by a few more steps at test-time, up to 8 for the best models. As training is not publicly available for GPT-5.4, we report its few-shot LPC as a lower bound on the discovery ceiling, since fine-tuning strictly matches or exceeds few-shot performance for all other LLMs evaluated.",
+      "page": 2,
+      "index": 3,
+      "width": 826,
+      "height": 313
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06427v1/fig-004.webp",
+      "caption": "Figure 8: Attention visualization for successful configurations (m = 3, k ∈ {2, 3, 4, 5}). For each configuration, the graph structure is shown on the left, where the orange node denotes the target and the violet node denotes the prediction, and the attention weights from the final token to all input tokens at each transformer layer are shown on the right. As k increases from 2 to 5, the attention progressively concentrates on nodes along the path from vtarget to vsource, with shallower layers attending to the target and deeper layers tracing back toward the source.",
+      "page": 29,
+      "index": 4,
+      "width": 826,
+      "height": 744
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06427v1/fig-005.webp",
+      "caption": "Figure 5: Training dynamics of Qwen 2.5 models (7B and 32B) across graph configurations. Both models exhibit the same two-stage learning process observed in the from-scratch transformer, with failures occurring exclusively in the second stage.",
+      "page": 22,
+      "index": 5,
+      "width": 655,
+      "height": 884
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06427v1/fig-006.webp",
+      "caption": "Table 4: In-distribution skill of trained models on star graph tasks across planning depths m ∈ {3, 4, 5, 6} and branch factors k ∈ {2, 3, 4, 5, 10}. Each model is trained and evaluated on the same graph configuration G(k,m). † denotes trained models. Blue-highlighted bold text indicates configurations where the model successfully rejects random guessing, while gray text indicates failure.",
+      "page": 18,
+      "index": 6,
+      "width": 826,
+      "height": 269
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06427v1/fig-007.webp",
+      "caption": "Figure 6: Training dynamics of Qwen 3 models (8B and 32B) across graph configurations. The same two-stage pattern persists, confirming that the discovery bottleneck is consistent across model families and scales.",
+      "page": 23,
+      "index": 7,
+      "width": 826,
+      "height": 897
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06427v1/fig-008.webp",
+      "caption": "Figure 4: Training dynamics of the from-scratch transformer across planning depths m ∈ {3, 4} and branch factors k ∈ K. The model exhibits a two-stage learning process: validation accuracy first rises to the random baseline ( 1 k ) as the model learns to predict valid neighbors, then either jumps to near-perfect accuracy (successful strategy discovery) or stagnates while training loss continues to decrease (overfitting without strategy discovery).",
+      "page": 19,
+      "index": 8,
+      "width": 826,
+      "height": 481
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06427v1/fig-009.webp",
+      "caption": "Table 5: Ablation study on Transformer architecture hyperparameters for star graph tasks across planning depths m ∈ {3, 4} and branch factors k ∈ {2, 3, 4, 5, 10}. The default configuration is (8 layers, 128 dim, 1 head). Each ablation varies one hyperparameter while keeping the others at default. † denotes trained models. Blue-highlighted bold text indicates configurations where the model successfully rejects random guessing, while gray text indicates failure.",
+      "page": 19,
+      "index": 9,
+      "width": 722,
+      "height": 461
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06427v1/fig-010.webp",
+      "caption": "Table 2: Dataset statistics across models.",
+      "page": 17,
+      "index": 10,
+      "width": 674,
+      "height": 317
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06427v1/fig-011.webp",
+      "caption": "Table 6: Zero-shot and few-shot skill of pre-trained models on star graph tasks across planning depths m ∈ {3, 4, 5, 6} and branch factors k ∈ {2, 3, 4, 5, 10}. No task-specific training is applied. Blue-highlighted bold text indicates configurations where the model successfully rejects random guessing, while gray text indicates failure.",
+      "page": 20,
+      "index": 11,
+      "width": 826,
+      "height": 335
+    }
+  ]
+}

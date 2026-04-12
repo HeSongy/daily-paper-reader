@@ -6,49 +6,43 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-04-11
-- 运行时间：2026-04-11 19:30:24 UTC
+- 最新运行日期：2026-04-12
+- 运行时间：2026-04-12 20:14:07 UTC
 - 运行状态：成功
-- 本次总论文数：9
+- 本次总论文数：7
 - 精读区：4
-- 速读区：5
+- 速读区：3
 
 ### 今日简报（AI）
-探索视觉语言导航与真实世界视频数据集，聚焦生成式世界模型最新进展。  
-重点关注《WorldMAP》和《MotionScape》，前者在路径预测上显著提升泛化能力，后者扩展了动态场景建模的上限。  
-建议下步关注世界模型在跨模态理解及无人系统中的实际应用落地。
-- 详情：[/202604/11/README](/202604/11/README)
+今日聚焦七篇论文，重点深入自动驾驶与视觉语言导航两大前沿方向。  
+DriveVA 与 WorldMAP 展示了零样本驾驶与生成式世界模型的突破，值得持续关注。  
+建议普通读者关注智能体自修正与多模态解释性研究的新趋势，理解技术如何迈向更高自主性。
+- 详情：[/202604/12/README](/202604/12/README)
 
 ### 精读区论文标签
-1. [WorldMAP: Bootstrapping Vision-Language Navigation Trajectory Prediction with Generative World Models](/202604/11/2604.07957v1-worldmap-bootstrapping-vision-language-navigation-trajectory-prediction-with-generative-world-models)  
+1. [DriveVA: Video Action Models are Zero-Shot Drivers](/202604/12/2604.04198v1-driveva-video-action-models-are-zero-shot-drivers)  
+   标签：评分：10.0/10、query:navwm
+   evidence：共享隐式生成过程中的基于世界模型的规划
+2. [WorldMAP: Bootstrapping Vision-Language Navigation Trajectory Prediction with Generative World Models](/202604/12/2604.07957v1-worldmap-bootstrapping-vision-language-navigation-trajectory-prediction-with-generative-world-models)  
    标签：评分：10.0/10、query:navwm
    evidence：用于视觉语言导航轨迹预测的生成式世界模型
-2. [MotionScape: A Large-Scale Real-World Highly Dynamic UAV Video Dataset for World Models](/202604/11/2604.07991v1-motionscape-a-large-scale-real-world-highly-dynamic-uav-video-dataset-for-world-models)  
+3. [How Far Are Large Multimodal Models from Human-Level Spatial Action? A Benchmark for Goal-Oriented Embodied Navigation in Urban Airspace](/202604/12/2604.07973v1-how-far-are-large-multimodal-models-from-human-level-spatial-action-a-benchmark-for-goal-oriented-embodied-navigation-in-urban-airspace)  
    标签：评分：9.0/10、query:navwm
-   evidence：无人机自主导航与3D动力学世界模型
-3. [HiRO-Nav: Hybrid ReasOning Enables Efficient Embodied Navigation](/202604/11/2604.08232v1-hiro-nav-hybrid-reasoning-enables-efficient-embodied-navigation)  
-   标签：评分：9.0/10、query:navwm
-   evidence：利用混合推理实现高效的具身导航
-4. [Contrastive Language-Colored Pointmap Pretraining for Unified 3D Scene Understanding](/202604/11/2604.02546v1-contrastive-language-colored-pointmap-pretraining-for-unified-3d-scene-understanding)  
+   evidence：城市3D空间中目标导向具身导航的基准测试
+4. [The Depth Ceiling: On the Limits of Large Language Models in Discovering Latent Planning](/202604/12/2604.06427v1-the-depth-ceiling-on-the-limits-of-large-language-models-in-discovering-latent-planning)  
    标签：评分：8.0/10、query:navwm
-   evidence：基于点图的统一场景表示用于3D理解
+   evidence：隐空间规划与隐表示推理
 
 ### 速读区论文标签
-1. [Open-Loop Planning, Closed-Loop Verification: Speculative Verification for VLA](/202604/11/2604.02965v1-open-loop-planning-closed-loop-verification-speculative-verification-for-vla)  
+1. [LAG-XAI: A Lie-Inspired Affine Geometric Framework for Interpretable Paraphrasing in Transformer Latent Spaces](/202604/12/2604.06086v1-lag-xai-a-lie-inspired-affine-geometric-framework-for-interpretable-paraphrasing-in-transformer-latent-spaces)  
    标签：评分：7.0/10、query:navwm
-   evidence：具身控制中的开环规划与闭环验证
-2. [Grounding Clinical AI Competency in Human Cognition Through the Clinical World Model and Skill-Mix Framework](/202604/11/2604.08226v1-grounding-clinical-ai-competency-in-human-cognition-through-the-clinical-world-model-and-skill-mix-framework)  
+   evidence：Transformer隐空间的解释性几何框架
+2. [How Much LLM Does a Self-Revising Agent Actually Need?](/202604/12/2604.07236v1-how-much-llm-does-a-self-revising-agent-actually-need)  
    标签：评分：7.0/10、query:navwm
-   evidence：用于决策架构的临床世界模型
-3. [ConceptTracer: Interactive Analysis of Concept Saliency and Selectivity in Neural Representations](/202604/11/2604.07019v1-concepttracer-interactive-analysis-of-concept-saliency-and-selectivity-in-neural-representations)  
+   evidence：基于大语言模型智能体中的世界建模与规划
+3. [Multi-Modal Learning meets Genetic Programming: Analyzing Alignment in Latent Space Optimization](/202604/12/2604.08324v1-multi-modal-learning-meets-genetic-programming-analyzing-alignment-in-latent-space-optimization)  
    标签：评分：6.0/10、query:navwm
-   evidence：分析神经表示与概念显著性
-4. [SubSearch: Intermediate Rewards for Unsupervised Guided Reasoning in Complex Retrieval](/202604/11/2604.07415v1-subsearch-intermediate-rewards-for-unsupervised-guided-reasoning-in-complex-retrieval)  
-   标签：评分：6.0/10、query:navwm
-   evidence：用于规划与推理的中间奖励信号
-5. [Semantic Noise Reduction via Teacher-Guided Dual-Path Audio-Visual Representation Learning](/202604/11/2604.08147v1-semantic-noise-reduction-via-teacher-guided-dual-path-audio-visual-representation-learning)  
-   标签：评分：6.0/10、query:navwm
-   evidence：解耦重建与对齐任务以优化语义表示学习
+   evidence：隐空间优化与对齐
 
 
 <div class="dpr-home-promo-card">

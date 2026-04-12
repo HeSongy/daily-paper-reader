@@ -1,0 +1,150 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.06086v1/fig-001.webp",
+      "caption": "Fig. A.5. Sensitivity analysis of the residual error threshold on the HaluEval dataset, illustrating the trade-off between hallucination recall and false-positive rate on legitimate paraphrases.",
+      "page": 25,
+      "index": 1,
+      "width": 854,
+      "height": 509
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06086v1/fig-002.webp",
+      "caption": "Fig. A.6. Bootstrap stability analysis of the geometric invariants (θ, 𝐷𝑒𝑓, and hybrid AUC) across 60 resampling iterations, confirming minimal variance and high reproducibility.",
+      "page": 25,
+      "index": 2,
+      "width": 886,
+      "height": 269
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06086v1/fig-003.webp",
+      "caption": "Fig. A.7. Geometric map of paraphrase complexity. The scatter plot projects real text pairs onto the angle-error plane, illustrating the boundaries between near-copy, canonical paraphrasing, and structural anomalies.",
+      "page": 25,
+      "index": 3,
+      "width": 941,
+      "height": 469
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06086v1/fig-004.webp",
+      "caption": "Fig. 5. Distribution of pairwise transformation angles for true paraphrases (Geometric Corridor). The red dashed line denotes the mean value of θ𝑝𝑎𝑖𝑟 = 44.16∘.",
+      "page": 14,
+      "index": 4,
+      "width": 644,
+      "height": 383
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06086v1/fig-005.webp",
+      "caption": "Table 3. Linguistic interpretation of paraphrasing based on local geometric XAI profiles.",
+      "page": 14,
+      "index": 5,
+      "width": 979,
+      "height": 707
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06086v1/fig-006.webp",
+      "caption": "Table 1. Comparative analysis of approaches and identified gaps",
+      "page": 3,
+      "index": 6,
+      "width": 977,
+      "height": 443
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06086v1/fig-007.webp",
+      "caption": "Table 7. Examples of LLM hallucination detection based on departure from the semantic manifold (HaluEval)",
+      "page": 18,
+      "index": 7,
+      "width": 977,
+      "height": 444
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06086v1/fig-008.webp",
+      "caption": "Fig. 7. Cross-corpus hallucination detection: distribution of the geometric affine approximation error ‖𝑥′ − (𝐴𝑥 + 𝑡)‖2 for the HaluEval dataset. The red zone (𝐸𝑟𝑟𝑜𝑟 > 1.108) denotes the space of semantic anomalies, lying beyond the 90th percentile of legitimate paraphrases from the PIT-2015 corpus.",
+      "page": 18,
+      "index": 8,
+      "width": 868,
+      "height": 519
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06086v1/fig-009.webp",
+      "caption": "Fig. A.1. Analysis of the impact of the orthogonal stabilization parameter (λ𝑜𝑟𝑡ℎ𝑜) on classification performance (a) and semantic deformation (b). The logarithmic scale visualization illustrates the numerical robustness of the method under extreme regularization values.",
+      "page": 23,
+      "index": 9,
+      "width": 967,
+      "height": 373
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06086v1/fig-010.webp",
+      "caption": "Fig. A.2. Visual audit of the parameters of the derived affine operator 𝑇(𝑥) = 𝐴𝑥 + 𝑡.",
+      "page": 23,
+      "index": 10,
+      "width": 967,
+      "height": 356
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06086v1/fig-011.webp",
+      "caption": "Fig. 4. Discriminative capacity evaluation: (a) ROC-AUC comparison between the affine model (AUC=0.771; SE=0.0045) and the baseline; (b) KDE distribution of residual errors. The dashed line in (b) denotes the cutoff threshold 𝑇 = 1.108, corresponding to the 90th percentile of the legitimate paraphrase distribution (𝑝-value < 0.10).",
+      "page": 13,
+      "index": 11,
+      "width": 967,
+      "height": 410
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06086v1/fig-012.webp",
+      "caption": "Fig. 3. Conceptual diagram of the LAG-XAI geometric decomposition. The affine operator 𝐴 is broken down into four linguistically interpretable components. (1) Rotation (R) models syntactic changes like word order. (2) Deformation (S) represents changes in information volume. (3) Translation (t) captures pragmatic shifts in context or tone. (4) Chirality (det(A) < 0) indicates a reflection, corresponding to a deep logical inversion of semantic roles.",
+      "page": 8,
+      "index": 12,
+      "width": 977,
+      "height": 281
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06086v1/fig-013.webp",
+      "caption": "Fig. 1. The complete methodological pipeline of the LAG-XAI framework. The process begins with encoding input texts into dense vectors using Sentence-BERT. These vectors then undergo geometric preprocessing (L2normalization and centering). The core LAG-XAI model solves a regularized optimization problem to find the global affine operator (𝐴, 𝑡). This operator is then decomposed to generate an interpretable XAI profile. Finally, a \"geometric check\" based on the approximation error determines whether the text pair is a legitimate paraphrase or a semantic anomaly, such as an LLM hallucination.",
+      "page": 4,
+      "index": 13,
+      "width": 616,
+      "height": 417
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06086v1/fig-014.webp",
+      "caption": "Table 2. Optimal trade-off search results on the validation set.",
+      "page": 12,
+      "index": 14,
+      "width": 977,
+      "height": 183
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06086v1/fig-015.webp",
+      "caption": "Fig. A.4. Comparative ROC-AUC performance of global versus local affine operators, highlighting the severe overfitting of topic-specific models on unseen domains.",
+      "page": 24,
+      "index": 15,
+      "width": 844,
+      "height": 502
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06086v1/fig-016.webp",
+      "caption": "Fig. A.3. Distribution of pairwise transformation angles and residual errors for PIT-2015 and TURL datasets, demonstrating cross-domain geometric consistency.",
+      "page": 24,
+      "index": 16,
+      "width": 977,
+      "height": 388
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06086v1/fig-017.webp",
+      "caption": "Fig. 2. Conceptual visualization of the LAG-XAI framework on the semantic manifold ℳ. The highly non-linear transformation between the original sentence 𝑥 and its true paraphrase 𝑥′ (represented by the red trajectory Φ) is locally approximated within the tangent space 𝑇𝑥ℳ . The dashed orange vector demonstrates the linear affine mapping 𝑥′ ≈ 𝐴𝑥 + 𝑡, which projects the semantic transition onto the linear subspace, enabling geometric interpretability.",
+      "page": 5,
+      "index": 17,
+      "width": 802,
+      "height": 616
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06086v1/fig-018.webp",
+      "caption": "Fig. 6. Affine Tube plots: (a) 3D Affine Paraphrase Tube for the Train Set, (b) 3D Affine Paraphrase Tube for the Dev Set, (c) Semantic Corridor Boundary (Dev Set).",
+      "page": 16,
+      "index": 18,
+      "width": 558,
+      "height": 435
+    }
+  ]
+}
