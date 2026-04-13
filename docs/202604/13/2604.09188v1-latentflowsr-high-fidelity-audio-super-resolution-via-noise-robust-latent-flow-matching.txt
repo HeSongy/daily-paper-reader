@@ -1,0 +1,355 @@
+Title: LatentFlowSR: High-Fidelity Audio Super-Resolution via Noise-Robust Latent Flow Matching
+
+URL Source: https://arxiv.org/pdf/2604.09188v1
+
+Published Time: Mon, 13 Apr 2026 00:47:17 GMT
+
+Number of Pages: 10
+
+Markdown Content:
+# LatentFlowSR: High-Fidelity Audio Super-Resolution via Noise-Robust Latent Flow Matching 
+
+# Fei Liu 
+
+fliu215@mail.ustc.edu.cn University of Science and Technology of China Hefei, Anhui, P. R. China 
+
+# Yang Ai 
+
+yangai@ustc.edu.cn University of Science and Technology of China Hefei, Anhui, P. R. China 
+
+# Hui-Peng Du 
+
+redmist@mail.ustc.edu.cn University of Science and Technology of China Hefei, Anhui, P. R. China 
+
+# Yu-Fei Shi 
+
+zkddsr2023@mail.ustc.edu.cn University of Science and Technology of China Hefei, Anhui, P. R. China 
+
+# Zhen-Hua Ling 
+
+zhling@ustc.edu.cn University of Science and Technology of China Hefei, Anhui, P. R. China 
+
+## Abstract 
+
+Audio super-resolution aims to recover missing high-frequency details from bandwidth-limited low-resolution audio, thereby im-proving the naturalness and perceptual quality of the reconstructed signal. However, most existing methods directly operate in the waveform or time–frequency domain, which not only involves high-dimensional generation spaces but is also largely limited to speech tasks, leaving substantial room for improvement on more complex audio types such as sound effects and music. To mitigate these limitations, we introduce LatentFlowSR, a new audio super-resolution approach that leverages conditional flow matching (CFM) within a latent representation space. Specifically, we first train a noise-robust autoencoder, which encodes low-resolution audio into a continuous latent space. Conditioned on the low-resolution latent representation, a CFM mechanism progressively generates the cor-responding high-resolution latent representation from a Gaussian prior with a one-step ordinary differential equation (ODE) solver. The resulting high-resolution latent representation is then decoded by the pretrained autoencoder to reconstruct the high-resolution audio. Experimental results demonstrate that LatentFlowSR consis-tently outperforms baseline methods across various audio types and super-resolution settings. These results indicate that the proposed method possesses strong high-frequency reconstruction capabil-ity and robust generalization performance, providing compelling evidence for the effectiveness of latent-space modeling in audio super-resolution. All relevant code will be made publicly available upon completion of the paper review process. 
+
+## CCS Concepts 
+
+• Applied computing → Sound and music computing ; • Com-puting methodologies → Learning latent representations .
+
+## Keywords 
+
+audio super-resolution, conditional flow matching, autoencoder, latent representation 
+
+## 1 Introduction 
+
+In real-world audio transmission scenarios, high-frequency com-ponents of audio signals are often lost due to limitations in trans-mission devices or channel bandwidth, which can negatively affect both perceptual quality and intelligibility. Therefore, audio super-resolution aims to reconstruct high-resolution audio signals from low-resolution inputs by restoring the missing high-frequency in-formation, thereby improving the naturalness and intelligibility of the audio. High-frequency reconstruction capability enables audio super-resolution to be applied to various downstream tasks, such as text-to-speech (TTS) synthesis [ 31 ], automatic speech recognition (ASR) [ 3, 11 ], speaker recognition [ 22 , 33 , 51 ], audio coding [ 50 ]and music restoration [ 30 ]. By restoring missing high-frequency details, it compensates for information loss, thereby improving syn-thesis quality, reducing word error rates in recognition tasks, and enhancing performance across various downstream applications. Early audio super-resolution techniques were mainly based on traditional signal processing methods, including interpolation-based approaches, parametric speech-based approaches, and mapping-based approaches, with most of these early methods primarily de-signed for speech signals [ 5, 17 , 32 , 34 , 36 , 46 , 53 ]. Interpolation-based methods [ 17 , 36 ] typically perform interpolation in the time domain and then apply a low-pass filter to remove the imaging com-ponents introduced during interpolation. Parametric speech-based methods [ 5, 46 ] model speech signals using an excitation–envelope representation, where the low-frequency spectral envelope is ex-tended to the high-frequency range and high-frequency excitation is generated to reconstruct the high-frequency speech components. Mapping-based methods [ 32 , 34 , 53 ] map low-frequency speech features to high-frequency features through techniques such as codebook mapping or linear mapping, and then reconstruct the cor-responding high-frequency speech signals. Although these signal-processing-based methods are relatively simple and highly inter-pretable, they often struggle to reconstruct natural high-frequency details. As a result, the generated speech tends to sound muffled, and these methods generally exhibit limited generalization ability. With the rapid advancement of deep learning, neural-network-based audio super-resolution methods have achieved impressive results, but the early research in this field was largely centered on speech super-resolution. These approaches can generally be  
+
+> arXiv:2604.09188v1 [cs.SD] 10 Apr 2026 Conference’17, July 2017, Washington, DC, USA Liu et al.
+
+categorized into waveform-based methods and spectrum-based methods. Waveform-based methods directly map low-resolution waveforms to high-resolution waveforms in the time domain using neural networks [ 1, 12 , 20 , 48 , 57 ]. For example, NU-Wave [ 20 ] was the first to introduce diffusion probabilistic models into the field of audio super-resolution. Conditioned on the low-resolution audio signal, it leverages the strong distribution modeling capability of diffusion models to recover missing high-frequency details and directly generate waveforms in the time domain. NU-Wave2 [ 12 ]further improves upon NU-Wave, achieving better efficiency and generation quality. However, waveform-based approaches require processing each time-domain sample individually, which leads to low generation efficiency. This limitation becomes particularly sig-nificant for long high-resolution audio sequences, making such methods less practical in real-world applications [25]. Spectrum-based methods, on the other hand, perform modeling in the frequency domain and use neural networks to predict the spectral features of high-resolution waveform [ 27 , 28 , 42 , 54 ]. md-ctGAN [ 42 ] models the modified discrete cosine transform (MDCT) spectrum and incorporates adversarial learning to predict a high-resolution MDCT spectrum from the low-resolution input, followed by an inverse transform to reconstruct the high-resolution audio. AP-BWE [ 27 ] explicitly models the amplitude and phase spectra, predicting both components in parallel before reconstructing the audio through an inverse transform. UDM+ [ 54 ] further formulates audio super-resolution as a spectral inpainting problem: during the reverse diffusion sampling process, the low-frequency compo-nents of the spectrum are directly replaced, and only the missing high-frequency information is generated. Although these meth-ods achieve promising high-frequency reconstruction performance, they primarily focus on speech super-resolution, with limited explo-ration of sound effects, music, etc., resulting in a relatively narrow range of applications. Recently, some audio super-resolution studies have begun to focus on audio signals beyond speech [ 16 , 21 , 24 , 55 ]. Other types of audio, e.g., sound effects and music, differ significantly from speech in structure. They exhibit fundamentally different harmonic patterns, with greater diversity and irregularity, and their high-frequency components contain abundant timbral details and texture-related information [ 41 , 43 ]. These components are more difficult to recover than speech high-frequency content, thus requiring more powerful super-resolution models. For example, AudioSR [ 24 ] employs a latent diffusion model (LDM) to model the mel-spectrogram, recovering a high-resolution mel-spectrogram from a low-resolution one and then reconstructing high-resolution audio using a vocoder. FlashSR [ 16 ], built upon the LDM framework of AudioSR, distills the model into a single-step student LDM that restores high-resolution mel-spectrograms, significantly improv-ing inference speed while maintaining quality close to that of Au-dioSR. FlowHigh [ 55 ] introduces conditional flow matching (CFM) into audio super-resolution task, learning a velocity field in the mel-spectrogram domain and sampling from it to generate a high-resolution mel-spectrogram, which is then converted back to high-resolution audio using a vocoder. Although these approaches can be applied to a wider variety of audio signals, most of them are still limited to modeling in the mel-spectrogram space, where phase in-formation is discarded and must later be reconstructed by a vocoder. Encoder 
+
+> Decoder
+> Flow -Matching -based
+> Super -Resolution
+
+lLR  lHR xLR  xHR ˆˆ
+
+Figure 1: Overview of the proposed LatentFlowSR. 
+
+A few studies have explored discrete latent spaces, but discretization may cause information loss [ 21 ]. As a result, existing methods still leave substantial room for improvement in terms of high-resolution audio reconstruction quality. Therefore, we propose a new audio super-resolution model, named LatentFlowSR, which performs flow matching [ 23 ] in the la-tent space. Specifically, we first train a noise-robust autoencoder and use it to map low-resolution audio into a compressed low-resolution latent representation. Next, in the latent space, we employ a CFM mechanism to perform super-resolution. Conditioned on the low-resolution latent, the CFM mechanism starts from Gaussian noise and predicts a velocity field to guide the generative process. By ap-proximately integrating this velocity field with ordinary differential equation (ODE) solver, a high-resolution latent representation is obtained, which is finally decoded by the pretrained autoencoder’s decoder to reconstruct the high-resolution audio. Experimental re-sults demonstrate that LatentFlowSR achieves state-of-the-art per-formance across multiple super-resolution tasks on diverse audio types compared with methods that directly model signals in either the time or frequency domain, thereby verifying the effectiveness of super-resolution modeling in the latent space. Furthermore, the experimental results suggest that latent-space modeling can ease the super-resolution process, thereby promoting improvements in efficiency and computational complexity. 
+
+## 2 Proposed Method 2.1 Overview 
+
+In this paper, we propose LatentFlowSR, a CFM–based audio super-resolution method that performs modeling in the latent space. La-tentFlowSR mainly consists of a noise-robust autoencoder and a CFM-based super-resolution model. The overall framework is illustrated in Figure 1. Given a low-resolution audio waveform 
+
+𝒙 ′ 
+
+> 𝐿𝑅
+
+∈ R𝐿 ′
+
+, we first upsample it to the target resolution to obtain 
+
+𝒙 𝐿𝑅 ∈ R𝐿 which still lacks the high-frequency bands, where 𝐿 ′ and 
+
+𝐿 denote the waveform lengths of 𝒙 ′ 
+
+> 𝐿𝑅
+
+and 𝒙 𝐿𝑅 , respectively, and thus the super-resolution ratio is 𝐿 /𝐿 ′. The upsampled audio is then compressed by the encoder of the autoencoder into a low-resolution latent representation 𝒍 𝐿𝑅 ∈ R𝐶 ×𝑇 , where 𝐶 and 𝑇 denote the num-ber of channels and frames, respectively. This representation is then fed into the super-resolution model to recover a high-resolution latent representation ˆ𝒍 𝐻𝑅 ∈ R𝐶 ×𝑇 . Finally, the decoder of the au-toencoder reconstructs the high-resolution audio ˆ𝒙 𝐻𝑅 ∈ R𝐿 from 
+
+ˆ𝒍 𝐻𝑅 . To fully exploit the information in the low-resolution audio, we replace the low-frequency band of the generated audio signal with the corresponding low-frequency band from the input audio LatentFlowSR: High-Fidelity Audio Super-Resolution via Noise-Robust Latent Flow Matching Conference’17, July 2017, Washington, DC, USA 
+
+[ 16 , 21 , 24 , 25 , 54 , 55 ]. In the following sub-sections, we describe each component in detail. 
+
+## 2.2 Noise-Robust Autoencoder 
+
+The noise-robust autoencoder mainly consists of an encoder and a decoder, and its architecture is illustrated in Figure 2. During train-ing, the noise-robust autoencoder jointly trains the encoder and decoder using high-resolution data. The original high-resolution au-dio 𝒙 𝐻𝑅 ∈ R𝐿 is first processed by the encoder and compressed into a low-dimensional latent space, producing the latent representation 
+
+𝒍 𝐻𝑅 ∈ R𝐶 ×𝑇 . This latent representation is then passed through the decoder to reconstruct the high-resolution audio ˜𝒙 𝐻𝑅 ∈ R𝐿 . In the subsequent super-resolution process, the encoder and decoder are respectively used for low-resolution latent representation extrac-tion and high-resolution audio reconstruction. The detailed design of the noise-robust autoencoder is described as follows. 
+
+2.2.1 Encoder. The encoder is composed of multiple one-dimensional convolution and downsampling modules. The input 𝒙 𝐻𝑅 is first pro-cessed by a one-dimensional convolution layer to extract temporal features. It then passes through four downsampling modules that progressively reduce the temporal resolution while increasing the channel dimension, thereby shortening the feature representation and reducing computational cost for latent-space super-resolution while preserving essential information [ 7, 19 , 56 ]. Each downsam-pling module consists of three residual blocks, a learnable periodic activation function, i.e., Snake, and a one-dimensional convolution layer for downsampling. Within each residual block, two Snake activations and two one-dimensional convolution layers are stacked alternately, and a residual connection [ 13 , 14 ] is employed to add the input of the block to its output. The Snake activation introduces a learnable periodic component, enabling the network to better model the periodic structures commonly found in audio signals [ 10 , 58 ]. After downsampling, the features are further fused across channels through an additional combination of a Snake activation and a one-dimensional convolution layer. Finally, layer normaliza-tion is applied to stabilize the channel scale and produce a compact latent representation 𝒍 𝐻𝑅 .
+
+2.2.2 Decoder. The decoder adopts a structure that is approxi-mately mirror-symmetric to the encoder. The compressed latent representation 𝒍 𝐻𝑅 first passes through a one-dimensional convolu-tion layer to increase the channel dimension, and then enters four upsampling modules that progressively restore the temporal reso-lution. In each upsampling module, the features are first activated by a Snake function and then upsampled using a one-dimensional transposed convolution. This is followed by residual blocks that refine the upsampled fine-grained structures. Finally, the feature representation is further processed by an additional Snake activa-tion and a one-dimensional convolution layer, and a Tanh activation is applied to constrain the output amplitude range, producing the reconstructed high-resolution waveform ˜𝒙 𝐻𝑅 in the time domain. 
+
+2.2.3 Noise-Robust Training Strategy. During autoencoder training, the decoder takes the target latent representation as input. In con-trast, during the inference stage of LatentFlowSR, the decoder is fed with the predicted latent representation, and this train–inference mismatch may degrade its decoding performance. To enable the decoder to adapt in advance to perturbed latent representations and thus improve its robustness, we sample 𝛿 ∼ N ( 0, 𝑰 ) from a standard Gaussian distribution and inject it into the compressed latent representation 𝒍 𝐻𝑅 during autoencoder training, where 𝑰 is a 
+
+𝐶 × 𝑇 -dimensional identity covariance matrix. Meanwhile, the autoencoder is optimized using both adversarial loss and waveform reconstruction loss. We employ a composite dis-criminator adopted from [ 19 ]. The generator (i.e., the autoencoder) and discriminator losses of the adversarial training are defined as follows: 
+
+L𝐺 = E ˜𝒙 𝐻 𝑅 max (0, 1 − 𝐷 ( ˜𝒙 𝐻𝑅 )) , (1) 
+
+L𝐷 = E(𝒙 𝐻 𝑅 , ˜𝒙 𝐻 𝑅 ) [max (0, 1 − 𝐷 (𝒙 𝐻𝑅 )) + max (0, 1 + 𝐷 ( ˜𝒙 𝐻𝑅 ))] , (2) where 𝐷 denotes the discriminator. The waveform reconstruction loss is formulated as the L1 distance between the input audio wave-form 𝒙 𝐻𝑅 and the reconstructed audio waveform ˜𝒙 𝐻𝑅 , i.e., 
+
+L𝑅 = E(𝒙 𝐻 𝑅 , ˜𝒙 𝐻 𝑅 ) ∥𝒙 𝐻𝑅 − ˜𝒙 𝐻𝑅 ∥1 , (3) where ∥·∥ 1 is the L1 norm. We use L𝐺 + L 𝑅 and L𝐷 to train the generator and discriminator alternately, following the standard adversarial training paradigm. 
+
+## 2.3 CFM-based Latent-Space Super-Resolution 
+
+We employ a CFM mechanism 𝜙 𝐶𝐹 𝑀𝑆𝑅 [ 26 , 45 ] to perform super-resolution in the latent space. The mechanism takes the low-resolution latent representation 𝒍 𝐿𝑅 , which is obtained by encoding the up-sampled audio 𝒙 𝐿𝑅 with the pretrained autoencoder’s encoder, as conditional information and learns a time-dependent velocity field to map an initial distribution 𝒍 0 ∼ N ( 0, 𝑰 ) to the desired high-resolution latent representation ˆ𝒍 𝐻𝑅 ∈ R𝐶 ×𝑇 , i.e., 
+
+ˆ𝒍 𝐻𝑅 = 𝜙 𝐶𝐹 𝑀𝑆𝑅 (𝒍 0 |𝒍 𝐿𝑅 ). (4) Finally, ˆ𝒍 𝐻𝑅 is passed through the decoder of the pretrained autoen-coder to reconstruct the high-resolution audio ˆ𝒙 𝐻𝑅 .
+
+2.3.1 CFM Mechanism for Latent-Space Modeling. We define a CFM time-dependent state 𝒍 𝑡 ∈ R𝐶 ×𝑇 in the latent space, where 
+
+𝑡 ∈ [ 0, 1]. The state at 𝑡 = 0 corresponds to the initial state 𝒍 0,while the state at 𝑡 = 1 corresponds to the high-resolution latent representation 𝒍 𝐻𝑅 (i.e., 𝒍 1 = 𝒍 𝐻𝑅 ). The evolution of this process is described by an ODE, i.e., 
+
+𝑑 𝒍 𝑡 
+
+𝑑𝑡 = 𝒗 𝜃 (𝒍 𝑡 , 𝑡, 𝒍 𝐿𝑅 ), (5) where 𝒗 𝜃 denotes the velocity field parameterized by neural net-work parameters 𝜃 . The velocity field takes the current state 𝒍 𝑡 ,the time variable 𝑡 , and the conditional latent representation 𝒍 𝐿𝑅 as inputs, and models the instantaneous direction that drives samples to evolve from the Gaussian prior toward the conditional target distribution 𝑝 (𝒍 1 |𝒍 𝐿𝑅 ). The terminal state 𝒍 1 is obtained from the initial state 𝒍 0 by solving the following integral equation: 
+
+𝒍 1 = 𝒍 0 +
+
+∫ 10
+
+𝒗 𝜃 (𝒍 𝑡 , 𝑡, 𝒍 𝐿𝑅 )𝑑𝑡 . (6) By conditioning on the low-resolution latent representation, the generation of the high-resolution latent is guided by stable semantic and acoustic information, enabling more effective reconstruction of high-frequency details. Conference’17, July 2017, Washington, DC, USA Liu et al. Conv 1D 
+
+> Residual Block
+> Residual Block
+> Residual Block
+> Snake Activation
+> Conv 1D
+> Snake Activation
+> Conv 1D
+> LayerNorm
+> Downsampling Module
+> ×4
+> Conv 1D
+> TConv 1D
+> Conv 1D
+> Snake Activation
+> Snake Activation
+> Residual Block
+> Residual Block
+> Residual Block
+> Upsampling Module
+> ×4
+> Tanh Activation
+
+# xHR lHR 
+
+# Encoder Decoder ~xHR 
+
+Noise Generator 
+
+# δ
+
+Figure 2: Overview of the noise-robust autoencoder. The noise generator only appears during the training process. ResNet 
+
+> Transformer
+> Downsampling
+> Conv  1D
+> ResNet
+> Transformer
+> ResNet
+> Transformer
+> Upsampling
+> TransConv  1D
+> Projection
+
+# vθ
+
+# lLR 
+
+# lt
+
+Embedding t
+
+## C
+
+×2  ×2  ×2 
+
+Figure 3: Overview of the velocity field estimation network used in CFM mechanism. 
+
+2.3.2 Velocity Field Estimation Network. To estimate the veloc-ity field 𝒗 𝜃 (𝒍 𝑡 , 𝑡, 𝒍 𝐿𝑅 ), we employ a U-Net–based generative net-work that combines local and global modeling [ 40 ], as illustrated in Figure 3. The network takes the intermediate state 𝒍 𝑡 and the low-resolution latent representation 𝒍 𝐿𝑅 as inputs and predicts the velocity field under the modulation of a time embedding from time 
+
+𝑡 .Specifically, at the input end, the intermediate state 𝒍 𝑡 and the low-resolution latent representation 𝒍 𝐿𝑅 are concatenated along the channel dimension and fed into the subsequent network for modeling. This design allows the conditional information to provide semantic and acoustic guidance throughout the generative process, thereby improving the consistency and stability of the generated results [ 39 , 49 ]. Meanwhile, to capture the dynamic characteristics of the continuous flow at different time steps, the time variable 𝑡 
+
+is mapped into a high-dimensional representation through a time-embedding module. This embedding is injected into network blocks, enabling the network to explicitly perceive the current time step and adjust the modeling of the instantaneous velocity accordingly [4]. The backbone follows a U-Net-style architecture and mainly con-sists of two downsampling blocks, two feature processing blocks, and two upsampling blocks. 1) Each downsampling block is com-posed of a ResNet block [ 13 ], a Transformer block [ 47 ], and a one-dimensional downsampling convolution layer. Here, the ResNet block adopts a one-dimensional convolution-based residual struc-ture consisting of two convolution layers, each followed by a group normalization layer [ 8 ] and a Mish activation function [ 29 ]. After the first convolution, the time embedding is added to the interme-diate features of the main branch. Meanwhile, a residual branch is preserved, where the input features pass through a one-dimensional convolution and are added to the output of the main branch. This residual design mitigates gradient degradation during deep net-work training and improves the stability of local feature modeling [13 , 14 ]. Built upon the local features extracted by the ResNet block, the Transformer block further performs global modeling to capture long-range contextual dependencies. The downsampling convo-lution layer then reduces the temporal resolution of the features while enlarging the effective receptive field. 2) The feature process-ing blocks are placed in the middle of the network and consist of alternating ResNet and Transformer blocks, where the same ResNet design is used to refine local temporal patterns and the Transformer blocks further enhance global dependency modeling. These blocks continuously integrate local acoustic details with global temporal dependencies to refine the intermediate representations [ 47 ]. 3) Each upsampling block is composed of a ResNet block, a Trans-former block, and an upsampling transposed convolution layer. In these blocks, the ResNet and Transformer blocks further en-hance the intermediate representations, while the transposed con-volution layer progressively restores the temporal resolution and reconstructs more detailed temporal structures. In addition, U-Net-style skip connections are introduced between the corresponding downsampling and upsampling stages, allowing shallow features to be fused with deeper representations so as to better preserve fine-grained local temporal details while maintaining long-range temporal coherence. Through this hierarchical design, the network LatentFlowSR: High-Fidelity Audio Super-Resolution via Noise-Robust Latent Flow Matching Conference’17, July 2017, Washington, DC, USA ODE 
+
+Solver  lHR 
+
+ˆVelocity 
+
+Network 
+
+n = 0,1, 
+
+…, N-1 
+
+## ltn+ 1
+
+# vθ
+
+## lLR 
+
+## t0 = 0
+
+Velocity 
+
+Network 
+
+State 
+
+Generator 
+
+## lHR 
+
+## t∼𝒰 (0,1) 
+
+## l0∼𝒩 (0,
+
+I ) lLR 
+
+## lt vθ
+
+## lHR - l0
+
+## Training 
+
+## Inference 
+
+## l0∼𝒩 (0,
+
+I )
+
+Figure 4: Overview of the CFM training and inference. 
+
+gradually combines short-term acoustic structures with long-range temporal coherence at different levels, enabling the velocity field prediction to recover fine-grained and globally consistent acoustic representations [38, 44]. At the output end, a projection block maps the features extracted by the backbone network to the velocity field. This module mainly consists of a one-dimensional convolution, a group normalization layer, a Mish activation function, and a final one-dimensional con-volution layer. It performs feature projection and channel mapping while preserving the temporal structure, ultimately producing the predicted velocity field 𝒗 𝜃 (𝒍 𝑡 , 𝑡, 𝒍 𝐿𝑅 ).
+
+2.3.3 Training and Inference. Figure 4 illustrates the training and inference processes of the CFM mechanism. During CFM training, the autoencoder provides the target latent representation 𝒍 𝐻𝑅 and the conditional input 𝒍 𝐿𝑅 . We then sample the initial state 𝒍 0 from a standard Gaussian distribution N ( 0, 𝑰 ) and uniformly sample the time variable 𝑡 ∼ U ( 0, 1) from the interval [0, 1]. To improve training efficiency and reduce optimization difficulty, we adopt the optimal transport CFM (OT-CFM) [ 45 ] formulation. Specifically, a linear path is constructed between the initial state 𝒍 0 and the target state 𝒍 𝐻𝑅 , as defined below, 
+
+𝒍 𝑡 = (1 − 𝑡 )𝒍 0 + 𝑡 𝒍 𝐻𝑅 . (7) Based on this formulation, the corresponding target velocity field can be derived 
+
+𝒗 = 𝑑 𝒍 𝑡 
+
+𝑑𝑡 = 𝒍 𝐻𝑅 − 𝒍 0, (8) which is independent of the time variable 𝑡 . The velocity field estimation network is then trained by minimizing the mean squared error between the predicted velocity field and the target one, i.e., 
+
+L𝐶𝐹 𝑀 = E𝒍 0∼N ( 0,𝑰 ),𝑡 ∼U ( 0,1) ∥𝒗 𝜃 (𝒍 𝑡 , 𝑡, 𝒍 𝐿𝑅 ) − 𝒗 ∥22 . (9) In this way, OT-CFM only requires matching the instantaneous local velocity at randomly sampled intermediate states and time steps during training, which generally leads to more efficient and stable optimization. During CFM inference, we take 𝒍 0 as the initial state, and under the conditioning of 𝒍 𝐿𝑅 , use an Euler-based ODE solver to discretely approximate the integral in Equation 6, thereby iteratively generat-ing the predicted high-resolution latent representation ˆ𝒍 𝐻𝑅 . Specifi-cally, the time interval [0, 1] is uniformly divided into 𝑁 steps, and each discrete time point is defined as 𝑡 𝑛 = 𝑛 Δ𝑡 , where Δ𝑡 = 1 
+
+> 𝑁
+
+and 
+
+𝑛 = 0, 1, · · · , 𝑁 − 1. Equation 6 can therefore be rewritten as 
+
+𝒍 𝑡 𝑛 +1 = 𝒍 𝑡 𝑛 + Δ𝑡 · 𝒗 𝜃 (𝒍 𝑡 𝑛 , 𝑡 𝑛 , 𝒍 𝐿𝑅 ). (10) After 𝑁 iteration steps, the final state 𝒍 𝑡 𝑁 is regarded as the predicted high-resolution latent representation ˆ𝒍 𝐻𝑅 .
+
+## 3 Experimental Setup 3.1 Datasets 
+
+To comprehensively evaluate the super-resolution capability of the proposed LatentFlowSR across different types of audio content, we conducted experiments on three audio scenarios with the distinct time–frequency structures and high-frequency detail distributions: speech, sound effects, and music. This setup enabled a thorough assessment of the model’s reconstruction ability and generalization performance under diverse acoustic conditions. 
+
+• Speech Dataset : We used the VCTK dataset [ 52 ] for training and in-domain evaluation. Following previous work [ 2, 27 ], the data from 108 speakers were split into a training set comprising 100 speakers (40,936 samples) and a test set comprising 8 speakers (2,937 samples). 
+
+• Sound Effects Dataset : We used the FSD50K dataset [ 9] as the training set (containing 51,197 samples) to provide diverse sam-ples of environmental sounds and event-based sound effects. The evaluation was then conducted on the out-of-domain ESC-50 dataset [ 35 ] (containing 2,000 samples) to assess its generaliza-tion ability under a cross-dataset setting, thereby providing a more rigorous evaluation of its super-resolution performance on previously unseen sound effect distributions. 
+
+• Music Dataset : We used an internal dataset containing songs in multiple languages and covering a variety of musical styles and recording conditions. The training set consisted of 3,962 songs, while the in-domain test set contained 87 songs. A list of the song titles included in the internal music dataset is provided in the supplementary material. In addition, we also evaluated on the out-of-domain test set of the public MUSDB18-HQ dataset [ 37 ](containing 50 songs), which further helps verify the generaliza-tion ability across different types of musical content. In the experiments 1, all audio signals are resampled to 44.1 kHz and treated as the high-resolution audio. To construct low-resolution inputs with different levels of degradation, the high-resolution audio is downsampled to 8 kHz, 12 kHz, 16 kHz, and 24 kHz, and then uniformly upsampled back to 44.1 kHz. In this way, four audio super-resolution tasks with different bandwidth limitations are constructed for each audio type. 
+
+## 3.2 Implementation Details 
+
+For the noise-robust autoencoder used in LatentFlowSR, its encoder adopted a four-stage downsampling architecture, with downsam-pling factors of 2, 4, 8, and 8 at each stage, respectively. Its decoder  
+
+> 1Audio samples are available at: https://latentflowsr-demo.pages.dev/. Conference’17, July 2017, Washington, DC, USA Liu et al.
+
+Table 1: Objective comparison of super-resolution performance of different methods on multiple datasets.                                                                                                                                                                                                                                                                                                 
+
+> Dataset Method 8 kHz →44.1 kHz 12 kHz →44.1 kHz 16 kHz →44.1 kHz 24 kHz →44.1 kHz LSD ↓LSD-HF ↓ViSQOL ↑LSD ↓LSD-HF ↓ViSQOL ↑LSD ↓LSD-HF ↓ViSQOL ↑LSD ↓LSD-HF ↓ViSQOL ↑
+> VCTK (In-domain) NU-Wave ------0.98 1.08 2.36 0.85 1.03 3.18 NU-Wave2 1.10 1.19 2.48 0.93 1.08 2.75 0.86 1.03 3.00 0.73 0.97 3.74 UDM+ 1.03 1.13 2.48 0.89 1.02 3.08 0.79 0.96 3.30 0.65 0.88 4.00 AudioSR 1.62 1.73 2.57 1.50 1.66 2.62 1.42 1.62 2.68 1.21 1.44 3.16 FlashSR 1.71 1.85 2.41 1.45 1.64 2.57 1.36 1.62 2.64 0.96 1.23 2.82 FlowHigh 1.29 1.32 3.34 1.25 1.29 3.43 1.23 1.28 3.58 1.17 1.23 4.08 mdctGAN 0.93 1.01 3.03 0.85 1.02 3.12 0.83 0.98 3.27 0.71 0.96 3.69 AP-BWE 0.86 0.97 3.34 0.79 0.92 3.42 0.74 0.90 3.60 0.63 0.87 4.15 LatentFlowSR 0.86 0.95 3.38 0.78 0.91 3.51 0.73 0.89 3.62 0.60 0.85 4.17
+> ESC-50 (Out-of-domain) AudioSR 1.75 1.88 2.78 1.69 1.89 2.83 1.65 1.93 2.84 1.58 2.07 3.11 FlashSR 1.70 1.86 2.88 1.64 1.87 2.93 1.60 1.94 2.96 1.54 2.14 3.14 FlowHigh 1.83 1.97 2.63 1.76 1.98 3.25 1.78 2.13 3.52 1.63 2.22 4.03 LatentFlowSR 1.36 1.50 3.19 1.30 1.51 3.34 1.31 1.62 3.57 1.18 1.71 4.11
+> Internal Music (In-domain) AudioSR 1.84 1.97 2.79 1.71 1.89 2.94 1.56 1.80 3.08 1.35 1.77 3.57 FlashSR 1.56 1.71 2.92 1.45 1.66 3.04 1.34 1.62 3.18 1.14 1.57 3.63 FlowHigh 3.57 3.93 1.68 2.85 3.31 1.76 2.34 2.89 2.05 1.43 2.02 3.27 LatentFlowSR 1.23 1.36 2.97 1.11 1.29 3.20 1.04 1.29 3.53 0.89 1.29 4.21
+> MUSDB18-HQ (Out-of-domain) AudioSR 2.06 2.24 2.58 1.83 2.08 2.89 1.63 1.95 3.13 1.40 1.89 3.60 FlashSR 1.71 1.88 2.79 1.50 1.73 3.17 1.36 1.67 3.40 1.19 1.66 3.50 FlowHigh 3.35 3.64 1.67 2.91 3.27 1.69 2.46 2.89 1.87 1.77 2.24 2.77 LatentFlowSR 1.41 1.55 2.81 1.23 1.43 3.19 1.15 1.43 3.46 0.97 1.41 4.14
+
+followed a symmetric four-stage upsampling structure, with up-sampling factors of 8, 8, 4, and 2. Within each residual block, dilated convolutions with a kernel size of 7 (dilation rates of 1, 3, and 9) were used, along with a 1 × 1 convolution. All convolutional layers employed weight normalization. The resulting latent representation had 64 channels (i.e., 𝐶 = 64 ). For the velocity field estimation network in the CFM mecha-nism of LatentFlowSR, its main branch of each ResNet block used one-dimensional convolutions with a kernel size of 3, while the residual branch employed a 1 × 1 convolution for projection. Each Transformer employed 2 attention heads. The downsampling convo-lutions used a kernel size of 3 with a stride of 2, and the upsampling transposed convolutions used a kernel size of 4 with a stride of 2. Finally, the projection block performed feature mapping using a one-dimensional convolution with a kernel size of 3 followed by a 1 × 1 convolution. During inference, an Euler-based ODE solver with 1 (i.e., 𝑁 = 1) iterations is used to discretely solve the ODE, enabling efficient audio super-resolution in the latent space. We adopted a two-stage training strategy for LatentFlowSR. First, the noise-robust autoencoder was trained and then frozen to pro-duce latent training data, based on which the velocity field esti-mation network in the CFM mechanism was subsequently trained in the learned latent space. Both of them were optimized using AdamW optimizer, with 𝛽 1 = 0.8, 𝛽 2 = 0.99 , and were trained for 400k and 2M steps, respectively. The learning rate was set initially to 0.0003 and scheduled to decay with a factor of 0.999 at every epoch. 
+
+## 3.3 Baseline Methods 
+
+We compared the proposed LatentFlowSR with several baseline methods. In the speech scenario, the selected baselines included NU-Wave [ 20 ], NU-Wave2 [ 12 ], UDM+ [ 54 ], AudioSR [ 24 ], FlashSR [ 16 ], FlowHigh [ 55 ], mdctGAN [ 42 ] and AP-BWE [ 27 ]. Among them, NU-Wave, NU-Wave2, UDM+, AudioSR, and FlashSR are diffusion-based methods, with the former two operating in the waveform domain and the latter three in the frequency domain. FlowHigh is a CFM-based method that performs modeling in the frequency domain, while mdctGAN and AP-BWE are discriminative methods in the same domain. In the sound effects and music scenar-ios, we compared only with methods specifically designed for gen-eral audio super-resolution (i.e., AudioSR, FlashSR, and FlowHigh), since the other approaches mainly focus on the speech domain. For NU-Wave2, UDM+, mdctGAN, AP-BWE, and FlowHigh, we re-trained their official implementations on our datasets. For NU-Wave, AudioSR, and FlashSR, we directly used the official checkpoints provided by the authors, and the output was downsampled to 44.1 kHz. Notably, NU-Wave did not conduct the experiment at source sampling rates of 8 kHz and 12 kHz, so we excluded these results from our analysis. 
+
+## 3.4 Quality Evaluation Metrics 
+
+We adopted both objective and subjective metrics to evaluate Latent-FlowSR and the baseline methods. For objective evaluation, we used several widely used metrics in audio super-resolution [ 12 , 16 , 20 , 21 ,24 , 27 , 54 , 55 ], including log-spectral distance (LSD), high-frequency log-spectral distance (LSD-HF), and virtual speech quality objective listener (ViSQOL) [ 6, 15 ]. LSD measures the log-spectral distance LatentFlowSR: High-Fidelity Audio Super-Resolution via Noise-Robust Latent Flow Matching Conference’17, July 2017, Washington, DC, USA 
+
+Table 2: Subjective MOS results for super-resolution methods on different datasets under the 8 kHz to 44.1 kHz setting.                                                                                                   
+
+> Method VCTK ESC-50 Internal Music MUSDB18-HQ Low-Resolution 2.07 ±0.05 2.18 ±0.05 2.53 ±0.05 2.67 ±0.05 NU-Wave2 3.48 ±0.05 ---UDM+ 3.50 ±0.06 ---mdctGAN 3.53 ±0.06 ---AP-BWE 4.01 ±0.05 ---AudioSR 3.58 ±0.05 3.55 ±0.06 3.35 ±0.06 3.42 ±0.05 FlashSR 3.38 ±0.06 3.76 ±0.06 3.78 ±0.05 3.95 ±0.05 FlowHigh 3.93 ±0.06 3.18 ±0.05 3.12 ±0.05 3.11 ±0.05 LatentFlowSR 4.03 ±0.05 3.97 ±0.05 4.02 ±0.05 3.99 ±0.05
+> Ground Truth 4.35 ±0.05 4.87 ±0.05 4.88 ±0.05 4.80 ±0.05
+
+between the reconstructed and target high-resolution audio over the entire frequency band, whereas LSD-HF evaluates it only within the high-frequency subband, thereby providing a more focused as-sessment of the model’s ability to recover high-frequency details. ViSQOL is an objective perceptual evaluation metric that further reflects quality changes in the reconstructed high-resolution audio in a way that aligns with human auditory perception. For subjective evaluation, we conduct mean opinion score (MOS) tests to assess the naturalness of the reconstructed high-resolution audio. For simplicity, we conduct MOS evaluations only under the most challenging 8 kHz to 44.1 kHz super-resolution setting. In each MOS test, twenty samples from the test set were evaluated by at least 30 listeners on the crowd-sourcing platform Amazon Mechanical Turk. For each sample, listeners were asked to rate a naturalness score between 1 and 5 with an interval of 0.5. All the MOS results were reported with 95% confidence intervals. 
+
+## 4 Results and Analysis 4.1 Main Results 
+
+The objective and subjective results on the test sets of the four audio types are presented in Tables 1 and 2, respectively. For in-domain speech evaluation, in the most challenging 8 kHz to 44.1 kHz task, the proposed LatentFlowSR obtained the best results on LSD-HF and ViSQOL, and matched AP-BWE on LSD. As the input sampling rate increased, LatentFlowSR continued to outperform the baseline methods across all three metrics, demonstrating its effectiveness under both severe and mild degradation conditions. These results suggest that the proposed latent-space CFM mechanism can more effectively characterize the mapping from low-resolution speech to high-resolution speech, resulting in improved spectral reconstruc-tion and perceptual quality. In addition, the subjective evaluation results indicate that LatentFlowSR achieved a higher MOS score than all baseline methods on the VCTK dataset, further validating its effectiveness in speech super-resolution. Consistent with the objective results on the in-domain speech test set, LatentFlowSR also achieved the best performance across all metrics under all four super-resolution settings on the out-of-domain ESC-50 sound effects test set. This shows that the proposed method not only gen-eralized well beyond speech signals, but also maintained strong robustness when evaluated on out-of-domain sound effect data, 
+
+Table 3: Complexity evaluation results between Latent-FlowSR and baseline methods. 
+
+Method Inference Steps Para. FLOPs AudioSR 50 258.20 M 1213 G FlashSR 1 258.20 M 12.13 G FlowHigh 1 49.40 M 25.30 G LatentFlowSR 1 10.94 M 0.96 G 
+
+highlighting its superior generalization ability across different au-dio types and domains. The MOS results on ESC-50 further support this observation: LatentFlowSR obtained the highest scores, improv-ing subjective ratings by more than 80% over the low-resolution input and by approximately 5%–6% over the strongest baseline, indicating a clearer and more natural listening experience. Compared with speech and sound effects, music super-resolution is generally more challenging due to its more complex harmonic structures, richer spectral details, wider frequency range, and longer temporal dependencies, which require stronger modeling capacity for both global structure and fine-grained high-frequency recov-ery. Despite these challenges, as shown in Table 1, LatentFlowSR still delivered the best objective performance across all four super-resolution settings on both the in-domain internal music and out-of-domain MUSDB18-HQ test sets. On the in-domain set, it improved LSD and LSD-HF by approximately 0.3 points over the strongest baseline FlashSR and achieved an average relative improvement of about 5% in ViSQOL. On MUSDB18-HQ, LatentFlowSR consis-tently remained the best-performing method, demonstrating strong generalization across different music domains and degradation lev-els. Notably, although AudioSR and FlashSR have been trained on MUSDB18-HQ, they still failed to outperform LatentFlowSR. FlowHigh performed substantially worse on the more challenging music datasets than on the speech and sound effect datasets. Con-sistent with the objective results, LatentFlowSR also achieved the best subjective performance on two music test sets under the 8 kHz to 44.1 kHz setting. The above results provide compelling evidence that LatentFlowSR delivers high-quality reconstruction and strong generalization across diverse audio types, unseen data, and a wide range of super-resolution settings. 
+
+## 4.2 Complexity Analysis of Super-Resolution 
+
+We further analyzed the model and computational complexity of different super-resolution methods using parameter count (Para.) and floating-point operations (FLOPs) required to generate one second of audio, respectively. For clarity, we consider only meth-ods specifically designed for audio super-resolution (i.e., AudioSR, FlashSR and FlowHigh), all of which are based on either diffusion models or CFM, and limit the analysis to the efficiency of super-resolution modeling in their respective representation spaces. The results are shown in Table 3. Overall, LatentFlowSR achieved the lowest parameter count and FLOPs with only one inference step, demonstrating clear complexity and efficiency advantages. AudioSR required as many as 50 diffusion-based sampling steps and incurred over 200M parameters and more than 1000G FLOPs. Built upon AudioSR, FlashSR used distillation to reduce the inference sampling Conference’17, July 2017, Washington, DC, USA Liu et al. 
+
+Table 4: Reconstruction quality evaluation results between proposed noise-robust autoencoder and other methods. 
+
+Method Type LSD ↓ ViSQOL ↑
+
+DAC VQ-VAE 0.93 4.13 BigVGAN vocoder 1.14 3.17 HiFi-GAN vocoder 1.73 3.09 Plain AE autoencoder 0.94 4.11 NRAE autoencoder 0.92 4.31 Table 5: Noise robustness evaluation results of the proposed noise-robust autoencoder and the plain autoencoder.                              
+
+> Method 1×Latent Noise 2×Latent Noise 3×Latent Noise LSD ↓ViSQOL ↑LSD ↓ViSQOL ↑LSD ↓ViSQOL ↑
+> Plain AE 3.42 2.36 3.72 2.38 3.83 2.30 NRAE 0.92 4.22 0.93 4.18 0.94 4.11
+
+steps to 1 and disable classifier-free guidance (CFG), thereby reduc-ing FLOPs by about an order of magnitude, but without lowering model complexity. With the same one-step inference setting, La-tentFlowSR incurs only about 8% of the FLOPs of FlashSR, which may be attributed to the fact that its parameter count was only 4.2% of that of FlashSR. Compared with FlowHigh, a CFM-based method operating in the mel-spectrogram domain, LatentFlowSR also achieved clear reductions in both parameter count and FLOPs, indicating that performing CFM-based super-resolution in the la-tent space is considerably more efficient. These results suggest that latent-space modeling can effectively reduce the difficulty of audio super-resolution, thus enabling the adoption of a more lightweight architecture with lower computational complexity and improved efficiency. 
+
+## 4.3 Analysis of Autoencoder’s Reconstruction Quality and Noise Robustness 
+
+The proposed noise-robust autoencoder (denoted by NRAE) is a key component of LatentFlowSR, and its reconstruction quality and noise robustness directly affect the performance of latent-space super-resolution. To evaluate its effectiveness, we compared the noise-robust autoencoder on the challenging internal music dataset with other analysis–reconstruction methods, including DAC [ 19 ], a vector-quantized variational autoencoder (VQ-VAE) based method; BigVGAN [ 10 ] and HiFi-GAN [ 18 ], two vocoder-based methods; and a plain autoencoder (denoted by Plain AE), i.e., training without latent noise injection. Note that this experiment only evaluates the analysis–reconstruction performance of each method, i.e., encoding high-resolution audio into intermediate representations (i.e., quan-tized result, mel-spectrogram or latent representation) and then reconstructing it, without involving the super-resolution process. Therefore, we adopted only LSD and ViSQOL as evaluation met-rics. As shown in Table 4, the noise-robust autoencoder achieved the best reconstruction performance among all compared methods. Compared with the plain autoencoder, the noise-robust variant further improved ViSQOL, indicating that latent noise injection 
+
+Table 6: Ablation results of LatentFlowSR under the 8 kHz to 44.1 kHz setting. 
+
+Method LSD ↓ LSD-HF ↓ ViSQOL ↑
+
+LatentFlowSR 1.24 1.36 2.95 
+
+LatentFlowSR w/o NR 1.30 1.43 2.89 LatentFlowSR w/ Mel 1.32 1.42 2.83 LatentFlowSR w/ DAC 1.29 1.42 2.91 helped preserve reconstruction fidelity. The noise-robust autoen-coder also outperformed DAC and two vocoder-based methods, suggesting that continuous latent representations are more suit-able for high-fidelity audio reconstruction compared with discrete representations and mel-spectrograms. We further analyzed the noise robustness of the proposed noise-robust autoencoder. During inference, Gaussian noise scaled by factors of 1, 2, and 3 was injected into the latent representations of the noise-robust and plain autoencoders, respectively. The recon-struction quality results are shown in Table 5. As the noise level increased, the performance of plain autoencoder degraded signifi-cantly, whereas the noise-robust autoencoder remained relatively stable. These results demonstrate that the noise-robust autoencoder possessed strong robustness to latent perturbations, thereby pro-viding a more stable latent space for subsequent super-resolution. 
+
+## 4.4 Ablation Studies 
+
+Finally, we conducted ablation studies of LatentFlowSR under the most challenging 8 kHz to 44.1 kHz setting on the internal music dataset, with results shown in Table 6. Specifically, to examine the ef-fect of noise-robust training, we replaced the proposed noise-robust autoencoder with plain one and performed super-resolution in its latent space, denoted as LatentFlowSR w/o NR. We also replaced the proposed latent modeling space with the mel-spectrogram space and the discrete latent space constructed by DAC, denoted as Latent-FlowSR w/ Mel and LatentFlowSR w/ DAC, respectively. As shown in Table 6, removing noise-robust training led to consistent degrada-tion across all metrics. This indicates that when the predicted latent representation deviates from the ground-truth latent representa-tion, the noise-robust latent space can better compensate for this mismatch, thereby improving the quality of reconstructed audio and the recovery of high-frequency details. In addition, replacing the proposed latent space with either the mel-spectrogram space or the discrete latent space also caused clear performance drops. These results suggest that the proposed noise-robust latent space in LatentFlowSR is better suited for audio super-resolution, owing to its stronger capacity to support high-quality latent modeling and more accurate recovery of high-frequency details. 
+
+## 5 Conclusion 
+
+In this paper, we propose LatentFlowSR, an audio super-resolution method based on CFM mechanism in the latent space. Unlike ap-proaches that directly perform high-dimensional generation in the waveform or spectral domain, our method first employs a noise-robust autoencoder to map audio into a continuous latent space. Conditioned on the low-resolution latent representation, a CFM mechanism, whose velocity field is parameterized by a U-Net-style LatentFlowSR: High-Fidelity Audio Super-Resolution via Noise-Robust Latent Flow Matching Conference’17, July 2017, Washington, DC, USA 
+
+hierarchical architecture, is then used to generate high-resolution la-tent representations from a Gaussian noise prior. During inference, only a one-step ODE solver is required to obtain the high-resolution latent representation, which is finally decoded by the pretrained autoencoder to reconstruct the high-resolution audio. Experimental results strongly demonstrate the effectiveness of latent-space mod-eling for audio super-resolution. In future work, we plan to further improve super-resolution performance, explore a wider range of audio types, and investigate approaches to achieve even higher computational efficiency. 
+
+## References 
+
+[1] 2017. Audio super resolution using neural networks, In Kuleshov, Volodymyr and Enam, S Zayd and Ermon, Stefano. Proc. ICLR 2017 .[2] Yang Ai, Xiao-Hang Jiang, Ye-Xin Lu, Hui-Peng Du, and Zhen-Hua Ling. 2024. APCodec: A neural audio codec with parallel amplitude and phase spectrum encoding and decoding. IEEE/ACM Transactions on Audio, Speech, and Language Processing 32 (2024), 3256–3269. [3] Abas Albahri, Catherine S Rodriguez, and Margaret Lech. 2016. Artificial band-width extension to improve automatic emotion recognition from narrow-band coded speech. In Proc. ICSPCS 2016 . 1–7. [4] Zheng Chen, Haotong Qin, Yong Guo, Xiongfei Su, Xin Yuan, Linghe Kong, and Yulun Zhang. 2024. Binarized diffusion model for image super-resolution. In Proc. NeurIPS 2024 , Vol. 37. 30651–30669. [5] Samir Chennoukh, A Gerrits, G Miet, and R Sluijter. 2001. Speech enhance-ment via frequency bandwidth extension using line spectral frequencies. In Proc. ICASSP 2001 , Vol. 1. 665–668. [6] Michael Chinen, Felicia SC Lim, Jan Skoglund, Nikita Gureev, Feargus O’Gorman, and Andrew Hines. 2020. ViSQOL v3: An open source production ready objective speech and audio metric. In Proc. QoMEX 2020 . IEEE, 1–6. [7] Alexandre Défossez, Jade Copet, Gabriel Synnaeve, and Yossi Adi. 2023. High fidelity neural audio compression. Transactions on Machine Learning Research 
+
+(2023). [8] Prafulla Dhariwal and Alexander Nichol. 2021. Diffusion models beat gans on image synthesis. In Proc. NeurIPS 2021 , Vol. 34. 8780–8794. [9] Eduardo Fonseca, Xavier Favory, Jordi Pons, Frederic Font, and Xavier Serra. 2021. FSD50K: An open dataset of human-labeled sound events. IEEE/ACM Transactions on Audio, Speech, and Language Processing 30 (2021), 829–852. [10] Sang gil Lee, Wei Ping, Boris Ginsburg, Bryan Catanzaro, and Sungroh Yoon. 2023. BigVGAN: A universal neural vocoder with large-scale training. In Proc. ICLR 2023 .[11] Mohammad Mohsen Goodarzi, Farshad Almasganj, Jahanshah Kabudian, Yasser Shekofteh, and Iman Sarraf Rezaei. 2012. Feature bandwidth extension for Persian conversational telephone speech recognition. In Proc. ICEE 2012 . 1220–1223. [12] Seungu Han and Junhyeok Lee. 2022. NU-Wave 2: A general neural audio upsampling model for various sampling rates. In Proc. Interspeech 2022 . 4401– 4405. [13] Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. 2016. Deep residual learning for image recognition. In Proc. CVPR 2016 . 770–778. [14] Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. 2016. Identity mappings in deep residual networks. In Proc. ECCV 2016 . 630–645. [15] Andrew Hines, Eoin Gillen, Damien Kelly, Jan Skoglund, Anil Kokaram, and Naomi Harte. 2015. ViSQOLAudio: An objective audio quality metric for low bitrate codecs. The Journal of the Acoustical Society of America 137, 6 (2015), EL449–EL455. [16] Jaekwon Im and Juhan Nam. 2025. FlashSR: One-step versatile audio super-resolution via diffusion distillation. In Proc. ICASSP 2025 . 1–5. [17] Peter Jax and Peter Vary. 2003. On artificial bandwidth extension of telephone speech. Signal Processing 83, 8 (2003), 1707–1719. [18] Jungil Kong, Jaehyeon Kim, and Jaekyoung Bae. 2020. HiFi-GAN: Generative adversarial networks for efficient and high fidelity speech synthesis. In Proc. NeurIPS 2020 , Vol. 33. 17022–17033. [19] Rithesh Kumar, Prem Seetharaman, Alejandro Luebs, Ishaan Kumar, and Kundan Kumar. 2023. High-fidelity audio compression with improved RVQGAN. In Proc. NeurIPS 2023 , Vol. 36. 27980–27993. [20] Junhyeok Lee and Seungu Han. 2021. NU-Wave: A diffusion probabilistic model for neural audio upsampling. In Proc. Interspeech 2021 . 1634–1638. [21] Chang Li, Zehua Chen, Liyuan Wang, and Jun Zhu. 2025. Audio super-resolution with latent bridge models. In Proc. NeurIPS 2025 .[22] Kehuang Li, Zhen Huang, Yong Xu, and Chin-Hui Lee. 2015. DNN-based speech bandwidth expansion and its application to adding high-frequency missing fea-tures for automatic speech recognition of narrowband speech. In Proc. Interspeech 2015 . 2578–2582. [23] Yaron Lipman, Ricky T. Q. Chen, Heli Ben-Hamu, Maximilian Nickel, and Matthew Le. 2023. Flow matching for generative modeling. In Proc. ICLR 2023 .[24] Haohe Liu, Ke Chen, Qiao Tian, Wenwu Wang, and Mark D Plumbley. 2024. AudioSR: Versatile audio super-resolution at scale. In Proc. ICASSP 2024 . 1076– 1080. [25] Haohe Liu, Woosung Choi, Xubo Liu, Qiuqiang Kong, Qiao Tian, and DeLiang Wang. 2022. Neural vocoder is all you need for speech super-resolution. In Proc. Interspeech 2022 . 4227–4231. [26] Xingchao Liu, Chengyue Gong, and Qiang Liu. 2023. Flow straight and fast: Learning to generate and transfer data with rectified flow. In Proc. ICLR 2023 .[27] Ye-Xin Lu, Yang Ai, Hui-Peng Du, and Zhen-Hua Ling. 2024. Towards high-quality and efficient speech bandwidth extension with parallel amplitude and phase prediction. IEEE Transactions on Audio, Speech and Language Processing 33 (2024), 236–250. [28] Moshe Mandel, Or Tal, and Yossi Adi. 2023. AERO: audio super resolution in the spectral domain. In Proc. ICASSP 2023 . 1–5. [29] Dongchan Min, Dong Bok Lee, Eunho Yang, and Sung Ju Hwang. 2021. Meta-stylespeech: Multi-speaker adaptive text-to-speech generation. In Proc. ICML 2021 . 7748–7759. [30] Eloi Moliner and Vesa Välimäki. 2022. BEHM-GAN: Bandwidth extension of historical music using generative adversarial networks. IEEE/ACM Transactions on Audio, Speech, and Language Processing 31 (2022), 943–956. [31] Kazuhiro Nakamura, Kei Hashimoto, Keiichiro Oura, Yoshihiko Nankaku, and Keiichi Tokuda. 2014. A mel-cepstral analysis technique restoring high frequency components from low-sampling-rate speech. In Proc. Interspeech 2014 . 2494–2498. [32] Yoshihisa Nakatoh, Mineo Tsushima, and Takeshi Norimatsu. 1997. Generation of broadband speech from narrowband speech using piecewise linear mapping.. In Proc. EUROSPEECH 1997 . 1643–1646. [33] Phani Sankar Nidadavolu, Cheng-I Lai, Jesús Villalba, and Najim Dehak. 2018. Investigation on bandwidth extension for speaker recognition. In Proc. Interspeech 2018 . 1111–1115. [34] Kun-Youl Park and Hyung Soon Kim. 2000. Narrowband to wideband conversion of speech using GMM based transformation. In Proc. ICASSP 2000 , Vol. 3. 1843– 1846. [35] Karol J Piczak. 2015. ESC: Dataset for environmental sound classification. In Proc. ACM MM 2015 . 1015–1018. [36] N Prasad and T Kishore Kumar. 2016. Bandwidth extension of speech signals: A comprehensive review. International Journal of Intelligent Systems and Applica-tions 8, 2 (2016), 45–52. [37] Zafar Rafii, Antoine Liutkus, Fabian-Robert Stöter, Stylianos Ioannis Mimi-lakis, and Rachel Bittner. 2019. MUSDB18-HQ - An uncompressed version of MUSDB18. [38] Nathanaël Carraz Rakotonirina. 2021. Self-attention for audio super-resolution. In Proc. MLSP 2021 . 1–6. [39] Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Björn Ommer. 2022. High-resolution image synthesis with latent diffusion models. In 
+
+Proc. CVPR 2022 . 10684–10695. [40] Olaf Ronneberger, Philipp Fischer, and Thomas Brox. 2015. U-Net: Convolutional networks for biomedical image segmentation. In Proc. MICCAI 2015 . 234–241. [41] Emery Schubert, Joe Wolfe, and Alex Tarnopolsky. 2004. Spectral centroid and timbre in complex, multiple instrumental textures. In Proc. ICMPC 2004 . 112–116. [42] Chenhao Shuai, Chaohua Shi, Lu Gan, and Hongqing Liu. 2023. mdctGAN: Taming transformer-based GAN for speech super-resolution with modified DCT spectra. In Proc. Interspeech 2023 . 5112–5116. [43] Kai Siedenburg, Charalampos Saitis, Stephen McAdams, Arthur N Popper, and Richard R Fay (Eds.). 2019. Timbre: Acoustics, perception, and cognition . Springer. [44] Daniel Stoller, Sebastian Ewert, and Simon Dixon. 2018. Wave-U-Net: A multi-scale neural network for end-to-end audio source separation. In Proc. ISMIR 2018 ,Emilia Gómez, Xiao Hu, Eric Humphrey, and Emmanouil Benetos (Eds.). 334–340. [45] Alexander Tong, Kilian Fatras, Nikolay Malkin, Guillaume Huguet, Yanlei Zhang, Jarrid Rector-Brooks, Guy Wolf, and Yoshua Bengio. 2024. Improving and gener-alizing flow-based generative models with minibatch optimal transport. Transac-tions on Machine Learning Research (2024), 1–34. [46] Ismail Uysal, Harsha Sathyendra, and John G Harris. 2005. Bandwidth extension of telephone speech using frame-based excitation and robust features. In Proc. EUSIPCO 2005 . 1–4. [47] Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, and Illia Polosukhin. 2017. Attention is all you need. In Proc. NeurIPS 2017 , Vol. 30. 5998–6008. [48] Heming Wang and DeLiang Wang. 2021. Towards robust speech super-resolution. 
+
+IEEE/ACM Transactions on Audio, Speech, and Language Processing 29 (2021), 2058– 2066. [49] Yuancheng Wang, Zeqian Ju, Xu Tan, Lei He, Zhizheng Wu, Jiang Bian, and Sheng Zhao. 2023. AUDIT: Audio editing by following instructions with latent diffusion models. In Proc. NeurIPS 2023 , Vol. 36. 71340–71357. [50] Wei Xiao, Wenzhe Liu, Meng Wang, Shan Yang, Yupeng Shi, Yuyong Kang, Dan Su, Shidong Shang, and Dong Yu. 2023. Multi-mode neural speech coding based on deep generative networks. In Proc. Interspeech 2023 . 819–823. Conference’17, July 2017, Washington, DC, USA Liu et al. 
+
+[51] Li Xinyu, Chebiyyam Venkata, and Kirchhoff Katrin. 2019. Speech audio super-resolution for speech recognition. In Proc. Interspeech 2019 . 3416–3420. [52] Junichi Yamagishi, Christophe Veaux, and Kirsten MacDonald. 2019. CSTR VCTK Corpus: English multi-speaker corpus for CSTR voice cloning toolkit (version 0.92). [sound]. University of Edinburgh. The Centre for Speech Technology Research (CSTR). [53] Yuki Yoshida and Masanobu Abe. 1994. An algorithm to reconstruct wideband speech from narrowband speech based on codebook mapping. In Proc. ICSLP 1994 . 1591–1594. [54] Chin-Yun Yu, Sung-Lin Yeh, György Fazekas, and Hao Tang. 2023. Conditioning and sampling in variational diffusion models for speech super-resolution. In Proc. ICASSP 2023 . 1–5. [55] Jun-Hak Yun, Seung-Bin Kim, and Seong-Whan Lee. 2025. FLowHigh: Towards efficient and high-quality audio super-resolution with single-step flow matching. In Proc. ICASSP 2025 . 1–5. [56] Neil Zeghidour, Alejandro Luebs, Ahmed Omran, Jan Skoglund, and Marco Tagliasacchi. 2021. Soundstream: An end-to-end neural audio codec. IEEE/ACM Transactions on Audio, Speech, and Language Processing 30 (2021), 495–507. [57] Kexun Zhang, Yi Ren, Changliang Xu, and Zhou Zhao. 2021. WSRGlow: A glow-based waveform generative model for audio super-resolution. In Proc. Interspeech 2021 . 1649–1653. [58] Liu Ziyin, Tilman Hartwig, and Masahito Ueda. 2020. Neural networks fail to learn periodic functions and how to fix it. In Proc. NeurIPS 2020 , Vol. 33. 1583– 1594.

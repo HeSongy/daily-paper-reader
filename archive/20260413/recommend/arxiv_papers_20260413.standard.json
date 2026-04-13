@@ -1,0 +1,617 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-04-13T20:08:44.797559+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 9,
+    "deep_cap": 6,
+    "deep_selected": 6,
+    "quick_candidates": 9,
+    "quick_skim_target": 11,
+    "quick_selected": 9
+  },
+  "deep_dive": [
+    {
+      "id": "2604.07957v1",
+      "source": "arxiv",
+      "title": "WorldMAP: Bootstrapping Vision-Language Navigation Trajectory Prediction with Generative World Models",
+      "abstract": "Vision-language models (VLMs) and generative world models are opening new opportunities for embodied navigation. VLMs are increasingly used as direct planners or trajectory predictors, while world models support look-ahead reasoning by imagining future views. Yet predicting a reliable trajectory from a single egocentric observation remains challenging. Current VLMs often generate unstable trajectories, and world models, though able to synthesize plausible futures, do not directly provide the grounded signals needed for navigation learning. This raises a central question: how can generated futures be turned into supervision for grounded trajectory prediction? We present WorldMAP, a teacher--student framework that converts world-model-generated futures into persistent semantic-spatial structure and planning-derived supervision. Its world-model-driven teacher builds semantic-spatial memory from generated videos, grounds task-relevant targets and obstacles, and produces trajectory pseudo-labels through explicit planning. A lightweight student with a multi-hypothesis trajectory head is then trained to predict navigation trajectories directly from vision-language inputs. On Target-Bench, WorldMAP achieves the best ADE and FDE among compared methods, reducing ADE by 18.0% and FDE by 42.1% relative to the best competing baseline, while lifting a small open-source VLM to DTW performance competitive with proprietary models. More broadly, the results suggest that, in embodied navigation, the value of world models may lie less in supplying action-ready imagined evidence than in synthesizing structured supervision for navigation learning.",
+      "authors": [
+        "Hongjin Chen",
+        "Shangyun Jiang",
+        "Tonghua Su",
+        "Chen Gao",
+        "Xinlei Chen",
+        "Yong Li",
+        "Zhibo Chen"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-04-09T08:21:58+00:00",
+      "link": "https://arxiv.org/pdf/2604.07957v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "generative world models for vision-language navigation",
+      "llm_evidence_cn": "用于视觉语言导航的生成式世界模型",
+      "llm_evidence": "用于视觉语言导航的生成式世界模型",
+      "canonical_evidence": "用于视觉语言导航的生成式世界模型",
+      "llm_tldr_en": "Uses generative world models to provide supervision for grounded trajectory prediction in navigation.",
+      "llm_tldr_cn": "利用生成式世界模型为导航中的轨迹预测提供接地监督信号。",
+      "llm_tldr": "利用生成式世界模型为导航中的轨迹预测提供接地监督信号。",
+      "llm_tags": [
+        "query:navwm:composite"
+      ],
+      "matched_query_tag": "query:navwm:composite",
+      "matched_query_text": "Papers central to 隐空间、导航与世界模型相关论文检索, especially work that connects or combines: 研究隐空间表示及其在智能系统中的作用; 智能体在复杂环境中的导航策略与学习方法; 世界模型的结构与在自主系统中的应用; 探索表示学习在构建世界模型与导航中的运用; 基于隐空间表示的规划与决策模型; 空间表示与认知映射的算法及模型; 检索关于隐空间表示在世界模型和导航中的研究论文; 寻找利用世界模型进行强化学习或规划的最新研究; 探索智能体如何利用隐空间进行导航与环境理解.",
+      "matched_requirement_id": "req-composite-navwm",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.09059v1",
+      "source": "arxiv",
+      "title": "Learning Vision-Language-Action World Models for Autonomous Driving",
+      "abstract": "Vision-Language-Action (VLA) models have recently achieved notable progress in end-to-end autonomous driving by integrating perception, reasoning, and control within a unified multimodal framework. However, they often lack explicit modeling of temporal dynamics and global world consistency, which limits their foresight and safety. In contrast, world models can simulate plausible future scenes but generally struggle to reason about or evaluate the imagined future they generate. In this work, we present VLA-World, a simple yet effective VLA world model that unifies predictive imagination with reflective reasoning to improve driving foresight. VLA-World first uses an action-derived feasible trajectory to guide the generation of the next-frame image, capturing rich spatial and temporal cues that describe how the surrounding environment evolves. The model then reasons over this self-generated future imagined frame to refine the predicted trajectory, achieving higher performance and better interpretability. To support this pipeline, we curate nuScenes-GR-20K, a generative reasoning dataset derived from nuScenes, and employ a three-stage training strategy that includes pretraining, supervised fine-tuning, and reinforcement learning. Extensive experiments demonstrate that VLA-World consistently surpasses state-of-the-art VLA and world-model baselines on both planning and future-generation benchmarks. Project page: https://vlaworld.github.io",
+      "authors": [
+        "Guoqing Wang",
+        "Pin Tang",
+        "Xiangxuan Ren",
+        "Guodongfang Zhao",
+        "Bailan Feng",
+        "Chao Ma"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-04-10T07:38:05+00:00",
+      "link": "https://arxiv.org/pdf/2604.09059v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Vision-Language-Action world models for autonomous driving foresight",
+      "llm_evidence_cn": "用于自动驾驶前瞻性的视觉-语言-动作世界模型",
+      "llm_evidence": "用于自动驾驶前瞻性的视觉-语言-动作世界模型",
+      "canonical_evidence": "用于自动驾驶前瞻性的视觉-语言-动作世界模型",
+      "llm_tldr_en": "Proposes VLA-World, integrating predictive imagination and reflective reasoning for autonomous driving.",
+      "llm_tldr_cn": "提出VLA-World，将预测性想象与反思性推理相结合以提升自动驾驶能力。",
+      "llm_tldr": "提出VLA-World，将预测性想象与反思性推理相结合以提升自动驾驶能力。",
+      "llm_tags": [
+        "query:navwm:composite"
+      ],
+      "matched_query_tag": "query:navwm:composite",
+      "matched_query_text": "Papers central to 隐空间、导航与世界模型相关论文检索, especially work that connects or combines: 研究隐空间表示及其在智能系统中的作用; 智能体在复杂环境中的导航策略与学习方法; 世界模型的结构与在自主系统中的应用; 探索表示学习在构建世界模型与导航中的运用; 基于隐空间表示的规划与决策模型; 空间表示与认知映射的算法及模型; 检索关于隐空间表示在世界模型和导航中的研究论文; 寻找利用世界模型进行强化学习或规划的最新研究; 探索智能体如何利用隐空间进行导航与环境理解.",
+      "matched_requirement_id": "req-composite-navwm",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.05351v1",
+      "source": "arxiv",
+      "title": "AnyImageNav: Any-View Geometry for Precise Last-Meter Image-Goal Navigation",
+      "abstract": "Image Goal Navigation (ImageNav) is evaluated by a coarse success criterion, the agent must stop within 1m of the target, which is sufficient for finding objects but falls short for downstream tasks such as grasping that require precise positioning. We introduce AnyImageNav, a training-free system that pushes ImageNav toward this more demanding setting. Our key insight is that the goal image can be treated as a geometric query: any photo of an object, a hallway, or a room corner can be registered to the agent's observations via dense pixel-level correspondences, enabling recovery of the exact 6-DoF camera pose. Our method realizes this through a semantic-to-geometric cascade: a semantic relevance signal guides exploration and acts as a proximity gate, invoking a 3D multi-view foundation model only when the current view is highly relevant to the goal image; the model then self-certifies its registration in a loop for an accurate recovered pose. Our method sets state-of-the-art navigation success rates on Gibson (93.1%) and HM3D (82.6%), and achieves pose recovery that prior methods do not provide: a position error of 0.27m and heading error of 3.41 degrees on Gibson, and 0.21m / 1.23 degrees on HM3D, a 5-10x improvement over adapted baselines.",
+      "authors": [
+        "Yijie Deng",
+        "Shuaihang Yuan",
+        "Yi Fang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV"
+      ],
+      "published": "2026-04-07T02:45:07+00:00",
+      "link": "https://arxiv.org/pdf/2604.05351v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "semantic relevance signal guides exploration and image-goal navigation",
+      "llm_evidence_cn": "语义相关性信号引导探索与图像目标导航",
+      "llm_evidence": "语义相关性信号引导探索与图像目标导航",
+      "canonical_evidence": "语义相关性信号引导探索与图像目标导航",
+      "llm_tldr_en": "Introduces a system for precise image-goal navigation using geometric queries and semantic-to-geometric cascades.",
+      "llm_tldr_cn": "引入一种利用几何查询和语义到几何级联实现精确图像目标导航的系统。",
+      "llm_tldr": "引入一种利用几何查询和语义到几何级联实现精确图像目标导航的系统。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索智能体如何利用隐空间进行导航与环境理解",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.08780v1",
+      "source": "arxiv",
+      "title": "Toward Hardware-Agnostic Quadrupedal World Models via Morphology Conditioning",
+      "abstract": "World models promise a paradigm shift in robotics, where an agent learns the underlying physics of its environment once to enable efficient planning and behavior learning. However, current world models are often hardware-locked specialists: a model trained on a Boston Dynamics Spot robot fails catastrophically on a Unitree Go1 due to the mismatch in kinematic and dynamic properties, as the model overfits to specific embodiment constraints rather than capturing the universal locomotion dynamics. Consequently, a slight change in actuator dynamics or limb length necessitates training a new model from scratch. In this work, we take a step towards a framework for training a generalizable Quadrupedal World Model (QWM) that disentangles environmental dynamics from robot morphology. We address the limitations of implicit system identification, where treating static physical properties (like mass or limb length) as latent variables to be inferred from motion history creates an adaptation lag that can compromise zero-shot safety and efficiency. Instead, we explicitly condition the generative dynamics on the robot's engineering specifications. By integrating a physical morphology encoder and a reward normalizer, we enable the model to serve as a neural simulator capable of generalizing across morphologies. This capability unlocks zero-shot control across a range of embodiments. We introduce, for the first time, a world model that enables zero-shot generalization to new morphologies for locomotion. While we carefully study the limitations of our method, QWM operates as a distribution-bounded interpolator within the quadrupedal morphology family rather than a universal physics engine, this work represents a significant step toward morphology-conditioned world models for legged locomotion.",
+      "authors": [
+        "Mohamad H. Danesh",
+        "Chenhao Li",
+        "Amin Abyaneh",
+        "Anas Houssaini",
+        "Kirsty Ellis",
+        "Glen Berseth",
+        "Marco Hutter",
+        "Hsiu-Chin Lin"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.LG"
+      ],
+      "published": "2026-04-09T21:31:24+00:00",
+      "link": "https://arxiv.org/pdf/2604.08780v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "generalizable Quadrupedal World Model for efficient planning and behavior learning",
+      "llm_evidence_cn": "用于高效规划和行为学习的可泛化四足机器人世界模型",
+      "llm_evidence": "用于高效规划和行为学习的可泛化四足机器人世界模型",
+      "canonical_evidence": "用于高效规划和行为学习的可泛化四足机器人世界模型",
+      "llm_tldr_en": "Proposes a hardware-agnostic world model for quadrupeds to enable efficient planning across different robot bodies.",
+      "llm_tldr_cn": "提出一种硬件无关的四足机器人世界模型，实现跨不同机器人实体的有效规划。",
+      "llm_tldr": "提出一种硬件无关的四足机器人世界模型，实现跨不同机器人实体的有效规划。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.08883v1",
+      "source": "arxiv",
+      "title": "HTNav: A Hybrid Navigation Framework with Tiered Structure for Urban Aerial Vision-and-Language Navigation",
+      "abstract": "Inspired by the general Vision-and-Language Navigation (VLN) task, aerial VLN has attracted widespread attention, owing to its significant practical value in applications such as logistics delivery and urban inspection. However, existing methods face several challenges in complex urban environments, including insufficient generalization to unseen scenes, suboptimal performance in long-range path planning, and inadequate understanding of spatial continuity. To address these challenges, we propose HTNav, a new collaborative navigation framework that integrates Imitation Learning (IL) and Reinforcement Learning (RL) within a hybrid IL-RL framework. This framework adopts a staged training mechanism to ensure the stability of the basic navigation strategy while enhancing its environmental exploration capability. By integrating a tiered decision-making mechanism, it achieves collaborative interaction between macro-level path planning and fine-grained action control. Furthermore, a map representation learning module is introduced to deepen its understanding of spatial continuity in open domains. On the CityNav benchmark, our method achieves state-of-the-art performance across all scene levels and task difficulties. Experimental results demonstrate that this framework significantly improves navigation precision and robustness in complex urban environments.",
+      "authors": [
+        "Chengjie Fan",
+        "Cong Pan",
+        "Zijian Liu",
+        "Ningzhong Liu",
+        "Jie Qin"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-04-10T02:47:01+00:00",
+      "link": "https://arxiv.org/pdf/2604.08883v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "navigation framework for complex urban environments using RL",
+      "llm_evidence_cn": "复杂城市环境下的强化学习导航框架",
+      "llm_evidence": "复杂城市环境下的强化学习导航框架",
+      "canonical_evidence": "复杂城市环境下的强化学习导航框架",
+      "llm_tldr_en": "Proposes HTNav, a hybrid IL-RL framework for urban aerial vision-and-language navigation.",
+      "llm_tldr_cn": "提出 HTNav，一种结合模仿学习与强化学习的城市空中视觉语言导航框架。",
+      "llm_tldr": "提出 HTNav，一种结合模仿学习与强化学习的城市空中视觉语言导航框架。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.08995v1",
+      "source": "arxiv",
+      "title": "Matrix-Game 3.0: Real-Time and Streaming Interactive World Model with Long-Horizon Memory",
+      "abstract": "With the advancement of interactive video generation, diffusion models have increasingly demonstrated their potential as world models. However, existing approaches still struggle to simultaneously achieve memory-enabled long-term temporal consistency and high-resolution real-time generation, limiting their applicability in real-world scenarios. To address this, we present Matrix-Game 3.0, a memory-augmented interactive world model designed for 720p real-time longform video generation. Building upon Matrix-Game 2.0, we introduce systematic improvements across data, model, and inference. First, we develop an upgraded industrial-scale infinite data engine that integrates Unreal Engine-based synthetic data, large-scale automated collection from AAA games, and real-world video augmentation to produce high-quality Video-Pose-Action-Prompt quadruplet data at scale. Second, we propose a training framework for long-horizon consistency: by modeling prediction residuals and re-injecting imperfect generated frames during training, the base model learns self-correction; meanwhile, camera-aware memory retrieval and injection enable the base model to achieve long horizon spatiotemporal consistency. Third, we design a multi-segment autoregressive distillation strategy based on Distribution Matching Distillation (DMD), combined with model quantization and VAE decoder pruning, to achieve efficient real-time inference. Experimental results show that Matrix-Game 3.0 achieves up to 40 FPS real-time generation at 720p resolution with a 5B model, while maintaining stable memory consistency over minute-long sequences. Scaling up to a 2x14B model further improves generation quality, dynamics, and generalization. Our approach provides a practical pathway toward industrial-scale deployable world models.",
+      "authors": [
+        "Zile Wang",
+        "Zexiang Liu",
+        "Jaixing Li",
+        "Kaichen Huang",
+        "Baixin Xu",
+        "Fei Kang",
+        "Mengyin An",
+        "Peiyu Wang",
+        "Biao Jiang",
+        "Yichen Wei",
+        "Yidan Xietian",
+        "Jiangbo Pei",
+        "Liang Hu",
+        "Boyi Jiang",
+        "Hua Xue",
+        "Zidong Wang",
+        "Haofeng Sun",
+        "Wei Li",
+        "Wanli Ouyang",
+        "Xianglong He",
+        "Yang Liu",
+        "Yangguang Li",
+        "Yahui Zhou"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-04-10T06:00:09+00:00",
+      "link": "https://arxiv.org/pdf/2604.08995v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Interactive world model for long-horizon video generation and temporal consistency",
+      "llm_evidence_cn": "用于长时视频生成和时间一致性的交互式世界模型",
+      "llm_evidence": "用于长时视频生成和时间一致性的交互式世界模型",
+      "canonical_evidence": "用于长时视频生成和时间一致性的交互式世界模型",
+      "llm_tldr_en": "Presents Matrix-Game 3.0, a memory-augmented world model for real-time, high-resolution longform video generation.",
+      "llm_tldr_cn": "提出 Matrix-Game 3.0，一种支持长时记忆的实时高分辨率交互式视频世界模型。",
+      "llm_tldr": "提出 Matrix-Game 3.0，一种支持长时记忆的实时高分辨率交互式视频世界模型。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2604.05828v1",
+      "source": "arxiv",
+      "title": "Precise Aggressive Aerial Maneuvers with Sensorimotor Policies",
+      "abstract": "Precise aggressive maneuvers with lightweight onboard sensors remains a key bottleneck in fully exploiting the maneuverability of drones. Such maneuvers are critical for expanding the systems' accessible area by navigating through narrow openings in the environment. Among the most relevant problems, a representative one is aggressive traversal through narrow gaps with quadrotors under SE(3) constraints, which require the quadrotors to leverage a momentary tilted attitude and the asymmetry of the airframe to navigate through gaps. In this paper, we achieve such maneuvers by developing sensorimotor policies directly mapping onboard vision and proprioception into low-level control commands. The policies are trained using reinforcement learning (RL) with end-to-end policy distillation in simulation. We mitigate the fundamental hardness of model-free RL's exploration on the restricted solution space with an initialization strategy leveraging trajectories generated by a model-based planner. Careful sim-to-real design allows the policy to control a quadrotor through narrow gaps with low clearances and high repeatability. For instance, the proposed method enables a quadrotor to navigate a rectangular gap at a 5 cm clearance, tilted at up to 90-degree orientation, without knowledge of the gap's position or orientation. Without training on dynamic gaps, the policy can reactively servo the quadrotor to traverse through a moving gap. The proposed method is also validated by training and deploying policies on challenging tracks of narrow gaps placed closely. The flexibility of the policy learning method is demonstrated by developing policies for geometrically diverse gaps, without relying on manually defined traversal poses and visual features.",
+      "authors": [
+        "Tianyue Wu",
+        "Guangtong Xu",
+        "Zihan Wang",
+        "Junxiao Lin",
+        "Tianyang Chen",
+        "Yuze Wu",
+        "Zhichao Han",
+        "Zhiyang Liu",
+        "Fei Gao"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-04-07T13:00:59+00:00",
+      "link": "https://arxiv.org/pdf/2604.05828v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "sensorimotor policies for aggressive navigation through narrow openings",
+      "llm_evidence_cn": "用于在狭窄开口中进行激进导航的感觉运动策略",
+      "llm_evidence": "用于在狭窄开口中进行激进导航的感觉运动策略",
+      "canonical_evidence": "用于在狭窄开口中进行激进导航的感觉运动策略",
+      "llm_tldr_en": "Develops RL-based sensorimotor policies for drones to perform precise aggressive maneuvers in complex environments.",
+      "llm_tldr_cn": "为无人机开发基于强化学习的感觉运动策略，以在复杂环境中执行精确的激进机动。",
+      "llm_tldr": "为无人机开发基于强化学习的感觉运动策略，以在复杂环境中执行精确的激进机动。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2604.08991v1",
+      "source": "arxiv",
+      "title": "PinpointQA: A Dataset and Benchmark for Small Object-Centric Spatial Understanding in Indoor Videos",
+      "abstract": "Small object-centric spatial understanding in indoor videos remains a significant challenge for multimodal large language models (MLLMs), despite its practical value for object search and assistive applications. Although existing benchmarks have advanced video spatial intelligence, embodied reasoning, and diagnostic perception, no existing benchmark directly evaluates whether a model can localize a target object in video and express its position with sufficient precision for downstream use. In this work, we introduce PinpointQA, the first dataset and benchmark for small object-centric spatial understanding in indoor videos. Built from ScanNet++ and ScanNet200, PinpointQA comprises 1,024 scenes and 10,094 QA pairs organized into four progressively challenging tasks: Target Presence Verification (TPV), Nearest Reference Identification (NRI), Fine-Grained Spatial Description (FSD), and Structured Spatial Prediction (SSP). The dataset is built from intermediate spatial representations, with QA pairs generated automatically and further refined through quality control. Experiments on representative MLLMs reveal a consistent capability gap along the progressive chain, with SSP remaining particularly difficult. Supervised fine-tuning on PinpointQA yields substantial gains, especially on the harder tasks, demonstrating that PinpointQA serves as both a diagnostic benchmark and an effective training dataset. The dataset and project page are available at https://rainchowz.github.io/PinpointQA.",
+      "authors": [
+        "Zhiyu Zhou",
+        "Peilin Liu",
+        "Ruoxuan Zhang",
+        "Luyang Zhang",
+        "Cheng Zhang",
+        "Hongxia Xie",
+        "Wen-Huang Cheng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-04-10T05:53:47+00:00",
+      "link": "https://arxiv.org/pdf/2604.08991v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "small object-centric spatial understanding in indoor videos",
+      "llm_evidence_cn": "室内视频中以小物体为中心的空间理解",
+      "llm_evidence": "室内视频中以小物体为中心的空间理解",
+      "canonical_evidence": "室内视频中以小物体为中心的空间理解",
+      "llm_tldr_en": "A benchmark for evaluating spatial intelligence and object localization in indoor video environments.",
+      "llm_tldr_cn": "一个用于评估室内视频环境中空间智能和物体定位能力的基准测试。",
+      "llm_tldr": "一个用于评估室内视频环境中空间智能和物体定位能力的基准测试。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.07042v1",
+      "source": "arxiv",
+      "title": "Planning Task Shielding: Detecting and Repairing Flaws in Planning Tasks through Turning them Unsolvable",
+      "abstract": "Most research in planning focuses on generating a plan to achieve a desired set of goals. However, a goal specification can also be used to encode a property that should never hold, allowing a planner to identify a trace that would reach a flawed state. In such cases, the objective may shift to modifying the planning task to ensure that the flawed state is never reached-in other words, to make the planning task unsolvable. In this paper we introduce planning task shielding: the problem of detecting and repairing flaws in planning tasks. We propose $allmin$, an optimal algorithm that solves these tasks by minimally modifying the original actions to render the planning task unsolvable. We empirically evaluate the performance of $allmin$ in shielding planning tasks of increasing size, showing how it can effectively shield the system by turning the planning task unsolvable.",
+      "authors": [
+        "Alberto Pozanco",
+        "Marianela Morales",
+        "Pietro Totis",
+        "Daniel Borrajo"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-04-08T12:57:37+00:00",
+      "link": "https://arxiv.org/pdf/2604.07042v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Modifying planning tasks to ensure safety and reachability properties",
+      "llm_evidence_cn": "修改规划任务以确保安全性和可达性属性",
+      "llm_evidence": "修改规划任务以确保安全性和可达性属性",
+      "canonical_evidence": "修改规划任务以确保安全性和可达性属性",
+      "llm_tldr_en": "Introduces planning task shielding to detect and repair flaws by minimally modifying actions.",
+      "llm_tldr_cn": "引入了规划任务屏蔽技术，通过最小化修改动作来检测和修复规划任务中的缺陷。",
+      "llm_tldr": "引入了规划任务屏蔽技术，通过最小化修改动作来检测和修复规划任务中的缺陷。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "寻找利用世界模型进行强化学习或规划的最新研究",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.08636v1",
+      "source": "arxiv",
+      "title": "LEGO: Latent-space Exploration for Geometry-aware Optimization of Humanoid Kinematic Design",
+      "abstract": "Designing robot morphologies and kinematics has traditionally relied on human intuition, with little systematic foundation. Motion-design co-optimization offers a promising path toward automation, but two major challenges remain: (i) the vast, unstructured design space and (ii) the difficulty of constructing task-specific loss functions. We propose a new paradigm that minimizes human involvement by (i) learning the design search space from existing mechanical designs, rather than hand-crafting it, and (ii) defining the loss directly from human motion data via motion retargeting and Procrustes analysis. Using screw-theory-based joint axis representation and isometric manifold learning, we construct a compact, geometry-preserving latent space of humanoid upper body designs in which optimization is tractable. We then solve design optimization in this latent space using gradient-free optimization. Our approach establishes a principled framework for data-driven robot design and demonstrates that leveraging existing designs and human motion can effectively guide the automated discovery of novel robot design.",
+      "authors": [
+        "Jihwan Yoon",
+        "Taemoon Jeong",
+        "Jeongeun Park",
+        "Chanwoo Kim",
+        "Jaewoon Kwon",
+        "Yonghyeon Lee",
+        "Kyungjae Lee",
+        "Sungjoon Choi"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-04-09T17:06:50+00:00",
+      "link": "https://arxiv.org/pdf/2604.08636v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "geometry-preserving latent space for humanoid kinematic design",
+      "llm_evidence_cn": "用于类人机器人运动学设计的几何保持隐空间",
+      "llm_evidence": "用于类人机器人运动学设计的几何保持隐空间",
+      "canonical_evidence": "用于类人机器人运动学设计的几何保持隐空间",
+      "llm_tldr_en": "Learns a compact, geometry-preserving latent space for optimizing robot morphology and design.",
+      "llm_tldr_cn": "学习一个紧凑且保持几何特性的隐空间，用于优化机器人形态与设计。",
+      "llm_tldr": "学习一个紧凑且保持几何特性的隐空间，用于优化机器人形态与设计。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2604.09072v1",
+      "source": "arxiv",
+      "title": "Overhang Tower: Resource-Rational Adaptation in Sequential Physical Planning",
+      "abstract": "Humans effortlessly navigate the physical world by predicting how objects behave under gravity and contact forces, yet how such judgments support sequential physical planning under resource constraints remains poorly understood. Research on intuitive physics debates whether prediction relies on the Intuitive Physics Engine (IPE) or fast, cue-based heuristics; separately, decision-making research debates deliberative lookahead versus myopic strategies. These debates have proceeded in isolation, leaving the cognitive architecture of sequential physical planning underspecified. How physical prediction mechanisms and planning strategies jointly adapt under limited cognitive resources remains an open question. Here we show that humans exhibit a dual transition under resource pressure, simultaneously shifting both physical prediction mechanism and planning strategy to match cognitive budget. Using Overhang Tower, a construction task requiring participants to maximize horizontal overhang while maintaining stability, we find that IPE-based simulation dominates early stages while CNN-based visual heuristics prevail as complexity grows; concurrently, time pressure truncates deliberative lookahead, shifting planning toward shallower horizons: a dual transition unpredicted by prior single-mechanism accounts. These findings reveal a hierarchical, resource-rational architecture that flexibly trades computational cost against predictive fidelity. Our results unify two long-standing debates (simulation vs. heuristics and myopic vs. deliberative planning) as a dynamic repertoire reconfigured by cognitive budget.",
+      "authors": [
+        "Ruihong Shen",
+        "Shiqian Li",
+        "Yixin Zhu"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-04-10T07:54:25+00:00",
+      "link": "https://arxiv.org/pdf/2604.09072v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "sequential physical planning and prediction mechanisms under resource constraints",
+      "llm_evidence_cn": "资源约束下的序列物理规划与预测机制",
+      "llm_evidence": "资源约束下的序列物理规划与预测机制",
+      "canonical_evidence": "资源约束下的序列物理规划与预测机制",
+      "llm_tldr_en": "Investigates how humans adapt physical prediction and sequential planning strategies under cognitive constraints.",
+      "llm_tldr_cn": "研究人类在认知约束下如何调整物理预测和序列规划策略。",
+      "llm_tldr": "研究人类在认知约束下如何调整物理预测和序列规划策略。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.09100v1",
+      "source": "arxiv",
+      "title": "Physically Grounded 3D Generative Reconstruction under Hand Occlusion using Proprioception and Multi-Contact Touch",
+      "abstract": "We propose a multimodal, physically grounded approach for metric-scale amodal object reconstruction and pose estimation under severe hand occlusion. Unlike prior occlusion-aware 3D generation methods that rely only on vision, we leverage physical interaction signals: proprioception provides the posed hand geometry, and multi-contact touch constrains where the object surface must lie, reducing ambiguity in occluded regions. We represent object structure as a pose-aware, camera-aligned signed distance field (SDF) and learn a compact latent space with a Structure-VAE. In this latent space, we train a conditional flow-matching diffusion model, pretraining on vision-only images and finetuning on occluded manipulation scenes while conditioning on visible RGB evidence, occluder/visibility masks, the hand latent representation, and tactile information. Crucially, we incorporate physics-based objectives and differentiable decoder-guidance during finetuning and inference to reduce hand--object interpenetration and to align the reconstructed surface with contact observations. Because our method produces a metric, physically consistent structure estimate, it integrates naturally into existing two-stage reconstruction pipelines, where a downstream module refines geometry and predicts appearance. Experiments in simulation show that adding proprioception and touch substantially improves completion under occlusion and yields physically plausible reconstructions at correct real-world scale compared to vision-only baselines; we further validate transfer by deploying the model on a real humanoid robot with an end-effector different from those used during training.",
+      "authors": [
+        "Gabriele Mario Caddeo",
+        "Pasquale Marra",
+        "Lorenzo Natale"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-04-10T08:32:51+00:00",
+      "link": "https://arxiv.org/pdf/2604.09100v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "compact latent space for environment understanding and reconstruction",
+      "llm_evidence_cn": "用于环境理解与重建的紧凑隐空间",
+      "llm_evidence": "用于环境理解与重建的紧凑隐空间",
+      "canonical_evidence": "用于环境理解与重建的紧凑隐空间",
+      "llm_tldr_en": "Uses a Structure-VAE latent space and flow-matching for 3D object reconstruction under occlusion.",
+      "llm_tldr_cn": "利用 Structure-VAE 隐空间和流匹配在遮挡下进行 3D 物体重建。",
+      "llm_tldr": "利用 Structure-VAE 隐空间和流匹配在遮挡下进行 3D 物体重建。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索智能体如何利用隐空间进行导航与环境理解",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.08685v1",
+      "source": "arxiv",
+      "title": "RAMP: Hybrid DRL for Online Learning of Numeric Action Models",
+      "abstract": "Automated planning algorithms require an action model specifying the preconditions and effects of each action, but obtaining such a model is often hard. Learning action models from observations is feasible, but existing algorithms for numeric domains are offline, requiring expert traces as input. We propose the Reinforcement learning, Action Model learning, and Planning (RAMP) strategy for learning numeric planning action models online via interactions with the environment. RAMP simultaneously trains a Deep Reinforcement Learning (DRL) policy, learns a numeric action model from past interactions, and uses that model to plan future actions when possible. These components form a positive feedback loop: the RL policy gathers data to refine the action model, while the planner generates plans to continue training the RL policy. To facilitate this integration of RL and numeric planning, we developed Numeric PDDLGym, an automated framework for converting numeric planning problems to Gym environments. Experimental results on standard IPC numeric domains show that RAMP significantly outperforms PPO, a well-known DRL algorithm, in terms of solvability and plan quality.",
+      "authors": [
+        "Yarin Benyamin",
+        "Argaman Mordoch",
+        "Shahaf S. Shperberg",
+        "Roni Stern"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-04-09T18:16:19+00:00",
+      "link": "https://arxiv.org/pdf/2604.08685v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Learning action models online for planning and reinforcement learning",
+      "llm_evidence_cn": "在线学习动作模型用于规划与强化学习",
+      "llm_evidence": "在线学习动作模型用于规划与强化学习",
+      "canonical_evidence": "在线学习动作模型用于规划与强化学习",
+      "llm_tldr_en": "Develops RAMP to simultaneously learn numeric action models and DRL policies for online planning.",
+      "llm_tldr_cn": "开发了RAMP，同时学习数值动作模型和深度强化学习策略以进行在线规划。",
+      "llm_tldr": "开发了RAMP，同时学习数值动作模型和深度强化学习策略以进行在线规划。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "寻找利用世界模型进行强化学习或规划的最新研究",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2604.09519v1",
+      "source": "arxiv",
+      "title": "Toward World Models for Epidemiology",
+      "abstract": "World models have emerged as a unifying paradigm for learning latent dynamics, simulating counterfactual futures, and supporting planning under uncertainty. In this paper, we argue that computational epidemiology is a natural and underdeveloped setting for world models. This is because epidemic decision-making requires reasoning about latent disease burden, imperfect and policy-dependent surveillance signals, and intervention effects are mediated by adaptive human behavior. We introduce a conceptual framework for epidemiological world models, formulating epidemics as controlled, partially observed dynamical systems in which (i) the true epidemic state is latent, (ii) observations are noisy and endogenous to policy, and (iii) interventions act as sequential actions whose effects propagate through behavioral and social feedback. We present three case studies that illustrate why explicit world modeling is necessary for policy-relevant reasoning: strategic misreporting in behavioral surveillance, systematic delays in time-lagged signals such as hospitalizations and deaths, and counterfactual intervention analysis where identical histories diverge under alternative action sequences.",
+      "authors": [
+        "Zeeshan Memon",
+        "Yiqi Su",
+        "Christo Kurisummoottil Thomas",
+        "Walid Saad",
+        "Liang Zhao",
+        "Naren Ramakrishnan"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-04-10T17:39:20+00:00",
+      "link": "https://arxiv.org/pdf/2604.09519v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "world models for learning latent dynamics and planning",
+      "llm_evidence_cn": "用于学习隐动态和规划的世界模型",
+      "llm_evidence": "用于学习隐动态和规划的世界模型",
+      "canonical_evidence": "用于学习隐动态和规划的世界模型",
+      "llm_tldr_en": "Applies world model paradigms to epidemiology for reasoning about latent states and planning under uncertainty.",
+      "llm_tldr_cn": "将世界模型范式应用于流行病学，用于推理隐状态并在不确定性下支持规划。",
+      "llm_tldr": "将世界模型范式应用于流行病学，用于推理隐状态并在不确定性下支持规划。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.09188v1",
+      "source": "arxiv",
+      "title": "LatentFlowSR: High-Fidelity Audio Super-Resolution via Noise-Robust Latent Flow Matching",
+      "abstract": "Audio super-resolution aims to recover missing high-frequency details from bandwidth-limited low-resolution audio, thereby improving the naturalness and perceptual quality of the reconstructed signal. However, most existing methods directly operate in the waveform or time-frequency domain, which not only involves high-dimensional generation spaces but is also largely limited to speech tasks, leaving substantial room for improvement on more complex audio types such as sound effects and music. To mitigate these limitations, we introduce LatentFlowSR, a new audio super-resolution approach that leverages conditional flow matching (CFM) within a latent representation space. Specifically, we first train a noise-robust autoencoder, which encodes low-resolution audio into a continuous latent space. Conditioned on the low-resolution latent representation, a CFM mechanism progressively generates the corresponding high-resolution latent representation from a Gaussian prior with a one-step ordinary differential equation (ODE) solver. The resulting high-resolution latent representation is then decoded by the pretrained autoencoder to reconstruct the high-resolution audio. Experimental results demonstrate that LatentFlowSR consistently outperforms baseline methods across various audio types and super-resolution settings. These results indicate that the proposed method possesses strong high-frequency reconstruction capability and robust generalization performance, providing compelling evidence for the effectiveness of latent-space modeling in audio super-resolution. All relevant code will be made publicly available upon completion of the paper review process.",
+      "authors": [
+        "Fei Liu",
+        "Yang Ai",
+        "Hui-Peng Du",
+        "Yu-Fei Shi",
+        "Zhen-Hua Ling"
+      ],
+      "primary_category": "cs.SD",
+      "categories": [
+        "cs.SD"
+      ],
+      "published": "2026-04-10T10:18:16+00:00",
+      "link": "https://arxiv.org/pdf/2604.09188v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Conditional flow matching within a latent representation space",
+      "llm_evidence_cn": "在隐表示空间内进行条件流匹配",
+      "llm_evidence": "在隐表示空间内进行条件流匹配",
+      "canonical_evidence": "在隐表示空间内进行条件流匹配",
+      "llm_tldr_en": "Develops LatentFlowSR for audio super-resolution using flow matching in a noise-robust latent space.",
+      "llm_tldr_cn": "开发了 LatentFlowSR，利用噪声鲁棒隐空间中的流匹配技术实现高质量音频超分辨率。",
+      "llm_tldr": "开发了 LatentFlowSR，利用噪声鲁棒隐空间中的流匹配技术实现高质量音频超分辨率。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

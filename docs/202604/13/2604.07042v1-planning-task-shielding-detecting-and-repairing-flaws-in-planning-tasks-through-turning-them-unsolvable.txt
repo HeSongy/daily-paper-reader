@@ -1,0 +1,279 @@
+Title: Planning Task Shielding: Detecting and Repairing Flaws in Planning Tasks through Turning them Unsolvable
+
+URL Source: https://arxiv.org/pdf/2604.07042v1
+
+Published Time: Thu, 09 Apr 2026 01:18:03 GMT
+
+Number of Pages: 6
+
+Markdown Content:
+# Planning Task Shielding: Detecting and Repairing Flaws in Planning Tasks through Turning them Unsolvable 
+
+## Alberto Pozanco, Marianela Morales, Pietro Totis, Daniel Borrajo 
+
+J.P. Morgan AI Research 
+
+{alberto.pozancolancho,marianela.moraleselena }@jpmorgan.com, {name.surname }@jpmorgan.com 
+
+Abstract 
+
+Most research in planning focuses on generating a plan to achieve a desired set of goals. However, a goal specifica-tion can also be used to encode a property that should never hold, allowing a planner to identify a trace that would reach a flawed state. In such cases, the objective may shift to modi-fying the planning task to ensure that the flawed state is never reached—in other words, to make the planning task unsolv-able. In this paper we introduce planning task shielding: the problem of detecting and repairing flaws in planning tasks. We propose ALLMIN , an optimal algorithm that solves these tasks by minimally modifying the original actions to render the planning task unsolvable. We empirically evaluate the per-formance of ALLMIN in shielding planning tasks of increas-ing size, showing how it can effectively shield the system by turning the planning task unsolvable. 
+
+## Introduction 
+
+Classical planning is the task of finding a plan, which is a sequence of deterministic actions that, when executed from a given initial state, lead to a state where some given goals are true (Ghallab, Nau, and Traverso 2004). Most research in planning focuses on generating plans to solve the given task, assuming such a plan exists. However, planning can also be applied in the opposite way. This approach involves formalizing the system and the security property to be verified as a planning task. If this planning task is proven to be unsolvable (Eriksson, R¨ oger, and Helmert 2017; St˚ ahlberg, Franc` es, and Seipp 2021), it indicates that the security property is upheld within the sys-tem. Conversely, if a solution is found, the resulting plan outlines a sequence of steps or actions that could poten-tially falsify the security property. This approach to plan-ning has been utilized to identify flaws in cybersecurity sys-tems (Boddy et al. 2005; Hoffmann 2015) and cryptographic protocols (Pozanco et al. 2021). In these systems, when a flaw is detected, a domain expert reviews the plan that leads to it and manually modifies the system’s dynamics (its ac-tions) to prevent that trace from occurring, hoping this will resolve the issue. However, addressing the flaw locally may introduce new vulnerabilities elsewhere in the system, po-tentially resulting in a cycle that is tedious and difficult to resolve. Listing 1: Approval workflow described as PDDL actions. 
+
+(:action submit_application :parameters () :precondition (documents_submitted) :effect (and (application_complete) (not (documents_submitted)))) (:action direct_approval :parameters () :precondition (application_complete) :effect (granted_approval)) (:action escalation :parameters () :precondition (and (application_complete) (client_concerns)) :effect (and (escalated))) 
+
+We illustrate these type of problems with a simple run-ning example (Listing 1), which describes an approval work-flow in PDDL (Haslum et al. 2019). Since the workflow may have been created by non-experts, it could contain errors and represents a best-effort formalization. The set of fluents is ⟨documents submitted , application complete ,
+
+granted approval , escalated , client concerns , safe client ⟩.The submit application action completes an application if all documents are submitted; direct approval allows direct approval for completed applications, and escalation han-dles cases with client concerns. We may want to check if flawed states can arise, such as reaching a state where an application is both granted approval and escalated ,starting from documents submitted and kyc concerns . The plan π = ( submit application , escalation , direct approval )
+
+achieves this, indicating the workflow is ill-defined. Ad-dressing this requires modifying actions, such as remov-ing escalated from the escalation action effects; or adding 
+
+safe client as a precondition to direct approval . Selecting the best fix depends on the domain and action semantics, and care is needed, as local changes may introduce new vul-nerabilities elsewhere in the workflow. In this paper, we propose an extension to the traditional approach of identifying flaws in systems represented as 
+
+> arXiv:2604.07042v1 [cs.AI] 8 Apr 2026
+
+planning tasks by introducing the capability to automatically fix these flaws. Our method focuses on making the planning task unsolvable, in contrast to domain repair works (Gragera et al. 2023; Lin, Grastien, and Bercher 2023; Bercher, Sreed-haran, and Vallati 2025; Gragera et al. 2025), which aim to modify the planning task to make it solvable. We refer to this problem as planning task shielding , and formally define it as finding the minimal set of precondition additions, add effect removals, and delete effect additions to the original set of actions such that the planning task becomes unsolvable. We then propose ALLMIN , an algorithm that computes the minimal set of modifications to the original set of actions that render the planning task unsolvable. ALLMIN computes all loopless plans that solve the planning task and then solves an optimization problem to identify the minimal set of mod-ifications needed to invalidate all these plans. The remainder of the paper is organized as follows. We first formalize classical planning. We then provide a for-mal definition of planning task shielding problems and their solutions, followed by a presentation of ALLMIN . Next, we present preliminary results for ALLMIN on a synthetic benchmark. Finally, we conclude by discussing the main re-sults and outlining potential directions for future research. 
+
+## Background 
+
+We formally define a planning task as follows: 
+
+Definition 1 (Planning task) . A planning task is a tuple P =
+
+⟨F , A, I, G⟩ , where F is a set of fluents, A is a set of actions, 
+
+I ⊆ F is an initial state, and G ⊆ F is a goal specification. 
+
+A state s ⊆ F is a set of fluents that are true at a given time. A state s ⊆ F is a goal state iff G ⊆ s. Each ac-tion a ∈ A is characterized by the following components. Its name NAME (a), which is a string. A set of precondi-tions PRE (a), which are set of fluents that need to be true for the action to be applied. Add and delete effects ADD (a) and 
+
+> DEL
+
+(a), which are set of fluents that are added (or deleted) once the action is applied. We assume ADD (a) ∩ DEL (a) = 
+
+∅. And finally a cost c(a) ∈ R associated with perform-ing the action. An action a is applicable in a state s iff 
+
+> PRE
+
+(a) ⊆ s. We define the result of applying an action in a state as γ(s, a ) = ( s \ DEL (a)) ∪ ADD (a). A sequence of actions π = ( a1, . . . , a n) is applicable in a state s0 if there are states (s1. . . . , s n) such that ai is applicable in si−1 and 
+
+si = γ(si−1, a i). The resulting state after applying a se-quence of actions is Γ( s, π ) = sn, and c(π) = Pni c(ai)
+
+denotes the cost of π. A state s is reachable from state s′
+
+iff there exists an applicable action sequence π such that 
+
+s ⊆ Γ( s′, π ). A sequence of actions is simple if it does not traverse the same state s ∈ S R more than once. The solution to a planning task P is a plan, i.e., a sequence of actions π
+
+such that G ⊆ Γ( I, π ). We denote as Π( P) the set of all simple solution plans to planning task P. A plan with mini-mal cost is optimal. A planning task is unsolvable if there is no sequence of actions π such that G ⊆ Γ( I, π ).
+
+## Shielding Planning Tasks 
+
+Given a system formalized as a planning task, where the goal specifies a property that should never be satisfied, our objec-tive is to shield the system. This means modifying the plan-ning task so that these modifications render it unsolvable. Although planning tasks can be made unsolvable by modi-fying I, G, or A, we focus exclusively on the latter. We then define a shielding planning task and its solution as follows: 
+
+Definition 2 (Shielding Solution) . Given a planning task 
+
+P = ⟨F , A, I, G⟩ , a solution to a shielding planning task 
+
+PS = ⟨F , A′, I, G⟩ is a new set of actions A′ such that PS
+
+is unsolvable. 
+
+While trivial modifications to the original set of actions are possible, such as setting A′ = ∅, our goal is to identify the minimal set of action modifications that render the plan-ning task unsolvable. We then formally define the optimality of a shielding solution as follows: 
+
+Definition 3 (Shielding Solution Optimality) . A Shielding Solution A′ is optimal iff there does not exist another solu-tion A′′ with fewer modifications. 
+
+We denote by #( A′) the number of modifications in a shielding solution relative to the original set of actions A.In order to compute optimal (or high quality) solutions for a shielding planning task, we do not need to reason about all the possible ways in which an action can be modified. In particular, we can restrict ourselves to the set of actions modifications that reduce the number of plans that solve the original planning task. 
+
+Proposition 1 (Monotonic Decrease of Solution Plans) .
+
+Let P = ⟨F , A, I, G⟩ be a planning task and let P′ =
+
+⟨F , A′, I, G⟩ be obtained from P by modifying actions only by: 
+
+• adding preconditions, PRE (a) ⊆ PRE (a′)
+
+• removing add effects, ADD (a′) ⊆ ADD (a)
+
+• adding delete effects, DEL (a) ⊆ DEL (a′)
+
+Then, after applying any modification, the number of plans that solve the task decreases monotonically, i.e., |Π( P′)| ≤ |Π( P)|.Proof. Let s ⊆ F be any state, and let a′ ∈ A ′ correspond to a ∈ A . Suppose a′ is applicable in s in P′. Then, by definition, PRE (a′) ⊆ s. Since PRE (a) ⊆ PRE (a′), it follows that PRE (a) ⊆ s, so a is also applicable in s in P. Thus, any action applicable in P′ at a state is also applicable in P at the same state. Conversely, suppose a is applicable in s in P
+
+(i.e., PRE (a) ⊆ s), but if there exists p ∈ PRE (a′) \ PRE (a)
+
+with p / ∈ s, then a′ is not applicable in s in P′. Therefore, the set of applicable actions in any state in P′ is a subset of those in P.For any state s where a′ is applicable, the resulting state after applying a′ in P′ is s′ = ( s\DEL (a′)) ∪ADD (a′). Since 
+
+> ADD
+
+(a′) ⊆ ADD (a) and DEL (a) ⊆ DEL (a′), it follows that 
+
+s \ DEL (a′) ⊆ s \ DEL (a) and (s \ DEL (a′)) ∪ ADD (a′) ⊆
+
+(s \ DEL (a)) ∪ ADD (a). Thus, the state reached by applying 
+
+a′ in P′ is a subset of the state reached by applying a in P.Consider any plan π′ = ( a′
+
+> 1
+
+, . . . , a ′
+
+> n
+
+) that solves P′. For each i, let ai be the corresponding action in A. By the above, 
+
+π = ( a1, . . . , a n) is also executable in P from I, and the sequence of states reached in P contains those reached in P′. Since the goal is the same, if π′ reaches G in P′, then π
+
+also reaches G in P.Therefore, every plan that solves P′ also solves P, i.e., 
+
+Π( P′) ⊆ Π( P), and thus |Π( P′)| ≤ | Π( P)|.Apart from limiting the set of modifications, we can also limit the subset of actions in that we need to modify in order to turn P unsolvable. We denote by AΠ = {a | a ∈ π, ∀π ∈
+
+Π( P)} the set of actions that appear in the plans solving the original task. 
+
+Remark 1. Note that we only need to consider modifying actions in AΠ (and not the rest of the actions in A) to render 
+
+P unsolvable. 
+
+Next, we present ALLMIN , our approach to compute opti-mal solutions to shielding tasks. 
+
+ALLMIN  
+
+> ALLMIN
+
+follows a two-step process: (1) it computes all the simple (loopless) plans that can solve the original planning task, Π( P); and (2) it determines the set of minimal modifi-cations to the original actions A that would block the execu-tion of all the plans in Π( P).To compute the set of plans that solve the original plan-ning task, we can utilize any planner capable of generating not just a single plan, but a set of plans for a given task (Katz et al. 2018; Speck, Mattm¨ uller, and Nebel 2020; Speck et al. 2025). We will provide further details about the specific tool used in our experimental setup. We formulate the task of computing the minimal modi-fications to the original actions that would block the exe-cution of all the plans as a Mixed-Integer Linear Program (MILP). The MILP receives as input the planning task P,and the set of plans that solve it Π( P). We reduce the num-ber of variables and constraints needed by leveraging Propo-sition 1 and Remark 1. We add a fake action ag to A, which represents the achievement of the goals G. PRE (ag ) = G
+
+and ADD = DEL = ∅. We append this action to each plan 
+
+π ∈ Π( P). We have the following set of decision variables: • pre a,f ∈ { 0, 1}: 1 if fluent f is added as a precondition to action a.• add a,f ∈ { 0, 1}: 1 if fluent f is removed from the add effects of action a.• del a,f ∈ { 0, 1}: 1 if fluent f is added to the delete effects of action a.• sπ,i,f ∈ { 0, 1}: 1 if fluent f holds after step i in plan π.• enabled π,i ∈ { 0, 1}: 1 if the action at step i in plan p is executable. • blocked π,i ∈ { 0, 1}: 1 if the action at step i in plan p is blocked. • pre unsat π,i,f ∈ { 0, 1}: 1 if precondition f is present and not satisfied at step i in plan π.The objective is to minimize the total number of modifi-cations to the actions, specifically the addition of new pre-conditions, removal of add effects, and addition of delete effects: 
+
+min X 
+
+> a∈A Π, f ∈F\ pre( a)
+
+pre a,f (1) 
+
++ X 
+
+> a∈A Π, f ∈add( a)
+
+add a,f (2) 
+
++ X 
+
+> a∈A Π, f ∈F\ del( a)
+
+del a,f (3) The constraints ensure the correct propagation of fluents, satisfaction of preconditions, and blocking of plans: 1. Initial State: The initial value of each fluent for each plan is set according to the initial state I. We include the following constraints for each π ∈ Π( P) and f ∈ F :
+
+sπ, 0,f = 1 if f ∈ I (4) 
+
+sπ, 0,f = 0 if f / ∈ I (5) 2. Precondition Satisfaction: For each action in each plan, the variable pre unsat π,i,f captures whether a precondi-tion is unsatisfied, considering both original and newly added preconditions. We include the following con-straints for each π ∈ Π( P), ai ∈ π, and f ∈ F :If f ∈ PRE (a):
+
+pre unsat π,i,f = 1 − sπ,i,f (6) If f / ∈ PRE (a):
+
+pre unsat π,i,f ≥ pre a,f − sπ,i,f (7) 
+
+pre unsat π,i,f ≤ pre a,f (8) 
+
+pre unsat π,i,f ≤ 1 − sπ,i,f (9) 3. Action Enabledness: An action is enabled if all its pre-conditions are satisfied. We include the following con-straints for each π ∈ Π( P) and ai ∈ π:
+
+enabled π,i = 1 − X 
+
+> f∈F
+
+pre unsat π,i,f (10) 4. Blocking Actions: The variable bπ,i indicates whether an action is blocked. We include the following constraints for each π ∈ Π( P) and ai ∈ π:
+
+bπ,i = 1 − enabled π,i (11) 5. State Propagation: The fluents are updated according to the effects of the actions and the modifications. We include the following constraints for each π ∈ Π( P),
+
+ai ∈ π, and f ∈ F :If f ∈ ADD (a):
+
+sπ,i +1 ,f ≥ 1 − add a,f (12) 
+
+sπ,i +1 ,f − sπ,i,f ≥ 1 − add a,f (13) sπ,i,f − sπ,i +1 ,f ≥ 1 − add a,f (14) Else If f ∈ DEL (a):
+
+sπ,i +1 ,f = 0 (15) Else: 
+
+sπ,i +1 ,f ≤ 1 − del a,f (16) 
+
+sπ,i +1 ,f − sπ,i,f ≤ 1 − del a,f (17) 
+
+sπ,i,f − sπ,i +1 ,f ≤ 1 − del a,f (18) 
+
+sπ,i +1 ,f − sπ,i,f ≥ 0 (19) 6. Plan Blocking: To ensure every plan is blocked, at least one action in each plan must be blocked. We include the following constraints for each π ∈ Π( P):
+
+> |π|− 1
+
+X
+
+> i=0
+
+bπ,i ≥ 1 (20) 7. Goal Persistence : We impose the following restriction to enforce that the goal is not modified, i.e., the precondi-tions of ag cannot be modified. 
+
+X 
+
+> f∈F
+
+pre ag ,f = 0 (21) This MILP formulation systematically identifies the min-imal set of action modifications needed to block all plans. By incorporating new preconditions ( pre a,f = 1 ), adding delete effects ( del a,f = 1 ), and removing specified add ef-fects ( add a,f = 1 ), the resulting set of actions A′ ensures that the original planning task becomes unsolvable. As a re-sult, A′ serves as a shielding solution for the original plan-ning task P.
+
+## Evaluation 
+
+Experimental Setting 
+
+Benchmark. We use a synthetic benchmark where we generate planning tasks in the form of a graph where we control: the number of plans ( 8, 16 , 32 ), their maximum (4, 8, 16 ) and minimum ( 2, 4, 6) length, and the percentage of plans that share some edges with other plans ( 0.4). The numbers of fluents, actions, and states range from a few dozen in the smaller instances with 8 plans to a few thou-sand in the larger instances with 32 plans. We generate 10 
+
+random problems for each of the 3 combinations, giving us a total of 30 problems of increasing complexity. The reason we selected this benchmark over standard planning bench-marks is threefold. First, it allows us to control the number of plans that solve the planning task, which is not possible when working with existing tasks or using generators for 
+
+|Π( P)| Execution Time ( s) #( A′)
+
+8 0.9 ± 0.1 6.0 ± 0.1
+
+16 4.4 ± 0.7 11 .2 ± 1.5
+
+32 100 .5 ± 12 .9 21 .4 ± 2.1
+
+Table 1: Average and standard deviation of the number of modifications #( A′) and Execution Time ( s) as we increase the planning task size and the number of plans that reach the flawed state |Π( P)|.known domains (Torralba, Seipp, and Sievers 2021). Sec-ond, tasks in current benchmarks are typically designed to be challenging for planners, often resulting in tasks that are too large to serve as meaningful shielding tasks. Finally, in practice, we would expect systems to have only a few ways of reaching a flawed state, rather than the hundreds of thou-sands of plans typically found in most planning tasks from existing benchmarks (Speck, Mattm¨ uller, and Nebel 2020). 
+
+Approaches and Metrics. We evaluate ALLMIN on the benchmark described above. We use the SYMK plan-ner (Speck, Mattm¨ uller, and Nebel 2020) to compute all sim-ple plans that solve a given planning task (von Tschammer, Mattm¨ uller, and Speck 2022). We then solve the resulting MILPs using the CBC solver (Forrest and Lougee-Heimer 2005) to determine the minimal modifications required to make the planning task unsolvable. We report (1) the time required to solve the shielding task; and (2) the number of modifications made to the original set of actions. We validate that the suggested changes turn the planning task unsolvable by calling SYMK again and verifying there are no plans that solve the reformulated task P′.
+
+Reproducibility. Experiments were run on an 8-core, 2.8GHz CPU machine with 32GB RAM, with a time limit of 1800 s for each shielding task. 
+
+Results 
+
+As shown in Table 1, ALLMIN requires an increasing number of modifications as the size of the planning task and the num-ber of plans that solve it grow, with the average number of modifications rising from 6 to 21 . In most cases, the number of modifications is less than the number of plans that solve the task, indicating that ALLMIN effectively identifies ac-tions shared across multiple plans and modifies them so that several plans become invalid simultaneously. A closer exam-ination of the types of modifications suggested by ALLMIN 
+
+reveals that precondition additions and add effect removals are equally represented. This is because we do not assign weights or preferences to any particular type of modifica-tion, resulting in solutions of equal quality for the MILP. The execution time of ALLMIN increases exponentially as the size of the planning task and the number of plans that solve it ( |Π( P)|) grow, rising from a few seconds for smaller tasks to hundred seconds for larger ones. We also analyzed how the execution time is distributed between the two main components of ALLMIN : generating all plans that solve the task using SYMK , and solving the MILP to determine the 8 16 32   
+
+> |()|
+> 0
+> 20
+> 40
+> 60
+> 80
+> 100
+> Average Time (s)
+> SymK time
+> MILP time
+
+Figure 1: ALLMIN execution time split into the time to com-pute the set of plans with SYMK (blue) and the time to com-pute the minimum number of modifications with the MILP (orange) as we increase the planning task size and the num-ber of plans that reach the flawed state |Π( P)|.necessary modifications. Figure 1 presents the results of this analysis, showing the contribution of each component to the average total execution time as the planning task size and the number of plans increase. For smaller tasks, the time spent computing the plans is greater than that spent on the MILP, with SYMK accounting for about 80% of the total execution time. As the planning task size increases, this trend reverses, and the MILP component dominates, consuming nearly all the execution time when |Π( P)| = 32 . This suggests that, for the current benchmark, the planning tasks are easier to solve than the optimization problem, which becomes in-creasingly complex as the number of actions, fluents, and plans grows, leading to a larger number of variables and con-straints. 
+
+## Conclusions and Future Work 
+
+In this paper, we introduce planning task shielding: the prob-lem of identifying the plans that lead to a flawed state in the original planning task and then automatically making the task unsolvable by minimally modifying the original set of actions. We formalize this problem and show that it can be addressed by considering only a subset of possible modifi-cations to the original actions: adding preconditions, remov-ing add effects, and adding delete effects. We then present 
+
+> ALLMIN
+
+, an optimal algorithm for solving shielding tasks that (1) computes all the plans that solve the original plan-ning task, and (2) determines the minimal set of modifica-tions to the original actions needed to make the task unsolv-able. Our preliminary evaluation demonstrates that ALLMIN 
+
+can effectively render planning tasks unsolvable, thereby shielding the system and preventing the existence of plans that reach flawed states. As next steps, we aim to enhance the benchmark by gen-erating relatively small instances from well-known planning domains that offer greater diversity in state space structure and plans. We also want to explore incorporating prefer-ences for certain types of modifications, as well as consid-ering additional objectives, such as minimizing the number of actions to which modifications are applied, or minimizing the number of fluents used in the modifications. Finally, we intend to develop alternative algorithms for solving shield-ing tasks that can trade some theoretical guarantees for im-proved empirical performance. 
+
+## Disclaimer 
+
+This paper was prepared for informational purposes by the Artificial Intelligence Research group of JPMorgan Chase & Co. and its affiliates (”JP Morgan”) and is not a product of the Research Department of JP Morgan. JP Morgan makes no representation and warranty whatsoever and disclaims all liability, for the completeness, accuracy or reliability of the information contained herein. This document is not intended as investment research or investment advice, or a recommen-dation, offer or solicitation for the purchase or sale of any se-curity, financial instrument, financial product or service, or to be used in any way for evaluating the merits of participat-ing in any transaction, and shall not constitute a solicitation under any jurisdiction or to any person, if such solicitation under such jurisdiction or to such person would be unlawful. © 2026 JPMorgan Chase & Co. All rights reserved 
+
+## References 
+
+Bercher, P.; Sreedharan, S.; and Vallati, M. 2025. A Survey on Model Repair in AI Planning. In 34th International Joint Conference on Artificial Intelligence . IJCAI Organization. Boddy, M. S.; Gohde, J.; Haigh, T.; and Harp, S. A. 2005. Course of Action Generation for Cyber Security Using Clas-sical Planning. In ICAPS , 12–21. Eriksson, S.; R¨ oger, G.; and Helmert, M. 2017. Unsolv-ability certificates for classical planning. In Proceedings of the International Conference on Automated Planning and Scheduling , volume 27, 88–97. Forrest, J.; and Lougee-Heimer, R. 2005. CBC user guide. In 
+
+Emerging theory, methods, and applications , 257–277. IN-FORMS. Ghallab, M.; Nau, D.; and Traverso, P. 2004. Automated Planning: theory and practice . Elsevier. Gragera, A.; Fuentetaja, R.; Garc´ ıa-Olaya, ´A.; and Fern´ andez, F. 2023. A planning approach to repair domains with incomplete action effects. In Proceedings of the Inter-national Conference on Automated Planning and Schedul-ing , volume 33, 153–161. Gragera, A.; Fuentetaja, R.; Olaya, ´ A. G.; and Fern´ andez, F. 2025. On the gains from using action observations in domain repair. In Proceedings of the International Conference on Automated Planning and Scheduling , volume 35, 343–347. Haslum, P.; Lipovetzky, N.; Magazzeni, D.; Muise, C.; Brachman, R.; Rossi, F.; and Stone, P. 2019. An introduc-tion to the planning domain definition language , volume 13. Springer. Hoffmann, J. 2015. Simulated penetration testing: From” dijkstra” to” turing test++”. In Proceedings of the inter-national conference on automated planning and scheduling ,volume 25, 364–372. Katz, M.; Sohrabi, S.; Udrea, O.; and Winterer, D. 2018. A novel iterative approach to top-k planning. In Proceedings of the International Conference on Automated Planning and Scheduling , volume 28, 132–140. Lin, S.; Grastien, A.; and Bercher, P. 2023. Towards auto-mated modeling assistance: An efficient approach for repair-ing flawed planning domains. In Proceedings of the AAAI Conference on Artificial Intelligence , volume 37, 12022– 12031. Pozanco, A.; Polychroniadou, A.; Magazzeni, D.; and Bor-rajo, D. 2021. Proving Security of Cryptographic Protocols using Automated Planning. FinPlan 2021 , 38. Speck, D.; Hecher, M.; Gnad, D.; Fichte, J. K.; and Corrˆ ea, A. B. 2025. Counting and reasoning with plans. In Pro-ceedings of the AAAI Conference on Artificial Intelligence ,volume 39, 26688–26696. Speck, D.; Mattm¨ uller, R.; and Nebel, B. 2020. Symbolic Top-k Planning. In Conitzer, V.; and Sha, F., eds., Proceed-ings of the Thirty-Fourth AAAI Conference on Artificial In-telligence (AAAI 2020) , 9967–9974. AAAI Press. St˚ ahlberg, S.; Franc` es, G.; and Seipp, J. 2021. Learning gen-eralized unsolvability heuristics for classical planning. In 
+
+The Thirtieth International Joint Conference on Artificial In-telligence, Montreal, 19-27 August 2021 , 4175–4181. Inter-national Joint Conferences on Artifical Intelligence (IJCAI). Torralba, A.; Seipp, J.; and Sievers, S. 2021. Automatic in-stance generation for classical planning. In Proceedings of the International Conference on Automated Planning and Scheduling , volume 31, 376–384. von Tschammer, J.; Mattm¨ uller, R.; and Speck, D. 2022. Loopless Top-K Planning. In Thi´ ebaux, S.; and Yeoh, W., eds., Proceedings of the Thirty-Second International Con-ference on Automated Planning and Scheduling (ICAPS 2022) , 380–384. AAAI Press.

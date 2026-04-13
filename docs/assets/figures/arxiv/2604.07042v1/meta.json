@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.07042v1/fig-001.webp",
+      "caption": "Figure 1: ALLMIN execution time split into the time to compute the set of plans with SYMK (blue) and the time to compute the minimum number of modifications with the MILP (orange) as we increase the planning task size and the number of plans that reach the flawed state |Π(P)|.",
+      "page": 5,
+      "index": 1,
+      "width": 484,
+      "height": 348
+    }
+  ]
+}
