@@ -1,0 +1,94 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.10261v1/fig-001.webp",
+      "caption": "Figure 1: (a) Existing benchmarks are 55 to 100% linear; AAR is 0% linear (all DAGs). Numbers in parentheses show mean steps per instance (abbreviated “s”). (b) Best agent accuracy is 36.6% (aggregated across 1,400 legs). (c) Navigation errors dominate (5% to 52%) while tool-use errors stay below 15%.",
+      "page": 2,
+      "index": 1,
+      "width": 821,
+      "height": 237
+    },
+    {
+      "url": "assets/figures/arxiv/2604.10261v1/fig-002.webp",
+      "caption": "Table 7: Per-template FA (%) on AAR-Linear. N: legs containing this template. C: Codex CLI. M: mini-swe-agent. m: GPT-5.4-mini.",
+      "page": 14,
+      "index": 2,
+      "width": 482,
+      "height": 327
+    },
+    {
+      "url": "assets/figures/arxiv/2604.10261v1/fig-003.webp",
+      "caption": "Table 6: Roadblock templates. Each composes 1–3 tool calls.",
+      "page": 14,
+      "index": 3,
+      "width": 826,
+      "height": 505
+    },
+    {
+      "url": "assets/figures/arxiv/2604.10261v1/fig-004.webp",
+      "caption": "Table 10: Full comparison with 12 representative benchmarks (condensed version in Table 1). Nav: navigation required. Met: number of metrics. Stp: step-level evaluation. Lve: live API data (†ToolBench suffers instability). Diff: difficulty control. Gld: verified gold trace. Gen: generation method (Auto/Man/Scr/Mix). Steps: mean pit stops per golden chain. %Lin/%DAG: fraction of strictly linear vs. branching instances. ‡GAIA step count from annotator metadata (validation split only).",
+      "page": 18,
+      "index": 4,
+      "width": 859,
+      "height": 383
+    },
+    {
+      "url": "assets/figures/arxiv/2604.10261v1/fig-005.webp",
+      "caption": "Figure 7: Main results on both benchmark variants: (a) AAR-Linear (800 legs, 6 configs including GPT-OSS-120B), (b) AAR-DAG (600 legs, 5 configs). PVR drops 13 to 18pp from Linear to DAG while RCR remains stable or increases.",
+      "page": 18,
+      "index": 5,
+      "width": 816,
+      "height": 360
+    },
+    {
+      "url": "assets/figures/arxiv/2604.10261v1/fig-006.webp",
+      "caption": "Table 5: The 19 tools available to agents, organized by category.",
+      "page": 13,
+      "index": 6,
+      "width": 652,
+      "height": 507
+    },
+    {
+      "url": "assets/figures/arxiv/2604.10261v1/fig-007.webp",
+      "caption": "Figure 5: (a) Aggregate results across all 1,400 legs (weighted average of Linear and DAG). FA (finish-line accuracy), PVR (navigation), RCR (tool use). Best FA is 36.6% (Claude + Sonnet 4); PVR is consistently the weakest metric. (b) FA degrades monotonically with difficulty (best: −13.5 pp, worst: −19.0 pp). Per-variant breakdown in Appendix M.",
+      "page": 8,
+      "index": 7,
+      "width": 818,
+      "height": 304
+    },
+    {
+      "url": "assets/figures/arxiv/2604.10261v1/fig-008.webp",
+      "caption": "Figure 2: An example clue envelope (or a “leg”) as presented to the agent.",
+      "page": 4,
+      "index": 8,
+      "width": 820,
+      "height": 450
+    },
+    {
+      "url": "assets/figures/arxiv/2604.10261v1/fig-009.webp",
+      "caption": "Table 11: Main results (%) on both benchmark variants. FA: finish-line accuracy. PVR: pit-stop visit rate. RCR: roadblock completion rate.",
+      "page": 19,
+      "index": 9,
+      "width": 756,
+      "height": 690
+    },
+    {
+      "url": "assets/figures/arxiv/2604.10261v1/fig-010.webp",
+      "caption": "Table 12: Computational resources per configuration. Tok.: mean input+output tokens per trial. Time: mean wall-clock time per trial. Total: cumulative agent time.",
+      "page": 20,
+      "index": 10,
+      "width": 448,
+      "height": 366
+    },
+    {
+      "url": "assets/figures/arxiv/2604.10261v1/fig-011.webp",
+      "caption": "Figure 4: The eight-step automated pipeline for generating AAR benchmark legs. Each leg passes a validation gate before producing evaluation targets: finish-line accuracy (FA), pit-stop visit rate (PVR), and roadblock completion rate (RCR).",
+      "page": 5,
+      "index": 11,
+      "width": 826,
+      "height": 294
+    }
+  ]
+}

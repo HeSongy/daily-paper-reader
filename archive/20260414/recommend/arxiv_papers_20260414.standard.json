@@ -1,0 +1,758 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-04-14T20:49:30.865802+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 11,
+    "deep_cap": 6,
+    "deep_selected": 7,
+    "quick_candidates": 14,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2604.07209v2",
+      "source": "arxiv",
+      "title": "INSPATIO-WORLD: A Real-Time 4D World Simulator via Spatiotemporal Autoregressive Modeling",
+      "abstract": "Building world models with spatial consistency and real-time interactivity remains a fundamental challenge in computer vision. Current video generation paradigms often struggle with a lack of spatial persistence and insufficient visual realism, making it difficult to support seamless navigation in complex environments. To address these challenges, we propose INSPATIO-WORLD, a novel real-time framework capable of recovering and generating high-fidelity, dynamic interactive scenes from a single reference video. At the core of our approach is a Spatiotemporal Autoregressive (STAR) architecture, which enables consistent and controllable scene evolution through two tightly coupled components: Implicit Spatiotemporal Cache aggregates reference and historical observations into a latent world representation, ensuring global consistency during long-horizon navigation; Explicit Spatial Constraint Module enforces geometric structure and translates user interactions into precise and physically plausible camera trajectories. Furthermore, we introduce Joint Distribution Matching Distillation (JDMD). By using real-world data distributions as a regularizing guide, JDMD effectively overcomes the fidelity degradation typically caused by over-reliance on synthetic data. Extensive experiments demonstrate that INSPATIO-WORLD significantly outperforms existing state-of-the-art (SOTA) models in spatial consistency and interaction precision, ranking first among real-time interactive methods on the WorldScore-Dynamic benchmark, and establishing a practical pipeline for navigating 4D environments reconstructed from monocular videos.",
+      "authors": [
+        "InSpatio Team",
+        "Donghui Shen",
+        "Guofeng Zhang",
+        "Haomin Liu",
+        "Haoyu Ji",
+        "Hujun Bao",
+        "Hongjia Zhai",
+        "Jialin Liu",
+        "Jing Guo",
+        "Nan Wang",
+        "Siji Pan",
+        "Weihong Pan",
+        "Weijian Xie",
+        "Xianbin Liu",
+        "Xiaojun Xiang",
+        "Xiaoyu Zhang",
+        "Xinyu Chen",
+        "Yifu Wang",
+        "Yipeng Chen",
+        "Zhenzhou Fan",
+        "Zhewen Le",
+        "Zhichao Ye",
+        "Ziqiang Zhao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-04-08T15:31:22+00:00",
+      "link": "https://arxiv.org/pdf/2604.07209v2",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "real-time 4D world simulator for seamless navigation",
+      "llm_evidence_cn": "用于无缝导航的实时4D世界模拟器",
+      "llm_evidence": "用于无缝导航的实时4D世界模拟器",
+      "canonical_evidence": "用于无缝导航的实时4D世界模拟器",
+      "llm_tldr_en": "Presents a real-time world simulator using spatiotemporal modeling to support navigation in complex scenes.",
+      "llm_tldr_cn": "提出了一种利用时空建模支持复杂场景导航的实时世界模拟器。",
+      "llm_tldr": "提出了一种利用时空建模支持复杂场景导航的实时世界模拟器。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.07957v1",
+      "source": "arxiv",
+      "title": "WorldMAP: Bootstrapping Vision-Language Navigation Trajectory Prediction with Generative World Models",
+      "abstract": "Vision-language models (VLMs) and generative world models are opening new opportunities for embodied navigation. VLMs are increasingly used as direct planners or trajectory predictors, while world models support look-ahead reasoning by imagining future views. Yet predicting a reliable trajectory from a single egocentric observation remains challenging. Current VLMs often generate unstable trajectories, and world models, though able to synthesize plausible futures, do not directly provide the grounded signals needed for navigation learning. This raises a central question: how can generated futures be turned into supervision for grounded trajectory prediction? We present WorldMAP, a teacher--student framework that converts world-model-generated futures into persistent semantic-spatial structure and planning-derived supervision. Its world-model-driven teacher builds semantic-spatial memory from generated videos, grounds task-relevant targets and obstacles, and produces trajectory pseudo-labels through explicit planning. A lightweight student with a multi-hypothesis trajectory head is then trained to predict navigation trajectories directly from vision-language inputs. On Target-Bench, WorldMAP achieves the best ADE and FDE among compared methods, reducing ADE by 18.0% and FDE by 42.1% relative to the best competing baseline, while lifting a small open-source VLM to DTW performance competitive with proprietary models. More broadly, the results suggest that, in embodied navigation, the value of world models may lie less in supplying action-ready imagined evidence than in synthesizing structured supervision for navigation learning.",
+      "authors": [
+        "Hongjin Chen",
+        "Shangyun Jiang",
+        "Tonghua Su",
+        "Chen Gao",
+        "Xinlei Chen",
+        "Yong Li",
+        "Zhibo Chen"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-04-09T08:21:58+00:00",
+      "link": "https://arxiv.org/pdf/2604.07957v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Generative world models for vision-language navigation trajectory prediction",
+      "llm_evidence_cn": "用于视觉语言导航轨迹预测的生成式世界模型",
+      "llm_evidence": "用于视觉语言导航轨迹预测的生成式世界模型",
+      "canonical_evidence": "用于视觉语言导航轨迹预测的生成式世界模型",
+      "llm_tldr_en": "WorldMAP uses generative world models to provide supervision for grounded trajectory prediction in navigation.",
+      "llm_tldr_cn": "WorldMAP利用生成式世界模型为具身导航中的接地轨迹预测提供监督信号。",
+      "llm_tldr": "WorldMAP利用生成式世界模型为具身导航中的接地轨迹预测提供监督信号。",
+      "llm_tags": [
+        "query:navwm:composite"
+      ],
+      "matched_query_tag": "query:navwm:composite",
+      "matched_query_text": "Papers central to 隐空间、导航与世界模型相关论文检索, especially work that connects or combines: 研究隐空间表示及其在智能系统中的作用; 智能体在复杂环境中的导航策略与学习方法; 世界模型的结构与在自主系统中的应用; 探索表示学习在构建世界模型与导航中的运用; 基于隐空间表示的规划与决策模型; 空间表示与认知映射的算法及模型; 检索关于隐空间表示在世界模型和导航中的研究论文; 寻找利用世界模型进行强化学习或规划的最新研究; 探索智能体如何利用隐空间进行导航与环境理解.",
+      "matched_requirement_id": "req-composite-navwm",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.11135v1",
+      "source": "arxiv",
+      "title": "AIM: Intent-Aware Unified world action Modeling with Spatial Value Maps",
+      "abstract": "Pretrained video generation models provide strong priors for robot control, but existing unified world action models still struggle to decode reliable actions without substantial robot-specific training. We attribute this limitation to a structural mismatch: while video models capture how scenes evolve, action generation requires explicit reasoning about where to interact and the underlying manipulation intent. We introduce AIM, an intent-aware unified world action model that bridges this gap via an explicit spatial interface. Instead of decoding actions directly from future visual representations, AIM predicts an aligned spatial value map that encodes task-relevant interaction structure, enabling a control-oriented abstraction of future dynamics. Built on a pretrained video generation model, AIM jointly models future observations and value maps within a shared mixture-of-transformers architecture. It employs intent-causal attention to route future information to the action branch exclusively through the value representation. We further propose a self-distillation reinforcement learning stage that freezes the video and value branches and optimizes only the action head using dense rewards derived from projected value-map responses together with sparse task-level signals. To support training and evaluation, we construct a simulation dataset of 30K manipulation trajectories with synchronized multi-view observations, actions, and value-map annotations. Experiments on RoboTwin 2.0 benchmark show that AIM achieves a 94.0% average success rate, significantly outperforming prior unified world action baselines. Notably, the improvement is more pronounced in long-horizon and contact-sensitive manipulation tasks, demonstrating the effectiveness of explicit spatial-intent modeling as a bridge between visual world modeling and robot control.",
+      "authors": [
+        "Liaoyuan Fan",
+        "Zetian Xu",
+        "Chen Cao",
+        "Wenyao Zhang",
+        "Mingqi Yuan",
+        "Jiayu Chen"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.LG"
+      ],
+      "published": "2026-04-13T07:48:58+00:00",
+      "link": "https://arxiv.org/pdf/2604.11135v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "unified world action model with spatial value maps",
+      "llm_evidence_cn": "带有空间价值图的统一世界动作模型",
+      "llm_evidence": "带有空间价值图的统一世界动作模型",
+      "canonical_evidence": "带有空间价值图的统一世界动作模型",
+      "llm_tldr_en": "Introduces a world action model using spatial value maps to bridge video generation and robot control.",
+      "llm_tldr_cn": "引入一种利用空间价值图的世界动作模型，连接视频生成与机器人控制。",
+      "llm_tldr": "引入一种利用空间价值图的世界动作模型，连接视频生成与机器人控制。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.05007v1",
+      "source": "arxiv",
+      "title": "Generalizable Audio-Visual Navigation via Binaural Difference Attention and Action Transition Prediction",
+      "abstract": "In Audio-Visual Navigation (AVN), agents must locate sound sources in unseen 3D environments using visual and auditory cues. However, existing methods often struggle with generalization in unseen scenarios, as they tend to overfit to semantic sound features and specific training environments. To address these challenges, we propose the \\textbf{Binaural Difference Attention with Action Transition Prediction (BDATP)} framework, which jointly optimizes perception and policy. Specifically, the \\textbf{Binaural Difference Attention (BDA)} module explicitly models interaural differences to enhance spatial orientation, reducing reliance on semantic categories. Simultaneously, the \\textbf{Action Transition Prediction (ATP)} task introduces an auxiliary action prediction objective as a regularization term, mitigating environment-specific overfitting. Extensive experiments on the Replica and Matterport3D datasets demonstrate that BDATP can be seamlessly integrated into various mainstream baselines, yielding consistent and significant performance gains. Notably, our framework achieves state-of-the-art Success Rates across most settings, with a remarkable absolute improvement of up to 21.6 percentage points in Replica dataset for unheard sounds. These results underscore BDATP's superior generalization capability and its robustness across diverse navigation architectures.",
+      "authors": [
+        "Jia Li",
+        "Yinfeng Yu"
+      ],
+      "primary_category": "cs.SD",
+      "categories": [
+        "cs.SD",
+        "cs.AI",
+        "eess.AS"
+      ],
+      "published": "2026-04-06T13:08:36+00:00",
+      "link": "https://arxiv.org/pdf/2604.05007v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "audio-visual navigation in unseen 3D environments",
+      "llm_evidence_cn": "未知3D环境中的视听导航",
+      "llm_evidence": "未知3D环境中的视听导航",
+      "canonical_evidence": "未知3D环境中的视听导航",
+      "llm_tldr_en": "Proposes a framework for generalizable audio-visual navigation using spatial orientation and action prediction.",
+      "llm_tldr_cn": "提出了一种利用空间定向和动作预测实现可泛化视听导航的框架。",
+      "llm_tldr": "提出了一种利用空间定向和动作预测实现可泛化视听导航的框架。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.08995v2",
+      "source": "arxiv",
+      "title": "Matrix-Game 3.0: Real-Time and Streaming Interactive World Model with Long-Horizon Memory",
+      "abstract": "With the advancement of interactive video generation, diffusion models have increasingly demonstrated their potential as world models. However, existing approaches still struggle to simultaneously achieve memory-enabled long-term temporal consistency and high-resolution real-time generation, limiting their applicability in real-world scenarios. To address this, we present Matrix-Game 3.0, a memory-augmented interactive world model designed for 720p real-time longform video generation. Building upon Matrix-Game 2.0, we introduce systematic improvements across data, model, and inference. First, we develop an upgraded industrial-scale infinite data engine that integrates Unreal Engine-based synthetic data, large-scale automated collection from AAA games, and real-world video augmentation to produce high-quality Video-Pose-Action-Prompt quadruplet data at scale. Second, we propose a training framework for long-horizon consistency: by modeling prediction residuals and re-injecting imperfect generated frames during training, the base model learns self-correction; meanwhile, camera-aware memory retrieval and injection enable the base model to achieve long horizon spatiotemporal consistency. Third, we design a multi-segment autoregressive distillation strategy based on Distribution Matching Distillation (DMD), combined with model quantization and VAE decoder pruning, to achieve efficient real-time inference. Experimental results show that Matrix-Game 3.0 achieves up to 40 FPS real-time generation at 720p resolution with a 5B model, while maintaining stable memory consistency over minute-long sequences. Scaling up to a 2x14B model further improves generation quality, dynamics, and generalization. Our approach provides a practical pathway toward industrial-scale deployable world models.",
+      "authors": [
+        "Zile Wang",
+        "Zexiang Liu",
+        "Jiaxing Li",
+        "Kaichen Huang",
+        "Baixin Xu",
+        "Fei Kang",
+        "Mengyin An",
+        "Peiyu Wang",
+        "Biao Jiang",
+        "Yichen Wei",
+        "Yidan Xietian",
+        "Jiangbo Pei",
+        "Liang Hu",
+        "Boyi Jiang",
+        "Hua Xue",
+        "Zidong Wang",
+        "Haofeng Sun",
+        "Wei Li",
+        "Wanli Ouyang",
+        "Xianglong He",
+        "Yang Liu",
+        "Yangguang Li",
+        "Yahui Zhou"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-04-10T06:00:09+00:00",
+      "link": "https://arxiv.org/pdf/2604.08995v2",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "interactive world model with long-horizon memory",
+      "llm_evidence_cn": "具有长时记忆的交互式世界模型",
+      "llm_evidence": "具有长时记忆的交互式世界模型",
+      "canonical_evidence": "具有长时记忆的交互式世界模型",
+      "llm_tldr_en": "A memory-augmented interactive world model for real-time long-form video generation.",
+      "llm_tldr_cn": "一种用于实时长视频生成的记忆增强型交互式世界模型。",
+      "llm_tldr": "一种用于实时长视频生成的记忆增强型交互式世界模型。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.09059v1",
+      "source": "arxiv",
+      "title": "Learning Vision-Language-Action World Models for Autonomous Driving",
+      "abstract": "Vision-Language-Action (VLA) models have recently achieved notable progress in end-to-end autonomous driving by integrating perception, reasoning, and control within a unified multimodal framework. However, they often lack explicit modeling of temporal dynamics and global world consistency, which limits their foresight and safety. In contrast, world models can simulate plausible future scenes but generally struggle to reason about or evaluate the imagined future they generate. In this work, we present VLA-World, a simple yet effective VLA world model that unifies predictive imagination with reflective reasoning to improve driving foresight. VLA-World first uses an action-derived feasible trajectory to guide the generation of the next-frame image, capturing rich spatial and temporal cues that describe how the surrounding environment evolves. The model then reasons over this self-generated future imagined frame to refine the predicted trajectory, achieving higher performance and better interpretability. To support this pipeline, we curate nuScenes-GR-20K, a generative reasoning dataset derived from nuScenes, and employ a three-stage training strategy that includes pretraining, supervised fine-tuning, and reinforcement learning. Extensive experiments demonstrate that VLA-World consistently surpasses state-of-the-art VLA and world-model baselines on both planning and future-generation benchmarks. Project page: https://vlaworld.github.io",
+      "authors": [
+        "Guoqing Wang",
+        "Pin Tang",
+        "Xiangxuan Ren",
+        "Guodongfang Zhao",
+        "Bailan Feng",
+        "Chao Ma"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-04-10T07:38:05+00:00",
+      "link": "https://arxiv.org/pdf/2604.09059v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "VLA world model for autonomous driving integrating perception and reasoning",
+      "llm_evidence_cn": "用于自动驾驶的VLA世界模型，集成了感知与推理",
+      "llm_evidence": "用于自动驾驶的VLA世界模型，集成了感知与推理",
+      "canonical_evidence": "用于自动驾驶的VLA世界模型，集成了感知与推理",
+      "llm_tldr_en": "VLA-World improves driving foresight by unifying predictive imagination with reflective reasoning in a world model.",
+      "llm_tldr_cn": "VLA-World通过在世界模型中统一预测想象与反思推理，提升了自动驾驶的前瞻性。",
+      "llm_tldr": "VLA-World通过在世界模型中统一预测想象与反思推理，提升了自动驾驶的前瞻性。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.10690v1",
+      "source": "arxiv",
+      "title": "Do LLMs Build Spatial World Models? Evidence from Grid-World Maze Tasks",
+      "abstract": "Foundation models have shown remarkable performance across diverse tasks, yet their ability to construct internal spatial world models for reasoning and planning remains unclear. We systematically evaluate the spatial understanding of large language models through maze tasks, a controlled testing context requiring multi-step planning and spatial abstraction. Across comprehensive experiments with Gemini-2.5-Flash, GPT-5-mini, Claude-Haiku-4.5, and DeepSeek-Chat, we uncover significant discrepancies in spatial reasoning that challenge assumptions about LLM planning capabilities. Using chain-of-thought prompting, Gemini achieves 80-86% accuracy on smaller mazes (5x5 to 7x7 grids) with tokenized adjacency representations, but performance collapses to 16-34% with visual grid formats, which is a 2-5x difference, suggesting representation-dependent rather than format-invariant spatial reasoning. We further probe spatial understanding through sequential proximity questions and compositional distance comparisons. Despite achieving 96-99% semantic coverage in reasoning traces, models fail to leverage this understanding for consistent spatial computations, indicating that they treat each question independently rather than building cumulative spatial knowledge. Our findings based on the maze-solving tasks suggest that LLMs do not develop robust spatial world models, but rather exhibit representation-specific and prompting-dependent reasoning that succeeds only under narrow conditions. These results have critical implications for deploying foundation models in applications requiring spatial abstraction.",
+      "authors": [
+        "Weijiang Li",
+        "Yilin Zhu",
+        "Rajarshi Das",
+        "Parijat Dube"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-04-12T15:30:43+00:00",
+      "link": "https://arxiv.org/pdf/2604.10690v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "internal spatial world models for reasoning and planning",
+      "llm_evidence_cn": "用于推理和规划的内部空间世界模型",
+      "llm_evidence": "用于推理和规划的内部空间世界模型",
+      "canonical_evidence": "用于推理和规划的内部空间世界模型",
+      "llm_tldr_en": "Evaluates whether LLMs build internal spatial world models for maze navigation and multi-step planning.",
+      "llm_tldr_cn": "评估大语言模型是否构建了用于迷宫导航和多步规划的内部空间世界模型。",
+      "llm_tldr": "评估大语言模型是否构建了用于迷宫导航和多步规划的内部空间世界模型。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2604.09535v1",
+      "source": "arxiv",
+      "title": "EgoTL: Egocentric Think-Aloud Chains for Long-Horizon Tasks",
+      "abstract": "Large foundation models have made significant advances in embodied intelligence, enabling synthesis and reasoning over egocentric input for household tasks. However, VLM-based auto-labeling is often noisy because the primary data sources lack accurate human action labels, chain-of-thought (CoT), and spatial annotations; these errors are amplified during long-horizon spatial instruction following. These issues stem from insufficient coverage of minute-long, daily household planning tasks and from inaccurate spatial grounding. As a result, VLM reasoning chains and world-model synthesis can hallucinate objects, skip steps, or fail to respect real-world physical attributes. To address these gaps, we introduce EgoTL. EgoTL builds a think-aloud capture pipeline for egocentric data. It uses a say-before-act protocol to record step-by-step goals and spoken reasoning with word-level timestamps, then calibrates physical properties with metric-scale spatial estimators, a memory-bank walkthrough for scene context, and clip-level tags for navigation instructions and detailed manipulation actions. With EgoTL, we are able to benchmark VLMs and World Models on six task dimensions from three layers and long-horizon generation over minute-long sequences across over 100 daily household tasks. We find that foundation models still fall short as egocentric assistants or open-world simulators. Finally, we finetune foundation models with human CoT aligned with metric labels on the training split of EgoTL, which improves long-horizon planning and reasoning, step-wise reasoning, instruction following, and spatial grounding.",
+      "authors": [
+        "Lulin Liu",
+        "Dayou Li",
+        "Yiqing Liang",
+        "Sicong Jiang",
+        "Hitesh Vijay",
+        "Hezhen Hu",
+        "Xuhai Xu",
+        "Zirui Liu",
+        "Srinivas Shakkottai",
+        "Manling Li",
+        "Zhiwen Fan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-04-10T17:53:55+00:00",
+      "link": "https://arxiv.org/pdf/2604.09535v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "world-model synthesis and spatial grounding for embodied tasks",
+      "llm_evidence_cn": "具身任务中的世界模型合成与空间定位",
+      "llm_evidence": "具身任务中的世界模型合成与空间定位",
+      "canonical_evidence": "具身任务中的世界模型合成与空间定位",
+      "llm_tldr_en": "Introduces EgoTL to improve spatial grounding and world-model synthesis for long-horizon household tasks.",
+      "llm_tldr_cn": "引入EgoTL流水线，旨在改进长程家庭任务中的空间定位和世界模型合成能力。",
+      "llm_tldr": "引入EgoTL流水线，旨在改进长程家庭任务中的空间定位和世界模型合成能力。",
+      "llm_tags": [
+        "query:navwm:composite"
+      ],
+      "matched_query_tag": "query:navwm:composite",
+      "matched_query_text": "Papers central to 隐空间、导航与世界模型相关论文检索, especially work that connects or combines: 研究隐空间表示及其在智能系统中的作用; 智能体在复杂环境中的导航策略与学习方法; 世界模型的结构与在自主系统中的应用; 探索表示学习在构建世界模型与导航中的运用; 基于隐空间表示的规划与决策模型; 空间表示与认知映射的算法及模型; 检索关于隐空间表示在世界模型和导航中的研究论文; 寻找利用世界模型进行强化学习或规划的最新研究; 探索智能体如何利用隐空间进行导航与环境理解.",
+      "matched_requirement_id": "req-composite-navwm",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2604.09519v2",
+      "source": "arxiv",
+      "title": "Toward World Models for Epidemiology",
+      "abstract": "World models have emerged as a unifying paradigm for learning latent dynamics, simulating counterfactual futures, and supporting planning under uncertainty. In this paper, we argue that computational epidemiology is a natural and underdeveloped setting for world models. This is because epidemic decision-making requires reasoning about latent disease burden, imperfect and policy-dependent surveillance signals, and intervention effects are mediated by adaptive human behavior. We introduce a conceptual framework for epidemiological world models, formulating epidemics as controlled, partially observed dynamical systems in which (i) the true epidemic state is latent, (ii) observations are noisy and endogenous to policy, and (iii) interventions act as sequential actions whose effects propagate through behavioral and social feedback. We present three case studies that illustrate why explicit world modeling is necessary for policy-relevant reasoning: strategic misreporting in behavioral surveillance, systematic delays in time-lagged signals such as hospitalizations and deaths, and counterfactual intervention analysis where identical histories diverge under alternative action sequences.",
+      "authors": [
+        "Zeeshan Memon",
+        "Yiqi Su",
+        "Christo Kurisummoottil Thomas",
+        "Walid Saad",
+        "Liang Zhao",
+        "Naren Ramakrishnan"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-04-10T17:39:20+00:00",
+      "link": "https://arxiv.org/pdf/2604.09519v2",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "world models for learning latent dynamics",
+      "llm_evidence_cn": "用于学习隐动力学的世界模型",
+      "llm_evidence": "用于学习隐动力学的世界模型",
+      "canonical_evidence": "用于学习隐动力学的世界模型",
+      "llm_tldr_en": "Proposes world models as a paradigm for learning latent dynamics in epidemiological systems.",
+      "llm_tldr_cn": "提出将世界模型作为学习流行病系统隐动力学的范式。",
+      "llm_tldr": "提出将世界模型作为学习流行病系统隐动力学的范式。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.07137v2",
+      "source": "arxiv",
+      "title": "What's in the latent space? Exploring coupled tropical Pacific variability within a Multi-branch $β$-Variational Autoencoder",
+      "abstract": "What is encoded in the latent space of a multi-branch $β$-variational autoencoder ($β$-VAE) trained on coupled tropical Pacific climate fields? To answer this question, we assess the reconstruction skill and physical interpretability of the latent space of a multi-branch $β$-VAE trained on sea surface temperature, ocean heat content, and outgoing longwave radiation across the tropical Pacific from a 500-year preindustrial control simulation. The model generalizes well, with only modest degradation from training to test performance, and preserves the dominant basin-scale structure of all three fields. Latent-space diagnostics show that variability is organized unevenly across dimensions: sea surface temperature is concentrated in a smaller subset of latent dimensions, whereas ocean heat content and outgoing longwave radiation are more broadly distributed across multiple dimensions. Comparisons with conventional tropical Pacific diagnostics further show that several latent dimensions align with known El Niño and La Niña variability, while others capture related coupled ocean-atmosphere variability on decadal or longer timescales. Sensitivity experiments and latent traversals identify dimensions associated with eastern-Pacific-like, central-Pacific-like, coastal, subsurface-dominant, and atmosphere-dominant variability. Together, these results show that the multi-branch $β$-variational autoencoder yields a skillful and physically informative reduced representation of coupled tropical Pacific variability.",
+      "authors": [
+        "Emily F. Wisinski",
+        "Maria J. Molina",
+        "Kyle J. C. Hall",
+        "Hannah Bao",
+        "Salil Mahajan",
+        "Nan Rosenbloom",
+        "John Fasullo"
+      ],
+      "primary_category": "physics.ao-ph",
+      "categories": [
+        "physics.ao-ph"
+      ],
+      "published": "2026-04-08T14:31:07+00:00",
+      "link": "https://arxiv.org/pdf/2604.07137v2",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "exploring latent space of variational autoencoder for physical interpretability",
+      "llm_evidence_cn": "探索变分自编码器隐空间以实现物理可解释性",
+      "llm_evidence": "探索变分自编码器隐空间以实现物理可解释性",
+      "canonical_evidence": "探索变分自编码器隐空间以实现物理可解释性",
+      "llm_tldr_en": "Analyzes the latent space of a multi-branch beta-VAE to interpret coupled tropical Pacific climate variability.",
+      "llm_tldr_cn": "分析多分支beta-VAE的隐空间，以解释热带太平洋气候场的耦合变化规律。",
+      "llm_tldr": "分析多分支beta-VAE的隐空间，以解释热带太平洋气候场的耦合变化规律。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.10391v1",
+      "source": "arxiv",
+      "title": "FishRoPE: Projective Rotary Position Embeddings for Omnidirectional Visual Perception",
+      "abstract": "Vision foundation models (VFMs) and Bird's Eye View (BEV) representation have advanced visual perception substantially, yet their internal spatial representations assume the rectilinear geometry of pinhole cameras. Fisheye cameras, widely deployed on production autonomous vehicles for their surround-view coverage, exhibit severe radial distortion that renders these representations geometrically inconsistent. At the same time, the scarcity of large-scale fisheye annotations makes retraining foundation models from scratch impractical. We present \\ours, a lightweight framework that adapts frozen VFMs to fisheye geometry through two components: a frozen DINOv2 backbone with Low-Rank Adaptation (LoRA) that transfers rich self-supervised features to fisheye without task-specific pretraining, and Fisheye Rotary Position Embedding (FishRoPE), which reparameterizes the attention mechanism in the spherical coordinates of the fisheye projection so that both self-attention and cross-attention operate on angular separation rather than pixel distance. FishRoPE is architecture-agnostic, introduces negligible computational overhead, and naturally reduces to the standard formulation under pinhole geometry. We evaluate \\ours on WoodScape 2D detection (54.3 mAP) and SynWoodScapes BEV segmentation (65.1 mIoU), where it achieves state-of-the-art results on both benchmarks.",
+      "authors": [
+        "Rahul Ahuja",
+        "Mudit Jain",
+        "Bala Murali Manoghar Sai Sudhakar",
+        "Venkatraman Narayanan",
+        "Pratik Likhar",
+        "Varun Ravi Kumar",
+        "Senthil Yogamani"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-04-12T00:46:51+00:00",
+      "link": "https://arxiv.org/pdf/2604.10391v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "internal spatial representations and Bird's Eye View for autonomous vehicles",
+      "llm_evidence_cn": "自动驾驶车辆的内部空间表示与鸟瞰图",
+      "llm_evidence": "自动驾驶车辆的内部空间表示与鸟瞰图",
+      "canonical_evidence": "自动驾驶车辆的内部空间表示与鸟瞰图",
+      "llm_tldr_en": "Adapts vision models to fisheye geometry for consistent spatial representation in autonomous driving.",
+      "llm_tldr_cn": "将视觉模型适配到鱼眼几何，以实现自动驾驶中一致的空间表示。",
+      "llm_tldr": "将视觉模型适配到鱼眼几何，以实现自动驾驶中一致的空间表示。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2604.10261v1",
+      "source": "arxiv",
+      "title": "The Amazing Agent Race: Strong Tool Users, Weak Navigators",
+      "abstract": "Existing tool-use benchmarks for LLM agents are overwhelmingly linear: our analysis of six benchmarks shows 55 to 100% of instances are simple chains of 2 to 5 steps. We introduce The Amazing Agent Race (AAR), a benchmark featuring directed acyclic graph (DAG) puzzles (or \"legs\") with fork-merge tool chains. We release 1,400 instances across two variants: sequential (800 legs) and compositional (600 DAG legs). Agents must navigate Wikipedia, execute multi-step tool chains, and aggregate results into a verifiable answer. Legs are procedurally generated from Wikipedia seeds across four difficulty levels with live-API validation. Three complementary metrics (finish-line accuracy, pit-stop visit rate, and roadblock completion rate) separately diagnose navigation, tool-use, and arithmetic failures. Evaluating three agent frameworks on 1,400 legs, the best achieves only 37.2% accuracy. Navigation errors dominate (27 to 52% of trials) while tool-use errors remain below 17%, and agent architecture matters as much as model scale (Claude Code matches Codex CLI at 37% with 6x fewer tokens). The compositional structure of AAR reveals that agents fail not at calling tools but at navigating to the right pages, a blind spot invisible to linear benchmarks. The project page can be accessed at: https://minnesotanlp.github.io/the-amazing-agent-race",
+      "authors": [
+        "Zae Myung Kim",
+        "Dongseok Lee",
+        "Jaehyung Kim",
+        "Vipul Raheja",
+        "Dongyeop Kang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CL",
+        "cs.LG"
+      ],
+      "published": "2026-04-11T15:58:29+00:00",
+      "link": "https://arxiv.org/pdf/2604.10261v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "benchmarking navigation and tool-use for agents",
+      "llm_evidence_cn": "智能体导航与工具使用的基准测试",
+      "llm_evidence": "智能体导航与工具使用的基准测试",
+      "canonical_evidence": "智能体导航与工具使用的基准测试",
+      "llm_tldr_en": "Introduces AAR benchmark to diagnose navigation and multi-step tool-use capabilities of LLM agents.",
+      "llm_tldr_cn": "提出AAR基准，用于诊断大语言模型智能体在复杂路径下的导航和多步工具调用能力。",
+      "llm_tldr": "提出AAR基准，用于诊断大语言模型智能体在复杂路径下的导航和多步工具调用能力。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.08324v2",
+      "source": "arxiv",
+      "title": "Multi-Modal Learning meets Genetic Programming: Analyzing Alignment in Latent Space Optimization",
+      "abstract": "Symbolic regression (SR) aims to discover mathematical expressions from data, a task traditionally tackled using Genetic Programming (GP) through combinatorial search over symbolic structures. Latent Space Optimization (LSO) methods use neural encoders to map symbolic expressions into continuous spaces, transforming the combinatorial search into continuous optimization. SNIP (Meidani et al., 2024), a contrastive pre-training model inspired by CLIP, advances LSO by introducing a multi-modal approach: aligning symbolic and numeric encoders in a shared latent space to learn the phenotype-genotype mapping, enabling optimization in the numeric space to implicitly guide symbolic search. However, this relies on fine-grained cross-modal alignment, whereas literature on similar models like CLIP reveals that such an alignment is typically coarse-grained. In this paper, we investigate whether SNIP delivers on its promise of effective bi-modal optimization for SR. Our experiments show that: (1) cross-modal alignment does not improve during optimization, even as fitness increases, and (2) the alignment learned by SNIP is too coarse to efficiently conduct principled search in the symbolic space. These findings reveal that while multi-modal LSO holds significant potential for SR, effective alignment-guided optimization remains unrealized in practice, highlighting fine-grained alignment as a critical direction for future work.",
+      "authors": [
+        "Benjamin Léger",
+        "Kazem Meidani",
+        "Christian Gagné"
+      ],
+      "primary_category": "cs.NE",
+      "categories": [
+        "cs.NE",
+        "cs.AI"
+      ],
+      "published": "2026-04-09T14:55:36+00:00",
+      "link": "https://arxiv.org/pdf/2604.08324v2",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "latent space optimization and alignment of symbolic/numeric encoders",
+      "llm_evidence_cn": "隐空间优化以及符号与数值编码器的对齐",
+      "llm_evidence": "隐空间优化以及符号与数值编码器的对齐",
+      "canonical_evidence": "隐空间优化以及符号与数值编码器的对齐",
+      "llm_tldr_en": "Analyzes latent space optimization in multi-modal learning to guide symbolic search via continuous optimization.",
+      "llm_tldr_cn": "分析多模态学习中的隐空间优化，通过连续优化引导符号搜索。",
+      "llm_tldr": "分析多模态学习中的隐空间优化，通过连续优化引导符号搜索。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.10533v1",
+      "source": "arxiv",
+      "title": "VLN-NF: Feasibility-Aware Vision-and-Language Navigation with False-Premise Instructions",
+      "abstract": "Conventional Vision-and-Language Navigation (VLN) benchmarks assume instructions are feasible and the referenced target exists, leaving agents ill-equipped to handle false-premise goals. We introduce VLN-NF, a benchmark with false-premise instructions where the target is absent from the specified room and agents must navigate, gather evidence through in-room exploration, and explicitly output NOT-FOUND. VLN-NF is constructed via a scalable pipeline that rewrites VLN instructions using an LLM and verifies target absence with a VLM, producing plausible yet factually incorrect goals. We further propose REV-SPL to jointly evaluate room reaching, exploration coverage, and decision correctness. To address this challenge, we present ROAM, a two-stage hybrid that combines supervised room-level navigation with LLM/VLM-driven in-room exploration guided by a free-space clearance prior. ROAM achieves the best REV-SPL among compared methods, while baselines often under-explore and terminate prematurely under unreliable instructions. VLN-NF project page can be found at https://vln-nf.github.io/.",
+      "authors": [
+        "Hung-Ting Su",
+        "Ting-Jun Wang",
+        "Jia-Fong Yeh",
+        "Min Sun",
+        "Winston H. Hsu"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CL",
+        "cs.CV"
+      ],
+      "published": "2026-04-12T08:49:27+00:00",
+      "link": "https://arxiv.org/pdf/2604.10533v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "navigation strategies in complex environments with false premises",
+      "llm_evidence_cn": "复杂环境下处理错误前提的导航策略",
+      "llm_evidence": "复杂环境下处理错误前提的导航策略",
+      "canonical_evidence": "复杂环境下处理错误前提的导航策略",
+      "llm_tldr_en": "Introduces a benchmark and method for vision-and-language navigation with unfeasible instructions.",
+      "llm_tldr_cn": "针对不可行指令提出VLN-NF基准和ROAM方法，提升智能体在复杂环境下的导航决策能力。",
+      "llm_tldr": "针对不可行指令提出VLN-NF基准和ROAM方法，提升智能体在复杂环境下的导航决策能力。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2604.11089v1",
+      "source": "arxiv",
+      "title": "Structured State-Space Regularization for Compact and Generation-Friendly Image Tokenization",
+      "abstract": "Image tokenizers are central to modern vision models as they often operate in latent spaces. An ideal latent space must be simultaneously compact and generation-friendly: it should capture image's essential content compactly while remaining easy to model with generative approaches. In this work, we introduce a novel regularizer to align latent spaces with these two objectives. The key idea is to guide tokenizers to mimic the hidden state dynamics of state-space models (SSMs), thereby transferring their critical property, frequency awareness, to latent features. Grounded in a theoretical analysis of SSMs, our regularizer enforces encoding of fine spatial structures and frequency-domain cues into compact latent features; leading to more effective use of representation capacity and improved generative modelability. Experiments demonstrate that our method improves generation quality in diffusion models while incurring only minimal loss in reconstruction fidelity.",
+      "authors": [
+        "Jinsung Lee",
+        "Jaemin Oh",
+        "Namhun Kim",
+        "Dongwon Kim",
+        "Byung-Jun Yoon",
+        "Suha Kwak"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-04-13T07:10:17+00:00",
+      "link": "https://arxiv.org/pdf/2604.11089v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "aligning latent spaces with state-space models for compact features",
+      "llm_evidence_cn": "将隐空间与状态空间模型对齐以获得紧凑特征",
+      "llm_evidence": "将隐空间与状态空间模型对齐以获得紧凑特征",
+      "canonical_evidence": "将隐空间与状态空间模型对齐以获得紧凑特征",
+      "llm_tldr_en": "Introduces a regularizer to align image tokenizer latent spaces with state-space model dynamics.",
+      "llm_tldr_cn": "引入一种正则化方法，使图像分词器的隐空间与状态空间模型的动力学特性对齐。",
+      "llm_tldr": "引入一种正则化方法，使图像分词器的隐空间与状态空间模型的动力学特性对齐。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.10199v1",
+      "source": "arxiv",
+      "title": "FatigueFusion: Latent Space Fusion for Fatigue-Driven Motion Synthesis",
+      "abstract": "Investigating the impact of fatigue on human physiological function and motor behavior is crucial for developing biomechanics and medical applications aimed at mitigating fatigue, reducing injury risk, and creating sophisticated ergonomic designs, as well as for producing physically-plausible 3D animation sequences. While the former has a prominent position in state-of-the-art literature, fatigue-driven motion generation is still an underexplored area. In this study, we present FatigueFusion, a deep-learning architecture for the fusion of fatigue features within a latent representation space, enabling the creation of a variation of novel fatigued movements, intermediate fatigued states, and progressively fatigued motions. Unlike existing approaches that focus on imitating the effects of fatigue accumulation in motion patterns, our framework incorporates algorithmic and data-driven modules to impose subject-specific temporal and spatial fatigue features on nonfatigued motions, while leveraging PINN-based techniques to simulate fatigue intensity. Since all motion modulation tasks are taking place in latent space, FatigueFusion offers an end-to-end architecture that operates directly on non-fatigued joint angle sequences and control parameters, allowing seamless integration into any motion synthesis pipeline, without relying on fatigue input data. Overall, our framework can be employed for various fatigue-driven synthesis tasks, such as fatigue profile transfer and fusion, while it also provides a solution for accurate rendering of the human fatigue state in both animation and simulation pipelines.",
+      "authors": [
+        "Iliana Loi",
+        "Konstantinos Moustakas"
+      ],
+      "primary_category": "cs.GR",
+      "categories": [
+        "cs.GR",
+        "cs.LG"
+      ],
+      "published": "2026-04-11T13:12:20+00:00",
+      "link": "https://arxiv.org/pdf/2604.10199v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "fusion of fatigue features within a latent representation space",
+      "llm_evidence_cn": "在隐式表示空间中融合疲劳特征",
+      "llm_evidence": "在隐式表示空间中融合疲劳特征",
+      "canonical_evidence": "在隐式表示空间中融合疲劳特征",
+      "llm_tldr_en": "Presents a latent space fusion architecture for synthesizing fatigue-driven human motions.",
+      "llm_tldr_cn": "提出了一种用于合成疲劳驱动人体动作的隐空间融合架构。",
+      "llm_tldr": "提出了一种用于合成疲劳驱动人体动作的隐空间融合架构。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.10573v1",
+      "source": "arxiv",
+      "title": "Learning 3D Representations for Spatial Intelligence from Unposed Multi-View Images",
+      "abstract": "Robust 3D representation learning forms the perceptual foundation of spatial intelligence, enabling downstream tasks in scene understanding and embodied AI. However, learning such representations directly from unposed multi-view images remains challenging. Recent self-supervised methods attempt to unify geometry, appearance, and semantics in a feed-forward manner, but they often suffer from weak geometry induction, limited appearance detail, and inconsistencies between geometry and semantics. We introduce UniSplat, a feed-forward framework designed to address these limitations through three complementary components. First, we propose a dual-masking strategy that strengthens geometry induction in the encoder. By masking both encoder and decoder tokens, and targeting decoder masks toward geometry-rich regions, the model is forced to infer structural information from incomplete visual cues, yielding geometry-aware representations even under unposed inputs. Second, we develop a coarse-to-fine Gaussian splatting strategy that reduces appearance-semantics inconsistencies by progressively refining the radiance field. Finally, to enforce geometric-semantic consistency, we introduce a pose-conditioned recalibration mechanism that interrelates the outputs of multiple heads by re-projecting predicted 3D point and semantic maps into the image plane using estimated camera parameters, and aligning them with corresponding RGB and semantic predictions to ensure cross-task consistency, thereby resolving geometry-semantic mismatches. Together, these components yield unified 3D representations that are robust to unposed, sparse-view inputs and generalize across diverse tasks, laying a perceptual foundation for spatial intelligence.",
+      "authors": [
+        "Bo Zhou",
+        "Qiuxia Lai",
+        "Zeren Sun",
+        "Xiangbo Shu",
+        "Yazhou Yao",
+        "Wenguan Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-04-12T10:36:18+00:00",
+      "link": "https://arxiv.org/pdf/2604.10573v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "3D representation learning for spatial intelligence and embodied AI",
+      "llm_evidence_cn": "用于空间智能和具身智能的3D表示学习",
+      "llm_evidence": "用于空间智能和具身智能的3D表示学习",
+      "canonical_evidence": "用于空间智能和具身智能的3D表示学习",
+      "llm_tldr_en": "Proposes UniSplat for learning robust 3D representations from multi-view images to support spatial intelligence.",
+      "llm_tldr_cn": "提出UniSplat框架，通过多视图图像学习鲁棒的3D表示，支持空间智能任务。",
+      "llm_tldr": "提出UniSplat框架，通过多视图图像学习鲁棒的3D表示，支持空间智能任务。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2604.11331v1",
+      "source": "arxiv",
+      "title": "Any 3D Scene is Worth 1K Tokens: 3D-Grounded Representation for Scene Generation at Scale",
+      "abstract": "3D scene generation has long been dominated by 2D multi-view or video diffusion models. This is due not only to the lack of scene-level 3D latent representation, but also to the fact that most scene-level 3D visual data exists in the form of multi-view images or videos, which are naturally compatible with 2D diffusion architectures. Typically, these 2D-based approaches degrade 3D spatial extrapolation to 2D temporal extension, which introduces two fundamental issues: (i) representing 3D scenes via 2D views leads to significant representation redundancy, and (ii) latent space rooted in 2D inherently limits the spatial consistency of the generated 3D scenes. In this paper, we propose, for the first time, to perform 3D scene generation directly within an implicit 3D latent space to address these limitations. First, we repurpose frozen 2D representation encoders to construct our 3D Representation Autoencoder (3DRAE), which grounds view-coupled 2D semantic representations into a view-decoupled 3D latent representation. This enables representing 3D scenes observed from arbitrary numbers of views--at any resolution and aspect ratio--with fixed complexity and rich semantics. Then we introduce 3D Diffusion Transformer (3DDiT), which performs diffusion modeling in this 3D latent space, achieving remarkably efficient and spatially consistent 3D scene generation while supporting diverse conditioning configurations. Moreover, since our approach directly generates a 3D scene representation, it can be decoded to images and optional point maps along arbitrary camera trajectories without requiring per-trajectory diffusion sampling pass, which is common in 2D-based approaches.",
+      "authors": [
+        "Dongxu Wei",
+        "Qi Xu",
+        "Zhiqi Li",
+        "Hangning Zhou",
+        "Cong Qiu",
+        "Hailong Qin",
+        "Mu Yang",
+        "Zhaopeng Cui",
+        "Peidong Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CG"
+      ],
+      "published": "2026-04-13T11:32:36+00:00",
+      "link": "https://arxiv.org/pdf/2604.11331v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "3D latent representation for scene generation",
+      "llm_evidence_cn": "用于场景生成的3D隐空间表示",
+      "llm_evidence": "用于场景生成的3D隐空间表示",
+      "canonical_evidence": "用于场景生成的3D隐空间表示",
+      "llm_tldr_en": "Proposes a 3D-grounded latent representation to improve spatial consistency in large-scale scene generation.",
+      "llm_tldr_cn": "提出一种基于3D的隐空间表示方法，以提升大规模场景生成的空间一致性。",
+      "llm_tldr": "提出一种基于3D的隐空间表示方法，以提升大规模场景生成的空间一致性。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

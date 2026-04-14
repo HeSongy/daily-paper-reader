@@ -6,67 +6,76 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-04-13
-- 运行时间：2026-04-13 20:12:58 UTC
+- 最新运行日期：2026-04-14
+- 运行时间：2026-04-14 20:53:35 UTC
 - 运行状态：成功
-- 本次总论文数：15
-- 精读区：6
-- 速读区：9
+- 本次总论文数：18
+- 精读区：7
+- 速读区：11
 
 ### 今日简报（AI）
-今日聚焦视觉语言世界模型与运动控制算法，系统梳理共15篇前沿研究。  
-重点推荐探索“视觉-语言-行动世界模型”在自主驾驶与导航中的突破。  
-建议读者关注多模态理解与智能决策结合的新趋势，为未来机器人学习打下基础。
-- 详情：[/202604/13/README](/202604/13/README)
+深入探索生成式空间建模与视觉语言导航等 4D 世界模拟新进展。  
+今日重点推荐《INSPATIO-WORLD》和《WorldMAP》，展示实时环境理解与自主导航预测的突破。  
+建议关注生成式世界模型在智能体学习与沉浸式交互中的应用潜力。
+- 详情：[/202604/14/README](/202604/14/README)
 
 ### 精读区论文标签
-1. [WorldMAP: Bootstrapping Vision-Language Navigation Trajectory Prediction with Generative World Models](/202604/13/2604.07957v1-worldmap-bootstrapping-vision-language-navigation-trajectory-prediction-with-generative-world-models)  
+1. [INSPATIO-WORLD: A Real-Time 4D World Simulator via Spatiotemporal Autoregressive Modeling](/202604/14/2604.07209v2-inspatio-world-a-real-time-4d-world-simulator-via-spatiotemporal-autoregressive-modeling)  
    标签：评分：10.0/10、query:navwm
-   evidence：用于视觉语言导航的生成式世界模型
-2. [Learning Vision-Language-Action World Models for Autonomous Driving](/202604/13/2604.09059v1-learning-vision-language-action-world-models-for-autonomous-driving)  
+   evidence：用于无缝导航的实时4D世界模拟器
+2. [WorldMAP: Bootstrapping Vision-Language Navigation Trajectory Prediction with Generative World Models](/202604/14/2604.07957v1-worldmap-bootstrapping-vision-language-navigation-trajectory-prediction-with-generative-world-models)  
    标签：评分：10.0/10、query:navwm
-   evidence：用于自动驾驶前瞻性的视觉-语言-动作世界模型
-3. [AnyImageNav: Any-View Geometry for Precise Last-Meter Image-Goal Navigation](/202604/13/2604.05351v1-anyimagenav-any-view-geometry-for-precise-last-meter-image-goal-navigation)  
+   evidence：用于视觉语言导航轨迹预测的生成式世界模型
+3. [AIM: Intent-Aware Unified world action Modeling with Spatial Value Maps](/202604/14/2604.11135v1-aim-intent-aware-unified-world-action-modeling-with-spatial-value-maps)  
+   标签：评分：10.0/10、query:navwm
+   evidence：带有空间价值图的统一世界动作模型
+4. [Generalizable Audio-Visual Navigation via Binaural Difference Attention and Action Transition Prediction](/202604/14/2604.05007v1-generalizable-audio-visual-navigation-via-binaural-difference-attention-and-action-transition-prediction)  
    标签：评分：9.0/10、query:navwm
-   evidence：语义相关性信号引导探索与图像目标导航
-4. [Toward Hardware-Agnostic Quadrupedal World Models via Morphology Conditioning](/202604/13/2604.08780v1-toward-hardware-agnostic-quadrupedal-world-models-via-morphology-conditioning)  
+   evidence：未知3D环境中的视听导航
+5. [Matrix-Game 3.0: Real-Time and Streaming Interactive World Model with Long-Horizon Memory](/202604/14/2604.08995v2-matrix-game-30-real-time-and-streaming-interactive-world-model-with-long-horizon-memory)  
    标签：评分：9.0/10、query:navwm
-   evidence：用于高效规划和行为学习的可泛化四足机器人世界模型
-5. [HTNav: A Hybrid Navigation Framework with Tiered Structure for Urban Aerial Vision-and-Language Navigation](/202604/13/2604.08883v1-htnav-a-hybrid-navigation-framework-with-tiered-structure-for-urban-aerial-vision-and-language-navigation)  
+   evidence：具有长时记忆的交互式世界模型
+6. [Learning Vision-Language-Action World Models for Autonomous Driving](/202604/14/2604.09059v1-learning-vision-language-action-world-models-for-autonomous-driving)  
    标签：评分：9.0/10、query:navwm
-   evidence：复杂城市环境下的强化学习导航框架
-6. [Matrix-Game 3.0: Real-Time and Streaming Interactive World Model with Long-Horizon Memory](/202604/13/2604.08995v1-matrix-game-30-real-time-and-streaming-interactive-world-model-with-long-horizon-memory)  
+   evidence：用于自动驾驶的VLA世界模型，集成了感知与推理
+7. [Do LLMs Build Spatial World Models? Evidence from Grid-World Maze Tasks](/202604/14/2604.10690v1-do-llms-build-spatial-world-models-evidence-from-grid-world-maze-tasks)  
    标签：评分：9.0/10、query:navwm
-   evidence：用于长时视频生成和时间一致性的交互式世界模型
+   evidence：用于推理和规划的内部空间世界模型
 
 ### 速读区论文标签
-1. [Precise Aggressive Aerial Maneuvers with Sensorimotor Policies](/202604/13/2604.05828v1-precise-aggressive-aerial-maneuvers-with-sensorimotor-policies)  
+1. [EgoTL: Egocentric Think-Aloud Chains for Long-Horizon Tasks](/202604/14/2604.09535v1-egotl-egocentric-think-aloud-chains-for-long-horizon-tasks)  
    标签：评分：8.0/10、query:navwm
-   evidence：用于在狭窄开口中进行激进导航的感觉运动策略
-2. [LEGO: Latent-space Exploration for Geometry-aware Optimization of Humanoid Kinematic Design](/202604/13/2604.08636v1-lego-latent-space-exploration-for-geometry-aware-optimization-of-humanoid-kinematic-design)  
+   evidence：具身任务中的世界模型合成与空间定位
+2. [FishRoPE: Projective Rotary Position Embeddings for Omnidirectional Visual Perception](/202604/14/2604.10391v1-fishrope-projective-rotary-position-embeddings-for-omnidirectional-visual-perception)  
    标签：评分：8.0/10、query:navwm
-   evidence：用于类人机器人运动学设计的几何保持隐空间
-3. [RAMP: Hybrid DRL for Online Learning of Numeric Action Models](/202604/13/2604.08685v1-ramp-hybrid-drl-for-online-learning-of-numeric-action-models)  
+   evidence：自动驾驶车辆的内部空间表示与鸟瞰图
+3. [VLN-NF: Feasibility-Aware Vision-and-Language Navigation with False-Premise Instructions](/202604/14/2604.10533v1-vln-nf-feasibility-aware-vision-and-language-navigation-with-false-premise-instructions)  
    标签：评分：8.0/10、query:navwm
-   evidence：在线学习动作模型用于规划与强化学习
-4. [PinpointQA: A Dataset and Benchmark for Small Object-Centric Spatial Understanding in Indoor Videos](/202604/13/2604.08991v1-pinpointqa-a-dataset-and-benchmark-for-small-object-centric-spatial-understanding-in-indoor-videos)  
+   evidence：复杂环境下处理错误前提的导航策略
+4. [Learning 3D Representations for Spatial Intelligence from Unposed Multi-View Images](/202604/14/2604.10573v1-learning-3d-representations-for-spatial-intelligence-from-unposed-multi-view-images)  
+   标签：评分：8.0/10、query:navwm
+   evidence：用于空间智能和具身智能的3D表示学习
+5. [Toward World Models for Epidemiology](/202604/14/2604.09519v2-toward-world-models-for-epidemiology)  
    标签：评分：7.0/10、query:navwm
-   evidence：室内视频中以小物体为中心的空间理解
-5. [Overhang Tower: Resource-Rational Adaptation in Sequential Physical Planning](/202604/13/2604.09072v1-overhang-tower-resource-rational-adaptation-in-sequential-physical-planning)  
+   evidence：用于学习隐动力学的世界模型
+6. [The Amazing Agent Race: Strong Tool Users, Weak Navigators](/202604/14/2604.10261v1-the-amazing-agent-race-strong-tool-users-weak-navigators)  
    标签：评分：7.0/10、query:navwm
-   evidence：资源约束下的序列物理规划与预测机制
-6. [Toward World Models for Epidemiology](/202604/13/2604.09519v1-toward-world-models-for-epidemiology)  
+   evidence：智能体导航与工具使用的基准测试
+7. [Structured State-Space Regularization for Compact and Generation-Friendly Image Tokenization](/202604/14/2604.11089v1-structured-state-space-regularization-for-compact-and-generation-friendly-image-tokenization)  
    标签：评分：7.0/10、query:navwm
-   evidence：用于学习隐动态和规划的世界模型
-7. [Planning Task Shielding: Detecting and Repairing Flaws in Planning Tasks through Turning them Unsolvable](/202604/13/2604.07042v1-planning-task-shielding-detecting-and-repairing-flaws-in-planning-tasks-through-turning-them-unsolvable)  
+   evidence：将隐空间与状态空间模型对齐以获得紧凑特征
+8. [Any 3D Scene is Worth 1K Tokens: 3D-Grounded Representation for Scene Generation at Scale](/202604/14/2604.11331v1-any-3d-scene-is-worth-1k-tokens-3d-grounded-representation-for-scene-generation-at-scale)  
+   标签：评分：7.0/10、query:navwm
+   evidence：用于场景生成的3D隐空间表示
+9. [What's in the latent space? Exploring coupled tropical Pacific variability within a Multi-branch $β$-Variational Autoencoder](/202604/14/2604.07137v2-whats-in-the-latent-space-exploring-coupled-tropical-pacific-variability-within-a-multi-branch--variational-autoencoder)  
    标签：评分：6.0/10、query:navwm
-   evidence：修改规划任务以确保安全性和可达性属性
-8. [Physically Grounded 3D Generative Reconstruction under Hand Occlusion using Proprioception and Multi-Contact Touch](/202604/13/2604.09100v1-physically-grounded-3d-generative-reconstruction-under-hand-occlusion-using-proprioception-and-multi-contact-touch)  
+   evidence：探索变分自编码器隐空间以实现物理可解释性
+10. [Multi-Modal Learning meets Genetic Programming: Analyzing Alignment in Latent Space Optimization](/202604/14/2604.08324v2-multi-modal-learning-meets-genetic-programming-analyzing-alignment-in-latent-space-optimization)  
    标签：评分：6.0/10、query:navwm
-   evidence：用于环境理解与重建的紧凑隐空间
-9. [LatentFlowSR: High-Fidelity Audio Super-Resolution via Noise-Robust Latent Flow Matching](/202604/13/2604.09188v1-latentflowsr-high-fidelity-audio-super-resolution-via-noise-robust-latent-flow-matching)  
+   evidence：隐空间优化以及符号与数值编码器的对齐
+11. [FatigueFusion: Latent Space Fusion for Fatigue-Driven Motion Synthesis](/202604/14/2604.10199v1-fatiguefusion-latent-space-fusion-for-fatigue-driven-motion-synthesis)  
    标签：评分：6.0/10、query:navwm
-   evidence：在隐表示空间内进行条件流匹配
+   evidence：在隐式表示空间中融合疲劳特征
 
 
 <div class="dpr-home-promo-card">

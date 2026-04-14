@@ -1,0 +1,158 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.07137v2/fig-001.webp",
+      "caption": "Fig. 1: Comparison of the spatial domain of the Niño-3.4 region (blue) and the 𝛽-VAE (red).",
+      "page": 6,
+      "index": 1,
+      "width": 959,
+      "height": 243
+    },
+    {
+      "url": "assets/figures/arxiv/2604.07137v2/fig-002.webp",
+      "caption": "Fig. 10: Same as Figure 9, but using the minimum SST longitude for ONI-defined La Niña events (𝑁 = 82).",
+      "page": 25,
+      "index": 2,
+      "width": 958,
+      "height": 799
+    },
+    {
+      "url": "assets/figures/arxiv/2604.07137v2/fig-003.webp",
+      "caption": "Fig. 16: Conceptual schematic summarizing the hypothesized physical interpretation of the 𝛽− 𝑉𝐴𝐸 latent dimensions (LDs; 𝑗 = 1, . . . , 𝑑) in the tropical Pacific. Labels are positioned according to the region, variable, or coupled process with which they are most consistently associated, based on reconstruction diagnostics, statistical relationships, and latent traversal experiments. This schematic is intended as a qualitative synthesis rather than a unique or definitive assignment of physical modes.",
+      "page": 38,
+      "index": 3,
+      "width": 917,
+      "height": 837
+    },
+    {
+      "url": "assets/figures/arxiv/2604.07137v2/fig-004.webp",
+      "caption": "Fig. 7: Same as Figure 6, but for Experiment 2: Isolated latent-dimension variance generation. For each latent dimension 𝑗 , reconstructions are decoded while holding all other latent dimensions fixed to a baseline (mean or zero).",
+      "page": 21,
+      "index": 4,
+      "width": 959,
+      "height": 407
+    },
+    {
+      "url": "assets/figures/arxiv/2604.07137v2/fig-005.webp",
+      "caption": "Table 2: Reconstruction skill of the 𝛽-VAE for SST (◦𝐶), OHC (×108𝐽𝑚−2), and OLR (𝑊𝑚−2) on the 1200-sample test set, with 4800-sample training set results for comparison. RMSE, MAE, and 𝑅2 are computed per sample over valid grid points. Reported values are sample means, with standard deviations (STD) in parentheses, along with skill ratios (SRs; test/train). Uncertainty is estimated by nonparametric bootstrapping (𝐵 = 1000) with resampling over time steps. Two-tailed 95% confidence intervals (CI) are given for the test minus train performance difference.",
+      "page": 14,
+      "index": 5,
+      "width": 789,
+      "height": 429
+    },
+    {
+      "url": "assets/figures/arxiv/2604.07137v2/fig-006.webp",
+      "caption": "Fig. 13: Spatial linear sensitivity of reconstructed SST (◦𝐶) to perturbations along latent dimensions (LDs), representing the decoder’s first-order response to latent perturbations.",
+      "page": 33,
+      "index": 6,
+      "width": 963,
+      "height": 794
+    },
+    {
+      "url": "assets/figures/arxiv/2604.07137v2/fig-007.webp",
+      "caption": "Fig. 14: Same as Figure 13, but for OHC (1×108 𝐽 𝑚−2).",
+      "page": 35,
+      "index": 7,
+      "width": 963,
+      "height": 794
+    },
+    {
+      "url": "assets/figures/arxiv/2604.07137v2/fig-008.webp",
+      "caption": "Fig. 8: Split violins of the latent posterior means (𝜇𝜙) for ONI-defined El Niño (red, left) and La Niña months (blue, right). Width indicates distribution density, and dashed lines mark the 25th, median (50th), and 75th percentiles within each ENSO phase.",
+      "page": 23,
+      "index": 8,
+      "width": 963,
+      "height": 349
+    },
+    {
+      "url": "assets/figures/arxiv/2604.07137v2/fig-009.webp",
+      "caption": "Table 3: Metrics comparing E3SM ONI and each latent dimension (LD; 𝑗 = 1, . . . , 𝑑) smoothed posterior mean (𝜇𝜙; 𝑁 = 5998), including Pearson correlation (corr; zero lag), best (absolute maximum) cross correlation and the associated lead/lag (±months), normalized Dynamic Time Warping (DTW) distances, and the dominant year identified from the Welch power spectral density.",
+      "page": 28,
+      "index": 9,
+      "width": 871,
+      "height": 815
+    },
+    {
+      "url": "assets/figures/arxiv/2604.07137v2/fig-010.webp",
+      "caption": "Fig. 3: The variance share from each latent dimension of the multi-branch 𝛽-VAE derived from the centered latent vectors, summing to 100%.",
+      "page": 13,
+      "index": 10,
+      "width": 837,
+      "height": 405
+    },
+    {
+      "url": "assets/figures/arxiv/2604.07137v2/fig-011.webp",
+      "caption": "Table 1: 𝛽-VAE hyperparameters. The validation set is a percentage of the training set.",
+      "page": 8,
+      "index": 11,
+      "width": 804,
+      "height": 617
+    },
+    {
+      "url": "assets/figures/arxiv/2604.07137v2/fig-012.webp",
+      "caption": "Fig. 15: Same as Figure 13, but for OLR (𝑊𝑚−2).",
+      "page": 36,
+      "index": 12,
+      "width": 963,
+      "height": 794
+    },
+    {
+      "url": "assets/figures/arxiv/2604.07137v2/fig-013.webp",
+      "caption": "Fig. 5: Percentage of variance explained by the first 20 principal components (PCs) derived separately for SST, OHC, and OLR, as legend indicated.",
+      "page": 19,
+      "index": 13,
+      "width": 784,
+      "height": 439
+    },
+    {
+      "url": "assets/figures/arxiv/2604.07137v2/fig-014.webp",
+      "caption": "Fig. 11: a) Time series of smoothed latent posterior mean (𝜇𝜙, colored lines) and ±1 standard deviation (𝜎𝜙, shaded lines) for LD1, LD17, and LD20 (𝑁 = 5998). ONI from E3SM is plotted for the corresponding time period (black dashed line). b) Lead-lag correlations between each latent posterior mean (rows) and E3SM ONI are computed over ±24 months (columns). Stippling denotes correlations that are significant at the 99% confidence level based on a two-sided 𝑡-test that accounts for lag−1 (serial) autocorrelation in both time series. c) Power spectral densities (PSDs) of each latent posterior mean and E3SM ONI were computed using Welch’s method. The PSDs are normalized to enable direct comparison of total variance across periods. The x-axis is reversed and logarithmic, and the peak period is indicated with a black circle marker on each PSD.",
+      "page": 27,
+      "index": 14,
+      "width": 958,
+      "height": 717
+    },
+    {
+      "url": "assets/figures/arxiv/2604.07137v2/fig-015.webp",
+      "caption": "Fig. 9: Peak SST longitude and latent posterior mean (𝜇𝜙) stratified by latent dimension (LD), for ONI-defined El Niño events (𝑁 = 92). Marker color indicates the peak SST anomaly (◦𝐶). Lines of best fit and corresponding Pearson correlation coefficients are shown for all events (black), central Pacific events west of 140◦W (blue), and eastern Pacific events east of 140◦W (green). Statistical significance is evaluated using a two-sided 𝑡-test, with 𝑝 < 0.05 denoted by an asterisk.",
+      "page": 24,
+      "index": 15,
+      "width": 958,
+      "height": 806
+    },
+    {
+      "url": "assets/figures/arxiv/2604.07137v2/fig-016.webp",
+      "caption": "Fig. 2: Schematic of the multibranch 𝛽-VAE architecture. For clarity, hidden layer widths are reduced, and only connections to the first node following each input variable are shown. In the implemented model, all neurons are fully connected to the subsequent layer.",
+      "page": 9,
+      "index": 16,
+      "width": 952,
+      "height": 545
+    },
+    {
+      "url": "assets/figures/arxiv/2604.07137v2/fig-017.webp",
+      "caption": "Fig. 12: Pearson correlation coefficient matrix between (unsmoothed) latent posterior means and variables from E3SM piControl (𝑁 = 6000). Boldface text indicates correlations that are statistically significant at the 𝛼 = 0.01 threshold based on a two-sided t-test.",
+      "page": 31,
+      "index": 17,
+      "width": 967,
+      "height": 745
+    },
+    {
+      "url": "assets/figures/arxiv/2604.07137v2/fig-018.webp",
+      "caption": "Fig. 6: Experiment 1: Leave-one-out reconstruction sensitivity. Bars show the normalized spatial variance of the difference between the full reconstruction and the reconstruction after ablating latent dimension 𝑗 (by mean- or zero-replacement), expressed as a percentage of the total spatial variance of the full 𝛽-VAE reconstruction for each input variable (legend indicated).",
+      "page": 20,
+      "index": 18,
+      "width": 959,
+      "height": 407
+    },
+    {
+      "url": "assets/figures/arxiv/2604.07137v2/fig-019.webp",
+      "caption": "Fig. 4: RMSE, MAE (black contours), and 𝑅2 for SST (◦𝐶, a-b), OHC (×108𝐽 𝑚−2, c-d), and OLR (𝑊𝑚−2, e-f). MAE contours indicate three evenly spaced levels spanning 0.2–0.6◦𝐶, 2− 4× 108 𝐽 𝑚−2, and 3− 11 𝑊𝑚−2. Stippling denotes grid cells where test-set performance is not significantly worse than the corresponding one-sided bootstrap threshold derived from the training data (𝐵 = 1000; ≥95th percentile for RMSE and MAE, ≤5th percentile for 𝑅2).",
+      "page": 16,
+      "index": 19,
+      "width": 767,
+      "height": 842
+    }
+  ]
+}
