@@ -1,0 +1,86 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.06911v1/fig-001.webp",
+      "caption": "Figure 3: Conceptual representation of anatomical regions in PEA for state-based sonification. Transitions are defined based on the Euclidean distance computed along the needle axis from xtip to both the moving pericardium (dTP ) and myocardium (dTM ). The figure is for illustration purposes only; size and order of magnitude are not to scale.",
+      "page": 6,
+      "index": 1,
+      "width": 786,
+      "height": 441
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06911v1/fig-002.webp",
+      "caption": "Figure 9: Modality-dependent time-accuracy relationships. Needle placement accuracy is measured by the distance of the needle tip position to the planned target point. The less distance represents better performance. Visual-only trials (gray) exhibit a positive correlation (ρ = +0.31), while multisensory trials (blue) show a negative trend (ρ = −0.28).",
+      "page": 15,
+      "index": 2,
+      "width": 465,
+      "height": 368
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06911v1/fig-003.webp",
+      "caption": "Figure 4: Planned trajectories for the phantom study, shown at End-Diastolic and Peak-Systolic phases of the cardiac cycle. Six trajectories were generated toward three target points (1,2,3) on the pericardium, following the strict requirements of PEA (Sec. 2.1). The myocardium and the initial tract of the pulmonary artery are shown in gray. The pericardium is color-coded to represent the inter-parietal distance between the myocardium and pericardium. This distance varies both spatially and temporally: it increases during Peak Systole, whereas End Diastole represents the most critical phase, with the myocardium at maximum volume and a higher risk of myocardial injury.",
+      "page": 10,
+      "index": 3,
+      "width": 487,
+      "height": 458
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06911v1/fig-004.webp",
+      "caption": "Figure 7: Final successful needle tip placements for both modalities relative to the pericardial membrane. Colors indicate the minimum distance to the dynamically moving pericardium (evaluated across 20 frames). The multisensory condition (bottom) exhibits greater spatial consistency, with placements more closely aligned to the membrane.",
+      "page": 14,
+      "index": 4,
+      "width": 678,
+      "height": 572
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06911v1/fig-005.webp",
+      "caption": "Table 3: Summary of accuracy measurements for final needle tip placement. Values are reported for successful trials only. n is the number of samples considered for each modality.",
+      "page": 13,
+      "index": 5,
+      "width": 560,
+      "height": 280
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06911v1/fig-006.webp",
+      "caption": "Figure 6: Box plot visualization of successful needle placement accuracy evaluated under two aspects : (A) stopping advancement upon reaching the pericardial membrane; and (B) accurately reaching the pre-planned target points (). The n variable represents the number of samples considered.",
+      "page": 13,
+      "index": 6,
+      "width": 686,
+      "height": 378
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06911v1/fig-007.webp",
+      "caption": "Figure 1: High-level schematic of the proposed workflow.",
+      "page": 4,
+      "index": 7,
+      "width": 975,
+      "height": 281
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06911v1/fig-008.webp",
+      "caption": "Table 2: Task outcome rates for expertise group under visual-only (V) and multisensory (MS) modalities. All the enrolled participants (12) performed 5 tasks per modality. Experts (5) and novices (7) subgroups were also analyzed. The higher values by Success and the lower values by Missed Target and Critical Failure, which show better performance, are bolded.",
+      "page": 12,
+      "index": 8,
+      "width": 620,
+      "height": 325
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06911v1/fig-009.webp",
+      "caption": "Figure 5: Distribution of task outcome rates (Successful Completion, Missed Target, and Critical Failure) under visual-only (V) and multisensory (MS) modalities for all participants, novices, and experts. The stacked bars highlight the higher success rates and lower error rates under MS across all groups.",
+      "page": 12,
+      "index": 9,
+      "width": 473,
+      "height": 365
+    },
+    {
+      "url": "assets/figures/arxiv/2604.06911v1/fig-010.webp",
+      "caption": "Figure 2: Overview of the XR-based multisensory surgical navigation system developed for PEA. A) ECG-gated 4DCTA frames over one cardiac cycle were analyzed. The myocardium and the external pericardial membrane (i.e. pericardium) were segmented, and their three-dimensional models reconstructed. An ad-hoc planning algorithm was then applied to compute risk-optimized needle trajectories, avoiding surrounding critical organs. B) Real-time computation of navigation parameters, defined as the Euclidean distance between the needle tip (xtip) and the moving pericardium (dTP ) and myocardium (dTM ). In this study, a navigation setup for real-time needle tracking was implemented. Registration steps were required to coherently track the needle tip (xtip) relative to the CT-derived phantom model ({CAD}), enabling the computation of navigation parameters. C) The XR-based multisensory display integrated modular visual and auditory components with input data prepared as detailed in (B), to provide accurate and dynamic tool guidance.",
+      "page": 5,
+      "index": 10,
+      "width": 976,
+      "height": 570
+    }
+  ]
+}

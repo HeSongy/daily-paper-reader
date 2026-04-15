@@ -1,0 +1,1265 @@
+Title: 2604.09734v1.pdf
+
+URL Source: https://arxiv.org/pdf/2604.09734v1
+
+Published Time: Tue, 14 Apr 2026 00:05:50 GMT
+
+Number of Pages: 37
+
+Markdown Content:
+## Multi-Frequency Local Plasticity for Visual 
+
+# Representation Learning    
+
+> A Controlled Study of Architectural Bias under Local Learning Constraints Structured frequency decomposition, competitive learning, associative memory, and top-down
+
+feedback in hierarchical vision models   
+
+> Mehdi Fatan Serj C. Alejandro Parraga Xavier Otazu
+
+## Computer Vision Centre (CVC), Universitat Autonoma de Barcelona, Spain 
+
+> mfatan@cvc.uab.cat
+
+## April 9, 2026 
+
+> Abstract
+
+We study how far structured architectural bias can compensate for the absence of end-to-
+
+end gradient-based representation learning in visual recognition. Building on the VisNet 
+
+tradition, we introduce a modular hierarchical framework combining: (i) fixed multi-frequency 
+
+Gabor decomposition into F=7 parallel streams; (i) within-stream competitive learning with 
+
+Hebbian/Oja updates and anti-Hebbian decorrelation; (iii) an associative memory module inspired by modern Hopfield retrieval; and (iv) iterative top-down modulation using local 
+
+prediction and reconstruction signals. 
+
+Representational layers are trained without end-to-end backpropagation through the full hierarchy; only the final linear readout and the top-down projection matrices are optimised by gradient descent (see Section 4.2 for full disclosure of all gradient-trained components). We therefore interpret the model as a hybrid system that is predominantly locally trained but contains a small number of gradient-trained parameters. The term “local” is used in the sense 
+
+of no global end-to-end credit propagation through the representational stream weights; some update components use layer-local surrogate objectives. 
+
+On CIFAR-10, the full model reaches 80.1% + 0.3% top-1 accuracy (5 seeds, 95% CI [79.5,80.7], linear probe), compared with 71.0% for a Hebbian-only baseline and 83.4% for a gradient-trained model on the same fixed Gabor basis. On CIFAR-100, the corresponding result is 54.8%. Factorial analysis (repeated- measures ANOVA, seed as blocking factor) indicates that multi-frequency streams, associative memory, and top-down feedback contribute largely 
+
+additively, with a significant Streams x Top-down interaction (p=0.02). These results suggest 
+
+that carefully chosen architectural priors can recover a substantial fraction of the performance typically associated with global gradient training, while leaving a measurable residual gap. We emphasise scope: all experiments are on CIFAR-10/100, theoretical results apply only to simplified subcases, and biological correspondences are functional analogies rather than   
+
+> mechanistic claims. Code: https://github.com/mehdifatan/VisNet-Unified-Framework.
+> Keywords: local learning, Hebbian plasticity, frequency decomposition, competitive learning,
+> associative memory, predictive coding, hierarchical vision, CIFAR-10, CIFAR-100
+
+Contents 
+
+1 Introduction L1 Motivation . .. ... ... ... 1.2 Efficiency-Plausibility as an Experimental Axis . . . .. ... .. ... ... ..., 1.3 Relation to Prior Work . R1.4 Working Hypotheses . . . . . ... ... ... ... ... .......... ..., 1.5 Contributions . . . .. ... ... 1.6 Scopeand Non-Claims . . . . . ... ... ... ... ... .. ............ 
+
+2 Related Work 
+
+2.1 Local and Semi-Local Learning Alternatives . . . . . ... ... ... ... ..... 2.2 VisNet and Hierarchical Competitive Learning . . . ... .. .. ... ....... 2.3 Frequency Decomposition . . .. .. ... ... ... ... .. 0L 2.4 Associative Memory and Modern Hopfield Networks . . . .. .. .......... 2.5 Self-Supervised Learning . . . .. . . ... ... L3 Theoretical Analysis in Simplified Settings 4 Architecture 41 Overview . . .. ... 4.2 Training Component Clarification . . .4.3 Gabor Frequency Decomposition . . .. . ... ... ... ... ... ....... 4.4 Topographic Competitive Streams . . . . ... ... ... ... ... ........ 4.5 Top-Down Sweep Direction . .. .. ... ... ... ... ... .. ........ 4.6 Associative Memory Module . . . . . ... ... oo 4.7 Tterative Top-Down Modulation . . . .. . ... ... ... ... ... ........ 5 Local Plasticity: A Four-Component Mixture 1 Functional Taxonomy . . . . .. .. ... ... ... ... ... 2 Combined Update . . . .. ... ... ... ... . ... ... ... 5. 5.  
+
+> 6Experimental Setup
+
+6.1 Datasets . . . .. . ... 6.2 Evaluation Protocol . . ... ... . ... ... ... ... .. 6.3 Baselines . . ... ... ... ... 6.4 Implementation Details . . . .. .. ... ... .......... .. ... ..., 7 Results 7.1 MainResults . . . ... ... ... 7.2 23 Factorial Interaction Analysis . . .. .. ...................... 7.3 Ablation of Plasticity Rules . . . . . ... ... ... ... . ... .. .. ... .. 7.4 Curriculum Ablation . . ... .. ... oL 7.5 Slot Utilisation . . ... ... ... ... ... 7.6 Learned Representations . .7.7 Per-Stream Probe Accuracy . . . . . ... ... .. L7.8 Memory Attention Entropy . . . . ... .. L oL o7.9 Hyperparameter Sensitivity . .. . . ... ... ... 0L L
+
+> e A IS N  SIR I  RN|
+
+11 11 11 12 12 12 12 13 10 11 7.10 Noise Robustness . . . . ... ... ... ... .. ... ... 7.11 Per-Class Accuracy and Failure Modes . . . . . ... ... ... ... ... ..... 7.12 Training Dynamics . . . ... .. .. ... ... 7.13 Efficiency-Accuracy Pareto Frontier . . . .. ... ... ... .. ... ... ..., 7.14 Calibration Analysis . . .. ... .. ... ... ... .. 7.15 Confusion Structure . . .. ... .. ... ... 
+
+> Neuroscience Correspondences and Limits
+
+8.1 Architectural Parallels . . . ... .. ... ... ... .. ... .8.2 What We Do Not Claim . . . ... ... ... ... ... ... ........... 8.3 The Locality Constraint as a Scientific Probe . . . . ... ... ... ... ... .. Discussion 9.1 What the Results Show . . . ... ... ... ... ... ... .. ..., 9.2 What the Results Do Not Show 9.3 Interpreting the Remaining Gap R9.4 Memory Module: When Does It Help Most? . . . . . ... ... ... ....... 9.5 Top-Down Feedback: Diminishing Returns . . . ... ... ... ... ... ..... 9.6 Complexity as Both Strength and Weakness . . . . . ... ... ... ... ..... 9.7 Scalability Considerations . . .. .. ... ... ... ... 0L 9.8 Limitations . . . . ... ... . ... 
+
+Future Work 
+
+10.1 Ablating Gradient-Trained Components . . . . .. . ... ... ... ........ 10.2 Beyond CIFAR . . . . . . . ... ... .10.3 Reliability-Weighted Gating . . . . . ... ... ... ... ... ... ... ..... 10.4 Disentangling the Memory Module . . . . ... ... ... ........ ... ... 10.5 Scaling to Larger Images . . . . . . . ... ... ... ... ... ... 10.6 Continual Learning . . . . . . .. ... 10.7 Neuromorphic Deployment 10.8 Theoretical Extensions . . . . .. .. .. ... ... ... Conclusion Demoted Plasticity Rules A.1 Holographic Reduced Representations . . .. . ...... ... ... ........ A2 Hyperbolic Regularisation . . .. .. ... ... ... ... ... .. ........ A3 Wavelet-Domain Objective . . . . . ... ... .. ... .. ... ... 
+
+Proof Sketches 
+
+B.1 Proof of Proposition 1 . . . ... .. ... .. B.2 Proof Sketch of Proposition 2 . . . . .. ... ... L oC Full Hyperparameter Table Memory Slot Count Sensitivity E CIFAR-100 Detailed Results 17 18 20 20 20 21 21 21 21 22 22 22 22 22 23 23 23 23 23 24 24 24 24 24 24 25 25 25 25 26 26 27 27 28 28 F Computational Cost Breakdown 
+
+Additional Sensitivity Analyses G.1 Anti-Hebbian Strength . . . . .. . ... ... ... L oG.2 Lateral Inhibition Strength . ... .. RG3 BatchSize . . ... ... ... ... G.4 Memory Blend Coefficient y . . . . . ... ... ... Lo         
+
+> G.5 Free-Energy Blend apg ..... .... ..
+
+G.6 Summary of Sensitivity Results . . . ... ... ... .o o 0Complete Training Algorithm Reproducibility Checklist 
+
+> Extended Comparison with Related Methods
+
+Statistical Power Analysis 28 29 29 29 29 30 30 30 32 32 32 32 1. Introduction 
+
+1.1. Motivation 
+
+End-to-end gradient descent produces powerful representations but requires global error transport, activation storage for back-propagation, and architectures constrained by differentiability [25]. Local learning rules—weight updates depending only on pre-/post-synaptic activity and local modulatory signals—eliminate these requirements, enabling memory-efficient training, neuromorphic deployment, and closer alignment with cortical microcircuits [18, 31]. The cost is a persistent accuracy gap relative to gradient-optimised systems. This paper asks a specific question: how much of that gap can be recovered through architectural structure alone? Rather than searching for a single replacement for backpropagation, we study whether a carefully chosen combination of fixed frequency decomposition, competitive topographic 
+
+processing, associative memory, and recurrent feedback can support useful representations under 
+
+predominantly local learning constraints. 1.2. Efficiency—Plausibility as an Experimental Axis     
+
+> We frame the study in terms of an efficiency-plausibility trade-off. Here “efficiency” refers to
+
+the reduction of global error transport and associated training requirements, while “plausibility” refers only to broad computational locality and functional parallels to cortical organisation, not to detailed biological realism. The main scientific aim is to characterise the cost of locality in a controlled setting: what accuracy is lost when end-to-end gradient learning in the representation stream is removed, and how much can be regained through architectural bias? 
+
+1.3. Relation to Prior Work 
+
+In our companion study [13], four VisNet variants (VisNet-LI, VisNet-RBF, VisNet-MD, VisNet-‘WTA) were evaluated on graded bilateral symmetry-level classification. The best variant, VisNet-MD, reached 72% on the ROTATED-TRANSLATED-HUMAN-LIKE dataset using a single pro-cessing stream with simple lateral inhibition and Hebbian updates, with no associative memory or top-down feedback. A Hebbian-only linear readout on CIFAR-10 reached approximately 71%. The present work extends that line in three directions motivated by the limitations of the earlier 
+
+> system:
+
+1. replacing a single processing stream with parallel frequency-selective streams; 2. introducing an associative memory module for adaptive fusion; 3. adding iterative top-down modulation. 1.4. Working Hypotheses The paper evaluates three hypotheses. H1. Multi-frequency decomposition helps local learning. By decorrelating and partitioning input structure before learning, fixed frequency channels may reduce the burden on local rules to discover useful feature subspaces. Theoretical support: Proposition 1. H2. Associative memory improves integration across streams. A memory module may outperform static concatenation by retrieving input-dependent prototypes and stabilising 
+
+fusion [20, 33]. 
+
+> o
+
+H3. Top-down modulation is most useful when representation diversity already exists. If multiple streams provide complementary information, recurrent feedback may refine the representation more effectively than in a single-stream setting. This hypothesis is tested empirically via the Sx T interaction in the factorial ANOVA; no theoretical proposition directly supports this hypothesis (Proposition 2 addresses within-stream feature stability, not top-down benefit). These hypotheses are tested empirically via factorial analysis (Section 7.2). 
+
+1.5. Contributions 
+
+Our contributions are empirical and methodological rather than state-of-the-art or biologically definitive: 1. Modular framework: A predominantly locally-trained architecture combining multi-frequency streams, competitive topographic hierarchies, associative memory, and recurrent feedback. 2. Controlled empirical study: 2° factorial design, 5 seeds, repeated-measures ANOVA with seed as blocking factor, 95% ClIs, Holm-Bonferroni corrected paired t¢-tests, Cohen’s d, and partial 7 across CIFAR-10 and CIFAR-100. 3. Informative baselines: Parameter-matched CNN, SimCLR, Forward-Forward, frozen-random features, and critically a Gabor4+MLP gradient ceiling (matched 4-layer hierarchical archi-tecture) that isolates the cost of replacing gradient-based feature learning with local plasticity on the same fixed front end. 4. Simplified theoretical support: Convergence guarantee for competitive Oja dynamics and a decorrelation bound for frequency streams, explicitly limited to reduced settings and not applicable to the full recurrent architecture. 5. Full training transparency: Explicit disclosure of all gradient-trained components (Sec-tion 4.2). 1.6. Scope and Non-Claims We do not claim: « state-of-the-art visual recognition; « a biologically faithful cortical model; o that all representational parameters are free of gradient training (see Section 4.2); o that CIFAR results generalise directly to large-scale vision; « that Proposition 2 applies to the full recurrent multi-stream architecture. The 80.1% result quantifies what is achievable under predominantly local learning with strong architectural support; the ~11pp gap to SimCLR (91.2%) is the measured cost of eliminating global gradient-based representation learning on CIFAR-10. 2. Related Work 
+
+2.1. Local and Semi-Local Learning Alternatives 
+
+A number of frameworks seek to reduce dependence on standard backpropagation. Equilibrium Propagation [36] requires settling phases; Target Propagation [24] needs layer-wise targets; the Forward-Forward algorithm [19] uses contrastive local goodness but still requires labelled pos-itive /negative phases; PEPITA [10] employs a perturbation-based local update. Local loss networks [30] train each layer with a local supervised or self-supervised objective and are among the most directly comparable methods to ours. Greedy layer-wise pretraining [2] established the original local-learning baseline for deep networks. Predictive coding [34, 41] provides biologi-cally motivated local error signals. These methods differ in what they consider local: some use local losses, some iterative settling, and some feedback-based targets. Our emphasis is narrower: representational stream-weight updates driven by pre/post activity, lateral competition, and local reconstruction signals, while avoiding global end-to-end error propagation through those stream weights. An extended quantitative comparison is provided in Appendix J. 
+
+2.2. VisNet and Hierarchical Competitive Learning 
+
+VisNet [35] demonstrated that invariant recognition can emerge from competitive hierarchies with Hebbian learning. Self-organising maps [22], the Neocognitron [15], adaptive resonance theory [18], and sparse coding [32] established the foundations. Our companion study [13] extended VisNet with four variants; the present work addresses the remaining single-stream, no-memory, no-feedback limitations. 2.3. Frequency Decomposition 
+
+Gabor filters (8], wavelets [27], and Laplacian pyramids [3] provide structured frequency decom-
+
+position with both engineering and biological motivation [1, 32]. Sedghi et al. [37] showed that random filters can be surprisingly effective; we show that structured filters (Gabor banks) provide a stronger prior for local plasticity, and we include a gradient-trained Gabor+MLP ceiling (matched architecture) to isolate the contribution of local plasticity beyond the structured basis (Section 6.3). 2.4. Associative Memory and Modern Hopfield Networks 
+
+Classical Hopfield networks [20] were capacity-limited. Modern continuous Hopfield networks [33] 
+
+connect to softmax attention with exponential capacity; those capacity guarantees apply to fixed stored patterns, not to the online EMA variant we use. Our memory module is more closely related to online codebook learning (as in VQ-VAE [39]) than to the fixed-pattern Hopfield formulation, and we use the “Hopfield” label only in the functional sense of prototype retrieval. Complementary learning systems theory [28] motivates separating fast adaptation (memory) from slow learning (plasticity). 
+
+2.5. Self-Supervised Learning SimCLR [6], BYOL [17], and DINO [5] learn representations without labels but use global gradients. 
+
+‘We include SimCLR only as a performance reference ceiling, not as a directly matched learning 
+
+> setup.
+
+3. Theoretical Analysis in Simplified Settings 
+
+The theoretical results in this section are deliberately modest. They do not analyse the full multi-stream recurrent system. Instead, they formalise two design intuitions in reduced settings: first, that fixed frequency bands can be weakly correlated; second, that competitive learning can  
+
+> prevent within-stream feature collapse under suitable assumptions. Neither proposition applies
+
+to the full architecture with top-down modulation, because the input covariance seen by each layer is non-stationary under iterative top-down feedback. Proposition 1 (Frequency-stream decorrelation bound). Let G € RP*P be the Gram matriz of the Gabor filter bank for frequency band k, with o), = A\;/2. The normalised cross-band Frobenius coherence satisfies 
+
+(A1 =) ) “Gl GZ“F < C(A1, A, - exp{ —(A1, A2, mg) - € P( ( % %) 
+
+## IGillFlIGallF —
+
+“wrongclosingdelimiterwhere C(-) is a geometric factor depending on wavelengths and orientation count (derived in Appendiz B). For our parameters (X € {2,3,4,6,8,11,16}, ng=8), this bound is empirically measured to be <0.02 between any two adjacent bands (see Appendiz B, Table 16). Note that the analytic bound is loose   
+
+> and becomes looser for high-frequency adjacent pairs, even though empirical coherence is lowest there; this is because the exponential form does not capture the discrete filter normalisation at small
+
+wavelengths. The measured values are more informative than the bound for the present architecture. Remark 1. This bound should be interpreted only as support for the claim that the fizved front-end 
+
+> can provide partially separated input subspaces.
+
+Proposition 2 (Competitive Oja dynamics in a reduced setting). Suppose the input covariance C has eigenvalues i1 > -+ > pig > 0. Under Oja’s rule with anti-Hebbian lateral inhibition (strength ), if nw < 2/p1 and oo < pa/pa, then: (a) each weight vector converges a.s. to a unit eigenvector of C; (b) distinct units converge to distinct eigenvectors. Caveat (near-singularity): If C is near-singular (jiq =~ 0), the condition a < pg/p forces a ~ 0, weakening the result. In practice we verify pa/p1 > 0.08 on CIFAR-10 after whitening, so a=0.1 satisfies the condition. Caveat (non-stationarity): This proposition assumes a static covariance C. In the full archi-  
+
+> tecture, top-down modulation (Eq. 7) multiplies layer activations by input-dependent gate signals,
+
+making the effective input distribution to each layer non-stationary. Proposition 2 does not apply to layers receiving top-down feedback; it applies only to the feedforward-only ablation (T=0, no memory).    
+
+> Remark 2. The two propositions are complementary at different levels: Proposition 1 concerns the fized Gabor input subspaces; Proposition 2 concerns within-stream Hebbian dynamics in the
+
+simplified feedforward setting. Proposition 2 does not support H3 (top-down feedback benefit): H3 is supported only empirically via the factorial interaction (Section 7.2). 
+
+4. Architecture 
+
+4.1. Overview The architecture contains four conceptual stages: (righ) Stream 7 L1l 
+
+Figure 1: Architecture overview. Solid arrows: feedforward; dashed blue: optional top-down (T'=2 iterations). The linear probe and top-down projection matrices Py use gradient descent; all stream weights W1 and generative matrices G use local rules. Memory values V are gradient-trained; keys K use EMA. See Section 4.2 for full details.  
+
+> 1. fized opponent-colour and Gabor preprocessing;
+
+2. seven parallel frequency-selective competitive hierarchies (stream weights: locally trained); 3. associative fusion through a memory module (keys: EMA; values: gradient-trained);   
+
+> 4. optional top-down modulation over a small number of iterations (projection matrices: gradient-
+
+trained).  
+
+> The model is best interpreted as a hybrid system: the representation-forming stream weights are
+
+locally trained, while the top-down projection matrices and memory values are gradient-trained. See 
+
+> Section 4.2 for a complete account.
+
+4.2. Training Component Clarification  
+
+> Table 1 provides a complete account of how each parameter set is updated. This transparency is
+
+essential for interpreting the “local learning” framing of the paper. Table 1: Training method for each parameter group. “Local” means the update depends only on local pre/post-synaptic activity and reconstruction error. “Gradient” means standard backpropagation through the cross-entropy loss. 
+
+Parameter Symbol Update method Notes 
+
+Stream weights WED Local (Eq. 10) Core local component 
+
+Generative matrices ~ G® Local Hebbian Separate from W Lateral inhibition Lo Anti-Hebbian (local) Fixed structure 
+
+Memory keys K EMA (local, top-1slot) No gradient Memory values v Gradient descent Non-local component Top-down projections P¢ CGradient descent Non-local component Linear probe Wy, Gradient descent Readout only 
+
+The gradient-trained components (V, Pe, W is) account for approzimately 0.85 M of the 12 M total  
+
+> parameters (~7%). The remaining 93% of parameters (stream weights and generative matrices)
+
+are trained exclusively by local rules. 4.3. Gabor Frequency Decomposition 
+
+ge(z,y) 7exp( Ig+qg)cos(27r%). o=\/2, 1) 
+
+with xg = x cos 0+ysin 0. Here o denotes the Gaussian envelope width (not the sigmoid function; we 
+
+use sig(+) for the logistic sigmoid throughout). We use F=T wavelengths A € {16,11,8,6,4,3,2} px 
+
+and ng=8 orientations per band, yielding Tx8=56 filter responses. Filters are fized and non-
+
+learnable. 4.4. Topographic Competitive Streams Each stream has four layers (L1-L4) with 80x80 topographic maps (N=6400 positions). At each layer, the feedforward drive is: 
+
+## ZW (1) 5 2
+
+where P is the RF-masked input patch (p=0.6 keep fraction). Lateral inhibition is resolved by n j=! 
+
+Jacobi iterations (convergence is guaranteed when the spectral radius p(aL )active < 1, which we 
+
+verify numerically at each layer): 
+
+4 L (50 D), (s 
+
+# w0 = - a Iy, ®) 
+
+J# 
+
+where ¢(z) = max(0, z), a=0.1 (lateral inhibition strength; distinct from the statistical significance 
+
+## level crsig=0.05), and LY = exp(~|ri — r;||2/203) is distance-dependent inhibition with o € {20,18,1.5,12} (L1 to L4). 
+
+4.56. Top-Down Sweep Direction Top-down modulation sweeps from the highest layer (L4) to the lowest (L1) so that coarse-to-fine feedback propagates hierarchically before the next feedforward pass. This direction is implemented in Algorithm 1, line 26, and is stated explicitly here to avoid ambiguity. 4.6. Associative Memory Module 
+
+Stream outputs zs € R are concatenated: q = [215...;27] € R¥S. The memory module performs scaled-dot-product retrieval: 
+
+# 5K a= softmax(%) cRM, r—a VeR%™, () 
+
+# = (1=y)a+~Pr, ®) 
+
+with K € RM*¥8 (keys; EMA-updated), V- € RM*54 (values; gradient-trained), P € R445x64 
+
+(projection; gradient-trained), M=96 slots, 3=1.5, 7=1.5, 7:5><10’4. The output satisfies 0 € RS, consistent with the concatenated representation q. The linear probe then has W 45 € RO*448 
+
+C=10 (CIFAR-10) or C=100 (CIFAR-100), yielding 4,480 or 44,800 classifier parameters. 
+
+Slot update. The winning slot k*=argmaxy ap is updated by EMA on its key: Kp- +(1-ne) K+ + 1eq. 1e=0.001. Only the top-1 slot is updated per step. Values V are updated by 
+
+backpropagation through the cross-entropy loss (see Table 1). where Functional interpretation. This module is functionally analogous to online codebook learning (e.g., VQ-VAE) more than to the fized-pattern Hopfield formulation. The “Hopfield” label refers to 10 the prototype retrieval function, not to the capacity theory of fized stored patterns. We do not claim 
+
+the Hopfield exponential capacity results apply here. 
+
+4.7. Iterative Top-Down Modulation Fort=1,..., T (default T=2), top-down gate signals are computed and applied to layer activations 
+
+in a L{—L1 sweep: 
+
+# g =sigPa), ©) Y =y o (1 + agel?), )) = elip (me(1+¢s”), Mmin. M) ®) 
+
+where sig(z) = 1/(1 + %) is the logistic sigmoid (distinct from the Gabor envelope width o = \/2), 
+
+0} ag=0.1 is the top-down gain, and the precision signal s, blends a top-down prediction with a local reconstruction-error signal: 
+
+() 
+
+# sl = (1—apg)al!) + apgdl!. )
+
+() () _Here iy ; = (Per®); is the top-doun prediction for unit i; O = \(G}egt) )i| s the local reconstruction (t) 
+
+error projected back through G¢ € RP*N. The term “precision” is used loosely; this is not a claim of formal variational inference. 
+
+Non-locality note. Py is gradient-trained (Table 1). The top-down signal therefore carries 
+
+gradient information from the classifier into the modulation of stream activations. The consistency 
+
+update AT (Section 5.2) depends on y(t“), which is modulated by Py, and is therefore not purely 
+
+local. This is acknowledged explicitly as a limitation. 
+
+5. Local Plasticity: A Four-Component Mizture 
+
+5.1. Functional Taxonomy 
+
+We use four update components, each intended to serve a distinct functional role: 
+
+Table 2: Functional taxonomy of representational update components. “Strictly local” means the update depends only on pre/post-synaptic activity without any gradient information from Py or V. 
+
+Component Symbol Intended role Strictly local? Analogy 
+
+Hebbian/Oja Af Variance capture; PCA Yes LTP 
+
+Anti-Hebbian A4 Decorrelation; sparsity Yes GABAergic inhibition 
+
+Reconstruction AFE Prediction-error minimisation Yes Predictive coding 
+
+Consistency AR Recurrent state stabilisation ~ No (depends on Py) Iterative settling 
+
+5.2. Combined Update 
+
+# AW, = n(anAWH + as AW £ ApAWTE 1 apAWE). (10) 
+
+Hebbian/Oja (strictly local): 
+
+1
+
+AWH = 3 > (wipvi — v Wo). (11) 
+
+B
+
+11 Anti-Hebbian (strictly local): 
+
+1 L
+
+# AL = ~C5 2wy, i#J. (12) 
+
+> b
+
+where ( = vy is the anti-Hebbian mizing weight from Eq. (10). Reconstruction / free energy (strictly local). The generative matriz G € RP*N maps from 
+
+representation space (JRN, N=6400) to input patch space (JRP) It is updated by a Hebbian-like rule 
+
+and is not shared with W : 
+
+e, =py— Gy, AGxey', AW/ (GTep’. (13) 
+
+Local consistency (partially non-local). 
+
+# AWE o oy — yiP), (19 
+
+where W(-) penalises large activation changes across top-down iterations. Since y™*Y is modulated by the gradient-trained Py (Eq. 7), this term is not strictly local (see Table 2). 
+
+6. Experimental Setup 
+
+6.1. Datasets 
+
+o CIFAR-10 [23]: 50k/10k, 10 classes. 2% stratified validation split (1,000 examples, 100 per 
+
+## class; SE ~A% ). The small validation st introduces noise into curriculum phase transitions; 
+
+this is acknowledged as a limitation. 
+
+o CIFAR-100 [23]: same protocol, 100 classes. 6.2. Evaluation Protocol 
+
+Linear probe (logistic regression, L2 regularisation C=1) on frozen representations. This protocol assesses representation quality. All results: mean = 95 % CI over 5 seeds (0-4). Statistical design. The same 5 seed values are used across all experimental conditions. This is a within-subjects (repeated-measures) design, not an independent-samples design. Pairwise com-
+
+parisons use paired t-tests (df =4, t,4~2.78). The factorial ANOVA uses a repeated-measures 
+
+(within-subjects) ANOVA with seed as the blocking factor, not a between-subjects fized-effects ANOVA, to correctly account for seed-level correlation. Family-wise error is controlled by Holm— Bonferroni correction within each table. Effect sizes: Cohen’s d for pairwise comparisons (reported with the SD of within-seed differences to allow verification), partial n* for ANOVA factors. ECE 
+
+computed with 15 bins. Given n=>5, small effects (d < 2) should be interpreted cautiously (Ap-
+
+pendiz K). 
+
+6.3. Baselines 
+
+The most informative comparison is the Gabor+MLP gradient ceiling, which keeps the fized Gabor basis but replaces local representational learning with gradient-based feature optimisation using the same 4-layer hierarchical architecture as the stream networks (matched in depth, map size, and parameter count). This isolates the cost of local feature learning under the same 
+
+structured front end and the same representational capacity. 12 Additional baselines:     
+
+> 1. Hebbian-only: Full architecture, only A active (aa=Ap=ar=0).
+
+2. Single stream (F=1): Mid-frequency Gabor only. 3. No memory: Multi-stream, concatenation, no memory module. 
+
+4. No top-down (T=0): Feedforward only. 
+
+5. Frozen random features: Fizved Gabor bank + random weights in all representational layers; linear probe only.        
+
+> 6. Parameter-matched CNN (PM-CNN): ResNet-10, ~12 M params, trained end-to-end
+
+(including classifier). Note: PM-CNN accuracy reflects end-to-end training, not a linear probe on [frozen features; direct comparison with local model linear-probe results should be made cautiously. 
+
+7. Forward-Forward [19]: Local contrastive learning. CIFAR-10 results from Hinton [19]; CIFAR-
+
+100 results from our reproduction under the present training protocol (75.8% + 0.6 / 47.3% +0.8 for C10/C100). The original paper does not report CIFAR-100. 8. SimCLR [6]: ResNet-18, linear probe. Performance ceiling only. 6.4. Implementation Details Training schedule: 300 epochs, batch size B=4, AdamW (imax=1073, cosine decay), label 
+
+smoothing 0.1, AMP. Batch size B=4 is empirically optimal for the Hebbian rules; the effect on 
+
+the gradient-trained components (V, Po, W o) is discussed in Appendiz G (Table 20). Layer-wise curriculum: L1 only (epochs 0-50), L2-L3 (50-100), L4 (100-150), full model with memory (150-300). Curriculum transitions are gated by validation accuracy on the 1,000-   
+
+> ezample validation set; the ~4% SE on this set introduces noise into transition timing. An ablation is reported in Table 6.
+
+Hardware: NVIDIA A100 80 GB; single GPU. 
+
+7. Results 
+
+7.1. Main Results 
+
+Key findings. The full model reaches 80.1% (95 % CI [79.5,80.7]) on CIFAR-10 and 54.8% on    
+
+> CIFAR-100. Relative to the Hebbian-only baseline, this corresponds to a gain of 9.1 pp. Relative to
+
+the matched-architecture Gabor+MLP gradient ceiling, the remaining gap is 3.3 pp. We regard this latter comparison as the cleanest estimate of the cost of replacing gradient-based representational learning with local updates, since it controls for both the structured front end and the representational architecture. 7.2. 2° Factorial Interaction Analysis    
+
+> Repeated-measures ANOVA results. Since the same 5 seeds are used across all 8 conditions,
+
+we use a repeated-measures (within-subjects) ANOVA with seed as the blocking factor. This gives 
+
+dfefrect = 1 and dferor = 4 for each main effect and interaction (not dfpesia = 32 as would be 
+
+appropriate for a between-subjects design): 13 Table 3: Main results. Mean + 95 % CI over 5 seeds. t-statistic (df=4, paired) and Holm-corrected 
+
+p-value vs. Hebbian-only baseline. “Mostly local?” indicates whether >93% of representational parameters use local updates (see Table 1). PM-CNN is evaluated end-to-end (not linear probe); comparisons with local models should be made cautiously. 
+
+Model Mostly local? CIFAR-10 (%) t(4) d CIFAR-100 (%)Mem (GB)s/ep Frozen random features v 423 wisasa — — 18.1 pradss 04 20 Gabor+MLP (gradient, matched arch.) x 83.4 2880 — — 59.2 (58.4.60.0] 12 68 Hebbian-only v 710 rosrs — — 44.3 pzsasy 40 240 Single stream (F=1) v 73.1% s 5.7 1.3 (SD0.18) 468 ueoara 24 155 No top-down (T'=0) v T5.7% psozea 121 2.8 (SD 0.18) 49.2 s.aso 42 250 No memory v 76.9% ro27r) 15.1 3.5 (SD 0.16) 50.8 o016 41 260 Full model v 80.1%" [r95.50.18.35.2 (SD 0.16) 54.8" siosse) 4.8 310 
+
+Forward-Forward’ 4 ~T6 — — 47.3% L6 s8] 1.0 85 
+
+PM-CNN (ResNet-10, end-to-end)® x 84.2 sacsis) — — 60.1 150.3.60.) 13 72 SimCLR (ResNet-18) x 91.2 wosore — — 68.4 (67.5.69.0] 24 120 * Holm-corrected p < 0.05; ** Holm-corrected p < 0.01 vs. Hebbian-only (paired t-test, 5 seeds, df=4). f CIFAR-10 from Hinton [19]; CIFAR-100 (*) from our reproduction (original paper does not report CIFAR-100). 
+
+> * PM-CNN is trained and evaluated end-to-end, not via linear probe; direct accuracy comparison with local models is not fully controlled. Nete Cohen’s d reported with SD of within-seed differences in parentheses for verifiability.
+
+Table 4: Full 2* factorial: Streams (S) x Memory (P) x Top-down (T). All 8 conditions, 5 seeds each (same seeds across conditions). CIFAR-10 test (%). 
+
+## Streams (F=7) Memory Top-down (I'=2) Accuracy (%)                         
+
+> XXX66.2 + 0.5 vXX73.1+£04 XvX69.4+0.5 XXv70.6 £ 0.6 vvX76.9 0.4 vXv75.7+£05 Xvv73.8+£0.5 vvv80.1+0.3
+
+14 e Main effects: Streams F(1,4)=148.2, p<0.001, 7712,:0.97; Memory F(1,4)=42.6, p=0.003, 
+
+7712):0.91; Top-down F(1,4)=58.3, p=0.002, 7712):0.94. 
+
+## « Two-way interactions: Sx P F(1,4)=2.1, p=022, n2=0.34 (n.s.); SxT F(1,4)=5.8, p=0.07, 
+
+7712):0.59 (marginal; see note); Px T F(1,4)=3.2, p=0.15, 77;:0.44 (n.s.). 
+
+## o Three-way: SxPxT F(1,4)=0.9, p=0.40, n?=0.18 (n.s.). 
+
+Note on SxT interaction. With dferor=4, the SxT interaction gives p=0.07, which is 
+
+marginal rather than significant at asig=0.05. The earlier (incorrect) between-subjects ANOVA reported p=0.02. We retain the discussion of H3 but note that the empirical support for the SxT 
+
+interaction is weaker than previously claimed: the interaction is directionally consistent with H3 but does not reach conventional significance with the correct repeated-measures analysis. 7.3. Ablation of Plasticity Rules Table 5: Plasticity rule ablation (CIFAR-10, full architecture, 5 seeds). Each row removes one rule from the full mixture. p-values are Holm-Bonferroni corrected for 4 comparisons. SD of within-seed differences shown in parentheses after d. 
+
+Configuration Accuracy (%) A vs. full #(4) Peorrocted dFull (4 rules) 80.1+0.3 — — —— Anti-Hebbian 743405 —58 268 <0001 7.1 (SD 0.08) —Reconstruction 76.2 4+ 0.4 -39 190 <0001 52 (SD0.07) —Consistency 78.8+ 0.4 —13 47 003 16 (SD0.28) —All except Hebbian 7104 0.5 —91 366 <0.001 9.8 (SD 0.09) 
+
+After Holm correction all four comparisons remain significant. Anti-Hebbian decorrelation 
+
+is the most critical non-Hebbian rule (=5.8 pp, d=7.1). The consistency rule’s effect is modest 
+
+(—1.3 pp., d=1.6, power ~0.52 at this effect size: Appendiz K). Note that the consistency rule is 
+
+partially non-local (Table 2); its removal therefore tests the joint effect of the consistency rule and the removal of the gradient signal from Py that feeds into it. 7.4. Curriculum Ablation Table 6: Effect of layer-wise curriculum on CIFAR-10 accuracy (full model, 5 seeds). 
+
+Training strategy Accuracy (%) A vs. curriculum Layer-wise curriculum (default) — 80.1+0.3 —All layers simultaneously 77.6+ 0.6 —2.5% Li-only pre-training then joint ~ 79.1+ 0.4 ~1.0 
+
+The layer-wise curriculum provides a 2.5 pp improvement over simultaneous training (t(4) = 8.3, = 0.001, paired). Curriculum transitions are sensitive to the small validation set (SE ~ 4% ), 
+
+which introduces noise into phase timing across seeds. 
+
+7.5. Slot Utilisation 
+
+91% of slots are actively used each epoch; only 4% are dead. The slot-usage entropy (5.83 bits vs. uniform 6.58 bits) indicates mild load imbalance but no catastrophic slot collapse. These statistics 15 Table 7: Memory slot utilisation diagnostics at end of training (CIFAR-10, full model, averaged 
+
+over 5 seeds). 
+
+Metric Value Fraction of slots winning > 1 time per epoch 0.91+0.03 Entropy of slot-usage distribution (bits) 5.83+0.12 Max entropy (uniform over 96 slots) 6.58 bits Fraction of dead slots (never winning) 0.04+0.02 Mean retrievals per active slot per epoch 521+ 18 
+
+reflect the EMA key updates; value updates (V) are gradient-trained and may exhibit different utilisation patterns. 
+
+7.6. Learned Representations 
+
+## (a) Hebbian-only (schematic) (b) Full model (schematic)    
+
+> t-SNE 2 t-SNE 2
+> Silhouette: 0.1521 Silhouette: 02281
+
+t-SNE 1 t-SNE 1 Figure 2: Schematic t-SNE visualisations (perplexity=30, 5 of 10 CIFAR-10 classes shown). These 
+
+plots use illustrative coordinates, not actual computed embeddings. The silhouette scores 
+
+(1) are computed on the actual high-dimensional representations (not on the 2D projections) and are the primary quantitative evidence here. The full model shows improved but still overlapping cluster structure (Silhouette 0.228 vs. 0.152). We treat these visualisations as qualitative illustrations only; the more persuasive evidence comes from linear-probe accuracy, ablations, and calibration results. 7.7. Per-Stream Probe Accuracy Table 8: Per-stream linear probe accuracy (%) on CIFAR-10. S1 = lowest frequency (A=16px), ST = highest (A=2px). 
+
+Layer Sl S2 S3 S4 S5 S6 S7 Fused L1 284 291 302 31.0 298 286 27.3 345 L4 63.5 66.8 702 729 70.1 654 61.0 784 
+
+84 (mid-frequency. A=6 px) achieves the highest single-stream accuracy at L{. Fusion always 
+
+exceeds every individual stream, confirming complementary information across frequency bands 
+
+16 (Proposition 1). 
+
+7.8. Memory Attention Entropy Table 9: Memory attention entropy (bits, H = — Y, ajlogy a;) by CIFAR-10 class, averaged over all test examples of each class (5 seeds; SD < 0.1 in all cases). Lower entropy indicates stronger routing to a single prototype slot. These are descriptive observations: causal attribution requires further controlled experiments. 
+
+## Class Entropy Dom.stream Class Entropy Dom. stream Airplane 18 Mid Dog 21 High Auto 16 Mid Frog 15 Mid Bird 20 Mixed ~ Horse 13 Low Cat 21 High Ship 13 Low Deer 19 Mixed Tk 15 Mid    
+
+> Structurally simple objects (Ship, Horse: entropy ~1.3 bits) are routed to a dominant prototype
+
+slot; texture-rich deformable objects (Cat, Dog: ~2.1 bits) activate diverse slots. This pattern is 
+
+stable across seeds (SD <0.1 bits). These are descriptive observations reflecting both the EMA key structure (locally trained) and the gradient-trained values V; disentangling their relative contributions is left for future work. 7.9. Hyperparameter Sensitivity 
+
+82 
+
+# IS — 80} 4 =? g 8 3
+
+g ool | g
+
+5 5 ST < 4 : -ol L . 0 1 2 3 4
+
+1 2 3 4 5 6 7 8 9 Top-down iterations T' 
+
+Number of streams F . . . . 
+
+> (b) Top-down iterations. T=2 is optimal; =3 adds
+
+(a) Stream count. Diminishing returns beyond F=7. 24% runtime for no gain. 
+
+Figure 3: Hyperparameter sensitivity (CIFAR-10, 5 seeds). Shaded regions: 95 % bootstrap Cls. 
+
+7.10. Noise Robustness At 0p0ise=0.20, the memory module contributes +5.4pp and top-down feedback +6.7 pp relative to models without those components (all comparisons significant after Holm correction, df=4). However, the high-frequency stream S7 loses ~20pp accuracy at 0p4i5c=0.20, and the current 
+
+memory module does not implement reliability-weighted gating to down-weight corrupted streams. This failure mode motivates the gating proposal in Section 10. 17 Table 10: Accuracy (%) under additive Gaussian noise (onoise applied to normalised pixel values). Mean + 95 % CI over 5 seeds (same 5 trained models at each noise level; noise-level comparisons 
+
+are within-subjects). Pairwise model comparisons at each opoise level are made with paired ¢-tests 
+
+(df=4); significance markers indicate Holm-corrected p < 0.05 vs. full model. 
+
+## Ouoise Full model No memory No top-down Hebbian-only 
+
+0.00 80.1+£0.3 76.9+04* 75.7+0.5" 71.0 +£0.5" 0.05 758+04 T7L5x0.5" 70.240.6" 65.3 +0.6** 0.10 712+£05 664+0.6" 651406 59.8 0.7 0.20 635+£0.6 581+0.7* 56.8+0.7" 51.4+0.8* 
+
+Table 11: Per-class CIFAR-10 test accuracy (%). Cat and Dog show the lowest accuracy, reflecting fine-grained texture discrimination limitations. 
+
+## Plane Auto Bird Cat Deer Dog Frog Horse Ship Truck 
+
+Full 85.2 89.4 76.1 63.8 827 67.3 84.9 865 881 86.0 No memory 82.0 86.1 714 59.2 79.3 63.1 814 830 84.7 827 
+
+7.11. Per-Class Accuracy and Failure Modes 
+
+Cat (63.8%) and Dog (67.3% ) are ~20 pp below Ship and Auto. The memory module contributes 
+
+most to these hard classes (Cat: +4.6 pp: Dog: +4.2 pp). suggesting that prototype retrieval aids fine-grained discrimination. The Cat<»Dog mutual confusion (12-13%, Figure 6) accounts for 
+
+approzimately 35% of all misclassifications and reflects shared texture and shape statistics that are difficult to resolve at 32x32 resolution. 7.12. Training Dynamics 
+
+## sof ]= 60 .
+
+> S
+
+## :G — Full model 
+
+< --- No memory 
+
+## 0L Hebbian only | -| ‘ ‘ :0 50 100 150 200 250 300 
+
+Epoch Figure 4: Validation accuracy over 300 epochs. The three-phase curriculum is visible (L1-only: 0-50; L2-L3: 50-100; full model with memory: 150-300). Smoothed with 5-epoch moving average. 7.13. Efficiency—Accuracy Pareto Frontier 7.14. Calibration Analysis 
+
+The full model’s ECE (4.2%) is roughly half that of the Hebbian-only baseline (8.4%). The 1.1 pp 
+
+remaining gap to PM-CNN partly reflects the contribution of gradient-trained V and Py to calibration; we cannot fully attribute calibration improvement to the local rules alone. 18 g 80l e
+
+# z °
+
+## g og<
+
+## S E
+
+# ==
+
+## w0 ‘ i ! x0 2 1 6 s 10 12 14 16 
+
+Gradient-free representational layers 
+
+> A
+
+¢
+
+M Gabor+MLP gradient (0 local) @
+
+## SimCLR (0 local) Full model (16 local) PM-CNN (0 local) 
+
+Fwd-Fwd (16 local) 
+
+## O Hebbian-only (16 local) 
+
+* Frozen random (16 local) Approx. trend 
+
+Figure 5: Efficiency-accuracy trade-off. The x-axis approximates the number of gradient-free representational layers (our model: 4 x 4 = 16; CNN baselines: 0). The dashed curve indicates an illustrative Pareto trend. The full model lies closest to this trend among fully local learning approaches. Table 12: Expected Calibration Error (ECE, 15 bins) on CIFAR-10 test set. Lower is better. Mean 
+
+=+ 95% CI over 5 seeds. 
+
+## Model ECE (%) Max bin error (%) Hebbian-only 8.4+ 0.3 142 No memory 6.14+0.3 1.8 No top-down 6.8 0.4 125 Full model 42402 8.6 PM-CNN 31402 6.2 SimCLR 28401 5.1 
+
+19 7.15. Confusion Structure 
+
+> Ship Truck
+
+Figure 6: Confusion matrix (rounded %) for the full model on CIFAR-10 test set. Dominant error: Cat+Dog (12% and 13% mutual confusion, highlighted red), accounting for ~35% of all misclassifications. 
+
+8. Neuroscience Correspondences and Limits 
+
+8.1. Architectural Parallels 
+
+Table 13: Functional analogies between the proposed architecture and cortical visual processing. 
+
+Strength: Strong (S), Moderate (M), Loose (L). These are computational analogies, not mechanistic 
+
+claims. 
+
+## Model component Cortical analogue Strength Gabor filter bank V1 simple cells [8, 21] SFrequency streams Spatial-frequency channels [4] MLateral inhibition Surround suppression in V1/V?2 [18] S
+
+Topographic maps Retinotopic organisation [40] M
+
+## Memory module Prefrontal working memory [29] LHebbian /anti-Hebbian ~ LTP/LTD [31] SPredictive coding signal Hierarchical prediction error [34] MTop-down feedback Recurrent cortico-cortical connections [14] M
+
+8.2. What We Do Not Claim         
+
+> 1. No spiking dynamics. All computations are rate-coded; direct neuromorphic deployment requires spike encoding. 2. No Dale’s principle. Individual units can have mized-sign output connections.
+
+3. No detailed laminar structure. Each “layer” is a single computational map, not a siz-layer cortical column. 20 4. Memory is a functional metaphor. The module is more analogous to online codebook 
+
+learning than to a classical Hopfield associative memory. 
+
+> =
+
+. No developmental timeline. The layerwise curriculum is a training convenience.    
+
+> 6. No timescale correspondence. Computational iterations do not map to biological timescales.
+
+7. Gradient-trained components are not biological. The gradient-trained P; and V have no direct biological analogue and should not be interpreted as cortical mechanisms. 8.3. The Locality Constraint as a Scientific Probe The primary scientific value lies in quantifying the computational cost of locality. The ~11 pp gap 
+
+between our system and SimCLR represents the price of eliminating global gradient signals from  
+
+> the representation. The 3.3 pp gap to Gabor+MLP (matched architecture) isolates the cost more
+
+precisely. The ~7% of gradient-trained parameters (V, Py) contributes to closing that gap; future work should ablate these components to quantify their individual contributions. 
+
+9. Discussion 
+
+9.1. What the Results Show 
+
+The main empirical result is that a substantial portion of the performance lost by removing end-to-end gradient-based representational learning can be recovered by adding architectural structure. In  
+
+> our predominantly-local setting (~93% of representational parameters locally trained), the proposed
+
+[framework improves a Hebbian-only baseline by 9.1 pp and comes within 3.3 pp of a gradient-trained model on the same fived Gabor basis and matched architecture. The factorial analysis confirms largely  
+
+> additive contributions, with a directionally consistent but marginally significant Sx T interaction
+
+under the corrected repeated- measures analysis. 
+
+9.2. What the Results Do Not Show         
+
+> 1. Full locality. The gradient-trained components (Pg, V; ~7% of parameters) contribute to
+
+performance. The model is a hybrid, not a fully local system. 2. Mechanistic explanation of memory module. The memory module may help through             
+
+> prototype retrieval, adaptive routing, gradient signal delivery via 'V, or some combination. 3. General validation of predictive coding. The top-down implementation is inspired by
+
+predictive-coding ideas but is not a full predictive-coding model. 4. A uniquely biological mechanism. The gains may reflect good hand-crafted inductive bias rather than any biologically principled plasticity rule. 
+
+> =
+
+. Significant SxT interaction. The corrected repeated-measures ANOVA gives p=0.07 for 
+
+Sx T (marginal, not significant at «=0.05). H3 is directionally supported but not statistically 
+
+confirmed at conventional thresholds. 21 9.3. Interpreting the Remaining Gap The 3.3 pp gap to the matched gradient ceiling likely reflects three factors:        
+
+> 1. Local credit assignment. The 5.8 pp anti-Hebbian ablation shows decorrelation partially
+
+substitutes for discriminative learning, but a residual cost remains. 2. Fized receptive fields. The gap between frozen random features (42.3%) and Gabor+MLP gradient (83.4%) quantifies the benefit of gradient-based feature learning. Our full model (80.1%) recovers most of this through local plasticity and the small gradient-trained component. 3. Fine-grained discrimination. The Cat/Dog confusion (~12%) shows that local rules struggle with categories sharing high-frequency tezture. 9.4. Memory Module: When Does It Help Most? The per-class analysis (Table 11) reveals that the memory module contributes most to hard classes     
+
+> (+4.6 pp Cat, +4.2 pp Dog). but only ~2.3 pp on average for easy classes. Whether this benefit
+
+arises from the EMA key structure (locally trained) or the gradient-trained values V cannot be determined from the current ablations. A controlled experiment that fizes V to random values would isolate the EMA key contribution. 9.5. Top-Down Feedback: Diminishing Returns Figure 3(b) shows T=2 iterations are optimal; further iterations provide no gain while increasing runtime by 24-48%. 9.6. Complexity as Both Strength and Weakness The architecture’s modularity enables controlled ablation (a strength), but many interacting parts  
+
+> and the partially non-local AR component make clean interpretation difficult (a weakness). We
+
+present the model as an experimental framework, not as a single elegant rule. 9.7. Scalability Considerations Table 14: Parameter breakdown by component. The model is dominated by stream weights, while auxiliary mechanisms (memory, top-down feedback, and lateral inhibition) contribute modest overhead. Fixed Gabor filters introduce negligible parameter cost. 
+
+Component Parameters Fraction 
+
+Gabor filters (fixed) 4536~ 0.0% Stream weights (7 streams x 4 layers) 108M 90.0% Lateral inhibition (shared weights) 03M 2.5% Memory (keys + values, 2 x 96 x 512) 0.05M 0.4% Top-down projection matrices 0.6M 5.0% Linear probe 025M 2.1% Total ~120M 100% 
+
+22 9.8. Limitations 
+
+1. Dataset scope. All results on CIFAR-10/100; generalisation to larger datasets untested. 
+
+2. Architectural complewxity. Many interacting parts; partially non-local A" complicates inter-pretation. 3. Gradient-trained components. Py and V (~7% of parameters) are gradient-trained; the 
+
+model is a hybrid. 4. Noise vulnerability. High-frequency streams degrade rapidly without reliability-weighted gating. 
+
+> =
+
+. Training cost. 4.8 GB and 310s/epoch exceed PM-CNN (1.3 GB, 72s/epoch). 6. Hyperparameter sensitivity. Three free mizing coefficients plus architectural hyperparameters 
+
+require careful tuning (~34 prozy runs recommended; Appendiz G). 
+
+7. Small validation set. 2% = 1,000 exzamples; SE ~4% introduces noise into curriculum transitions. 8. Power at df=4. The consistency rule ablation (d=1.6, power ~0.52) and the Sx T interaction are underpowered. Minimum n=10 seeds recommended for future work targeting small effects. 9. No continual learning evaluation. Memory module design motivates continual learning, but split-CIFAR benchmarks are left for future work. 10. Batch size confound. B=4 is optimal for the Hebbian rules but may be suboptimal for 
+
+gradient-trained components; these have not been tuned separately. 
+
+10. Future Work 
+
+10.1. Ablating Gradient-Trained Components 
+
+The most important immediate experiment is to replace the gradient- trained V and Py with locally trained alternatives (e.g., EMA values, Hebbian projection updates) and measure the accuracy drop. 
+
+This would quantify how much of the 80.1% result depends on the 7% gradient-trained parameters. 10.2. Beyond CIFAR The framework should be tested on STL-10 and Tiny-ImageNet, where image resolution and category diversity are less favourable to hand-crafted front ends. 10.3. Reliability- Weighted Gating The noise analysis reveals a need for stream-level reliability estimation: 
+
+# Izl , SNRy= ——""—, 15 
+
+# ) =z, -2 15) 
+
+B - SNR, 
+
+wi®e — softmax(/giS 9
+
+where Zs is the memory module’s predicted reconstruction of stream s. 23 10.4. Disentangling the Memory Module 
+
+Future experiments should compare against: (i) fized random prototype banks; (ii) learnable per-
+
+stream scalar weights; and (iii) EMA keys with locally trained (non-gradient) values, to isolate the contribution of prototype retrieval vs. gradient-trained fusion. 10.5. Scaling to Larger Images  
+
+> 1. Hierarchical spatial pooling.
+
+2. Patch-based processing. 3. Steerable pyramids [38]. 10.6. Continual Learning 
+
+EMA slot updates provide natural dynamics: new classes recruit unoccupied slots; old slots are 
+
+protected by usage-weighted decay. Split-CIFAR-10 and Split-CIFAR-100 benchmarks are planned. 10.7. Neuromorphic Deployment 
+
+Hebbian and anti-Hebbian rules map to STDP in neuromorphic hardware [9]. Key challenges:  
+
+> implementing softmax retrieval with winner-take-all circuits, and mapping the 12 M parameters into on-chip SRAM.
+
+10.8. Theoretical Extensions 
+
+1. Convergence rate for Proposition 2. 2. Non-stationary covariance analysis for the full top-down architecture.   
+
+> 3. Representation capacity as a function of F, N, M.
+
+4. Information-theoretic analysis via matriz-based Rényi entropy [16]. 
+
+11. Conclusion 
+
+We presented a controlled study of visual representation learning under predominantly local learning constraints. The central result is that architectural structure can recover a substantial fraction of    
+
+> the gap caused by removing end-to-end gradient-based representational learning. On CIFAR-10, the proposed framework improves a Hebbian-only baseline by 9.1 pp and comes within 3.3 pp of a
+
+gradient-trained model on the same fized Gabor basis and matched architecture. The model is a hybrid: ~93% of representational parameters are locally trained, while the top-down projection matrices and memory values (~7%) are gradient-trained. This hybrid nature should be taken into account when interpreting the results as a test of “local learning”. 
+
+The factorial analysis confirms largely additive contributions from multi-frequency streams, 
+
+associative memory, and top-down feedback. The Sx T interaction is directionally consistent with H3 but reaches only marginal significance (p=0.07) under the correct repeated-measures analysis. 
+
+> Anti-Hebbian decorrelation is the single most critical plasticity component (—5.8 pp, d=7.1 when
+
+removed). 24 Within the acknowledged limits (CIFAR scope, hybrid training, ANOVA correction, small 
+
+validation set), the framework provides a useful platform for studying how structured priors interact with local plasticity in hierarchical vision. 
+
+Conflict of Interest Statement 
+
+The authors declare no conflict of interest. 
+
+Acknowledgments 
+
+This research was conducted at the Computer Vision Centre (CVC) of the Autonomous University of Barcelona as part of the first author’s Ph.D. thesis work. 
+
+Data Availability 
+
+CIFAR-10 and CIFAR-100 are publicly available at ht tps: //www. cs .toronto.edu/~kriz/ 
+
+## cifar. html. Code and analysis scripts are at ht tps: //gi thub .com/mehdi fa tan/ Vi s 
+
+et -Uni fied-Framework. 
+
+A. Demoted Plasticity Rules 
+
+The following three rules contribute < 1.5 pp marginal accuracy on CIFAR-10 (Holm-corrected p > 0.04) and are demoted to optional extensions. 
+
+A.1. Holographic Reduced Representations 
+
+d-1 
+
+b=y®c, [b]= Zot/a C(k—j) mod d> (16) 
+
+=
+
+# AW = g (bip]| — bl W) (an 
+
+Ablation: +0.7 pp, peorrected=0.36, d=0.5 (n.s.). 
+
+A.2. Hyperbolic Regularisation 
+
+H z H= ——— - tanh( , Lhp =X\ dy(z],0). 18 e (|z]): Lnyp h; (2, 0) (18) 
+
+Ablation: +1.1pp, peorrectea=0.18, d=0.7 (n.s.). A.3. Wavelet-Domain Objective 
+
+# Luar =0 30 2 [WEYEDY,. (19) 
+
+s 1
+
+Ablation: +1.3 pp, peorrectea=0.04, d=0.8. Nominally significant but small effect and extra hyper-parameter Ay. Table 15: Demoted rules summary (CIFAR-10, 5 seeds, Holm-Bonferroni corrected). 
+
+Rule A(PD) Peomected d Verdict HRR binding +0.7 036 05 s, Hyperbolic reg. ~ +1.1 018 0.7 s, Wavelet sparsity ~ +1.3 004 08 sig., small d All three +1.8 002 L0 sig., 3 extra params B. Proof Sketches 
+
+B.1. Proof of Proposition 1Proof. Note on notation. Throughout this proof, o = Ar/2 denotes the Gabor envelope width (not the logistic sigmoid). A 2D Gabor filter with wavelength \; and orientation is:   
+
+> 12+y2>co (27rzg>.
+> xr,Yy) =exp(—
+
+Ineo(@,y) P( 307 ”
+
+The inner product between filters at wavelengths i, Ay (same orientation 6) is: (97.0:900) = //e*”brf)/zgt2 coszf—" - e~ (@) 203 coszAi: dz dy. (20) Using cos Acos B = %[cos(A—B) + cos(A+B)] and completing the Gaussian square: 
+
+# 2% (0f + o3) (M 42)2)_ @(9r1.0: 920 0) X EXP(* N2 
+
+Applying A\, = 20;, and AM-GM gives the stated bound. Summing over ny=8 orientations: 
+
+C(ALAaymg) = 25,0y < 1. 
+
+Note on looseness. The bound becomes looser for small A pairs because the exponential form does not account for discrete filter normalisation. Empirically, high-frequency pairs have the lowest coherence despite the looser bound. The measured values (Table 16) are more informative. aTable 16: Empirical cross-band coherence for adjacent Gabor bands. All measured values < 0.02. The bound is loose and becomes looser at high frequencies (small A), contrary to the trend in measured coherence; see text. 
+
+## Band pair (A1, \s) Bound (Prop. 1) Measured coherence 
+
+(16,11) 0.31 0.018 (11,8) 0.44 0.015 (8,6) 0.61 0.013 (6,4) 0.57 0.012 (4,3) 0.78 0.009 (3,2) 0.82 0.007 
+
+26 B.2. Proof Sketch of Proposition 2 Proof sketch. This follows Oja [31] extended to the competitive case via Ljung [26]. Define: Under the ODE approximation: (1) Oja’s self-normalising term keeps ||w;i||=1 at equilibrium; (2) anti-Hebbian penalty drives distinct vectors toward orthogonality; (3) when o < pa/p1, weight collapse is prevented while eigenvector convergence is preserved. The result follows from the stable 
+
+> K
+
+V(W)=-Y w/Cw;+a  
+
+> i=1
+
+i#j 
+
+# Do (wlwy)* 
+
+manifold theorem and stochastic approximation [26], provided 1y < 2/p1. Non-stationarity caveat. This proof assumes static C. In the full architecture, top-down modulation renders C non-stationary; the proposition does not apply in that setting. 
+
+C. Full Hyperparameter Table 
+
+Table 17: Complete hyperparameter specification. Symbol Description Value Sensitivity F Frequency streams 7 Low above 5 
+
+Ak Gabor wavelengths (px) {2,3,4,6,8,11,16} Moderate       
+
+> ng Orientations per band 8Low NMap size per layer 80x80 Moderate
+
+o Lateral inhibition strength 0.1 High 
+
+o Inhibition radii (L1-L4) {2.0,1.8,1.5,1.2} Moderate 
+
+P RF keep fraction 0.6 Low    
+
+> ny Jacobi iterations 5Low above 3
+
+374 Hebbian weight 1.0 Reference aa=( Anti-Hebbian weight 0.3 High Ap Reconstruction weight 0.15 Moderate aR Consistency weight 0.1 Low M Memory slots 96 Low above 64    
+
+> 8Memory inverse temperature 1.5 Moderate
+
+T Memory softmax temperature 1.5 Moderate ¥ Memory blend coefficient 5x1074 High Ne EMA learning rate 0.001 Low    
+
+> TTop-down iterations 2Low above 2
+
+ag Top-down modulation gain 0.1 Moderate    
+
+> QFE Free-energy blend 0.3 Moderate
+
+Tmin Min learning rate 10-° Low          
+
+> Tmax Magx learning rate 103 Low BBatch size 4Moderate —Epochs 300 Low above 250
+
+— Label smoothing 0.1 Low 27 
+
+Continued on next page Symbol Description Value Sensitivity — Weight decay 104 Low 
+
+D. Memory Slot Count Sensitivity  
+
+> 982
+
+## < M=96 (defauls) g s0f g<< 
+
+## SR ClE 1
+
+# 2=
+
+## =T 76l ‘16 32 48 64 96 128 192 256 
+
+Number of memory slots M Figure 7: Memory slot count sensitivity (5 seeds, 95 % CI shaded). Performance saturates around M=64 and is stable through M=256. Note that memory values V are gradient-trained: increasing M also increases the number of gradient-trained parameters proportionally. 
+
+E. CIFAR-100 Detailed Results 
+
+Table 18: CIFAR-100 accuracy (%) for all 20 superclasses (full model). Bottom-5 superclasses highlighted. Results averaged over 5 seeds. 
+
+Superclass Ace. (%) | Superclass Ace. (%) Large natural scenes 724 | Medium-sized mammals 48.2 Vehicles 1 681 | Insects 476 Household furniture 65.2 | Trees 468 Fruit and vegetables 638 | People 442 Household electrical dev. 624 | Reptiles 43.1 Large carnivores 583 | Small mammals 26 Flowers 568 | Aquatic mammals a8 Food containers 542 | Fish 105 Non-insect invertebrates 52.6 | Vehicles 2 394 Large omnivores & herbi. 504 | Large outdoor things 38.1 
+
+All 20 CIFAR-100 superclasses are reported. The five worst-performing superclasses (highlighted) are predominantly fine-grained biological categories, consistent with the Cat/Dog confusion pattern observed on CIFAR-10. 
+
+F. Computational Cost Breakdown 
+
+Lateral inhibition Jacobi iterations account for 23% of runtime. Reducing nj from 5 to 3 saves 
+
+## ~35% of inhibition time at a cost of —0.2pp accuracy. The top-down and gradient update step 
+
+(12.3%) includes backpropagation through Pe, V., and W gs. 28 Table 19: Wall-clock time per epoch (300 epochs total) on a single NVIDIA A100 80 GB GPU. 
+
+Component, Time (s/epoch) Fraction (%) 
+
+Cabor filtering (fixed, GPU) 8 26 Feedforward pass (7 streams x 4 layers) 105 33.9 Lateral inhibition (Jacobi, nj=5) 72 23.2 Plasticity updates (4 rules) 55 17.7 Memory retrieval + EMA update 12 3.9 
+
+Top-down iterations (T'=2) + gradient step 38 123     
+
+> Linear probe gradient update 10 32 Overhead (data loading, logging) 10 3.2
+
+Total 310 100.0 
+
+G. Additional Sensitivity Analyses 
+
+G.1. Anti-Hebbian Strength 
+
+> ) default 80 |78 76
+
+- —e— Mean (5 seeds)            
+
+> —9%B%CI 79 LLmI00.1 0.2 0.3 0.4 0.5 0.6
+
+Anti-Hebbian weight a4 CIFAR-10 Accuracy (% Figure 8: Anti-Hebbian weight aa=( sensitivity (full model, CIFAR-10, 5 seeds). Optimum at 
+
+a4~0.30 with broad plateau [0.20, 0.40]. 
+
+G.2. Lateral Inhibition Strength 
+
+Joint sensitivity. A 3x3 grid over a4 € {0.20,0.30,0.40} and a € {0.08,0.10,0.12} (9 conditions,              
+
+> 3seeds each) gives amazximum range of 0.6 pp, confirming the two parameters can be tuned
+
+sequentially without significant interaction. 
+
+G.3. Batch Size 
+
+Table 20: Effect of batch size B on CIFAR-10 accuracy (full model, 5 seeds, mean + 95% CI). The inverted-U shape reflects competing effects on the Hebbian rules; the gradient-trained components (P¢, V, Wis) have not been separately tuned for batch size. 
+
+B 1 2 4 8 16 32 Accuracy (%) 78.4+0.6 79.2+0.5 80.1+£0.3 79.5+04 79.3+0.4 78.6+0.5 s/epoch 820 480 310 210 165 140 GB (peak) 3.1 3.4 48 5.6 6.9 9.2 
+
+The inverted-U shape arises from two opposing forces on the Hebbian rules: 29 82 T T T Tdefault 80 78 
+
+—=— Mean (5 seeds) 
+
+## r — e§ Sacob it 
+
+> CIFAR-10 Accuracy (%)
+
+7 L . i I I0 5.102 01 015 02 02 03 
+
+Lateral inhibition strength o Figure 9: Lateral inhibition strength a sensitivity (full model, CIFAR-10, 5 seeds). Sharp optimum near =0.10. The dotted red line marks where the spectral radius condition begins to be violated, causing Jacobi non-convergence. 1. Update frequency. Smaller batches yield more updates per epoch, favouring Oja convergence.           
+
+> 2. Covariance estimate quality. The anti-Hebbian term AL{? o< %Eb YoiYp; has variance
+
+O(1/B); at B=4 the variance is sufficiently low to stabilise decorrelation.  
+
+> Note that the optimal B=4 reflects the Hebbian rule dynamics. The gradient-trained components
+
+may benefit from larger batches; this interaction has not been explored and is left for future work. G.4. Memory Blend Coefficient v 
+
+## =
+
+2 80 
+
+## g
+
+5  
+
+> ST8 4
+> (=]
+
+2& 6| i
+
+## g= default over-regularise 
+
+O 74 
+
+0.000 1.000 2.000 3.000 4.000 5.000 
+
+Memory blend coefficient 1073 Figure 10: Memory blend coefficient + sensitivity (full model, CIFAR-10, 5 seeds: shaded band = 95% CI, using named paths). At y=0 the system reduces to the No-memory configuration (76.9%). Optimum at y=5x10~%; usable plateau [3x10~%, 1073]. For y>2x 1073 the representation collapses toward stored prototypes prematurely. G.5. Free-Energy Blend ayg G.6. Summary of Sensitivity Results Recommended tuning order for a new dataset: 1. «a (lateral inhibition) — sharp optimum; tune first to ensure Jacobi convergence. 2. oy (anti-Hebbian) — five-point search over [0.1, 0.5]. 30 acy (%) 
+
+Aok g B 
+
+> 76 default L
+
+1 I         
+
+> 001 02 03 04 05 06 07 08 09 Free-energy blend apg
+> CIFAR-10 Accur:
+> 74
+
+Figure 11: Free-energy blend apg sensitivity (full model, CIFAR-10, 5 seeds: shaded band = 95 % CI). The a-axis now extends to apg=1.0 (pure free-energy signal). Optimum at apg=0.3; plateau [0.2, 0.4]. At ape=0 (top-down prediction only): 77.4%; at apg=1.0 (local free-energy 
+
+only): 74.7%. 
+
+Table 21: Summary of all sensitivity analyses. “Plateau” is the parameter range yielding accuracy within 0.5 pp of the optimum. “Tuning runs” is the minimum number of 100-epoch proxy runs 
+
+needed to locate the optimum. Note that oy = ¢ in the combined update (Eq. 10). 
+
+Parameter Default ~ Plateau Peak (%) Sensitivity Tuning runs a4 (anti-Hebbian) 030 [0.20, 0.40] 80.1 High 5a (lat. inhibition) 010 [0.08, 0.12] 80.1 High 57 (memory blend) 5x10~4 [3x10-4,10-3] 80.1 High 3 (log) arg (FE blend) 030 [0.20, 0.40] 80.1 Moderate 5B (batch size) 4 4, 80.1 Moderate 4F (stream count) 7 80.2 Low 4M (memory slots) 96 80.2 Low 4 (log) T (top-down iters) 2 80.1 Low 4Total tuning budget (sequential, 100-epoch prowy runs) ~34 
+
+31 3. v (memory blend) — three-point log search over [1[)’4_ 1079). 
+
+4. B (batch size) — four-point search over {1,2,4,8}. 5. apg, F, T, M — use defaults unless a specific failure mode is observed (e.g., high noise = 
+
+reduce F; many fine-grained classes = increase M ). 
+
+H. Complete Training Algorithm 
+
+Notes on the algorithm.         
+
+> oLine 5: REO) is the Gabor output for stream s, used as L1 input. The superscript (I—1) on line
+
+7 is well-defined for alll € {1,2,3,4}. 
+
+o Lines 15-17: The consistency update AT is applied after the top-down sweep (lines 25-35) so         
+
+> that y(t“) reflects modulated activations. This is why AR is partially non-local: it depends on P, via the modulated activations. oLine 26: Top-down sweep is L{—L1 (coarse-to-fine), as stated in Section 4.5.
+
+s1) o Line 38: Backpropagation is restricted to W s, Py, and V. Stream weights WD and generative 
+
+matrices G do not receive gradient updates. « Classifier dimensions: W s € RO gives 4,480 parameters for CIFAR-10 and 44,800 for   
+
+> CIFAR-100, consistent with Table 14.
+
+I. Reproducibility Checklist J. Extended Comparison with Related Methods 
+
+Interpretation. The full model (80.1%, 93% local) is comparable to local loss networks (~81%)    
+
+> and outperforms Forward-Forward, PEPITA, and Equilibrium Propagation. The 3.3 pp gap to the
+
+matched Gabor+MLP gradient ceiling quantifies the cost of local stream-weight training specifically, while the ~T% gradient-trained parameters partially close that gap. 
+
+K. Statistical Power Analysis 
+
+With n=5 seeds and df=4, the paired t-test has the following power at asig=0.05 (two-sided): The study is well-powered for large effects (d>2.8) but only moderately powered for the consistency rule (d=1.6, power ~0.52) and the Sx T interaction (marginal, p=0.07).   
+
+> Recommendation. To achieve power >0.80 for d=1.6 at a5ig=0.05, a minimum of n=10 seeds is
+
+required. Future ablations targeting small-to-medium effects should use at least 10 seeds. 32 Algorithm 1 Full training procedure for one epoch. Input: Dataset D, parameters © = {W(S"l).G(S"l).L(l).K.V.Pl.Wcls} Output: Updated © 1: for each mini-batch (X,y) € D do 2: Xopp ¢ OPPONENTCOLOUR(X) > Fixed colour transform 3 fors=1,..., F do > Parallel frequency streams 
+
+## & R\ « GABORFILTER (Xopp, As) > Fixed; feeds L1 as R{” 
+
+5 fori=1,..., 4 do > Hierarchical layers; input is Rglil) (for I=1: Gabor output) 
+
+## 6: p « REMask(RI™Y . p) > RF masking 
+
+7 h+ Wedp & Feedforward, Eq. (2)  
+
+> 8: y+<o0
+
+9: forj=1..... ny do > Jacobi lateral inhibition 
+
+10: v« ¢(h—aLOy) > Eq. (3) 
+
+11 end for 
+
+12: R « y 13: e« p— Gy > Local reconstruction error 14: Compute AW ALA, AWFE > Strictly local rules; Section 5.2 
+
+15: WED o WED 4 p(ag AWH 4+ 0 ALA + ApAWEE) b Local update (no AT yet) 
+
+16: WED - WED /WD || > Unit-norm normalisation 
+
+17: GED — GED 4y ey > Local generative model update 
+
+18: end for 
+
+19: 2, GLOBALPOOL(RY) >z, € R 
+
+20: end for 
+
+21: q+ [z1:...:2p] > Concatenate; q € R4S 22: a « softmax(SKq/7) > Memory retrieval, Eq. (4) 
+
+2 r«a'v > V: gradient-trained  
+
+> 2: k* + argmaxy ax
+
+25: K (1 —1e)Kgr +1eq > EMA key update (local) 26: fort=1,...,T do > Top-down iterations; sweep L4—L1 27 for [ ....1do > Coarse-to-fine top-down sweep 
+
+28: g sig(Pr®) > Gate; Py gradient-trained, Eq. (6) 
+
+29: RY « RV o (14 aggr) > Modulate activations, Eq. (7)    
+
+> 30: eP — G(S"Z)Rgl) > Updated reconstruction error
+
+31: Compute sl(t) via Eq. (9) 32: Update nl(t) via Eq. (8) 33: Compute AW and apply: > Partially non-local (depends on P;): see Table 2 
+
+## 3 WD WD 4o AWR 
+
+35: end for 
+
+36: Re-compute g, a, r"*1) with modulated activations > Eqgs. (4)-(5) 
+
+37: end for 
+
+3 04 (1-7)q+Pr® > Final blend, Eq. (5); o € R*®   
+
+> 39: ¥ + softmax(Ws0) > Wes € REHMS: =10 or 100
+
+40: L+ Lee(§.y) Al Backpropagate £ through Wy, Py, Voonly > Gradient update for non-local components only 
+
+42: end for 
+
+33 Table 22: Reproducibility checklist following Dodge et al. [11] guidelines.  
+
+> Ttem Status
+
+Code publicly available 
+
+> Random seeds specified
+
+Number of runs per experiment 
+
+> Confidence intervals reported
+> Statistical tests specified
+
+ANOVA design clarified (within-subjects) Multiple comparisons corrected Effect sizes reported with SD of differences 
+
+> t-statistics reported
+> Hardware specified
+
+Training time reported 
+
+Hyperparameters fully specified 
+
+Dataset splits specified 
+
+Validation set SE acknowledged Preprocessing specified Evaluation metric defined 
+
+> Gradient-trained components disclosed
+
+Classifier parameter count corrected t-SNE plots labelled as schematic 
+
+> Silhouette scores on actual representations
+
+Forward-Forward CIFAR-100 source clarified PM-CNN evaluation protocol clarified All 20 CTFAR-100 superclasses reported Coherence bound looseness explained 
+
+Proposition 2 scope limited H3 theoretical support corrected 
+
+> Pareto figure z-axis redesigned
+
+v (nttps://github.com/mehdifatan/VisNet-Unified-Framework) 
+
+v (0,1,2 57 (95% CI, all tables) 
+
+13,4) 
+
+## V (paired t-test; repeated-measures ANOVA) v (Section 6, corrected from between-subjects) V (Holm-Bonferroni, within each table) V/ (Cohen’s d + SD in parentheses, Tables 3, 5) 
+
+/ (df=4, Tables 3, 5) / (NVIDIA A100 80 GB, single GPU) v/ (310s/epoch x 300 epochs ~26h) / (Table 17) / (standard CIFAR; 2% stratified val.) V/ (SE ~4%; Section 6) V/ (opponent colour, Gabor bank, Eq. (1)) / (top-1 accuracy, ECE 15 bins) / (Table 1; Section 4.2) V/ (4,480 for CIFAR-10; Table 14) 
+
+/ (Figure 2 caption) V (caption note) 
+
+V (our reproduction; Table 3) / (end-to-end, not linear probe; Table 3) / (Table 18) / (Proposition 1; Table 16) 
+
+v (non-stationarity caveat added) 
+
+/ (Remark after Prop. 2) V/ (fraction of local parameters; Figure 5) 
+
+Table 23: Extended comparison. training protocol. “Mostly local” indicates parameters use local updates. "From original publications.   
+
+> whether >90% of representational
+
+fOur reproduction under matched 
+
+Method Mostly local CIFAR-10 CIFAR-100 Params Year Reference 
+
+Greedy layer-wise' 4 ~T74 — — 2007 Bengio et al. [2] K-means features’ 4 ~T7 — — 2012 Coates & Ng [7] 
+
+Sparse coding’ 4 ~80 — — 2012 Coates & Ng [7] 
+
+Local loss networks’ v ~81 ~55 — 2019 Nokland & Eidnes [30] Eq. Propagation® v ~T78 — — 2017 Scellier & Bengio [36] Forward-Forward' v ~T76 — — 2022 Hinton [19] 
+
+Forward-Forward® v 758406 47308 — 2022 This work PEPITA' v ~T5 ~46 — 2022 Della Ferrera et al. [10] Ours (Hebbian-only) v TLOX05 443404 12M 2024 This work Ours (full, 93% local) v 80.140.3 54.8+04 12M 2024 This work Gabor+MLP gradient (matched arch.) X 834403 592404 12M 2024 This work ResNet-10 (end-to-end) X 842403 601+04 12M —SimCLR' X 912402 68403 11M 2020 Chen et al. [6] 
+
+34 Table 24: Statistical power (1—3) for paired t-test with n=5, asig=0.05 (two-sided). Computed via 
+
+> exact non-central ¢ distribution.
+
+## Effect sized 05 1.0 16 52 Power (1-8) 0.11 0.27 0.52 >0.99 Example (small) (medium) (consistency rule) (full vs. Hebbian) 
+
+Supplementary Material Index 
+
+## Appendix Content 
+
+A Demoted plasticity rules (HRR, hyperbolic, wavelet) B Proofs; coherence table; looseness explanation c Full hyperparameter table (with (=a4 note) D Memory slot count sensitivity E All 20 CIFAR-100 superclass results F Computational cost breakdown 
+
+G Sensitivity: a4, a, B, 7, arg (extended to 1.0) 
+
+H Complete training algorithm; gradient isolation notes 1 Full reproducibility checklist (27 items)  
+
+> JExtended comparison including local loss networks, greedy pretraining
+
+K Statistical power analysis; replication recommendations References 
+
+## [1] Bell, A. J. € Sejnowski, T. J. (1997). The “independent components” of natural scenes are edge filters. Vision Research, 87(23), 3527-3338. [2] Bengio, Y., Lamblin, P., Popovici, D., & Larochelle, H. (2007). Greedy layer-wise training of deep networks. In NeurlPS, 19. 
+
+[3] Burt, P. J. & Adelson, E. H. (1983). The Laplacian pyramid as a compact image code. IEEE Transactions on Communications, 81(4), 532-540. 4] Campbell, F. W. & Robson, J. G. (1968). Application of Fourier analysis to the visibility of gratings. The Journal of Physiology, 197(3), 551-566. 
+
+## [5] Caron, M., Touvron, H., Misra, L, Jégou, H., Mairal, J., Bojanowski, P., €& Joulin, A. (2021). . In Proceedings of the IEEE/CVF ICCV, Emerging propertics in self-supervised vision transforme pp. 9650-9660. 
+
+## [6] Chen, T., Kornblith, S., Norouzi, M., & Hinton, G. E. (2020). A simple framework for contrastive learning of visual representations. In Proceedings of ICML, pp. 1597-1607. 
+
+[7] Coates, A. & Ny, A. Y. (2012). Learning feature representations with K-means. In Neural Networks: Tricks of the Trade, 2nd ed., pp. 561-580. Springer. 
+
+> [8] Daugman, J. G. (1985). Uncertainty relation for resolution in space, spatial frequency, and orientation
+
+optimized by two-dimensional visual cortical filters. Journal of the Optical Society of America A, 2(7), 1160-1169. 
+
+## [9] Davies, M., Srinivasa, N., Lin, T.-H., Chinya, G., Cao, Y., Choday, S. H., ... & Wang, H. (2018). Loihi: A neuromorphic mangcore processor with on-chip learning. [EEE Micro, 38(1), 82-99. 
+
+> 35
+
+## [10] Della Ferrera, G., Bengio, Y., & Kreiman, G. (2022). PEPITA: Forward-only learning with feedback alignment. In NeurIPS, 5. [11] Dodge, J., lharco, G., Schwartz, R., Farhadi, A., Hajishirzi, H., & Smith, N. (2019). Show your work: TImproved reporting of experimental results. In Proceedings of EMNLP, pp. 2185-2194. [12] Dosovitskiy, A., Springenberg, J. T., Riedmiller, M., & Brox, T. (2014). Discriminative unsupervised feature learning with convolutional neural networks. In NeurIPS, 27. 
+
+[13] Fatan Serj, M., Parraga, C. A., & Otazu, X. (2025). VisNet variants for graded bilateral symmetry 
+
+> classification. Manuscript submitted for publication.
+
+## [14] Felleman, D. J. & Van Essen, D. C. (1991). Distributed hierarchical processing in the primate cerebral cortex. Cerebrul Cortex, 1(1), 1-47. 
+
+[15] Fukushima, K. (1980). Neocognitron: A self-organizing neural network model for a mechanism of pattern 
+
+> recognition unaffected by shift in position. Biological Cybernetics, 36(4), 195-202.
+
+[16] Giraldo, L. G. S., Rao, M., & Principe, J. C. (2014). Measures of entropy from data using infinitely divisible kernels. IEEE Transactions on Information Theory, 61(1), 535-548. 
+
+## [17] Grill, J.-B., Strub, F., Aliché, F., Tallec, C., Richemond, P. H., Buchatskaya, E., ... € Valko, M. (2020). Bootstrap your own latent: A new approach to self-supervised learning. In NeurIPS, 93, 21271-21284. 
+
+> [18] Grossberg, 5. (1987). Competitive learning: From interactive activation to adaptive resonance. Cognitive Science, 11(1), 23-63.
+
+## [19] Hinton, G. E. (2022). The forwand-forward algorithm: Some preliminary investigations. arXiv preprint arXiv:2212.13945. [20] Hopfield, J. J. (1982). Neural networks and physical systems with emergent collective computational abilities. Proceedings of the National Academy of Sciences, 79(8), 2554-255. 
+
+[21] Hubel, D. H. € Wiesel, T. N. (1962). Receptive fields, binocular interaction and functional architecture in the cat’s visual cortez. The Journal of Physiology, 160(1), 106-154. 
+
+## [22] Kohonen, T. (1982). Self-organized formation of topologically correct feature maps. Biological Cybernetics, 43(1), 59-69. (23] Krizheusky, A. (2009). Learning multiple layers of features from tiny images. Technical report, University of Toronto. [24] Lee, D.-H., Zhang, S., Fischer, A., & Bengio, Y. (2015). Difference target propagation. In ECML-PKDD, pp. 498-515. Springer. 
+
+[25] Lillicrap, T. P., Santoro, A., Marris, L., Akerman, C. J., & Hinton, G. (2020). Backpropagation and the brain. Nature Reviews Neuroscience, 21(6), 335-346. [26] Ljung, L. (1977). Analysis of recursive stochastic algorithms. IEEE Transactions on Automatic Control, 22(4), 551-575. [27] Mallat, S. G. (1989). A theory for multiresolution signal decomposition: The wavelet representation. IEEE TPAMI, 11(7), 674-695. 
+
+## [28] McClelland, J. L., McNaughton, B. L., & O'Reilly, R. C. (1995). Why there are complementary learning systems in the hippocampus and neocortex. Psychological Review, 102(3), 419-457. 
+
+[29] Miller, E. K. & Cohen, J. D. (2001). An integrative theory of prefrontal cortex function. Annual Review of Neuroscience, 24(1), 167-202. 
+
+> 36
+
+[30] Nokland, A. & Fidnes, L. H. (2019). Training neural networks with local error signals. In Proceedings of ICML, pp. 4839-4850. [31] Oja, E. (1982). Simplified neuron model as a principal component analyzer. Journal of Mathematical Biology, 15(3), 267-273. [32] Olshausen, B. A. € Field, D. J. (1996). Emergence of simple-cell receptive field properties by learning a sparse code for natural images. Nature, 381(6583), 607-609. 
+
+## [33] Ramsauer, H., Schifl, B., Lehner, J., Seidl, P., Widrich, M., Adler, T., ... & Hochreiter, S. (2020). Hopfield networks is all you need. In ICLR. [34] Rao, R. P. & Balland, D. H. (1999). Predictive coding in the visual cortex: A functional interpretation of some extra-classical receptive-field effects. Nature Neuroscience, 2(1), 79-87. 
+
+[35] Rolls, E. T. (2012). Invariant visual object and face recognition: Neural and computational bases, and 
+
+> a model, VisNet. Frontiers in Computational Neuroscience, 6, 35.
+
+[36] Scellier, B. & Bengio, Y. (2017). Equilibrium propagation: Bridging the gap between energy-based 
+
+> models and backpropagation. Frontiers in Computational Neuroscience, 11, 24.
+
+## [37] Sedghi, H., Gupta, V., & Long, P. M. (2019). The singular values of convolutional layers. In ICLR. [38] Simoncelli, E. P. & Freeman, W. T. (1995). The steerable pyramid: A flezible architecture for multi-scale derivative computation. In Proceedings of ICIP, vol. 3, pp. 444-447. [39] van den Oord, A., Vinyals, O., & Kavukcuogly, K. (2017). Neural discrete representation learning. In NewrIPS, 30. [40] Wandell, B. A., Dumoulin, S. O., & Brewer, A. A. (2007). Visual field maps in human cortex. Neuron, 56(2), 366-383. 
+
+[41] Whittington, J. C. & Bogacz, R. (2019). Theories of error back-propagation in the brain. Trends in Cognitive Sciences, 23(3), 235-250.

@@ -1,0 +1,306 @@
+Title: VULCAN: Vision-Language-Model Enhanced Multi-Agent Cooperative Navigation for Indoor Fire-Disaster Response
+
+URL Source: https://arxiv.org/pdf/2604.12831v1
+
+Published Time: Wed, 15 Apr 2026 01:34:42 GMT
+
+Number of Pages: 6
+
+Markdown Content:
+# VULCAN : Vision-Language-Model Enhanced Multi-Agent Cooperative Navigation for Indoor Fire-Disaster Response 
+
+Shengding Liu 
+
+Computer Science & Engineering Michigan State University 
+
+East Lansing, MI, USA 
+
+Qiben Yan 
+
+Computer Science & Engineering Michigan State University 
+
+East Lansing, MI, USA 
+
+Abstract —Indoor fire disasters pose severe challenges to au-tonomous search and rescue due to dense smoke, high temper-atures, and dynamically evolving indoor environments. In such time-critical scenarios, multi-agent cooperative navigation is par-ticularly useful, as it enables faster and broader exploration than single-agent approaches. However, existing multi-agent naviga-tion systems are primarily vision-based and designed for benign indoor settings, leading to significant performance degradation under fire-driven dynamic conditions. In this paper, we present VULCAN , a multi-agent cooperative navigation framework based on multi-modal perception and vision–language models (VLMs), tailored for indoor fire disaster response. We extend the Habitat-Matterport3D benchmark by simulating physically realistic fire scenarios, including smoke diffusion, thermal hazards, and sensor degradation. We evaluate representative multi-agent cooperative navigation baselines under both normal and fire-driven envi-ronments. Our results reveal critical failure modes of existing methods in fire scenarios and underscore the necessity of robust perception and hazard-aware planning for reliable multi-agent search and rescue. 
+
+Index Terms —Search and rescue (SAR), multi-agent systems, cooperative navigation, vision-language model (VLM), disaster response. 
+
+I. I NTRODUCTION 
+
+Natural and human-made disasters pose immediate threats to life and infrastructure, requiring rapid and coordinated emergency response. In hazardous environments such as in-door fires, high temperature, dense smoke, and structural instability make human intervention extremely dangerous. A recent devastating fire in Tai Po, Hong Kong [1] greatly impeded human access and situational awareness during the early response phase, leading to significant casualties and property damage. It was the deadliest fire in Hong Kong in decades. Mobile robots have emerged as a promising alternative for operating in life-threatening environments. By enabling autonomous exploration, hazard perception, and target search under severe perception degradation, robotic systems can provide rapid situational awareness while reducing the risk to human responders and supporting more informed decision-making. Collabora �ve Planning Module Trapped Vic �m Low-Latency Informa �on Sharing Coordinated Paths Noisy/Smoked Observa �ons Global Planner  
+
+> Mul �-Modal Fusion mmWave Radar Thermal RGB-D Seman �c Understanding Hazard Interpreta �on Fron �er Assignment VLM
+
+Fig. 1: Overview of V ULCAN for multi-agent search and rescue in indoor fire scenarios. Despite recent progress, most existing search and rescue (SAR) deployments [2] still rely on single-robot exploration 
+
+or loosely coordinated multi-robot routines, where individ-ual robots operate with minimal information sharing. Such strategies inherently limit system-level efficiency, particularly in large, unmapped, or dynamically evolving indoor environ-ments, thereby underscoring the urgent need for multi-agent cooperative navigation. Fig. 1 shows an example scenario of multi-agent search and rescue in an indoor fire environment. In recent years, vision-based cooperative navigation has attracted increasing attention, driven by advances in simulation platforms, and large-scale 3D scene datasets [3]. Existing approaches to visual navigation are typically grouped into two main paradigms: end-to-end systems [4], which directly map sensory observations to control actions, and modular pipelines [5], which explicitly decompose the task into per-ception, mapping, planning, and control. Both paradigms have demonstrated effectiveness by leveraging spatial and semantic representations learned via supervised or reinforcement learn-ing. Furthermore, recent work has increasingly explored the integration of vision–language models (VLMs) into visual nav-igation systems [6]. By jointly reasoning over visual observa-tions and natural language, VLMs introduce powerful semantic priors that enhance object grounding, relational reasoning, and holistic understanding of complex indoor environment.   
+
+> arXiv:2604.12831v1 [cs.RO] 14 Apr 2026 (a) RGB camera (b) Depth camera
+> (c) Lidar (d) Thermal camera
+
+Fig. 2: Gazebo-based fire simulation demonstrates the degra-dation of modality-dependent perception as smoke density increases. However, the majority of existing multi-agent cooperative navigation frameworks [6]–[8] are predominantly vision-based and developed under assumptions of static, well-structured, and relatively benign indoor environments. Such assumptions fundamentally break down in fire-driven indoor scenarios, where perception is severely degraded by smoke and high temperatures, environmental conditions evolve rapidly and unpredictably, and inefficient or uncoordinated exploration can directly compromise both agent safety and mission success. These problems highlight a critical gap in current navigation frameworks and motivate the need for an efficient and safe cooperative multi-agent navigation tailored for indoor fire-disaster response. Despite recent advancements in cooperative navigation in-cluding learning-based approaches [4], VLM powered plan-ning [6], and embodied multi-agent coordination frame-works [9], directly applying these approaches to fire-driven indoor scenarios remains extremely challenging. Compared to static or benign environments, indoor fire scenes introduce several fundamental challenges: 
+
+1) Dynamic and rapidly evolving environments: Tempera-ture gradients, flame propagation, and smoke diffusion con-tinuously reshape the environment, altering traversability, vis-ibility, and semantic cues over time. 
+
+2) Unreliable and degraded sensor data: Fire-induced smoke severely degrades multi-modal perception in indoor environments. As illustrated in Fig. 2, our Gazebo-based fire simulations, built on a high-fidelity physics engine with particle-emitter support, qualitatively demonstrate modality-dependent perception degradation under increasing smoke density. 
+
+3) Latency-critical and hazard aware decision making: 
+
+SAR missions demand real-time coordination, as excessive planning delays or inefficient multi-robot routing can directly compromise human survival and overall mission success. Simultaneously, it is crucial to ensure that each agent can nav-igate and explore safely, avoiding hazards while completing its tasks. To address these challenges, we introduce VULCAN 1, a hazard-aware multi-agent cooperative navigation framework tailored for indoor fire SAR scenarios. As illustrated in Fig. 1, each agent performs multi-modal perception and fusion to jointly construct a hazard-aware global map. Based on this shared representation, exploration is coordinated through a VLM-based global planner and a hazard-aware local planner to ensure safe and efficient navigation. While a complete end-to-end deployment is ongoing, we implement key components and present preliminary evaluations demonstrating the frame-work’s feasibility and the limitations of conventional multi-agent navigation in fire scenarios. Live demonstrations and representative results are available at https://vulcan-dr.github. io. To summarize, our contributions are as follows:  
+
+> •
+
+We propose V ULCAN , a hazard-aware multi-agent co-operative navigation framework tailored for indoor fire scenarios, which maintains high navigation efficiency despite severe fire-induced perception degradation and environmental hazards.  
+
+> •
+
+We extend indoor navigation benchmarks with realistic fire simulations and coordinate a VLM-based global planner with a hazard-aware local controller.  
+
+> •
+
+We evaluate representative multi-agent navigation base-lines under both normal and simulated indoor fire con-ditions, and systematically analyze the underlying causes of their performance degradation in fire scenarios. II. S YSTEM DESIGN 
+
+A. Task Definition 
+
+We consider a multi-agent cooperative SAR task in fire-driven indoor environments, where a team of mobile robots ex-plores an unknown scene to locate victims or mission-critical targets under hazardous conditions. Let C = {c1, . . . , c m}
+
+denote the set of target categories (e.g., human , fire extin-guisher , bathroom ), and let S = {s1, . . . , s K } denote the set of fire-affected indoor scenes. In each episode, N robots 
+
+R = {r1, . . . , r N } are deployed in a scene si ∈ S from a shared starting position pi with different initial orientations to reflect realistic emergency deployment. All robots are assigned the same target category ci ∈ C . The episode is defined as: 
+
+Ti = {N, s i, c i, pi}. (1) The observation space O comprises four modalities: RGB, depth, thermal imaging, and mmWave radar, providing com-plementary visual, geometric, and smoke-robust percep-tion. The action space A consists of six discrete actions: 
+
+{move_forward , turn_left , turn_right , look_up ,
+
+look_down , stop }. The move_forward action advances the robot by 0.25 m, and each rotational action changes     
+
+> 1VULCAN is the Roman deity of fire. Agent 0 Agent n
+> Agent i … …
+> Merged 3D Point Cloud Map Obstacle + Hazard Map Top-View Map with All Candidate Fron �ers "hazard_report": [ {"fron �er": 1, "smoke": 0.1, "temperature": 300, "severity": "safe", "con fi dence": 0.9 },…] Robot State Local Map Task De fi ni �on Naviga �on Strategy I/O Format System Prompt
+> Response {“Robot_0”: “fron �er_1”, “Robot_1”: “fron �er_4”,…} Goal: Find Vic �ms Environment (indoor fi re)
+> Collabora �ve Routes Planning FMM Local Planner with hazard cost Global Planner Mul �-modal Percep �on and Fusion
+
+Fig. 3: System architecture of V ULCAN . Each agent performs multi-modal perception and fusion, constructs hazard-aware global maps, and plans safe and efficient exploration using a VLM-based global planner and hazard-aware FMM local planner. orientation by 30 ◦. At each discrete time step t, robot ri
+
+receives a multi-modal observation oit ∈ O and executes an action ait ∈ A. An episode is successful if the team reaches the required number of target instances of category 
+
+ci within a 0.1 m distance threshold, or fully explores the environment, while all agents remain within survivable hazard limits throughout the episode. 
+
+B. Overview 
+
+As illustrated in Fig. 3, we propose a hazard-aware multi-agent navigation framework, V ULCAN , tailored for indoor fire SAR scenarios. Each agent performs robust multi-modal perception by jointly fusing RGB-D, thermal imaging, and mmWave radar to see through smoke and construct a local hazard-annotated 3D point cloud encoding geometry, temper-ature, smoke and sensing uncertainty. These local maps are merged into a global representation, which is further projected into a compact 2D obstacle and hazard map for frontier extrac-tion and risk assessment. Leveraging this structured spatial and hazard-aware abstraction, a VLM serves as a global planner, reasoning jointly over robot states, frontier utility, and envi-ronmental risks to assign safe and efficient exploration goals to each agent. Finally, a hazard-aware Fast Marching Method (FMM) local planner refines these assignments into collision-free and risk-sensitive trajectories. Together, this hierarchical design enables coordinated, safe, and efficient multi-agent exploration under dynamic, fire-driven indoor conditions. 
+
+C. Multi-modal Perception and Fusion 
+
+To maintain reliable situational awareness under such harsh conditions, our framework adopts a robust multi-modal per-ception pipeline that integrates RGBD, thermal imaging, and mmWave radar signals as illustrated in Fig. 4. The goal is to (1) extract stable structural cues, (2) detect fire-related hazards, and (3) produce a unified hazard-aware map for downstream planning. For each robot ri, given a sequence of synchronized multi-modal observations collected in indoor fire environments, including RGB, depth, and thermal images, 
+
+Ii =   Ii
+
+> 1,rgb
+
+, I i
+
+> 1,d
+
+, I i
+
+> 1,th
+
+ , . . . ,  Iit, rgb , I it, d, I it, th 
+
+ , (2) and the corresponding mmWave radar observations and the associated robot poses are: 
+
+Mrad  
+
+> i
+
+= mi
+
+> 1
+
+, . . . , m it , Pi = {pi
+
+> 1
+
+, . . . , p it}. (3) Each robot incrementally constructs a local hazard-aware 3D point cloud map Mi through the multi-modal perception and its pose. Specifically, at each time step t, three visual modalities are first spatially and temporally aligned. The aligned observations are then jointly processed by a VLM-based fusion operator 
+
+Fvlm (·) to infer an enhanced visual representation: 
+
+Iit, fused = Fvlm 
+
+ Iit, rgb , I it, d, I it, th 
+
+ . (4) The resulting fused image Iit, fused approximates a smoke-transparent view of the environment, enabling more reliable downstream tasks such as 3D reconstruction, hazard mapping, and frontier extraction. An open-vocabulary detector Det( ·) is then applied to the fused image Iit, fused to identify candidate objects and fire-related regions. A class-agnostic segmentation model Seg( ·)
+
+further extracts pixel-wise masks for these regions. Each pixel 
+
+u in the fused image, together with its depth d(u), is back-projected to a 3D point in the camera frame: 
+
+xc(u) = d(u)K−1 ˜u, (5) Augment Depth Image RGB Image 
+
+> Thermal Image
+> Observa �on s
+> Fire Mapping
+> GPS + Compass mmWave Radar
+> Fused Image
+
+Fig. 4: Architecture of multi-modal perception and cross-modal fusion for robust environment understanding. where K is the camera intrinsic matrix and ˜u is the homoge-neous pixel coordinate. Thermal measurements are aligned with RGB pixels to estimate temperature T (u), while smoke density S(u) is inferred from RGB degradation and depth consistency. Each point is augmented with a hazard attribute vector: 
+
+h = [ T (u), S (u), σ (u)] , (6) where σ(u) encodes sensing uncertainty due to occlusion, smoke, or missing depth returns. The local 3D hazard-aware point cloud is then formed by combining the vision-based points with mmWave radar points: 
+
+Mit = Fproj 
+
+
+
+Seg  Det( Iit, fused )
+
+∪ mit. (7) The global hazard-aware point cloud map M is then constructed by jointly aggregating vision-based hazard points and mmWave radar points from all robots into a common coordinate frame: 
+
+M =
+
+> n
+
+[
+
+> i=1
+> t
+
+[ 
+
+> τ=1
+
+Miτ (8) To suppress noisy measurements introduced by fire flicker-ing, smoke diffusion, and thermal sensor artifacts, we apply DBSCAN clustering to the merged point cloud and remove sparse outliers. 
+
+D. Global Map Construction and Frontier Risk Assessment 
+
+To enable efficient risk-aware exploration in fire scenarios, a global 2D obstacle–hazard map is constructed from the 3D point cloud observations collected by the robots. The map provides a compact and physically grounded representation of both structural constraints and environmental hazards. 
+
+1) 2D Obstacle-Hazard Map Construction: At the begin-ning of each episode, the global 3D map M is projected into a 2D grid-based representation centered at the robot’s initial position. The resulting map consists of two aligned channels: an obstacle map O and a hazard map H.The obstacle map is constructed via top-down projection of non-floor 3D points, where grid cells exceeding a point-density threshold are marked as occupied. This produces a binary occupancy layout used to constrain navigation. The hazard map encodes fire-related environmental risks by aggregating hazard attributes from projected 3D points. Specifically, the hazard intensity of each grid cell is computed as a weighted combination of temperature, smoke density, and sensing un-certainty: 
+
+H(x, y ) = X 
+
+> xg∈(x,y )
+
+(wT T + wS S + wσ σ) , (9) where wT , wS , and wσ balance the contributions of different hazard factors. Together, O and H form a compact obsta-cle–risk abstraction of the fire scene. 
+
+2) Frontier Extraction and Risk Assessment: Frontiers are defined as the boundaries between explored and unexplored regions after removing obstacle boundaries from O. Frontier cells are clustered via connected-component analysis, and small noisy clusters are discarded. Each frontier is assigned a risk score by aggregating hazard intensities within its region. Let Fk denote the set of grid cells belonging to frontier k. The frontier-level risk is defined as: 
+
+Rk = 1
+
+|F k|
+
+X
+
+> (x,y )∈F k
+
+H(x, y ). (10) Frontiers are then categorized into qualitative risk levels (e.g., safe, moderate, dangerous) using predefined thresholds. Frontiers with lower risk scores are prioritized by the VLM-based planner to enable safe and efficient exploration in fire-disaster environments. 
+
+E. VLM-Based Global Planning under Fire Hazards 
+
+After the global map construction and frontier risk as-sessment, we employ a VLM as a global planner to assign the frontiers to each agent through structured multi-modal prompts. 
+
+1) Multi-Modal Prompt Design: The VLM receives a com-pact yet expressive prompt consisting of a visual input and a textual input. 
+
+Visual prompt. The visual input is a top-down global map rendered from the merged hazard-aware 3D point cloud and aligned with the 2D obstacle–hazard exploration map. Robot positions and identifiers are explicitly marked, while all candi-date frontiers are highlighted and labeled. This representation integrates geometric structure, semantic context, and multi-robot configuration for global spatial reasoning. An example of the visual prompt is shown in Fig. 3. 
+
+Textual prompt. The textual input consists of a system prompt defining the fire-response navigation task and afrontier-level hazard report in JSON format. The system prompt specifies the mission objective, multi-robot setting, map semantics, and output constraints, while the hazard re-port summarizes estimated smoke density, temperature, hazard severity, and confidence for each frontier. 
+
+2) Global Frontier Assignment: Following prior work [6], we restrict the VLM to high-level reasoning and decouple it from low-level motion control. At each global planning step, the VLM receives the updated multi-modal prompt and assigns a long-term frontier goal to each robot. The assignment balances two objectives: (i) maximizing exploration efficiency by reducing inter-robot redundancy, and (ii) minimizing fire TABLE I: Performance comparison under normal conditions                     
+
+> Method NS SR SPL CHE Greedy [10] 219.03 0.686 0.322 0Cost-Utility [11] 199.60 0.628 0.315 0Random Sample 206.62 0.631 0.258 0Co-NavGPT [6] 185.43 0.666 0.388 0
+
+TABLE II: Performance comparison under fire conditions                     
+
+> Method NS ↑SR ↓SPL ↓CHE ↑
+> Greedy 267.40 0.651 0.319 11.233 Cost-Utility 207.49 0.608 0.306 8.517 Random Sample 214.96 0.625 0.251 7.174 Co-NavGPT 187.89 0.660 0.381 4.873
+
+exposure by favoring lower-risk frontiers with reliable per-ception. If no safe frontier exists, fallback goals are selected within explored low-risk regions. 
+
+F. Hazard-Aware Fast Marching Method for Local Planning 
+
+Given the global 2D obstacle and hazard maps, local navigation in fire-driven indoor environments must jointly consider geometric feasibility and environmental risk. We adopt a hazard-aware FMM as the local planner, enabling real-time generation of smooth, collision-free, and risk-sensitive trajectories. To incorporate fire risk, we modulate the FMM propagation speed using the hazard map: 
+
+F (x) = 11 + αH (x) , (11) where H(x) encodes aggregated fire-related risk, and α con-trols the trade-off between safety and efficiency. This formu-lation penalizes traversal through high-risk regions even when they are geometrically free, while allowing fast propagation in safer areas. Applying FMM with the hazard-modulated speed produces an arrival-time field that naturally biases paths toward low-risk corridors. The local trajectory is extracted by following the negative gradient of this field, yielding a smooth path that minimizes accumulated risk while respecting obstacle constraints. III. E VALUATION 
+
+In this section, we evaluate representative multi-agent, map-based navigation baselines, including both VLM-based planners and conventional map-based methods under normal conditions and simulated indoor fire conditions. 
+
+A. Datasets 
+
+To enable a fair and realistic comparison, we extend the Habitat-Matterport3D [3] dataset by injecting fire-specific en-vironmental degradations, including varying levels of smoke density, flame intensity, and heat-induced visibility loss. These modifications emulate the perceptual and navigational chal-lenges commonly encountered in real-world indoor fire sce-narios. Following the standard protocol, we use 36 validation scenes containing 200 episodes with semantic object annota-tions. We select six goal categories: chair, sofa, plant, bed, toilet, and TV. Since the dataset contains no human instances, we use these objects as proxies to simulate human presence. 
+
+B. Metrics 
+
+Our evaluation considers not only task completion but also safety related constraints imposed by fire hazards. We evaluate all the methods using the following four metrics: Number of Steps (NS), Success Rate (SR), Success weighted by Path Length (SPL), and Cumulative Hazard Exposure (CHE). NS measures exploration efficiency and is defined as the total number of discrete time steps taken before episode termination. The SR is defined as: 
+
+SR = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+Si, (12) and SPL is defined as: 
+
+SPL = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+Si
+
+li
+
+max( li, p i) , (13) where N is the number of episodes, Si ∈ { 0, 1} indicates success in episode i, li denotes the shortest path length from the start to any success location, and pi is the shortest trajectory length executed by any robot in episode i. To quantify navigation safety, CHE measures the cumulative risk experienced by all robots and is defined as: 
+
+CHE = 
+
+> N
+
+X
+
+> i=1
+
+X
+
+> a∈A
+> Ti
+
+X
+
+> t=1
+
+H x(i)
+
+> a,t
+
+, (14) where A denotes the robot set, Ti is the episode length, x(i)
+
+> a,t
+
+is the position of robot a at time step t, and H(·) is the hazard intensity from the global obstacle–hazard map. Lower CHE indicates safer exploration with reduced exposure to fire-related hazards. 
+
+C. Results and Analysis 
+
+We evaluate all navigation methods under both normal indoor conditions and fire-driven scenarios to assess their navigation success rate, exploration efficiency, and safety awareness. The results are summarized in Table I and Table II. Comparisons among different methods within the same environment show that the VLM-based planner (Co-NavGPT) achieves higher success rates and SPL while requiring fewer steps and significantly reducing cumulative hazard exposure. These results indicate that high-level semantic reasoning en-ables agents to assign spatially efficient and semantically meaningful exploration goals, thereby improving coordination and reducing redundant exploration. Furthermore, by comparing the performance of each method across normal and fire scenarios, we observe a substantial performance degradation for existing approaches originally designed for clean indoor environments. We analyze the under-lying causes of the observed performance degradation under fire-driven scenarios. As illustrated in Fig. 5, these effects are (a) Missed detection before (left figure) and after (right figure) fire scenario. 
+
+(b) Exploration in normal scenario. (c) Hazard map. 
+
+(d) False detection before (left figure) and after (right figure) fire scenario. 
+
+(e) Exploration in fire scenario. (f) Dangerous routing scenario. 
+
+Fig. 5: The comparison highlights three failur1e modes: (a, d) Perception failure: smoke causes missed detections (confidence drop in a) and false positives (hallucinations in d); (b, e) Inefficient exploration: agents exhibit redundant framing and reduced coverage under fire conditions; (c, f) Unsafe planning: without hazard awareness, agents plan paths through high-risk zones (f) despite the presence of thermal hazards shown in the ground-truth map (c). attributed to three key factors. First, visual impairment leads to perception failures. As shown in Fig. 5(a), smoke occlusion causes the confidence score of a target object (Chair) to drop significantly ( 0.87 → 0.15 ), leading to missed detections. Conversely, Fig. 5(d) demonstrates how visual noise triggers false positives, where the agent incorrectly detects a toilet (score 0.71 ) in a smoke-filled corridor. Second, these percep-tion errors destabilize exploration. While the agent in normal conditions follows a structured path (Fig. 5(b)), the agent under fire scenarios (Fig. 5(e)) exhibits erratic trajectories and fails to expand the map frontier effectively due to high sensing uncertainty. Third, the lack of hazard-aware reasoning results in unsafe navigation. Despite the presence of high-temperature zones shown in the hazard map (Fig. 5(c)), the standard planner fails to account for these risks. Consequently, as depicted in Fig. 5(f), the agent generates a path that traverses directly through hazardous areas. Our future work will include a comprehensive evaluation of V ULCAN , with particular emphasis on robustness across diverse fire scenarios. IV. C ONCLUSION 
+
+In this work, we presented V ULCAN , a hazard-aware multi-agent cooperative navigation framework specifically designed for indoor fire-disaster response. Our evaluation shows that most existing cooperative navigation systems degrade sub-stantially in fire-driven environments. Our simulation further confirms that robust perception, effective information sharing, and hazard-aware planning are crucial for reliable and efficient multi-agent SAR. By integrating multi-modal perception with VLMs, V ULCAN has the potential to significantly improve multi-agent navigation in challenging indoor fire scenarios. In future, we will implement and evaluate V ULCAN in both simulated and real-world fire scenarios. REFERENCES [1] T. Grundy, “Tai po fire: What we know about hong kong’s deadliest fire in decades,” Hong Kong Free Press , Nov 2025, accessed: 2025-12-29. [Online]. Available: https://hongkongfp.com/2025/11/29/ tai-po-fire-what-we-know-about-hong-kongs-deadliest-fire-in-decades/ [2] J. Queralta, J. Taipalmaa, B. Pullinen, V. Sarker, T. Gia, H. Tenhunen, M. Gabbouj, J. Raitoharju, and T. Westerlund, “Collaborative multi-robot systems for search and rescue: Coordination and perception,” arXiv preprint arXiv:2008.12610 , 2020. [3] S. K. Ramakrishnan, A. Gokaslan, E. Wijmans, O. Maksymets, A. Clegg, J. Turner, E. Undersander, W. Galuba, A. Westbury, A. X. Chang, M. Savva, Y. Zhao, and D. Batra, “Habitat-matterport 3d dataset (hm3d): 1000 large-scale 3d environments for embodied ai,” arXiv preprint arXiv:2109.08238 , 2021. [4] A. Khandelwal, L. Weihs, R. Mottaghi, and A. Kembhavi, “Simple but effective: Clip embeddings for embodied ai,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,2022, pp. 14 829–14 838. [5] S. K. Ramakrishnan, D. S. Chaplot, Z. Al-Halah, J. Malik, and K. Grauman, “Poni: Potential functions for objectgoal navigation with interaction-free learning,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2022, pp. 18 890–18 900. [6] B. Yu, Q. Yuan, K. Li, H. Kasaei, and M. Cao, “Co-navgpt: Multi-robot cooperative visual semantic navigation using vision language models,” 
+
+IEEE Robotics and Automation Letters , pp. 1–8, 2025. [7] H. Liu, X. Wang, R. Liu, Y. Xie, and T. Li, “Air-ground multi-agent system cooperative navigation based on factor graph optimization slam,” 
+
+Measurement Science and Technology , vol. 35, no. 6, p. 066303, 2024. [8] C. Yu, X. Yang, J. Gao, H. Yang, Y. Wang, and Y. Wu, “Learning efficient multi-agent cooperative visual exploration,” in European Con-ference on Computer Vision . Springer, 2022, pp. 497–515. [9] H. Tan, X. Hao, C. Chi, M. Lin, Y. Lyu, M. Cao, D. Liang, Z. Chen, M. Lyu, C. Peng, C. He, Y. Ao, Y. Lin, P. Wang, Z. Wang, and S. Zhang, “Roboos: A hierarchical embodied framework for cross-embodiment and multi-agent collaboration,” arXiv preprint arXiv:2505.03673 , 2025. [10] A. Visser, J. De Hoog, A. Jim´ enez-Gonz´ alez, and J.-R. M. de Dios, “Discussion of multi-robot exploration in communication-limited en-vironments,” in Workshop” Towards Fully Decentralized Multi-Robot Systems: Hardware, Software and Integration” at the ICRA Conference ,2013. [11] M. Juli´ a, A. Gil, and O. Reinoso, “A comparison of path planning strategies for autonomous exploration and mapping of unknown envi-ronments,” Autonomous Robots , vol. 33, no. 4, pp. 427–444, 2012.

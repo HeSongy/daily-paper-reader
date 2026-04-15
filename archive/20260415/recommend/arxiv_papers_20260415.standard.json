@@ -1,0 +1,664 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-04-15T19:57:45.430924+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 8,
+    "deep_cap": 6,
+    "deep_selected": 6,
+    "quick_candidates": 10,
+    "quick_skim_target": 11,
+    "quick_selected": 10
+  },
+  "deep_dive": [
+    {
+      "id": "2604.07957v1",
+      "source": "arxiv",
+      "title": "WorldMAP: Bootstrapping Vision-Language Navigation Trajectory Prediction with Generative World Models",
+      "abstract": "Vision-language models (VLMs) and generative world models are opening new opportunities for embodied navigation. VLMs are increasingly used as direct planners or trajectory predictors, while world models support look-ahead reasoning by imagining future views. Yet predicting a reliable trajectory from a single egocentric observation remains challenging. Current VLMs often generate unstable trajectories, and world models, though able to synthesize plausible futures, do not directly provide the grounded signals needed for navigation learning. This raises a central question: how can generated futures be turned into supervision for grounded trajectory prediction? We present WorldMAP, a teacher--student framework that converts world-model-generated futures into persistent semantic-spatial structure and planning-derived supervision. Its world-model-driven teacher builds semantic-spatial memory from generated videos, grounds task-relevant targets and obstacles, and produces trajectory pseudo-labels through explicit planning. A lightweight student with a multi-hypothesis trajectory head is then trained to predict navigation trajectories directly from vision-language inputs. On Target-Bench, WorldMAP achieves the best ADE and FDE among compared methods, reducing ADE by 18.0% and FDE by 42.1% relative to the best competing baseline, while lifting a small open-source VLM to DTW performance competitive with proprietary models. More broadly, the results suggest that, in embodied navigation, the value of world models may lie less in supplying action-ready imagined evidence than in synthesizing structured supervision for navigation learning.",
+      "authors": [
+        "Hongjin Chen",
+        "Shangyun Jiang",
+        "Tonghua Su",
+        "Chen Gao",
+        "Xinlei Chen",
+        "Yong Li",
+        "Zhibo Chen"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-04-09T08:21:58+00:00",
+      "link": "https://arxiv.org/pdf/2604.07957v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Generative world models for vision-language navigation and trajectory prediction",
+      "llm_evidence_cn": "用于视觉语言导航和轨迹预测的生成式世界模型",
+      "llm_evidence": "用于视觉语言导航和轨迹预测的生成式世界模型",
+      "canonical_evidence": "用于视觉语言导航和轨迹预测的生成式世界模型",
+      "llm_tldr_en": "WorldMAP uses generative world models to provide supervision for grounded trajectory prediction in navigation.",
+      "llm_tldr_cn": "WorldMAP 利用生成式世界模型为具身导航中的接地轨迹预测提供监督信号。",
+      "llm_tldr": "WorldMAP 利用生成式世界模型为具身导航中的接地轨迹预测提供监督信号。",
+      "llm_tags": [
+        "query:navwm:composite"
+      ],
+      "matched_query_tag": "query:navwm:composite",
+      "matched_query_text": "Papers central to 隐空间、导航与世界模型相关论文检索, especially work that connects or combines: 研究隐空间表示及其在智能系统中的作用; 智能体在复杂环境中的导航策略与学习方法; 世界模型的结构与在自主系统中的应用; 探索表示学习在构建世界模型与导航中的运用; 基于隐空间表示的规划与决策模型; 空间表示与认知映射的算法及模型; 检索关于隐空间表示在世界模型和导航中的研究论文; 寻找利用世界模型进行强化学习或规划的最新研究; 探索智能体如何利用隐空间进行导航与环境理解.",
+      "matched_requirement_id": "req-composite-navwm",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.11751v1",
+      "source": "arxiv",
+      "title": "Grounded World Model for Semantically Generalizable Planning",
+      "abstract": "In Model Predictive Control (MPC), world models predict the future outcomes of various action proposals, which are then scored to guide the selection of the optimal action. For visuomotor MPC, the score function is a distance metric between a predicted image and a goal image, measured in the latent space of a pretrained vision encoder like DINO and JEPA. However, it is challenging to obtain the goal image in advance of the task execution, particularly in new environments. Additionally, conveying the goal through an image offers limited interactivity compared with natural language. In this work, we propose to learn a Grounded World Model (GWM) in a vision-language-aligned latent space. As a result, each proposed action is scored based on how close its future outcome is to the task instruction, reflected by the similarity of embeddings. This approach transforms the visuomotor MPC to a VLA that surpasses VLM-based VLAs in semantic generalization. On the proposed WISER benchmark, GWM-MPC achieves a 87% success rate on the test set comprising 288 tasks that feature unseen visual signals and referring expressions, yet remain solvable with motions demonstrated during training. In contrast, traditional VLAs achieve an average success rate of 22%, even though they overfit the training set with a 90% success rate.",
+      "authors": [
+        "Quanyi Li",
+        "Lan Feng",
+        "Haonan Zhang",
+        "Wuyang Li",
+        "Letian Wang",
+        "Alexandre Alahi",
+        "Harold Soh"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-04-13T17:25:41+00:00",
+      "link": "https://arxiv.org/pdf/2604.11751v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "world model in vision-language-aligned latent space for planning",
+      "llm_evidence_cn": "视觉语言对齐隐空间中的世界模型用于规划",
+      "llm_evidence": "视觉语言对齐隐空间中的世界模型用于规划",
+      "canonical_evidence": "视觉语言对齐隐空间中的世界模型用于规划",
+      "llm_tldr_en": "Learns a grounded world model in aligned latent space to enable language-guided planning and action scoring.",
+      "llm_tldr_cn": "在对齐的隐空间中学习接地世界模型，实现语言引导的规划与动作评分。",
+      "llm_tldr": "在对齐的隐空间中学习接地世界模型，实现语言引导的规划与动作评分。",
+      "llm_tags": [
+        "query:navwm:composite"
+      ],
+      "matched_query_tag": "query:navwm:composite",
+      "matched_query_text": "Papers central to 隐空间、导航与世界模型相关论文检索, especially work that connects or combines: 研究隐空间表示及其在智能系统中的作用; 智能体在复杂环境中的导航策略与学习方法; 世界模型的结构与在自主系统中的应用; 探索表示学习在构建世界模型与导航中的运用; 基于隐空间表示的规划与决策模型; 空间表示与认知映射的算法及模型; 检索关于隐空间表示在世界模型和导航中的研究论文; 寻找利用世界模型进行强化学习或规划的最新研究; 探索智能体如何利用隐空间进行导航与环境理解.",
+      "matched_requirement_id": "req-composite-navwm",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.12208v1",
+      "source": "arxiv",
+      "title": "Unveiling the Surprising Efficacy of Navigation Understanding in End-to-End Autonomous Driving",
+      "abstract": "Global navigation information and local scene understanding are two crucial components of autonomous driving systems. However, our experimental results indicate that many end-to-end autonomous driving systems tend to over-rely on local scene understanding while failing to utilize global navigation information. These systems exhibit weak correlation between their planning capabilities and navigation input, and struggle to perform navigation-following in complex scenarios. To overcome this limitation, we propose the Sequential Navigation Guidance (SNG) framework, an efficient representation of global navigation information based on real-world navigation patterns. The SNG encompasses both navigation paths for constraining long-term trajectories and turn-by-turn (TBT) information for real-time decision-making logic. We constructed the SNG-QA dataset, a visual question answering (VQA) dataset based on SNG that aligns global and local planning. Additionally, we introduce an efficient model SNG-VLA that fuses local planning with global planning. The SNG-VLA achieves state-of-the-art performance through precise navigation information modeling without requiring auxiliary loss functions from perception tasks. Project page: SNG-VLA",
+      "authors": [
+        "Zhihua Hua",
+        "Junli Wang",
+        "Pengfei LI",
+        "Qihao Jin",
+        "Bo Zhang",
+        "Kehua Sheng",
+        "Yilun Chen",
+        "Zhongxue Gan",
+        "Wenchao Ding"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-04-14T02:34:44+00:00",
+      "link": "https://arxiv.org/pdf/2604.12208v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "navigation guidance in autonomous driving",
+      "llm_evidence_cn": "自动驾驶中的导航引导",
+      "llm_evidence": "自动驾驶中的导航引导",
+      "canonical_evidence": "自动驾驶中的导航引导",
+      "llm_tldr_en": "Proposes a framework to improve global navigation utilization in end-to-end autonomous driving systems.",
+      "llm_tldr_cn": "提出一种框架，旨在提高端到端自动驾驶系统对全局导航信息的利用率。",
+      "llm_tldr": "提出一种框架，旨在提高端到端自动驾驶系统对全局导航信息的利用率。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.12493v1",
+      "source": "arxiv",
+      "title": "Latent Planning Emerges with Scale",
+      "abstract": "LLMs can perform seemingly planning-intensive tasks, like writing coherent stories or functioning code, without explicitly verbalizing a plan; however, the extent to which they implicitly plan is unknown. In this paper, we define latent planning as occurring when LLMs possess internal planning representations that (1) cause the generation of a specific future token or concept, and (2) shape preceding context to license said future token or concept. We study the Qwen-3 family (0.6B-14B) on simple planning tasks, finding that latent planning ability increases with scale. Models that plan possess features that represent a planned-for word like \"accountant\", and cause them to output \"an\" rather than \"a\"; moreover, even the less-successful Qwen-3 4B-8B have nascent planning mechanisms. On the more complex task of completing rhyming couplets, we find that models often identify a rhyme ahead of time, but even large models seldom plan far ahead. However, we can elicit some planning that increases with scale when steering models towards planned words in prose. In sum, we offer a framework for measuring planning and mechanistic evidence of how models' planning abilities grow with scale.",
+      "authors": [
+        "Michael Hanna",
+        "Emmanuel Ameisen"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-04-14T09:18:53+00:00",
+      "link": "https://arxiv.org/pdf/2604.12493v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "internal planning representations in latent space",
+      "llm_evidence_cn": "隐空间中的内部规划表示",
+      "llm_evidence": "隐空间中的内部规划表示",
+      "canonical_evidence": "隐空间中的内部规划表示",
+      "llm_tldr_en": "Investigates how latent planning representations emerge in LLMs to shape future outputs.",
+      "llm_tldr_cn": "研究大语言模型中如何涌现隐空间规划表示以影响未来输出。",
+      "llm_tldr": "研究大语言模型中如何涌现隐空间规划表示以影响未来输出。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.12831v1",
+      "source": "arxiv",
+      "title": "VULCAN: Vision-Language-Model Enhanced Multi-Agent Cooperative Navigation for Indoor Fire-Disaster Response",
+      "abstract": "Indoor fire disasters pose severe challenges to autonomous search and rescue due to dense smoke, high temperatures, and dynamically evolving indoor environments. In such time-critical scenarios, multi-agent cooperative navigation is particularly useful, as it enables faster and broader exploration than single-agent approaches. However, existing multi-agent navigation systems are primarily vision-based and designed for benign indoor settings, leading to significant performance degradation under fire-driven dynamic conditions. In this paper, we present VULCAN, a multi-agent cooperative navigation framework based on multi-modal perception and vision-language models (VLMs), tailored for indoor fire disaster response. We extend the Habitat-Matterport3D benchmark by simulating physically realistic fire scenarios, including smoke diffusion, thermal hazards, and sensor degradation. We evaluate representative multi-agent cooperative navigation baselines under both normal and fire-driven environments. Our results reveal critical failure modes of existing methods in fire scenarios and underscore the necessity of robust perception and hazard-aware planning for reliable multi-agent search and rescue.",
+      "authors": [
+        "Shengding Liu",
+        "Qiben Yan"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-04-14T14:50:43+00:00",
+      "link": "https://arxiv.org/pdf/2604.12831v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "multi-agent cooperative navigation in dynamic indoor environments",
+      "llm_evidence_cn": "动态室内环境中的多智能体协同导航",
+      "llm_evidence": "动态室内环境中的多智能体协同导航",
+      "canonical_evidence": "动态室内环境中的多智能体协同导航",
+      "llm_tldr_en": "Proposes a VLM-based framework for multi-agent navigation in fire disaster scenarios.",
+      "llm_tldr_cn": "提出一种基于视觉语言模型的火灾场景多智能体协同导航框架。",
+      "llm_tldr": "提出一种基于视觉语言模型的火灾场景多智能体协同导航框架。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.12872v1",
+      "source": "arxiv",
+      "title": "OVAL: Open-Vocabulary Augmented Memory Model for Lifelong Object Goal Navigation",
+      "abstract": "Object Goal Navigation (ObjectNav) refers to an agent navigating to an object in an unseen environment, which is an ability often required in the accomplishment of complex tasks. While existing methods demonstrate proficiency in isolated single object navigation, their limitations emerge in the restricted applicability of lifelong memory representations, which ultimately hinders effective navigation toward continual targets over extended periods. To address this problem, we propose OVAL, a novel lifelong open-vocabulary memory framework, which enables efficient and precise execution of long-term navigation in semantically open tasks. Within this framework, we introduce memory descriptors to facilitate structured management of the memory model. Additionally, we propose a novel probability-based exploration strategy, utilizing a multi-value frontier scoring to enhance lifelong exploration efficiency. Extensive experiments demonstrate the efficiency and robustness of the proposed system.",
+      "authors": [
+        "Jiahua Pei",
+        "Yi Liu",
+        "Guoping Pan",
+        "Yuanhao Jiang",
+        "Houde Liu",
+        "Xueqian Wang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-04-14T15:22:57+00:00",
+      "link": "https://arxiv.org/pdf/2604.12872v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "lifelong memory model for object goal navigation",
+      "llm_evidence_cn": "用于目标导航的终身记忆模型",
+      "llm_evidence": "用于目标导航的终身记忆模型",
+      "canonical_evidence": "用于目标导航的终身记忆模型",
+      "llm_tldr_en": "A lifelong open-vocabulary memory framework for efficient long-term object navigation.",
+      "llm_tldr_cn": "一种用于高效长期目标导航的终身开放词汇记忆框架。",
+      "llm_tldr": "一种用于高效长期目标导航的终身开放词汇记忆框架。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "寻找利用世界模型进行强化学习或规划的最新研究",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2604.09535v1",
+      "source": "arxiv",
+      "title": "EgoTL: Egocentric Think-Aloud Chains for Long-Horizon Tasks",
+      "abstract": "Large foundation models have made significant advances in embodied intelligence, enabling synthesis and reasoning over egocentric input for household tasks. However, VLM-based auto-labeling is often noisy because the primary data sources lack accurate human action labels, chain-of-thought (CoT), and spatial annotations; these errors are amplified during long-horizon spatial instruction following. These issues stem from insufficient coverage of minute-long, daily household planning tasks and from inaccurate spatial grounding. As a result, VLM reasoning chains and world-model synthesis can hallucinate objects, skip steps, or fail to respect real-world physical attributes. To address these gaps, we introduce EgoTL. EgoTL builds a think-aloud capture pipeline for egocentric data. It uses a say-before-act protocol to record step-by-step goals and spoken reasoning with word-level timestamps, then calibrates physical properties with metric-scale spatial estimators, a memory-bank walkthrough for scene context, and clip-level tags for navigation instructions and detailed manipulation actions. With EgoTL, we are able to benchmark VLMs and World Models on six task dimensions from three layers and long-horizon generation over minute-long sequences across over 100 daily household tasks. We find that foundation models still fall short as egocentric assistants or open-world simulators. Finally, we finetune foundation models with human CoT aligned with metric labels on the training split of EgoTL, which improves long-horizon planning and reasoning, step-wise reasoning, instruction following, and spatial grounding.",
+      "authors": [
+        "Lulin Liu",
+        "Dayou Li",
+        "Yiqing Liang",
+        "Sicong Jiang",
+        "Hitesh Vijay",
+        "Hezhen Hu",
+        "Xuhai Xu",
+        "Zirui Liu",
+        "Srinivas Shakkottai",
+        "Manling Li",
+        "Zhiwen Fan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-04-10T17:53:55+00:00",
+      "link": "https://arxiv.org/pdf/2604.09535v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "world-model synthesis and spatial instruction following for embodied intelligence",
+      "llm_evidence_cn": "具身智能中的世界模型合成与空间指令遵循",
+      "llm_evidence": "具身智能中的世界模型合成与空间指令遵循",
+      "canonical_evidence": "具身智能中的世界模型合成与空间指令遵循",
+      "llm_tldr_en": "EgoTL improves long-horizon spatial reasoning in embodied agents using egocentric think-aloud chains.",
+      "llm_tldr_cn": "EgoTL通过第一人称出声思维链提升了具身智能体在长程任务中的空间推理能力。",
+      "llm_tldr": "EgoTL通过第一人称出声思维链提升了具身智能体在长程任务中的空间推理能力。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2604.10721v1",
+      "source": "arxiv",
+      "title": "Turning Generators into Retrievers: Unlocking MLLMs for Natural Language-Guided Geo-Localization",
+      "abstract": "Natural-language Guided Cross-view Geo-localization (NGCG) aims to retrieve geo-tagged satellite imagery using textual descriptions of ground scenes. While recent NGCG methods commonly rely on CLIP-style dual-encoder architectures, they often suffer from weak cross-modal generalization and require complex architectural designs. In contrast, Multimodal Large Language Models (MLLMs) offer powerful semantic reasoning capabilities but are not directly optimized for retrieval tasks. In this work, we present a simple yet effective framework to adapt MLLMs for NGCG via parameter-efficient finetuning. Our approach optimizes latent representations within the MLLM while preserving its pretrained multimodal knowledge, enabling strong cross-modal alignment without redesigning model architectures. Through systematic analysis of diverse variables, from model backbone to feature aggregation, we provide practical and generalizable insights for leveraging MLLMs in NGCG. Our method achieves SOTA on GeoText-1652 with a 12.2% improvement in Text-to-Image Recall@1 and secures top performance in 5 out of 12 subtasks on CVG-Text, all while surpassing baselines with far fewer trainable parameters. These results position MLLMs as a robust foundation for semantic cross-view retrieval and pave the way for MLLM-based NGCG to be adopted as a scalable, powerful alternative to traditional dual-encoder designs. Project page and code are available at https://yuqichen888.github.io/NGCG-MLLMs-web/.",
+      "authors": [
+        "Yuqi Chen",
+        "Xiaohan Zhang",
+        "Ahmad Arrabi",
+        "Waqas Sultani",
+        "Chen Chen",
+        "Safwan Wshah"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-04-12T16:40:02+00:00",
+      "link": "https://arxiv.org/pdf/2604.10721v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "optimizing latent representations for natural language-guided geo-localization",
+      "llm_evidence_cn": "优化自然语言引导地理定位中的隐空间表示",
+      "llm_evidence": "优化自然语言引导地理定位中的隐空间表示",
+      "canonical_evidence": "优化自然语言引导地理定位中的隐空间表示",
+      "llm_tldr_en": "This work adapts MLLMs for geo-localization by optimizing latent representations for cross-view retrieval.",
+      "llm_tldr_cn": "该研究通过优化隐空间表示，将多模态大模型应用于自然语言引导的地理定位任务。",
+      "llm_tldr": "该研究通过优化隐空间表示，将多模态大模型应用于自然语言引导的地理定位任务。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.06911v1",
+      "source": "arxiv",
+      "title": "Physics-driven Sonification for Improving Multisensory Needle Guidance in Percutaneous Epicardial Access",
+      "abstract": "Percutaneous epicardial access (PEA), performed on a beating heart under fluoroscopy, enables arrhythmia treatment. However, advancing a needle toward the thin and moving pericardium remains highly challenging and risky. To address this problem, we present a physics-driven sonification method for Extended Reality (XR)-based multisensory navigation to enhance user perception during the critical needle landing phase in PEA.   Dynamic cardiac anatomy from 4D CTA was reconstructed and registered to a real-world coordinate system. Real-time needle tracking provided the position of the needle tip relative to moving cardiac structures and drove an audio-visual feedback module. The visual display presented navigational cues and dynamic anatomy, while the auditory display encoded physiological cardiac states using a multilayer physical membrane model.   A phantom study was conducted with twelve cardiologists performing needle insertions under visual-only and multisensory feedback. The multisensory method significantly improved navigation safety ($χ^2 = 11.30$, $p < 0.01$), reducing myocardial contact (3.64% vs. 7.27%) and increasing correct access (90.91% vs. 52.73%). Needle placement accuracy improved, with closer membrane proximity (Cliff delta = 0.19) and reduced variability ($p < 0.05$). Execution time was comparable, while time-accuracy correlations differed significantly between modalities ($p < 0.01$). NASA-TLX indicated lower cognitive load with multisensory guidance ($p < 0.01$).   These results demonstrate the feasibility of physics-driven sonification for improving spatiotemporal awareness and supporting user-centered surgical navigation.",
+      "authors": [
+        "Veronica Ruozzi",
+        "Sasan Matinfar",
+        "Pasquale Vergara",
+        "Alessandro Albanesi",
+        "Serena Dell'Aversana",
+        "Stefano Carugo",
+        "Gianluigi Buccoliero",
+        "Nassir Navab",
+        "Alberto Redaelli",
+        "Emiliano Votta"
+      ],
+      "primary_category": "cs.HC",
+      "categories": [
+        "cs.HC"
+      ],
+      "published": "2026-04-08T10:11:07+00:00",
+      "link": "https://arxiv.org/pdf/2604.06911v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multisensory navigation in complex environments",
+      "llm_evidence_cn": "复杂环境中的多感官导航",
+      "llm_evidence": "复杂环境中的多感官导航",
+      "canonical_evidence": "复杂环境中的多感官导航",
+      "llm_tldr_en": "Develops a physics-driven sonification method for multisensory needle navigation in medical procedures.",
+      "llm_tldr_cn": "开发了一种物理驱动的声演化方法，用于医疗手术中的多感官穿刺导航。",
+      "llm_tldr": "开发了一种物理驱动的声演化方法，用于医疗手术中的多感官穿刺导航。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.12656v1",
+      "source": "arxiv",
+      "title": "FeaXDrive: Feasibility-aware Trajectory-Centric Diffusion Planning for End-to-End Autonomous Driving",
+      "abstract": "End-to-end diffusion planning has shown strong potential for autonomous driving, but the physical feasibility of generated trajectories remains insufficiently addressed. In particular, generated trajectories may exhibit local geometric irregularities, violate trajectory-level kinematic constraints, or deviate from the drivable area, indicating that the commonly used noise-centric formulation in diffusion planning is not yet well aligned with the trajectory space where feasibility is more naturally characterized. To address this issue, we propose FeaXDrive, a feasibility-aware trajectory-centric diffusion planning method for end-to-end autonomous driving. The core idea is to treat the clean trajectory as the unified object for feasibility-aware modeling throughout the diffusion process. Built on this trajectory-centric formulation, FeaXDrive integrates adaptive curvature-constrained training to improve intrinsic geometric and kinematic feasibility, drivable-area guidance within reverse diffusion sampling to enhance consistency with the drivable area, and feasibility-aware GRPO post-training to further improve planning performance while balancing trajectory-space feasibility. Experiments on the NAVSIM benchmark show that FeaXDrive achieves strong closed-loop planning performance while substantially improving trajectory-space feasibility. These findings highlight the importance of explicitly modeling trajectory-space feasibility in end-to-end diffusion planning and provide a step toward more reliable and physically grounded autonomous driving planners.",
+      "authors": [
+        "Baoyun Wang",
+        "Zhuoren Li",
+        "Ming Liu",
+        "Xinrui Zhang",
+        "Bo Leng",
+        "Lu Xiong"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.LG"
+      ],
+      "published": "2026-04-14T12:24:54+00:00",
+      "link": "https://arxiv.org/pdf/2604.12656v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "diffusion planning for autonomous driving trajectories and feasibility",
+      "llm_evidence_cn": "自动驾驶轨迹和可行性的扩散规划",
+      "llm_evidence": "自动驾驶轨迹和可行性的扩散规划",
+      "canonical_evidence": "自动驾驶轨迹和可行性的扩散规划",
+      "llm_tldr_en": "Proposes a feasibility-aware trajectory-centric diffusion planning method for autonomous driving.",
+      "llm_tldr_cn": "提出了一种面向自动驾驶的可行性感知轨迹中心扩散规划方法。",
+      "llm_tldr": "提出了一种面向自动驾驶的可行性感知轨迹中心扩散规划方法。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2604.11668v1",
+      "source": "arxiv",
+      "title": "UNIGEOCLIP: Unified Geospatial Contrastive Learning",
+      "abstract": "The growing availability of co-located geospatial data spanning aerial imagery, street-level views, elevation models, text, and geographic coordinates offers a unique opportunity for multimodal representation learning. We introduce UNIGEOCLIP, a massively multimodal contrastive framework to jointly align five complementary geospatial modalities in a single unified embedding space. Unlike prior approaches that fuse modalities or rely on a central pivot representation, our method performs all-to-all contrastive alignment, enabling seamless comparison, retrieval, and reasoning across arbitrary combinations of modalities. We further propose a scaled latitude-longitude encoder that improves spatial representation by capturing multi-scale geographic structure. Extensive experiments across downstream geospatial tasks demonstrate that UNIGEOCLIP consistently outperforms single-modality contrastive models and coordinate-only baselines, highlighting the benefits of holistic multimodal geospatial alignment. A reference implementation is available at https://gastruc.github.io/unigeoclip.",
+      "authors": [
+        "Guillaume Astruc",
+        "Eduard Trulls",
+        "Jan Hosang",
+        "Loic Landrieu",
+        "Paul-Edouard Sarlin"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-04-13T16:14:49+00:00",
+      "link": "https://arxiv.org/pdf/2604.11668v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "unified embedding space for geospatial representation",
+      "llm_evidence_cn": "地理空间表示的统一嵌入空间",
+      "llm_evidence": "地理空间表示的统一嵌入空间",
+      "canonical_evidence": "地理空间表示的统一嵌入空间",
+      "llm_tldr_en": "Proposes a multimodal framework to align geospatial data in a unified embedding space for spatial reasoning.",
+      "llm_tldr_cn": "提出一个多模态框架，在统一嵌入空间中对齐地理空间数据以进行空间推理。",
+      "llm_tldr": "提出一个多模态框架，在统一嵌入空间中对齐地理空间数据以进行空间推理。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.08597v1",
+      "source": "arxiv",
+      "title": "STIndex: A Context-Aware Multi-Dimensional Spatiotemporal Information Extraction System",
+      "abstract": "Extracting structured knowledge from unstructured data still faces practical limitations: entity and event extraction pipelines remain brittle, knowledge graph construction requires costly ontology engineering, and cross-domain generalization is rarely production-ready. In contrast, space and time provide universal contextual anchors that naturally align heterogeneous information and benefit downstream tasks such as retrieval and reasoning. We introduce \\textbf{STIndex}, an end-to-end system that structures unstructured content into a multidimensional spatiotemporal data warehouse. Users define domain-specific analysis dimensions with configurable hierarchies, while large language models perform context-aware extraction and grounding. \\textbf{STIndex} integrates document-level memory, geocoding correction, and quality validation, and offers an interactive analytics dashboard for visualization, clustering, burst detection, and entity network analysis. In evaluation on a public health benchmark, \\textbf{STIndex} improves spatiotemporal entity extraction F1 by 4.37\\% (GPT-4o-mini) and 3.60\\% (Qwen3-8B). A live demonstration and open-source code are available at https://stindex.ai4wa.com/dashboard.",
+      "authors": [
+        "Wenxiao Zhang",
+        "Yu Liu",
+        "Qiang sun",
+        "Yihao Ding",
+        "Sirui Li",
+        "Yanbing Liu",
+        "Jin B. Hong",
+        "Wei Liu"
+      ],
+      "primary_category": "cs.DB",
+      "categories": [
+        "cs.DB",
+        "cs.AI"
+      ],
+      "published": "2026-04-07T04:42:44+00:00",
+      "link": "https://arxiv.org/pdf/2604.08597v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "spatiotemporal information extraction and grounding",
+      "llm_evidence_cn": "时空信息提取与接地",
+      "llm_evidence": "时空信息提取与接地",
+      "canonical_evidence": "时空信息提取与接地",
+      "llm_tldr_en": "A system for extracting structured spatiotemporal knowledge to provide universal contextual anchors.",
+      "llm_tldr_cn": "一种提取结构化时空知识以提供通用上下文锚点的系统。",
+      "llm_tldr": "一种提取结构化时空知识以提供通用上下文锚点的系统。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.12626v1",
+      "source": "arxiv",
+      "title": "Habitat-GS: A High-Fidelity Navigation Simulator with Dynamic Gaussian Splatting",
+      "abstract": "Training embodied AI agents depends critically on the visual fidelity of simulation environments and the ability to model dynamic humans. Current simulators rely on mesh-based rasterization with limited visual realism, and their support for dynamic human avatars, where available, is constrained to mesh representations, hindering agent generalization to human-populated real-world scenarios. We present Habitat-GS, a navigation-centric embodied AI simulator extended from Habitat-Sim that integrates 3D Gaussian Splatting scene rendering and drivable gaussian avatars while maintaining full compatibility with the Habitat ecosystem. Our system implements a 3DGS renderer for real-time photorealistic rendering and supports scalable 3DGS asset import from diverse sources. For dynamic human modeling, we introduce a gaussian avatar module that enables each avatar to simultaneously serve as a photorealistic visual entity and an effective navigation obstacle, allowing agents to learn human-aware behaviors in realistic settings. Experiments on point-goal navigation demonstrate that agents trained on 3DGS scenes achieve stronger cross-domain generalization, with mixed-domain training being the most effective strategy. Evaluations on avatar-aware navigation further confirm that gaussian avatars enable effective human-aware navigation. Finally, performance benchmarks validate the system's scalability across varying scene complexity and avatar counts.",
+      "authors": [
+        "Ziyuan Xia",
+        "Jingyi Xu",
+        "Chong Cui",
+        "Yuanhong Yu",
+        "Jiazhao Zhang",
+        "Qingsong Yan",
+        "Tao Ni",
+        "Junbo Chen",
+        "Xiaowei Zhou",
+        "Hujun Bao",
+        "Ruizhen Hu",
+        "Sida Peng"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV"
+      ],
+      "published": "2026-04-14T11:52:59+00:00",
+      "link": "https://arxiv.org/pdf/2604.12626v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "high-fidelity navigation simulator for embodied AI agents",
+      "llm_evidence_cn": "用于具身智能体的高保真导航模拟器",
+      "llm_evidence": "用于具身智能体的高保真导航模拟器",
+      "canonical_evidence": "用于具身智能体的高保真导航模拟器",
+      "llm_tldr_en": "Introduces a navigation-centric simulator using Gaussian Splatting for photorealistic embodied AI training.",
+      "llm_tldr_cn": "介绍了一种利用高斯泼溅技术进行光追渲染的导航中心化具身智能模拟器。",
+      "llm_tldr": "介绍了一种利用高斯泼溅技术进行光追渲染的导航中心化具身智能模拟器。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.09734v1",
+      "source": "arxiv",
+      "title": "Multi-Frequency Local Plasticity for Visual Representation Learning",
+      "abstract": "We study how far structured architectural bias can compensate for the absence of end-to-end gradient-based representation learning in visual recognition. Building on the VisNet tradition, we introduce a modular hierarchical framework combining: (i) fixed multi-frequency Gabor decomposition into F=7 parallel streams; (ii) within-stream competitive learning with Hebbian and Oja updates and anti-Hebbian decorrelation; (iii) an associative memory module inspired by modern Hopfield retrieval; and (iv) iterative top-down modulation using local prediction and reconstruction signals.   Representational layers are trained without end-to-end backpropagation through the full hierarchy; only the final linear readout and top-down projection matrices are optimized by gradient descent. We therefore interpret the model as a hybrid system that is predominantly locally trained but includes a small number of gradient-trained parameters.   On CIFAR-10, the full model reaches 80.1% +/- 0.3% top-1 accuracy, linear probe), compared with 71.0% for a Hebbian-only baseline and 83.4% for a gradient-trained model on the same fixed Gabor basis. On CIFAR-100, performance is 54.8%. Factorial analysis indicates that multi-frequency streams, associative memory, and top-down feedback contribute largely additively, with a significant Streams x TopDown interaction (p=0.02).   These results suggest that carefully chosen architectural priors can recover a substantial fraction of the performance typically associated with global gradient training, while leaving a measurable residual gap. Experiments are limited to CIFAR-10/100.",
+      "authors": [
+        "Mehdi Fatan Serj",
+        "C. Alejandro Parraga",
+        "Xavier Otazu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-04-09T18:30:47+00:00",
+      "link": "https://arxiv.org/pdf/2604.09734v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Visual representation learning using local plasticity and hierarchical frameworks",
+      "llm_evidence_cn": "利用局部可塑性和分层框架进行视觉表示学习",
+      "llm_evidence": "利用局部可塑性和分层框架进行视觉表示学习",
+      "canonical_evidence": "利用局部可塑性和分层框架进行视觉表示学习",
+      "llm_tldr_en": "Explores visual representation learning without end-to-end backpropagation using structured architectural bias.",
+      "llm_tldr_cn": "探索在没有端到端反向传播的情况下，利用结构化架构偏差进行视觉表示学习。",
+      "llm_tldr": "探索在没有端到端反向传播的情况下，利用结构化架构偏差进行视觉表示学习。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索表示学习在构建世界模型与导航中的运用",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.10591v1",
+      "source": "arxiv",
+      "title": "GeoMeld: Toward Semantically Grounded Foundation Models for Remote Sensing",
+      "abstract": "Effective foundation modeling in remote sensing requires spatially aligned heterogeneous modalities coupled with semantically grounded supervision, yet such resources remain limited at scale. We present GeoMeld, a large-scale multimodal dataset with approximately 2.5 million spatially aligned samples. The dataset spans diverse modalities and resolutions and is constructed under a unified alignment protocol for modality-aware representation learning. GeoMeld provides semantically grounded language supervision through an agentic captioning framework that synthesizes and verifies annotations from spectral signals, terrain statistics, and structured geographic metadata, encoding measurable cross-modality relationships within textual descriptions. To leverage this dataset, we introduce GeoMeld-FM, a pretraining framework that combines multi-pretext masked autoencoding over aligned modalities, JEPA representation learning, and caption-vision contrastive alignment. This joint objective enables the learned representation space to capture both reliable cross-sensor physical consistency and grounded semantics. Experiments demonstrate consistent gains in downstream transfer and cross-sensor robustness. Together, GeoMeld and GeoMeld-FM establish a scalable reference framework for semantically grounded multi-modal foundation modeling in remote sensing.",
+      "authors": [
+        "Maram Hasan",
+        "Md Aminur Hossain",
+        "Savitra Roy",
+        "Souparna Bhowmik",
+        "Ayush V. Patel",
+        "Mainak Singha",
+        "Subhasis Chaudhuri",
+        "Muhammad Haris Khan",
+        "Biplab Banerjee"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-04-12T11:47:11+00:00",
+      "link": "https://arxiv.org/pdf/2604.10591v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "spatially aligned representation learning",
+      "llm_evidence_cn": "空间对齐的表示学习",
+      "llm_evidence": "空间对齐的表示学习",
+      "canonical_evidence": "空间对齐的表示学习",
+      "llm_tldr_en": "Creates a large-scale multimodal dataset for semantically grounded representation learning in remote sensing.",
+      "llm_tldr_cn": "创建一个大规模多模态数据集，用于遥感领域中具有语义基础的表示学习。",
+      "llm_tldr": "创建一个大规模多模态数据集，用于遥感领域中具有语义基础的表示学习。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索表示学习在构建世界模型与导航中的运用",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.12766v1",
+      "source": "arxiv",
+      "title": "NaviRAG: Towards Active Knowledge Navigation for Retrieval-Augmented Generation",
+      "abstract": "Retrieval-augmented generation (RAG) typically relies on a flat retrieval paradigm that maps queries directly to static, isolated text segments. This approach struggles with more complex tasks that require the conditional retrieval and dynamic synthesis of information across different levels of granularity (e.g., from broad concepts to specific evidence). To bridge this gap, we introduce NaviRAG, a novel framework that shifts from passive segment retrieval to active knowledge navigation. NaviRAG first structures the knowledge documents into a hierarchical form, preserving semantic relationships from coarse-grained topics to fine-grained details. Leveraging this reorganized knowledge records, a large language model (LLM) agent actively navigates the records, iteratively identifying information gaps and retrieving relevant content from the most appropriate granularity level. Extensive experiments on long-document QA benchmarks show that NaviRAG consistently improves both retrieval recall and end-to-end answer performance over conventional RAG baselines. Ablation studies confirm performance gains stem from our method's capacity for multi-granular evidence localization and dynamic retrieval planning. We further discuss efficiency, applicable scenario, and future directions of our method, hoping to make RAG systems more intelligent and autonomous.",
+      "authors": [
+        "Jihao Dai",
+        "Dingjun Wu",
+        "Yuxuan Chen",
+        "Zheni Zeng",
+        "Yukun Yan",
+        "Zhenghao Liu",
+        "Maosong Sun"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-04-14T14:07:01+00:00",
+      "link": "https://arxiv.org/pdf/2604.12766v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "active knowledge navigation and hierarchical semantic relationships",
+      "llm_evidence_cn": "主动知识导航与分层语义关系",
+      "llm_evidence": "主动知识导航与分层语义关系",
+      "canonical_evidence": "主动知识导航与分层语义关系",
+      "llm_tldr_en": "Shifts RAG from passive retrieval to active navigation using hierarchical knowledge structures.",
+      "llm_tldr_cn": "利用分层知识结构将RAG从被动检索转变为主动导航。",
+      "llm_tldr": "利用分层知识结构将RAG从被动检索转变为主动导航。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
