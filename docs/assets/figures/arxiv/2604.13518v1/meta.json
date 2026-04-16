@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.13518v1/fig-001.webp",
+      "caption": "Fig. 1. Architectural comparison of Contrastive, Non Contrastive, Reconstruction based and Predictive Representation",
+      "page": 6,
+      "index": 1,
+      "width": 725,
+      "height": 377
+    },
+    {
+      "url": "assets/figures/arxiv/2604.13518v1/fig-002.webp",
+      "caption": "Fig. 3. New Taxonomy for SSL categorization",
+      "page": 11,
+      "index": 2,
+      "width": 725,
+      "height": 308
+    },
+    {
+      "url": "assets/figures/arxiv/2604.13518v1/fig-003.webp",
+      "caption": "Table 1. Conceptual and architectural comparison",
+      "page": 8,
+      "index": 3,
+      "width": 716,
+      "height": 183
+    },
+    {
+      "url": "assets/figures/arxiv/2604.13518v1/fig-004.webp",
+      "caption": "Fig. 2. Comparision of the results from our custom implimentation and training: Comparison of augmentation similarity and occlusion robustness across BYOL, I-JEPA, and MAE. Predictive learning (I-JEPA) achieves superior robustness despite lower similarity.",
+      "page": 9,
+      "index": 4,
+      "width": 710,
+      "height": 348
+    }
+  ]
+}

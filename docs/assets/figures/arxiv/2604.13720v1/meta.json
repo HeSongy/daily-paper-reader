@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.13720v1/fig-001.webp",
+      "caption": "Fig. 2. Illustration of the cVAE. The encoder, decoder, and prior networks are implemented using NNs. During training and inference, the latent variable z is inferred via the decoder network (switch in the lower position) and the prior network (switch in the upper position), respectively.",
+      "page": 3,
+      "index": 1,
+      "width": 506,
+      "height": 291
+    },
+    {
+      "url": "assets/figures/arxiv/2604.13720v1/fig-002.webp",
+      "caption": "Fig. 1. Visualization of the indoor channel model with two APs (black points), one possible UE position (green point), and a possible location of the blocking object (red cuboid). The gray area corresponds to test set T3.",
+      "page": 2,
+      "index": 2,
+      "width": 529,
+      "height": 373
+    },
+    {
+      "url": "assets/figures/arxiv/2604.13720v1/fig-003.webp",
+      "caption": "Fig. 4. Empirical cCDFs of the normalized rate achieved with different context-based CSI prediction and AP selection approaches at SNR = 10dB for the test sets (a) T1, (b) T2, and (c) T3.",
+      "page": 5,
+      "index": 3,
+      "width": 1034,
+      "height": 351
+    }
+  ]
+}
