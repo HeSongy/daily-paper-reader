@@ -1,0 +1,444 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-04-17T19:42:59.641935+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 5,
+    "deep_cap": 6,
+    "deep_selected": 5,
+    "quick_candidates": 5,
+    "quick_skim_target": 11,
+    "quick_selected": 5
+  },
+  "deep_dive": [
+    {
+      "id": "2604.07957v1",
+      "source": "arxiv",
+      "title": "WorldMAP: Bootstrapping Vision-Language Navigation Trajectory Prediction with Generative World Models",
+      "abstract": "Vision-language models (VLMs) and generative world models are opening new opportunities for embodied navigation. VLMs are increasingly used as direct planners or trajectory predictors, while world models support look-ahead reasoning by imagining future views. Yet predicting a reliable trajectory from a single egocentric observation remains challenging. Current VLMs often generate unstable trajectories, and world models, though able to synthesize plausible futures, do not directly provide the grounded signals needed for navigation learning. This raises a central question: how can generated futures be turned into supervision for grounded trajectory prediction? We present WorldMAP, a teacher--student framework that converts world-model-generated futures into persistent semantic-spatial structure and planning-derived supervision. Its world-model-driven teacher builds semantic-spatial memory from generated videos, grounds task-relevant targets and obstacles, and produces trajectory pseudo-labels through explicit planning. A lightweight student with a multi-hypothesis trajectory head is then trained to predict navigation trajectories directly from vision-language inputs. On Target-Bench, WorldMAP achieves the best ADE and FDE among compared methods, reducing ADE by 18.0% and FDE by 42.1% relative to the best competing baseline, while lifting a small open-source VLM to DTW performance competitive with proprietary models. More broadly, the results suggest that, in embodied navigation, the value of world models may lie less in supplying action-ready imagined evidence than in synthesizing structured supervision for navigation learning.",
+      "authors": [
+        "Hongjin Chen",
+        "Shangyun Jiang",
+        "Tonghua Su",
+        "Chen Gao",
+        "Xinlei Chen",
+        "Yong Li",
+        "Zhibo Chen"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-04-09T08:21:58+00:00",
+      "link": "https://arxiv.org/pdf/2604.07957v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Generative world models for embodied navigation and trajectory prediction",
+      "llm_evidence_cn": "用于具身导航和轨迹预测的生成式世界模型",
+      "llm_evidence": "用于具身导航和轨迹预测的生成式世界模型",
+      "canonical_evidence": "用于具身导航和轨迹预测的生成式世界模型",
+      "llm_tldr_en": "WorldMAP uses generative world models to provide supervision for vision-language navigation trajectory prediction.",
+      "llm_tldr_cn": "WorldMAP利用生成式世界模型为视觉语言导航的轨迹预测提供监督信号。",
+      "llm_tldr": "WorldMAP利用生成式世界模型为视觉语言导航的轨迹预测提供监督信号。",
+      "llm_tags": [
+        "query:navwm:composite"
+      ],
+      "matched_query_tag": "query:navwm:composite",
+      "matched_query_text": "Papers central to 隐空间、导航与世界模型相关论文检索, especially work that connects or combines: 研究隐空间表示及其在智能系统中的作用; 智能体在复杂环境中的导航策略与学习方法; 世界模型的结构与在自主系统中的应用; 探索表示学习在构建世界模型与导航中的运用; 基于隐空间表示的规划与决策模型; 空间表示与认知映射的算法及模型; 检索关于隐空间表示在世界模型和导航中的研究论文; 寻找利用世界模型进行强化学习或规划的最新研究; 探索智能体如何利用隐空间进行导航与环境理解.",
+      "matched_requirement_id": "req-composite-navwm",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.14268v1",
+      "source": "arxiv",
+      "title": "HY-World 2.0: A Multi-Modal World Model for Reconstructing, Generating, and Simulating 3D Worlds",
+      "abstract": "We introduce HY-World 2.0, a multi-modal world model framework that advances our prior project HY-World 1.0. HY-World 2.0 accommodates diverse input modalities, including text prompts, single-view images, multi-view images, and videos, and produces 3D world representations. With text or single-view image inputs, the model performs world generation, synthesizing high-fidelity, navigable 3D Gaussian Splatting (3DGS) scenes. This is achieved through a four-stage method: a) Panorama Generation with HY-Pano 2.0, b) Trajectory Planning with WorldNav, c) World Expansion with WorldStereo 2.0, and d) World Composition with WorldMirror 2.0. Specifically, we introduce key innovations to enhance panorama fidelity, enable 3D scene understanding and planning, and upgrade WorldStereo, our keyframe-based view generation model with consistent memory. We also upgrade WorldMirror, a feed-forward model for universal 3D prediction, by refining model architecture and learning strategy, enabling world reconstruction from multi-view images or videos. Also, we introduce WorldLens, a high-performance 3DGS rendering platform featuring a flexible engine-agnostic architecture, automatic IBL lighting, efficient collision detection, and training-rendering co-design, enabling interactive exploration of 3D worlds with character support. Extensive experiments demonstrate that HY-World 2.0 achieves state-of-the-art performance on several benchmarks among open-source approaches, delivering results comparable to the closed-source model Marble. We release all model weights, code, and technical details to facilitate reproducibility and support further research on 3D world models.",
+      "authors": [
+        "Team HY-World",
+        "Chenjie Cao",
+        "Xuhui Zuo",
+        "Zhenwei Wang",
+        "Yisu Zhang",
+        "Junta Wu",
+        "Zhenyang Liu",
+        "Yuning Gong",
+        "Yang Liu",
+        "Bo Yuan",
+        "Chao Zhang",
+        "Coopers Li",
+        "Dongyuan Guo",
+        "Fan Yang",
+        "Haiyu Zhang",
+        "Hang Cao",
+        "Jianchen Zhu",
+        "Jiaxin Lin",
+        "Jie Xiao",
+        "Jihong Zhang",
+        "Junlin Yu",
+        "Lei Wang",
+        "Lifu Wang",
+        "Lilin Wang",
+        "Linus",
+        "Minghui Chen",
+        "Peng He",
+        "Penghao Zhao",
+        "Qi Chen",
+        "Rui Chen",
+        "Rui Shao",
+        "Sicong Liu",
+        "Wangchen Qin",
+        "Xiaochuan Niu",
+        "Xiang Yuan",
+        "Yi Sun",
+        "Yifei Tang",
+        "Yifu Sun",
+        "Yihang Lian",
+        "Yonghao Tan",
+        "Yuhong Liu",
+        "Yuyang Yin",
+        "Zhiyuan Min",
+        "Tengfei Wang",
+        "Chunchao Guo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-04-15T17:59:17+00:00",
+      "link": "https://arxiv.org/pdf/2604.14268v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Multi-modal world model for 3D world generation and trajectory planning",
+      "llm_evidence_cn": "用于3D世界生成和轨迹规划的多模态世界模型",
+      "llm_evidence": "用于3D世界生成和轨迹规划的多模态世界模型",
+      "canonical_evidence": "用于3D世界生成和轨迹规划的多模态世界模型",
+      "llm_tldr_en": "Introduces HY-World 2.0 for generating navigable 3D scenes and planning trajectories using a world model.",
+      "llm_tldr_cn": "引入HY-World 2.0，通过世界模型生成可导航的3D场景并进行轨迹规划。",
+      "llm_tldr": "引入HY-World 2.0，通过世界模型生成可导航的3D场景并进行轨迹规划。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.14732v1",
+      "source": "arxiv",
+      "title": "World-Value-Action Model: Implicit Planning for Vision-Language-Action Systems",
+      "abstract": "Vision-Language-Action (VLA) models have emerged as a promising paradigm for building embodied agents that ground perception and language into action. However, most existing approaches rely on direct action prediction, lacking the ability to reason over long-horizon trajectories and evaluate their consequences, which limits performance in complex decision-making tasks. In this work, we introduce World-Value-Action (WAV) model, a unified framework that enables implicit planning in VLA systems. Rather than performing explicit trajectory optimization, WAV model learn a structured latent representation of future trajectories conditioned on visual observations and language instructions. A learned world model predicts future states, while a trajectory value function evaluates their long-horizon utility. Action generation is then formulated as inference in this latent space, where the model progressively concentrates probability mass on high-value and dynamically feasible trajectories. We provide a theoretical perspective showing that planning directly in action space suffers from an exponential decay in the probability of feasible trajectories as the horizon increases. In contrast, latent-space inference reshapes the search distribution toward feasible regions, enabling efficient long-horizon decision making. Extensive simulations and real-world experiments demonstrate that the WAV model consistently outperforms state-of-the-art methods, achieving significant improvements in task success rate, generalization ability, and robustness, especially in long-horizon and compositional scenarios.",
+      "authors": [
+        "Runze Li",
+        "Hongyin Zhang",
+        "Junxi Jin",
+        "Qixin Zeng",
+        "Zifeng Zhuang",
+        "Yiqi Tang",
+        "Shangke Lyu",
+        "Donglin Wang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.LG"
+      ],
+      "published": "2026-04-16T07:46:05+00:00",
+      "link": "https://arxiv.org/pdf/2604.14732v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "structured latent representation for implicit planning in world models",
+      "llm_evidence_cn": "世界模型中用于隐式规划的结构化隐空间表示",
+      "llm_evidence": "世界模型中用于隐式规划的结构化隐空间表示",
+      "canonical_evidence": "世界模型中用于隐式规划的结构化隐空间表示",
+      "llm_tldr_en": "Introduces a World-Value-Action model using latent representations for implicit planning in embodied agents.",
+      "llm_tldr_cn": "引入WAV模型，利用隐空间表示在具身智能体中实现隐式规划。",
+      "llm_tldr": "引入WAV模型，利用隐空间表示在具身智能体中实现隐式规划。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.15076v1",
+      "source": "arxiv",
+      "title": "NEAT-NC: NEAT guided Navigation Cells for Robot Path Planning",
+      "abstract": "To navigate a space, the brain makes an internal representation of the environment using different cells such as place cells, grid cells, head direction cells, border cells, and speed cells. All these cells, along with sensory inputs, enable an organism to explore the space around it. Inspired by these biological principles, we developed NEATNC, a Neuro-Evolution of Augmenting Topology guided Navigation Cells. The goal of the paper is to improve NEAT algorithm performance in path planning in dynamic environments using spatial cognitive cells. This approach uses navigation cells as inputs and evolves recurrent neural networks, representing the hippocampus part of the brain. The performance of the proposed algorithm is evaluated in different static and dynamic scenarios. This study highlights NEAT's adaptability to complex and different environments, showcasing the utility of biological theories. This suggests that our approach is well-suited for real-time dynamic path planning for robotics and games.",
+      "authors": [
+        "Hibatallah Meliani",
+        "Khadija Slimani",
+        "Samira Khoulji"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI",
+        "cs.NE"
+      ],
+      "published": "2026-04-16T14:40:46+00:00",
+      "link": "https://arxiv.org/pdf/2604.15076v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "internal representation using place and grid cells for robot path planning",
+      "llm_evidence_cn": "利用位置细胞和网格细胞进行机器人路径规划的内部表示",
+      "llm_evidence": "利用位置细胞和网格细胞进行机器人路径规划的内部表示",
+      "canonical_evidence": "利用位置细胞和网格细胞进行机器人路径规划的内部表示",
+      "llm_tldr_en": "Develops biologically inspired navigation cells for robot path planning in dynamic environments.",
+      "llm_tldr_cn": "受生物学启发，开发了用于动态环境下机器人路径规划的导航细胞模型。",
+      "llm_tldr": "受生物学启发，开发了用于动态环境下机器人路径规划的导航细胞模型。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.12628v1",
+      "source": "arxiv",
+      "title": "A Comparison of Reinforcement Learning and Optimal Control Methods for Path Planning",
+      "abstract": "Path-planning for autonomous vehicles in threat-laden environments is a fundamental challenge. While traditional optimal control methods can find ideal paths, the computational time is often too slow for real-time decision-making. To solve this challenge, we propose a method based on Deep Deterministic Policy Gradient (DDPG) and model the threat as a simple, circular `no-go' zone. A mission failure is claimed if the vehicle enters this `no-go' zone at any time or does not reach a neighborhood of the destination. The DDPG agent is trained to learn a direct mapping from its current state (position and velocity) to a series of feasible actions that guide the agent to safely reach its goal. A reward function and two neural networks, critic and actor, are used to describe the environment and guide the control efforts. The DDPG trains the agent to find the largest possible set of starting points (``feasible set'') wherein a safe path to the goal is guaranteed. This provides critical information for mission planning, showing beforehand whether a task is achievable from a given starting point, assisting pre-mission planning activities. The approach is validated in simulation. A comparison between the DDPG method and a traditional optimal control (pseudo-spectral) method is carried out. The results show that the learning-based agent may produce effective paths while being significantly faster, making it a better fit for real-time applications. However, there are areas (``infeasible set'') where the DDPG agent cannot find paths to the destination, and the paths in the feasible set may not be optimal. These preliminary results guide our future research: (1) improve the reward function to enlarge the DDPG feasible set, (2) examine the feasible set obtained by the pseudo-spectral method, and (3) investigate the arc-search IPM method for the path planning problem.",
+      "authors": [
+        "Qiang Le",
+        "Yaguang Yang",
+        "Isaac E. Weintraub"
+      ],
+      "primary_category": "math.OC",
+      "categories": [
+        "math.OC",
+        "cs.RO"
+      ],
+      "published": "2026-04-14T11:55:15+00:00",
+      "link": "https://arxiv.org/pdf/2604.12628v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Reinforcement learning for path planning in threat-laden environments",
+      "llm_evidence_cn": "复杂威胁环境下的强化学习路径规划",
+      "llm_evidence": "复杂威胁环境下的强化学习路径规划",
+      "canonical_evidence": "复杂威胁环境下的强化学习路径规划",
+      "llm_tldr_en": "Compares RL and optimal control for real-time autonomous vehicle path planning in hazardous environments.",
+      "llm_tldr_cn": "比较了强化学习与最优控制在复杂威胁环境下自主车辆实时路径规划中的应用。",
+      "llm_tldr": "比较了强化学习与最优控制在复杂威胁环境下自主车辆实时路径规划中的应用。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2604.12102v2",
+      "source": "arxiv",
+      "title": "Spatial Atlas: Compute-Grounded Reasoning for Spatial-Aware Research Agent Benchmarks",
+      "abstract": "We introduce compute-grounded reasoning (CGR), a design paradigm for spatial-aware research agents in which every answerable sub-problem is resolved by deterministic computation before a language model is asked to generate. Spatial Atlas instantiates CGR as a single Agent-to-Agent (A2A) server that handles two challenging benchmarks: FieldWorkArena, a multimodal spatial question-answering benchmark spanning factory, warehouse, and retail environments, and MLE-Bench, a suite of 75 Kaggle machine learning competitions requiring end-to-end ML engineering. A structured spatial scene graph engine extracts entities and relations from vision descriptions, computes distances and safety violations deterministically, then feeds computed facts to large language models, thereby avoiding hallucinated spatial reasoning. Entropy-guided action selection maximizes information gain per step and routes queries across a three-tier frontier model stack (OpenAI + Anthropic). A self-healing ML pipeline with strategy-aware code generation, a score-driven iterative refinement loop, and a prompt-based leak audit registry round out the system. We evaluate across both benchmarks and show that CGR yields competitive accuracy while maintaining interpretability through structured intermediate representations and deterministic spatial computations.",
+      "authors": [
+        "Arun Sharma"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-04-13T22:22:07+00:00",
+      "link": "https://arxiv.org/pdf/2604.12102v2",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "spatial-aware research agents and structured spatial scene graph engine",
+      "llm_evidence_cn": "空间感知研究智能体与结构化空间场景图引擎",
+      "llm_evidence": "空间感知研究智能体与结构化空间场景图引擎",
+      "canonical_evidence": "空间感知研究智能体与结构化空间场景图引擎",
+      "llm_tldr_en": "Introduces a compute-grounded reasoning paradigm for spatial-aware agents in complex environments.",
+      "llm_tldr_cn": "为复杂环境中的空间感知智能体引入了一种基于计算推理的设计范式。",
+      "llm_tldr": "为复杂环境中的空间感知智能体引入了一种基于计算推理的设计范式。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.14572v1",
+      "source": "arxiv",
+      "title": "Don't Retrieve, Navigate: Distilling Enterprise Knowledge into Navigable Agent Skills for QA and RAG",
+      "abstract": "Retrieval-Augmented Generation (RAG) grounds LLM responses in external evidence but treats the model as a passive consumer of search results: it never sees how the corpus is organized or what it has not yet retrieved, limiting its ability to backtrack or combine scattered evidence. We present Corpus2Skill, which distills a document corpus into a hierarchical skill directory offline and lets an LLM agent navigate it at serve time. The compilation pipeline iteratively clusters documents, generates LLM-written summaries at each level, and materializes the result as a tree of navigable skill files. At serve time, the agent receives a bird's-eye view of the corpus, drills into topic branches via progressively finer summaries, and retrieves full documents by ID. Because the hierarchy is explicitly visible, the agent can reason about where to look, backtrack from unproductive paths, and combine evidence across branches. On WixQA, an enterprise customer-support benchmark for RAG, Corpus2Skill outperforms dense retrieval, RAPTOR, and agentic RAG baselines across all quality metrics.",
+      "authors": [
+        "Yiqun Sun",
+        "Pengfei Wei",
+        "Lawrence B. Hsieh"
+      ],
+      "primary_category": "cs.IR",
+      "categories": [
+        "cs.IR",
+        "cs.AI",
+        "cs.CL",
+        "cs.MA"
+      ],
+      "published": "2026-04-16T03:05:37+00:00",
+      "link": "https://arxiv.org/pdf/2604.14572v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "agent navigation of hierarchical skill directories for environment understanding",
+      "llm_evidence_cn": "智能体导航分层技能目录以实现环境理解",
+      "llm_evidence": "智能体导航分层技能目录以实现环境理解",
+      "canonical_evidence": "智能体导航分层技能目录以实现环境理解",
+      "llm_tldr_en": "Distills knowledge into navigable skills for agents to explore complex document structures.",
+      "llm_tldr_cn": "将知识提取为可导航的技能，供智能体探索复杂的文档结构。",
+      "llm_tldr": "将知识提取为可导航的技能，供智能体探索复杂的文档结构。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索智能体如何利用隐空间进行导航与环境理解",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.13710v2",
+      "source": "arxiv",
+      "title": "SLQ: Bridging Modalities via Shared Latent Queries for Retrieval with Frozen MLLMs",
+      "abstract": "Multimodal Large Language Models (MLLMs) exhibit strong reasoning and world knowledge, yet adapting them for retrieval remains challenging. Existing approaches rely on invasive parameter updates, such as full fine-tuning and LoRA, which may disrupt the pre-trained semantic space and impair the structured knowledge essential for reasoning. In this work, we argue that adapting MLLMs for retrieval should focus on eliciting pre-trained representations rather than overwriting them. To this end, we propose SLQ, an effective and efficient framework that adapts a frozen MLLM into a retriever through a small set of Shared Latent Queries. Appended to the end of both text and image token sequences, these queries leverage the model's native causal attention to serve as global aggregation interfaces, producing compact embeddings in a unified space while keeping the backbone unchanged. Furthermore, to better evaluate retrieval beyond superficial pattern matching, we construct KARR-Bench, a benchmark designed for knowledge-aware reasoning retrieval. Extensive experiments show that SLQ outperforms full fine-tuning and LoRA on COCO and Flickr30K, while achieving competitive performance on MMEB and yielding substantial gains on KARR-Bench. The results demonstrate that SLQ, which preserves pre-trained representations, provides an effective and efficient framework for adapting MLLMs to retrieval.",
+      "authors": [
+        "Haoran Lou",
+        "Ziyan Liu",
+        "Chunxiao Fan",
+        "Yuexin Wu",
+        "Yue Ming"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-04-15T10:39:42+00:00",
+      "link": "https://arxiv.org/pdf/2604.13710v2",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Shared latent queries for eliciting pre-trained representations",
+      "llm_evidence_cn": "用于提取预训练表示的共享隐查询",
+      "llm_evidence": "用于提取预训练表示的共享隐查询",
+      "canonical_evidence": "用于提取预训练表示的共享隐查询",
+      "llm_tldr_en": "Adapts MLLMs for retrieval by using shared latent queries to leverage pre-trained semantic spaces.",
+      "llm_tldr_cn": "通过共享隐查询调整多模态大模型，利用预训练语义空间进行检索。",
+      "llm_tldr": "通过共享隐查询调整多模态大模型，利用预训练语义空间进行检索。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.15153v1",
+      "source": "arxiv",
+      "title": "Compressing Sequences in the Latent Embedding Space: $K$-Token Merging for Large Language Models",
+      "abstract": "Large Language Models (LLMs) incur significant computational and memory costs when processing long prompts, as full self-attention scales quadratically with input length. Token compression aims to address this challenge by reducing the number of tokens representing inputs. However, existing prompt-compression approaches primarily operate in token space and overlook inefficiencies in the latent embedding space. In this paper, we propose K-Token Merging, a latent-space compression framework that merges each contiguous block of K token embeddings into a single embedding via a lightweight encoder. The compressed sequence is processed by a LoRA-adapted LLM, while generation remains in the original vocabulary. Experiments on structural reasoning (Textualized Tree), sentiment classification (Amazon Reviews), and code editing (CommitPackFT) show that K-Token Merging lies on the Pareto frontier of performance vs. compression, achieving up to 75% input length reduction with minimal performance degradation.",
+      "authors": [
+        "Zihao Xu",
+        "John Harvill",
+        "Ziwei Fan",
+        "Yizhou Sun",
+        "Hao Ding",
+        "Hao Wang"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-04-16T15:32:45+00:00",
+      "link": "https://arxiv.org/pdf/2604.15153v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "compressing sequences in the latent embedding space",
+      "llm_evidence_cn": "在隐式嵌入空间中压缩序列",
+      "llm_evidence": "在隐式嵌入空间中压缩序列",
+      "canonical_evidence": "在隐式嵌入空间中压缩序列",
+      "llm_tldr_en": "Proposes a framework for merging token embeddings in the latent space to reduce LLM computational costs.",
+      "llm_tldr_cn": "提出了一种在隐空间中合并标记嵌入的框架，以降低大语言模型的计算成本。",
+      "llm_tldr": "提出了一种在隐空间中合并标记嵌入的框架，以降低大语言模型的计算成本。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.14641v1",
+      "source": "arxiv",
+      "title": "Learning to Draw ASCII Improves Spatial Reasoning in Language Models",
+      "abstract": "When faced with complex spatial problems, humans naturally sketch layouts to organize their thinking, and the act of drawing further sharpens their understanding. In this work, we ask whether a similar principle holds for Large Language Models (LLMs): can learning to construct explicit visual layouts from spatial descriptions instill genuine spatial understanding? We introduce Text2Space, a dataset that pairs natural language descriptions with ground-truth ASCII grid layouts and spatial QA pairs, enabling us to separate failures in constructing spatial representations from failures in reasoning over them. We adopt ASCII because it is human-readable, operates entirely within the token space of language models, and encodes spatial relations in a structurally verifiable form. Our evaluation reveals a pronounced \"Read-Write Asymmetry\": LLMs interpret ASCII representations effectively but struggle to produce them from text, and these construction errors propagate to incorrect answers downstream. To address this limitation, we train models on layout construction (Text$\\rightarrow$ASCII) and find that it significantly improves spatial reasoning from text alone, even without producing any ASCII at inference time. Combining construction with comprehension training further amplifies these gains. Crucially, these improvements transfer to three external spatial reasoning benchmarks, demonstrating that, much as sketching sharpens human spatial thinking, learning to construct explicit layouts instills spatial understanding that generalizes beyond the training format.",
+      "authors": [
+        "Shiyuan Huang",
+        "Li Liu",
+        "Jincheng He",
+        "Leilani H. Gilpin"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-04-16T05:42:09+00:00",
+      "link": "https://arxiv.org/pdf/2604.14641v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Spatial reasoning and explicit visual layouts for spatial understanding",
+      "llm_evidence_cn": "空间推理与用于空间理解的显式视觉布局",
+      "llm_evidence": "空间推理与用于空间理解的显式视觉布局",
+      "canonical_evidence": "空间推理与用于空间理解的显式视觉布局",
+      "llm_tldr_en": "Explores whether learning to draw ASCII layouts improves spatial reasoning and representation in LLMs.",
+      "llm_tldr_cn": "探索学习绘制ASCII布局是否能提高大语言模型的空间推理与表示能力。",
+      "llm_tldr": "探索学习绘制ASCII布局是否能提高大语言模型的空间推理与表示能力。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

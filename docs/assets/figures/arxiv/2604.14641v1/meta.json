@@ -1,0 +1,86 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.14641v1/fig-001.webp",
+      "caption": "Table 2: Spatial reasoning accuracy across reasoning sources and settings. RDesc(Ans, ASCII) and RDesc(ASCII, Ans) denote whether the answer precedes or follows the ASCII output. “One-turn generation”: answer and ASCII generated jointly. “two-turn generation” generated in separate calls, where RDesc+ASCII provides gold-standard ASCII. Answer accuracy: label matching; ASCII accuracy: proportion of NL relations correctly depicted. For each model, we bold the best-performing reasoning source and underline the second best.",
+      "page": 6,
+      "index": 1,
+      "width": 812,
+      "height": 490
+    },
+    {
+      "url": "assets/figures/arxiv/2604.14641v1/fig-002.webp",
+      "caption": "Table 9: F1-score results. The best result is shown in bold, and the second-best is underlined.",
+      "page": 15,
+      "index": 2,
+      "width": 908,
+      "height": 661
+    },
+    {
+      "url": "assets/figures/arxiv/2604.14641v1/fig-003.webp",
+      "caption": "Figure 1: Overview of the study design. Inspired by empirical cognitive human strategies, we utilize Natural Language (NL) and ASCII representations as independent reasoning sources. This bidirectional cycle connects the two modalities via Parsing, Drawing, Interpreting, and Describing steps. We find that training LLMs to mimic this human-like, sketch-based reasoning process significantly improves accuracy on complex spatial reasoning tasks.",
+      "page": 2,
+      "index": 3,
+      "width": 950,
+      "height": 321
+    },
+    {
+      "url": "assets/figures/arxiv/2604.14641v1/fig-004.webp",
+      "caption": "Table 3: Answer accuracy (Ans), consistency between the generated ASCII and the generated answer (Cons), and accuracy on consistent instances across different settings (C_Acc). For each model, the higher Cons value is in bold.",
+      "page": 7,
+      "index": 4,
+      "width": 460,
+      "height": 377
+    },
+    {
+      "url": "assets/figures/arxiv/2604.14641v1/fig-005.webp",
+      "caption": "Figure 4: Confusion matrices for spatial reasoning predictions by Qwen3-30B-A3B before and after fine-tuning (Qwen3-30B-A3B FTD→A). The top row ((A)-(B)) shows results on the text-only spatial reasoning task (RDesc), while the bottom row ((C)-(D)) shows results when ASCII is generated as an intermediate step (RDesc:(Ans, ASCII)). Left panels ((A),(C)) correspond to the base model, and right panels ((B),(D)) to the fine-tuned model. Rows indicate ground-truth spatial relations and columns indicate predicted relations. Darker diagonal cells indicate correct predictions.",
+      "page": 14,
+      "index": 5,
+      "width": 950,
+      "height": 838
+    },
+    {
+      "url": "assets/figures/arxiv/2604.14641v1/fig-006.webp",
+      "caption": "Figure 2: An example in our TEXT2SPACE dataset: we have natural language description, Q-A pairs, three types of ASCII, and a rendered image.",
+      "page": 3,
+      "index": 6,
+      "width": 446,
+      "height": 344
+    },
+    {
+      "url": "assets/figures/arxiv/2604.14641v1/fig-007.webp",
+      "caption": "Table 8: Dataset statistics for the full dataset and the evaluation subset.",
+      "page": 13,
+      "index": 7,
+      "width": 667,
+      "height": 685
+    },
+    {
+      "url": "assets/figures/arxiv/2604.14641v1/fig-008.webp",
+      "caption": "Figure 3: Distribution of (a) number of components, (b) number of relations, and (c) number of ambiguous stages. An ambiguous stage occurs when a newly introduced relation does not uniquely determine the position of an entity relative to those already placed; higher counts indicate configurations requiring more transitive inference steps. The dataset contains 20,000 instances with an average of 5.7 components and 6.4 relations.",
+      "page": 13,
+      "index": 8,
+      "width": 906,
+      "height": 288
+    },
+    {
+      "url": "assets/figures/arxiv/2604.14641v1/fig-009.webp",
+      "caption": "Figure 5: Overview of the human validation interface and instruction protocol. Participants solved spatial reasoning tasks across three counterbalanced sessions: (1) Text Description Only, (2) ASCII Visualization Only, and (3) Combined Text + ASCII. We use Google Form to collect the response from the participants. The interface requires participants to select the most precise directional term from a standardized drop-down menu.",
+      "page": 19,
+      "index": 9,
+      "width": 950,
+      "height": 748
+    },
+    {
+      "url": "assets/figures/arxiv/2604.14641v1/fig-010.webp",
+      "caption": "Table 5: TEXT2SPACE Dataset Schema, including spatial query types, terminology variations, and structural constraints (components and relations).",
+      "page": 12,
+      "index": 10,
+      "width": 465,
+      "height": 761
+    }
+  ]
+}
