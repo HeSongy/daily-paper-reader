@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.14249v1/fig-001.webp",
+      "caption": "Figure 1: Geometry of the MAPCA family. Each panel shows a fixed two-dimensional dataset (grey scatter) together with its covariance ellipse (dashed grey), the metric unit ball {w : w⊤Mw = 1} (solid coloured ellipse), and the two principal component directions (red and blue arrows). The metric unit ball encodes what the method treats as “unit length”: a circle means all directions are treated equally; an ellipse aligned with the data means the metric has absorbed the full covariance structure. (1) Standard PCA (M = I, β = 0): the ball is a circle, blind to the data geometry; the condition number κ = 15.3 reflects full spectral bias. (2) IPCA (M = D): the ball is an axis-aligned ellipse, correcting for marginal variances without rotating the metric; this is the diagonal approximation to Σ made geometric. (3)–(4) MAPCA (β = 0.5, β = 0.75): the ball continuously rotates and contracts toward the data ellipse as β increases, compressing the spectrum and reducing κ monotonically (Proposition 4). (5) Whitening (M = Σ, β = 1): the ball matches the data ellipse exactly, enforcing isotropic output; κ = 1 by construction, but all variance structure is removed and eigenvectors are non-unique (Remark 11). IPCA occupies a geometrically distinct position: its axis-aligned ball corrects for scale without rotating the metric, and it is the unique member of the MAPCA family satisfying strict scale invariance under arbitrary diagonal rescaling (Theorem 7, Corollary 8).",
+      "page": 5,
+      "index": 1,
+      "width": 943,
+      "height": 250
+    },
+    {
+      "url": "assets/figures/arxiv/2604.14249v1/fig-002.webp",
+      "caption": "Table 2: Metric correspondence between SSL methods and the MAPCA framework.",
+      "page": 9,
+      "index": 2,
+      "width": 943,
+      "height": 545
+    },
+    {
+      "url": "assets/figures/arxiv/2604.14249v1/fig-003.webp",
+      "caption": "Table 3: Scale invariance verification across four MAPCA methods, army cadets dataset.",
+      "page": 10,
+      "index": 3,
+      "width": 943,
+      "height": 469
+    }
+  ]
+}

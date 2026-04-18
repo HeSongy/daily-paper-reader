@@ -1,0 +1,69 @@
+{
+  "label": "2026-04-18",
+  "date": "2026-04-18",
+  "generated_at": "2026-04-18T19:39:42",
+  "count": 4,
+  "papers": [
+    {
+      "paper_id": "202604/18/2604.11751v1-grounded-world-model-for-semantically-generalizable-planning",
+      "section": "deep",
+      "title_en": "Grounded World Model for Semantically Generalizable Planning",
+      "authors": "Quanyi Li, Lan Feng, Haonan Zhang, Wuyang Li, Letian Wang, Alexandre Alahi, Harold Soh",
+      "date": "2026-04-13",
+      "pdf": "https://arxiv.org/pdf/2604.11751v1",
+      "score": "10.0",
+      "evidence": "在视觉-语言对齐隐空间中构建世界模型用于规划",
+      "tldr": "本文针对视觉运动预测控制中依赖目标图像的问题，提出基于视觉-语言对齐的Grounded World Model（GWM），通过在语义空间中衡量动作结果与语言任务指令的相似度，实现语义泛化更强的规划，在WISER基准中大幅超过现有方法。",
+      "tags": "query:navwm",
+      "abstract_en": "In Model Predictive Control (MPC), world models predict the future outcomes of various action proposals, which are then scored to guide the selection of the optimal action. For visuomotor MPC, the score function is a distance metric between a predicted image and a goal image, measured in the latent space of a pretrained vision encoder like DINO and JEPA. However, it is challenging to obtain the goal image in advance of the task execution, particularly in new environments. Additionally, conveying the goal through an image offers limited interactivity compared with natural language. In this work, we propose to learn a Grounded World Model (GWM) in a vision-language-aligned latent space. As a result, each proposed action is scored based on how close its future outcome is to the task instruction, reflected by the similarity of embeddings. This approach transforms the visuomotor MPC to a VLA that surpasses VLM-based VLAs in semantic generalization. On the proposed WISER benchmark, GWM-MPC achieves a 87% success rate on the test set comprising 288 tasks that feature unseen visual signals and referring expressions, yet remain solvable with motions demonstrated during training. In contrast, traditional VLAs achieve an average success rate of 22%, even though they overfit the training set with a 90% success rate.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202604/18/2604.12084v1-inst-align-implicit-neural-alignment-for-spatial-transcriptomics-via-canonical-expression-fields",
+      "section": "quick",
+      "title_en": "INST-Align: Implicit Neural Alignment for Spatial Transcriptomics via Canonical Expression Fields",
+      "authors": "Bonian Han, Cong Qi, Przemyslaw Musialski, Zhi Wei",
+      "date": "2026-04-13",
+      "pdf": "https://arxiv.org/pdf/2604.12084v1",
+      "score": "6.0",
+      "evidence": "将空间坐标映射到表达嵌入的隐式神经表示",
+      "tldr": "本研究提出INST-Align，一种用于空间转录组学切片间隐式神经对齐的无监督框架，通过结合坐标变形网络与共享的规范表达场，实现跨切片联合对齐与表达重建，有效应对非刚性形变与批次效应问题，并取得领先的对齐精度与三维组织重建效果。",
+      "tags": "query:navwm",
+      "abstract_en": "Spatial transcriptomics (ST) measures mRNA expression while preserving spatial organization, but multi-slice analysis faces two coupled difficulties: large non-rigid deformations across slices and inter-slice batch effects when alignment and integration are treated independently. We present INST-Align, an unsupervised pairwise framework that couples a coordinate-based deformation network with a shared Canonical Expression Field, an implicit neural representation mapping spatial coordinates to expression embeddings, for joint alignment and reconstruction. A two-phase training strategy first establishes a stable canonical embedding space and then jointly optimizes deformation and spatial-feature matching, enabling mutually constrained alignment and representation learning. Cross-slice parameter sharing of the canonical field regularizes ambiguous correspondences and absorbs batch variation. Across nine datasets, INST-Align achieves state-of-the-art mean OT Accuracy (0.702), NN Accuracy (0.719), and Chamfer distance, with Chamfer reductions of up to 94.9\\% on large-deformation sections relative to the strongest baseline. The framework also yields biologically meaningful spatial embeddings and coherent 3D tissue reconstruction. The code will be released after review phase.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202604/18/2604.13924v1-aster-latent-pseudo-anomaly-generation-for-unsupervised-time-series-anomaly-detection",
+      "section": "quick",
+      "title_en": "ASTER: Latent Pseudo-Anomaly Generation for Unsupervised Time-Series Anomaly Detection",
+      "authors": "Romain Hermary, Samet Hicsonmez, Dan Pineau, Abd El Rahman Shabayek, Djamila Aouada",
+      "date": "2026-04-15",
+      "pdf": "https://arxiv.org/pdf/2604.13924v1",
+      "score": "6.0",
+      "evidence": "在隐空间中直接生成伪异常用于无监督检测",
+      "tldr": "本文提出了ASTER，一种针对时间序列异常检测的无监督框架，通过在潜在空间中生成伪异常样本并结合Transformer分类器和预训练大语言模型增强的时序表示，在无需人工注入异常的情况下实现了优异的检测效果，显著提升了当前方法的性能。",
+      "tags": "query:navwm",
+      "abstract_en": "Time-series anomaly detection (TSAD) is critical in domains such as industrial monitoring, healthcare, and cybersecurity, but it remains challenging due to rare and heterogeneous anomalies and the scarcity of labelled data. This scarcity makes unsupervised approaches predominant, yet existing methods often rely on reconstruction or forecasting, which struggle with complex data, or on embedding-based approaches that require domain-specific anomaly synthesis and fixed distance metrics. We propose ASTER, a framework that generates pseudo-anomalies directly in the latent space, avoiding handcrafted anomaly injections and the need for domain expertise. A latent-space decoder produces tailored pseudo-anomalies to train a Transformer-based anomaly classifier, while a pre-trained LLM enriches the temporal and contextual representations of this space. Experiments on three benchmark datasets show that ASTER achieves state-of-the-art performance and sets a new standard for LLM-based TSAD.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202604/18/2604.14249v1-metric-aware-principal-component-analysis-mapcaa-unified-framework-for-scale-invariant-representation-learning",
+      "section": "quick",
+      "title_en": "Metric-Aware Principal Component Analysis (MAPCA):A Unified Framework for Scale-Invariant Representation Learning",
+      "authors": "Michael Leznik",
+      "date": "2026-04-15",
+      "pdf": "https://arxiv.org/pdf/2604.14249v1",
+      "score": "6.0",
+      "evidence": "尺度不变表示学习的统一框架",
+      "tldr": "本文提出了度量感知主成分分析（MAPCA）框架，实现尺度不变的表征学习。MAPCA通过引入度量矩阵M统一了PCA、输出白化和自监督学习中的多种方法，揭示了不同光谱偏置和尺度不变性之间的内在联系。",
+      "tags": "query:navwm",
+      "abstract_en": "We introduce Metric-Aware Principal Component Analysis (MAPCA), a unified framework for scale-invariant representation learning based on the generalised eigenproblem max Tr(W^T Sigma W) subject to W^T M W = I, where M is a symmetric positive definite metric matrix. The choice of M determines the representation geometry. The canonical beta-family M(beta) = Sigma^beta, beta in [0,1], provides continuous spectral bias control between standard PCA (beta=0) and output whitening (beta=1), with condition number kappa(beta) = (lambda_1/lambda_p)^(1-beta) decreasing monotonically to isotropy. The diagonal metric M = D = diag(Sigma) recovers Invariant PCA (IPCA), a method rooted in Frisch (1928) diagonal regression, as a distinct member of the broader framework. We prove that scale invariance holds if and only if the metric transforms as M_tilde = CMC under rescaling C, a condition satisfied exactly by IPCA but not by the general beta-family at intermediate values.   Beyond its classical interpretation, MAPCA provides a geometric language that unifies several self-supervised learning objectives. Barlow Twins and ZCA whitening correspond to beta=1 (output whitening); VICReg's variance term corresponds to the diagonal metric. A key finding is that W-MSE, despite being described as a whitening-based method, corresponds to M = Sigma^{-1} (beta = -1), outside the spectral compression range entirely and in the opposite spectral direction to Barlow Twins. This distinction between input and output whitening is invisible at the level of loss functions and becomes precise only within the MAPCA framework.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
