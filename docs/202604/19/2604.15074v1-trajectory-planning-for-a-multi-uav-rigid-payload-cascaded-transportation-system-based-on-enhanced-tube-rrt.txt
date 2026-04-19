@@ -1,0 +1,1349 @@
+Title: Trajectory Planning for a Multi-UAV Rigid-Payload Cascaded Transportation System Based on Enhanced Tube-RRT*
+
+URL Source: https://arxiv.org/pdf/2604.15074v1
+
+Published Time: Fri, 17 Apr 2026 01:19:56 GMT
+
+Number of Pages: 15
+
+Markdown Content:
+# Trajectory Planning for a Multi-UAV Rigid-Payload Cascaded Transportation System Based on Enhanced Tube-RRT* 
+
+Jianqiao Yu , Member, IEEE 
+
+Jia Li , Member, IEEE Beijing Institute of Technology, Beijing , China 
+
+Tianhua Gao , Member, IEEE University of Tsukuba, Ibaraki, Japan 
+
+Abstract— This paper presents a two-stage trajectory planning framework for a multi-UAV rigid-payload cascaded transportation system, aiming to address planning challenges in densely cluttered environments. In Stage I, an Enhanced Tube-RRT* algorithm is developed by integrating active hybrid sampling and an adaptive expansion strategy, enabling rapid generation of a safe and feasible virtual tube in environments with dense obstacles. Moreover, a trajectory smoothness cost is explicitly incorporated into the edge cost to reduce excessive turns and thereby mitigate cable-induced oscillations. Simulation results demonstrate that the proposed En-hanced Tube-RRT* achieves a higher success rate and effective sampling rate than mixed-sampling Tube-RRT* (STube-RRT*) and adaptive-extension Tube-RRT*(AETube-RRT*), while producing a shorter optimal path with a smaller cumulative turning angle. In Stage II, a convex quadratic program is formulated by considering payload translational and rotational dynamics, cable tension con-straints, and collision-safety constraints, yielding a smooth, collision-free desired payload trajectory. Finally, a centralized geometric control scheme is applied to the cascaded system to validate the effectiveness and feasibility of the proposed planning framework, offering a practical solution for payload attitude maneuvering in densely cluttered environments. 
+
+Index Terms— Centralized geometric control, multi-UAV rigid-payload cascaded transportation system, obstacle avoidance, trajec-tory planning 
+
+Authors’ addresses: Jianqiao Yu and Jia Li are with the School of Aerospace Science and Technology, Beijing Institute of Technology, Beijing 100081, China. (e-mail: jianqiao@bit.edu.cn; 3120240042@bit.edu.cn). T. Gao is with the Graduate School of Systems and Information Engineering, University of Tsukuba, Japan. (e-mail: gao.tianhua.tkb gb@u.tsukuba.ac.jp). (Corresponding author: T. Gao.) For the trajectory planning and tracking of a multi-UAV rigid payload cascade transportation system, see supplementary materials. This work has been submitted to the IEEE for possible publication. Copyright may be transferred without notice, after which this version may no longer be accessible. 0018-9251 © 2022 IEEE 
+
+I. INTRODUCTION 
+
+With the continuous increase in mission complexity and payload requirements, cooperative aerial transporta-tion systems composed of multiple unmanned aerial vehi-cles (UAVs) [1]–[3] have gradually emerged as an impor-tant technological approach to overcome the limitations of payload capacity and maneuverability inherent in single-UAV platforms. Such systems not only significantly en-hance the overall payload capability, but also provide improved maneuvering flexibility [4] and mission adapt-ability under heavy-load and high-inertia conditions.The core challenge of motion planning for these systems lies in generating executable trajectories that are safe, smooth, and energy-efficient under the combined influence of multiple safety constraints, system dynamics constraints, and actuator limitations [5]. Due to the highly underactuated nature of cable-suspended payload transportation systems and their pro-nounced strongly coupled nonlinear dynamics, a sub-stantial body of research has proposed representative trajectory planning schemes by leveraging explicit system dynamic models. In [6], the authors first proved that cooperative transportation systems with multiple quadro-tors satisfy the differential flatness condition, and then parameterized the system states and control inputs using flat outputs to generate smooth trajectories with high-order continuity via optimization. Although differential flatness enables an explicit parameterization of the tra-jectory generation problem and thus converts it into an algebraic planning problem, this structured parameteri-zation becomes increasingly difficult to satisfy multiple performance objectives and feasibility requirements as the system scale grows and additional complex conditions (e.g., tension constraints, obstacle avoidance, and input limits) are introduced. Consequently, more studies have shifted to continuous optimization frameworks based on optimal control [7]–[11]. In [10], a direct collocation–based optimal trajectory planning framework was adopted, in which the coupled UAV–payload dynamics, input constraints, and obstacle-avoidance constraints were incorporated into a unified op-timization problem, enabling the simultaneous treatment of multiple constraint classes at the optimization level. In [11], the space was reconstructed under a gravity-normal (GN) formulation, and a direct multiple shooting method was employed to generate globally time-optimal trajecto-ries, which simplified the expression of spatial constraints and resulted in shorter flight time. Since the performance of continuous optimal control methods is often sensitive to the quality of the initial guess, this has motivated the integration of planning frameworks with global search capability. In [12], the original model was simplified to a second-order integrator as the dynamic constraint, and time-optimal trajectories were generated in the sense of the system’s bounding sphere. In [13], PolyFly was proposed as a globally optimal planning framework by modeling the quadrotor, cable, payload, and environment 
+
+IEEE TRANSACTIONS ON AEROSPACE AND ELECTRONIC SYSTEMS VOL. XX, No. XX XXXXX 2022 1
+
+> arXiv:2604.15074v1 [cs.RO] 16 Apr 2026
+
+as orientation-aware polyhedra and constructing differ-entiable constraints via duality theory, thereby enabling fast optimal trajectory generation with a non-conservative geometric representation. In [14], the pc-dbCBS planner was proposed, which achieves planning with dynamic constraints at arbitrary times by combining three-layer conflict detection/resolution and state stacking, together with alternating representations between stacked states and minimal coordinates. In [15], a MINCO-based op-timization framework was developed by integrating ro-tational formation regulation and GeoSafe safe-region expansion, overcoming the limitations of conventional four-DoF planning in ultra-narrow spaces and enabling efficient and scalable passage for multi-UAV payload systems. In [16], an online formation planning method was proposed for cooperative transportation by multiple multirotor UAVs with unknown payload mass and cable length; by analyzing cable tension, the authors designed formation criteria and an optimization-based performance function, and generated optimal trajectories in conjunction with an admittance model. Although global optimization can theoretically miti-gate local minima, its computational complexity typically grows rapidly with the problem scale. In recent years, hybrid planning frameworks that combine search-based methods [17]–[20] or sampling-based methods [21]– [23] with local optimization have been widely adopted. In [20], a heuristic-guided 3-D motion-primitive graph search algorithm was proposed to improve trajectory smoothness, and the cable tension was further optimized by incorporating the payload translational dynamics. In [22], the payload–cable states produced by a geometric sampling strategy were used as the initial guess, and a full-dynamics motion planning problem with nonlinear trajectory optimization was solved, including all state variables such as the UAV attitude; a high success rate was demonstrated experimentally. In [23], a 3-D trajectory planning method combining the BIGIT* algorithm with minimum-snap polynomial optimization was proposed: collision-free waypoint sequences were first generated, and then smooth and feasible trajectories were constructed and integrated with a two-layer explicit model predictive control framework, enabling real-time stabilized quadro-tor flight control under constraints and uncertainties. Despite the encouraging progress under complex con-straints, the aforementioned planning approaches still suffer from two major limitations: i) for cooperative aerial transportation systems adopting distributed architectures, the payload attitude may remain uncontrolled during transportation [24], which can cause attitude errors to ac-cumulate during aggressive maneuvers; ii ) many methods only enforce constraints on the payload translational dy-namics while neglecting the coupling mechanism between attitude and cable tension, making it difficult to guarantee physical feasibility in both geometric and tension-related senses. To reduce reliance on accurate models, learning-based trajectory generation methods have also been explored [25]–[28]. For example, [27] developed a reinforcement learning framework that does not require an accurate dynamics model; trajectory generation was realized via value-function approximation and policy iteration, pro-ducing smooth transportation paths that suppress payload swing. In [28], a reinforcement learning policy enabled high-speed and stable flight of a quadrotor slung-load system in designed scenarios, avoiding the high com-putational burden of traditional optimization methods arising from cable mode switching and complex dynamics modeling. Moreover, several studies have investigated cooperative transportation from an integrated planning– control perspective. In [29], higher-order time-varying control barrier functions (HOCBFs) were introduced to enforce complex Signal Temporal Logic specifications, and transportation tasks were executed through a finite set of discrete waypoints. In [30], a new co-design strategy for the planner and controller was proposed, where an event-triggered real-time planner can effectively suppress payload swing. In [31], a centralized planner was used in a laboratory environment with predefined obstacle/no-fly regions to achieve highly agile payload pose tracking and online obstacle avoidance, extending the planning and control capability of transportation systems in controlled environments. While these studies have further advanced planning methods for aerial transportation systems, systematic so-lutions remain lacking for trajectory planning of cascaded aerial transportation systems operating in outdoor envi-ronments with complex obstacles, especially under dense obstacle conditions: i) the volumes of outdoor obstacles and transportation systems are non-negligible, making it difficult to express safety constraints using point-mass models or overly conservative inflation approximations; 
+
+ii ) the cascaded structure introduces stronger geometric occupancy and motion coupling, increasing the dimen-sionality of system–environment collision checking and feasible-trajectory construction, thereby limiting the scal-ability of conventional methods in complex environments. Motivated by these challenges, this paper focuses on the trajectory planning problem of a multi-UAV cascaded transportation system with rigid payloads in outdoor envi-ronments with dense obstacles, while explicitly account-ing for the impact of both obstacle volume and system volume on safety constraints. The objective is to achieve a better balance among safety, efficiency, and computa-tional complexity, and to provide a generalizable planning framework and implementation pathway for reliable aerial transportation in complex environments. Specifically, for a multi-UAV cascaded transportation system with rigid payloads built upon a centralized control strategy [24], we explicitly incorporate dynamic constraints—in particular, payload attitude variations and cable-tension variations— within a two-stage planning scheme. First, an Enhanced Tube-RRT* algorithm is developed based on the Tube-RRT* framework, where proactive mixed sampling and adaptive expansion strategies are introduced to improve feasible-solution discovery efficiency in dense-obstacle    
+
+> 2IEEE TRANSACTIONS ON AEROSPACE AND ELECTRONIC SYSTEMS VOL. XX, No. XX XXXXX 2022
+
+environments, enabling sampling-based search to con-sistently output collision-free feasible paths with safety margins under complex geometric constraints. Further-more, we propose a payload-oriented trajectory planning method that incorporates cable-tension feasibility and payload dynamics as explicit constraints, ensuring consis-tency between the planned trajectories and the subsequent centralized tracking controller at both the dynamics and constraint levels. This reduces the risk of infeasibility caused by planning–control mismatch and improves the overall system safety and robustness. The main contributions of this paper are summarized as follows: 1) To the best of our knowledge, this paper presents the first two-stage obstacle-avoidance trajectory planning framework for multi-UAV cascaded transportation systems with rigid payloads, in which payload attitude variations and system-volume constraints are explicitly considered during planning. 2) We develop Enhanced Tube-RRT* based on Tube-RRT*, where proactive mixed sampling and adap-tive expansion strategies improve the search ef-ficiency and solution quality in narrow passages and dense-obstacle scenarios, enabling rapid gen-eration of collision-free feasible paths. 3) A centralized tracking control strategy is em-ployed to achieve dynamic tracking of the payload trajectory and attitude, and simulations validate the feasibility and effectiveness of the proposed planning–control scheme. The remainder of this paper is organized as follows. Section II presents the dynamic model of the cascaded aerial transportation system and formulates the problem. Section III introduces the proposed Enhanced Tube-RRT* algorithm. Section IV formulates the trajectory optimiza-tion problem for the cascaded transportation system. Sec-tion V reports simulation results and verifies trajectory feasibility using centralized geometric control. Finally, Section VI concludes the paper. 
+
+Notation The Euclidean space of dimension n is denoted by Rn. The special orthogonal group is denoted by SO (3) and its Lie algebra by so (3) . The two–sphere is denoted by S2. For x ∈ R3, the hat map (·)∧ : R3 → so (3) 
+
+satisfies ˆxy = x × y for any x, y ∈ R3, where × denotes the cross product.The superscript (k) denotes the k-th order time derivative with k > 0. The notation ∥·∥ denotes the Euclidean norm and I denotes the identity matrix. 
+
+II. Problem Statement and System Modeling A. Problem Formulation 
+
+Consider a system in which nC unmanned aerial vehicles (UAVs) cooperatively transport a rigid payload using cables (in this paper nC = 3 ), as illustrated in Fig. 1. Let the load-carrying UAVs be indexed by nodes 
+
+i ∈ { 1, . . . , n C }. Each node i is connected to a corner of  
+
+> Fig. 1. Schematic of the multi-UAV tethered payload transportation system.
+
+the payload via an inextensible and massless cable with length li > 0.The system evolves in a bounded three-dimensional workspace X ⊂ R3 containing a set of known static obstacles O = {O k}No
+
+> k=1
+
+. The corresponding free space is defined as Xfree = X \ O .Given the initial system state s(0) = s0, the initial payload position ξo ∈ R3, and the goal position ξg ∈ R3,the objective of planning is to generate a smooth trajectory 
+
+ξd ∈ R3 for the payload that accounts for both obstacle avoidance and system-volume constraints, while satisfy-ing the payload dynamic constraints and cable-tension feasibility. In summary, this paper addresses the following prob-lem: for a multi-UAV cascaded transportation system carrying a rigid payload operating in a dense-obstacle three-dimensional environment with system parameter constraints, design a trajectory planning method that transports the payload from the initial position to the target position by generating a smooth desired trajectory satisfying the cascaded geometric constraints, dynamic constraints, and cable-tension constraints, while ensuring collision avoidance among the payload, UAVs, cables, and obstacles. The resulting trajectory serves as the reference input for subsequent trajectory tracking using a centralized geometric control strategy. 
+
+B. System Model 
+
+Let the position and attitude of the payload with respect to the inertial frame I be denoted by ξ0 ∈ R3
+
+and R0 ∈ SO(3) , respectively. The direction of the ith cable is represented by qi ∈ S2, and ρi ∈ R3 denotes the position of the corresponding attachment point with respect to the payload center of mass. Let Ri ∈ SO(3) 
+
+denote the attitude of the ith UAV. Then, the position of the ith UAV, denoted by ξi ∈ R3, is given by 
+
+ξi = ξ0 + R0ρi + liqi. (1)  
+
+> :3
+
+Based on Lagrangian mechanics formulated on non-linear manifolds, the coordinate-free equations of motion can be derived as follows [32]: 
+
+m0( ¨ξ0 − g) + 
+
+> nC
+
+X
+
+> i=1
+
+miqiq⊤
+
+> i
+
+ ¨ξ0 − g − R0 bρi ˙Ω0
+
+
+
+= ∆ ξ0 +
+
+> nC
+
+X
+
+> i=1
+
+
+
+ui + ∆ ξi − mili∥ωi∥2qi
+
+− miqiq⊤ 
+
+> i
+
+R0 bΩ20ρi
+
+
+
+.
+
+(2) 
+
+J0 ˙Ω0 + bΩ0J0Ω0
+
++
+
+> nC
+
+X
+
+> i=1
+
+mi bρiR⊤ 
+
+> 0
+
+qiq⊤
+
+> i
+
+ ¨ξ0 − g − R0 bρi ˙Ω0
+
+
+
+= ∆ R0 +
+
+> nC
+
+X
+
+> i=1
+
+bρiR⊤ 
+
+> 0
+
+ui + ∆ ξi
+
+− mili∥ωi∥2qi − miqiq⊤ 
+
+> i
+
+R0 bΩ20ρi
+
+
+
+.
+
+(3) 
+
+mili ˙ωi = mi bq⊤
+
+> i
+
+ ¨ξ0 − g − R0 bρi ˙Ω0
+
++ R0 bΩ20ρi
+
+
+
+− bq⊤
+
+> i
+
+ u⊥ 
+
+> i
+
++ ∆ ⊥
+
+> ξi
+
+.
+
+(4) 
+
+Ji ˙Ωi + bΩiJiΩi = Mi + ∆ Ri . (5) Here, m0 denotes the mass of the payload, and mi denotes the mass of the ith UAV. J0 represents the inertia matrix of the payload, while Ji denotes the rotational inertia matrix of the ith UAV. The angular velocity of the payload is denoted by Ω0 ∈ R3. The angular velocity of the ith cable is denoted by ωi ∈ R3, and the angular velocity of the ith UAV is denoted by Ωi ∈ R3. The control thrust generated by the ith UAV is denoted by fi ∈ R, and the control moment applied to the ith UAV is denoted by 
+
+Mi ∈ R3. The gravitational acceleration vector is denoted by g ∈ R3. The disturbance terms ∆ξ0 ∈ R3 and ∆R0 ∈
+
+R3 represent the uncertainties and disturbances acting on the translational and rotational dynamics of the payload, respectively. The vector ui ∈ R3 denotes the total thrust generated by the ith quadrotor, defined as 
+
+ui = −fiRie3, (6) where e3 = [0 , 0, 1] ⊤ is the unit vector along the third axis of the inertial frame I.In this paper, a hierarchical cascaded control frame-work is adopted. The payload controller generates the desired thrust component parallel to the cable, denoted by 
+
+u∥ 
+
+> i
+
+, while the perpendicular component u⊥ 
+
+> i
+
+is determined by the cable dynamics. They are defined as 
+
+u∥ 
+
+> i
+
+= qiq⊤ 
+
+> i
+
+ui (7) 
+
+u⊥ 
+
+> i
+
+= −bq2 
+
+> i
+
+ui = ( I − qiq⊤ 
+
+> i
+
+)ui. (8) Similarly, the disturbance ∆ξi ∈ R3 acting on the ith UAV can be decomposed as 
+
+∆∥ 
+
+> ξi
+
+= qiq⊤ 
+
+> i
+
+∆ξi , (9) 
+
+∆⊥ 
+
+> ξi
+
+= −bq2 
+
+> i
+
+∆ξi = ( I − qiq⊤ 
+
+> i
+
+)∆ ξi . (10) 
+
+III. Enhanced Tube-RRT ∗
+
+This section presents an Enhanced Tube-RRT ∗ algo-rithm tailored for load-transport scenarios. The method focuses on planning techniques that improve trajectory quality. These techniques include active mixed sampling, an adaptive extension strategy, and a composite cost function. The goal is to maximize trajectory smoothness. This work also provides a foundation for subsequent trajectory generation and control of the overall system. 
+
+A. Active Mixed Sampling 
+
+First, a Voronoi diagram is introduced to partition the configuration space X into K subregions. Each subregion is denoted as Xk (k = 1 , . . . , K ) and defined as 
+
+Xk =
+
+
+
+ξ ∈ X ∥ξ − ri∥ ≤ ξ − rj , ∀ i̸ = j
+
+
+
+, (11) where ξ ∈ R3 denotes an arbitrary point in the workspace, 
+
+ri, rj ∈ R3 denote two distinct generator points. To avoid the sampling instability caused by fixed Gaussian distribution parameters in [33], a Beta posterior uncertainty model is introduced to update the sampling probability of each subregion. Thompson sampling is further employed to actively select subregions, eliminat-ing the need for additional heuristic weights or manual parameter tuning. Let θk ∈ (0 , 1) denote the sampling–expansion success probability of subregion Xk. The prior distribution is defined as 
+
+θk ∼ Beta 
+
+
+
+α(0)  
+
+> k
+
+, β (0) 
+
+> k
+
+
+
+,α(0)  
+
+> k
+
+= 1 + κp
+
+
+
+1 − ρobs 
+
+> k
+
+
+
+,β(0)  
+
+> k
+
+= 1 + κp ρobs  
+
+> k
+
+,
+
+(12) where positive constant κp denotes the strength of the Beta prior, and ρobs  
+
+> k
+
+∈ [0 , 1] denotes the estimated obstacle density of the subregion, which can be obtained via a Monte Carlo method [33]. As the obstacle density increases, the prior mean E[θk] = α(0)  
+
+> k
+> α(0)
+> k+β(0)
+> k
+
+becomes smaller, indicating a lower probability of feasible expan-sion. Each expansion attempt within a subregion is treated as a Bernoulli trial. At each iteration, a sample of the success probability is drawn from the posterior distribu-tion of every subregion, and the subregion with the largest sampled value is selected for uniform sampling: 
+
+ˆθ(t) 
+
+> k
+
+∼ Beta 
+
+
+
+α(t) 
+
+> k
+
+, β (t)
+
+> k
+
+
+
+, k = 1 , . . . , K (13) 
+
+k∗ = arg max 
+
+> k∈{ 1,...,K }
+
+ˆθ(t) 
+
+> k
+
+, (14) 
+
+ξrand ∼ Unif( Xk∗ ) . (15) Once an observation yt is obtained within Xk∗ , the posterior parameters αk∗ and βk∗ are updated online as 
+
+αk∗ ← αk∗ + yt,βk∗ ← βk∗ + (1 − yt), (16)    
+
+> 4IEEE TRANSACTIONS ON AEROSPACE AND ELECTRONIC SYSTEMS VOL. XX, No. XX XXXXX 2022
+
+Algorithm 1 Bayesian Active Subregion Sampling Strat-egy 
+
+Require: Subregion partition {X k}Kk=1 , posterior param-eters (αk, β k), mixing coefficient ϵu
+
+Ensure: Sample point ξrand and posterior update of the selected subregion Xk 
+
+> 1:
+
+Sample u ∼ Unif(0 , 1)  
+
+> 2:
+
+if u < ϵ u then  
+
+> 3:
+
+Sample ξrand ∼ Unif( X ) 
+
+> 4:
+
+k∗ ← None  
+
+> 5:
+
+else  
+
+> 6:
+
+for k = 1 to K do  
+
+> 7:
+
+Sample ˆθk ∼ Beta( αk, β k) 
+
+> 8:
+
+end for  
+
+> 9:
+
+Compute k∗ according to (14)  
+
+> 10:
+
+Generate ξrand according to (15)  
+
+> 11:
+
+end if  
+
+> 12:
+
+Expand to obtain ξnew according to Algorithm 2  
+
+> 13:
+
+Collision checking and feasibility test: if ξnew can be added to the tree, set yt ← 1; otherwise yt ← 0 
+
+> 14:
+
+if k∗̸ = None then  
+
+> 15:
+
+Update (αk∗ , β k∗ ) according to (16)  
+
+> 16:
+
+end if 
+
+where yt denotes the binary feedback obtained during the 
+
+t-th sampling and expansion attempt in subregion Xk:
+
+yt =
+
+(
+
+1, if the generated node is feasible ,
+
+0, otherwise . (17) Furthermore, to improve robustness in complex en-vironments and avoid losing exploration capability due to excessive bias (e.g., missing narrow passages), the following mixed sampling strategy is adopted: 
+
+p(ξ) = ϵu u(ξ) + (1 − ϵu)pg δ(ξ − ξg ) + (1 − pg ) q(ξ),
+
+(18) where u(ξ) denotes the global uniform sampling distribu-tion over the state space, ϵu is a positive constant uniform mixing coefficient, pg ∈ (0 , 1) is a constant goal-bias probability, δ(ξ − ξg ) denotes a point-mass distribution at the goal state ξg , and q(ξ) denotes the distribution induced by the proposed active sampling strategy. The sampling procedure is summarized in Algo-rithm 1. By introducing Bayesian active subregion sam-pling, regions with higher posterior means and lower uncertainty are selected more frequently, while regions with limited samples and higher posterior uncertainty still retain a nonzero probability of being explored. This mech-anism effectively reduces invalid sampling, improves the probability of discovering narrow passages, and enhances the overall planning efficiency. 
+
+B. Adaptive Extension Strategy 
+
+Given the nearest node ξnear ∈ R3 and the sampled point ξrand ∈ R3, the standard RRT* direction urand ∈ S2
+
+and the initial constant expansion step size ϵ0 are defined. In standard tree expansion, the direction and new node 
+
+ξnew ∈ R3 are computed as 
+
+urand = ξrand − ξnear 
+
+∥ξrand − ξnear ∥ , (19) 
+
+ξnew = ξnear + ϵ0 urand . (20) Conventional repulsive fields are typically designed for point obstacles. However, the volume of a multi-UAV payload transportation system is non-negligible. In the presence of sharp features (e.g., polyhedral obstacles such as cubes), it is desirable to employ a potential field that both tightly conforms to obstacle geometry and yields smooth transitions. To this end, a superquadric repulsive potential is adopted, and a goal attractive field is introduced to mitigate goal-unreachability issues. The potential-field direction uF ∈ S2 is constructed from an obstacle repulsion term Frep (ξ) ∈ R3, a goal attraction term Fatt (ξ, ξg ) ∈ R3, and a linear constraint term Fline (ξ) ∈ R3 that regularizes the expansion direc-tion: 
+
+uF = Ftot 
+
+∥Ftot ∥ , (21) 
+
+Ftot = Fatt (ξ, ξg ) + Frep (ξ) + Fline (ξ). (22) The obstacle repulsion term is defined as Frep =
+
+−Krep ∇ξU (ξ), where Krep > 0 is a constant repulsion gain. The superquadric potential function is defined as 
+
+U (ξ) = Ae −ηC (ξ)
+
+C(ξ) , (23) where A and η are positive constants. The corresponding implicit superquadric function is 
+
+C(ξ) = 
+
+ ξ(1) 
+
+> f1(ξ)
+
+2b
+
++
+
+ ξ(2) 
+
+> f2(ξ)
+
+2b 2a
+
+> 2b
+
++
+
+ ξ(3) 
+
+> f3(ξ)
+
+2a
+
+− 1,
+
+where fi(ξ) (i = 1, 2, 3) are scaling functions, and positive constant a and positive constant b are shape parameters that regulate the geometry of the level sets. The goal attraction term is defined as Fatt =
+
+Katt (ξg −ξ). The linear constraint term Fline is introduced to suppress lateral deviations and thus improve local path smoothness: 
+
+Fline = −Kline (v − (v⊤ℓ) ℓ), (24) where Katt and Kline denote positive constant gains, v =
+
+ξ − ξp ∈ R3, and ξp ∈ R3 denotes the parent of the current nearest node ξnear . The unit vector of the previous expansion direction ℓ ∈ S2 is defined as 
+
+ℓ = ξnear − ξp
+
+∥ξnear − ξp∥ . (25) To balance obstacle avoidance safety and sampling-based exploration, an adaptive weighted fusion between the random direction urand and the potential-field direc-tion uF is employed. Specifically, the fused expansion direction ˜d is defined as 
+
+˜d = α(ξ) uF +  1 − α(ξ) urand 
+
+α(ξ) uF +  1 − α(ξ) urand 
+
+, (26)  
+
+> :5
+
+where α(ξ) ∈ [0 , 1] is an adaptive weight defined by 
+
+α(ξ) = αobs · αF
+
+=
+
+ d0 − dobs 
+
+d0
+
+  ∥Ftot ∥∥Ftot ∥ + F0
+
+
+
+, (27) where dobs denotes the distance from the current node to the nearest obstacle, d0 and F0 are positive constants, and d0 represents the influence distance threshold of the potential field. Hence, α(ξ) increases as the node approaches obstacles. To further enhance robustness, with probability pe the algorithm falls back to the original random expansion direction, preventing the potential field from causing the search to get trapped in local minima in dense obstacles, particularly in narrow passages. Finally, the expansion direction d is defined as follows: 
+
+d =
+
+(
+
+urand , p ≤ pe,
+
+˜d, otherwise . (28) Moreover, since the steering capability of the system is limited by a maximum admissible curvature and the asso-ciated upper bound on lateral acceleration, the path cannot exhibit arbitrarily large direction changes at corners. If a fixed step size ϵ0 is used, invalid and non-executable local segments may occur near sharp turns. Therefore, the turning angle ϑ is explicitly incorporated, and a turn-angle adaptive strategy is adopted to shorten the step size and reduce the dynamic burden during turning, thereby improving executability and convergence efficiency. The angle-related candidate step size is defined as 
+
+ϵ1 = ϵ0
+
+
+
+τ + (1 − τ ) exp( −βϑ/π )
+
+
+
+, (29) where ϑ is the angle between the incoming direction and the current expansion direction, β is a positive constant turn-angle factor, and τ ∈ (0 , 1] is a constant parameter.. In addition, the step size should adapt to environment complexity [33]. An environment-dependent candidate step size is defined as 
+
+ϵ2 = ϵ0
+
+
+
+1 + Π [−Sλ, max , S λ, max ]
+
+ Sλk 
+
+
+
+,
+
+Π[l,u ](y) = arg min 
+
+> h∈[l,u ]
+
+(h − y)2,Sλk = kλ
+
+ρobs (X ) − ρobs 
+
+> k
+
+1 − ρobs (X ) ,ρobs (X ) = 1
+
+K
+
+> K
+
+X
+
+> k=1
+
+ρobs  
+
+> k
+
+.
+
+(30) where Sλk is the step-size adjustment factor, kλ > 0 is the density scaling coefficient, Sλ, max > 0 is the saturation bound, and ρobs (X ) denotes the average obstacle density of the configuration space. To satisfy both obstacle-density effects and dynamic feasibility requirements, the final step size is obtained using a soft-min operator that smoothly selects the smaller value between the two candidates: 
+
+ϵ = softmin α(ϵ1, ϵ 2)= ϵm − 1
+
+α log 
+
+
+
+e−α(ϵ1−ϵm) + e−α(ϵ2−ϵm)
+
+
+
+, (31) 
+
+Algorithm 2 Adaptive Potential-Guided Tree Expansion Strategy 
+
+Require: nearest node ξnear , sampled point ξrand , initial step size ϵ0
+
+Ensure: new node ξnew  
+
+> 1:
+
+Compute urand using (19)  
+
+> 2:
+
+Compute uF using (21)–(25)  
+
+> 3:
+
+Compute ˜d and the fallback direction using (26)–(28)  
+
+> 4:
+
+Sample p ∼ Unif(0 , 1)  
+
+> 5:
+
+if p ≤ pe then  
+
+> 6:
+
+d ← urand  
+
+> 7:
+
+else  
+
+> 8:
+
+d ← ˜d 
+
+> 9:
+
+end if  
+
+> 10:
+
+Compute ϵ using the soft-min strategy  
+
+> 11:
+
+Update ξnew using (32)  
+
+> 12:
+
+return ξnew 
+
+where ϵm = min {ϵ1, ϵ 2} and α > 0 is a constant smoothing parameter. In summary, the improved tree expansion updates the direction and step size according to 
+
+ξnew = ξnear + ϵ d. (32) The overall procedure is summarized in Algorithm 2. 
+
+C. Composite Cost Function 
+
+Since the admissible acceleration of the system is limited and the lateral acceleration during turning often becomes the dominant constraint, this paper incorporates a smooth feasibility surrogate for cable-force constraints directly into the online search process, rather than rely-ing solely on post-processing smoothing after obtaining a geometrically feasible path. To this end, a turning-acceleration energy surrogate is introduced into the cost function to continuously penalize sampled points asso-ciated with high curvature and aggressive turning. As a result, the search is biased toward producing trajectory segments with smoother curvature variations and lower tension requirements. Consider an edge that expands from a parent node 
+
+ξp to a child node ξnew . The corresponding turning acceleration a ∈ R3 is computed as 
+
+a = vref (uout − uin )∆t , (33) 
+
+uin = ξp − ξpp , (34) 
+
+uout = ξnew − ξp, (35) where ∆t and vref are positive constants denoting the time interval and the reference speed, respectively; uout , uin ∈
+
+S2 denote the outgoing and incoming unit directions, respectively; and ξpp ∈ R3 denotes the parent of ξp.Furthermore, the acceleration penalty of the edge is defined as 
+
+Ae =
+
+Z
+
+∥a(t)∥2 dt ≈ ∥a∥2 ∆t. (36)    
+
+> 6IEEE TRANSACTIONS ON AEROSPACE AND ELECTRONIC SYSTEMS VOL. XX, No. XX XXXXX 2022
+
+Algorithm 3 Enhanced Tube-RRT* Planner 
+
+Require: space X , start state ξo, goal state ξg
+
+Ensure: G = ( V, E ) 
+
+> 1:
+
+V ← { ξ0}; E ← ∅ ; G = ( V, E ) 
+
+> 2:
+
+for t = 1 to m do  
+
+> 3:
+
+ξrand ← Sampling using Algorithm 1  
+
+> 4:
+
+ξnew ← Tree expansion using Algorithm 2  
+
+> 5:
+
+if rnew > r min then  
+
+> 6:
+
+Xnear ← NearConnect( G, ξnew ) 
+
+> 7:
+
+V ← V ∪ { ξnew } 
+
+> 8:
+
+E ← Rewire( ξnew , X near , E ) 
+
+> 9:
+
+end if  
+
+> 10:
+
+end for  
+
+> 11:
+
+return G = ( V, E )
+
+This cost directly penalizes the turning acceleration induced by the change in unit direction. As the turning an-gle increases, the directional difference ∥uout − uin ∥ also increases, yielding a larger penalty. Therefore, this term suppresses frequent heading changes during the search stage, effectively reducing “zigzag” paths and improving trajectory smoothness. In summary, the following composite cost function is adopted during parent selection and rewiring: 
+
+J(ξ) = wLmX
+
+> t=1
+
+ℓt
+
+dref 
+
++ wA Ae, (37) where ℓt denotes the Euclidean distance between two adjacent sampled points, dref is a normalization constant, and wL and wA are constant weighting factors. Accordingly, when selecting a candidate parent node 
+
+ξp for the new node ξnew , the incremental cost can be computed using only the parent of ξp, i.e., ξpp , thereby preserving the incremental computability of the overall cost. During rewiring, only the turning-related term in the locally affected region needs to be updated, which maintains the online efficiency of RRT ∗.
+
+D. Enhanced Tube-RRT ∗ Framework 
+
+Table 3 presents the complete workflow of the pro-posed algorithm and provides the theorems regarding its probabilistic completeness and asymptotic optimality. THEOREM 1 (Probabilistic Completeness of the Enhanced Tube-RRT*) Let the initial state be ξ0 and the goal region 
+
+ξg ⊆ X free . If the planning problem admits a feasible solution, i.e., there exists at least one collision-free path 
+
+σ⋆ : [0 , 1] → X free such that σ⋆(0) = ξ0 and σ⋆(1) = ξg ,then as the number of samples m → ∞ , the probability that the Enhanced TUBE -RRT* algorithm finds a feasible solution converges to 1.Proof: 
+
+See Appendix A. THEOREM 2 (Asymptotic Optimality of the Enhanced Tube-RRT*) Assume that a feasible solution exists. As the number of samples m → ∞ , the composite cost func-tion obtained by the proposed algorithm J(ξ) converges almost surely to the optimal cost J⋆(ξ).Proof: 
+
+See Appendix B. 
+
+Remark 1 Let m denote the number of nodes sam-pled by the Enhanced Tube-RRT* algorithm. The com-putational complexity remains O(m(log m + 1)) [34]. Therefore, the proposed planner can be applied to ef-ficiently generate payload homotopy paths in large-scale environments. In such cases, the computational complexity becomes 
+
+O(m(log m + 1) + l),
+
+where l denotes the number of homotopy paths. 
+
+Remark 2 rnew denotes the maximum collision-free radius at the sampled configuration, i.e., the distance to the nearest obstacle. rmin is the minimum tube ra-dius determined by the physical size of the multi-UAV transportation system. The condition rnew > rmin in Algorithm 3 guarantees that the local free space can accommodate the system body without collision. 
+
+IV. Trajectory Optimization 
+
+In this section, the discrete path points generated in the previous section are smoothed. The payload trajectory in 3-D space is parameterized using piecewise polynomials [35]. Meanwhile, the cable force vectors are jointly opti-mized at discrete sampling points such that the dynamic equilibrium, tension upper bound, and maximum tilt-cone constraints are satisfied. High-order derivative costs are introduced to ensure trajectory smoothness, while a set of convex regularization terms is employed to obtain smooth, balanced, and feasible cable-force profiles. First, the payload position trajectory ξ(t) ∈ R3 is represented by an n-th order piecewise polynomial with 
+
+S segments: 
+
+ξs(t) = 
+
+> n
+
+X
+
+> j=0
+
+cs,j (t − ts−1)j , t ∈ [ts−1, t s], (38) where cs,j denotes the j-th polynomial coefficient of the s-th segment,and stacking all segment coefficients 
+
+cs,j ∈ R3 yields the overall trajectory parameter vector 
+
+c = [ c⊤
+
+> 1,0
+
+, c⊤
+
+> 1,1
+
+, . . . , c⊤
+
+> 1,n
+
+, c⊤
+
+> 2,0
+
+, . . . , c⊤
+
+> S,n
+
+]⊤.The trajectory smoothness objective is defined as 
+
+Jtraj = 12
+
+Z tS
+
+> t0
+
+dr ξ(t)
+
+dt r
+
+> 2
+
+dt = 12 c⊤Qc, (39) where Q is the corresponding positive semidefinite cost matrix determined by the r-th order derivative in the smoothness objective. Considering the relationship be-tween the system control inputs and higher-order tra-jectory derivatives, r ≥ 5 is required to ensure smooth control commands. In addition, the equality constraint 
+
+Aeq c = beq must be satisfied, corresponding to waypoint  
+
+> :7
+
+and continuity constraints: 
+
+ξ(ts) = ws, s = 0 , . . . , S. dq ξs(t)
+
+dt q t=ts
+
+= dq ξs+1 (t)
+
+dt q t=ts
+
+,q = 0 , . . . , r − 1, s = 1 , . . . , S − 1.
+
+(40) Velocity and acceleration bounds are also imposed: 
+
+vmin ≤ vk ≤ vmax ,
+
+amin ≤ ak ≤ amax . (41) Next, we introduce the decision variable Fk,i ∈ R3,representing the tension vector transmitted from the i-th UAV to the payload at time tk. To suppress abrupt variations between adjacent sampling instants, both the magnitude and temporal variation of cable tensions are regularized: 
+
+J∆F = λfnCX
+
+> i=1
+> Ns−1
+
+X
+
+> k=1
+
+∥Fk+1 ,i − Fk,i ∥2, (42) 
+
+JF = λTnCX
+
+> i=1
+> Ns
+
+X
+
+> k=1
+
+∥Fk,i ∥2, (43) where Ns denotes the number of sampling instants, and 
+
+λf and λT are positive weighting coefficients. Assuming massless cables and considering only the translational dynamics of the payload, the force equilib-rium constraint is nCX
+
+> i=1
+
+Fk,i = rk, (44) 
+
+ak = Ak(tk) c. (45) Here, rk = m0(ak + g) denotes the required resultant force of the payload at time tk, and Ak(tk) denotes the linear mapping from the polynomial coefficient vector c
+
+to the acceleration ak.An upper bound on the allowable cable tension Tu is imposed: 
+
+∥Fk,i ∥ ≤ Tu. (46) Let αu denote the maximum allowable tilt angle between the cable force direction and the vertical direction 
+
+e3 in the inertial frame I. The following constraint is imposed: 
+
+e⊤ 
+
+> 3
+
+Fk,i ≥ cos αu∥Fk,i ∥, (47) this constraint ensures that Fk,i lies within a second-order cone with axis e3 and half-angle αu, while also enforcing a positive vertical force component. To reduce the risk of cable overload and improve force distribution balance, a tension-sharing regularization term is introduced: 
+
+Jshare = λshare 
+
+> nC
+
+X
+
+> i=1
+> Ns
+
+X
+
+> k=1
+
+Fk,i − rk
+
+nC
+
+> 2
+
+, (48) where λshare is a positive weighting coefficient. To account for payload attitude variations, a moment-tracking cost term is further introduced: 
+
+Jmoment = λMNsX
+
+> k=1
+
+Mk − M ref 
+
+> d,k
+> 2
+
+, (49) 
+
+Mk =
+
+> nC
+
+X
+
+> i=1
+
+bρi
+
+
+
+(Rref 0d,k )⊤Fk,i 
+
+
+
+, (50) 
+
+M ref  
+
+> d,k
+
+= J0 ˙Ω0d,k + [Ω0d,k J0 Ω0d,k , (51) where λM is a positive weighting coefficient; The vector 
+
+Mk ∈ R3 represents the total moment acting on the payload generated by the distributed UAV forces at the 
+
+kth prediction step, The matrix Rref 0d,k ∈ SO(3) represents the reference attitude of the payload at step k, whose com-putation follows the method proposed in [32]. The desired moment M ref  
+
+> d,k
+
+∈ R3 is determined from the reference rotational dynamics of the payload, where Ω0d,k ∈ R3 is the desired payload angular velocity, and ˙Ω0d,k ∈ R3 is the corresponding desired angular acceleration at step k.Based on the above considerations, we formulate the following convex quadratic program: 
+
+min 
+
+> c,Fk,i
+
+Jtraj + J∆F + JF + Jshare + Jmoment 
+
+s.t. Aeq c = beq ,
+
+vmin ≤ A(1)  
+
+> k
+
+c ≤ vmax ,
+
+amin ≤ A(2)  
+
+> k
+
+c ≤ amax ,
+
+> nC
+
+X
+
+> i=1
+
+Fk,i = m0(A(2)  
+
+> k
+
+c + g),
+
+∥Fk,i ∥ ≤ Tu,
+
+e⊤ 
+
+> 3
+
+Fk,i ≥ cos αu ∥Fk,i ∥.
+
+(52) Problem (52) consists of a convex quadratic objective, linear equality/inequality constraints, and second-order cone (SOC) constraints, and can thus be solved efficiently using off-the-shelf convex optimization solvers. In this work, we use CVX as the modeling interface and MOSEK 
+
+as the underlying solver. The feasibility of (52) is primarily determined by the force equilibrium constraint and the feasible set of cable tensions. A feasible initialization is constructed as follows. First, we ignore the cable constraints and solve for the minimum high-order derivative trajectory to obtain 
+
+r(0)  
+
+> k
+
+, then an initial tension allocation is set as 
+
+F (0)  
+
+> k,i
+
+≈ r(0) 
+
+> k
+
+nC
+
+. (53) The direction of F (0)  
+
+> k,i
+
+is then projected onto the tilt-cone constraint to ensure consistency with the angle bound. This initialization is also aligned with the tension-sharing soft constraint in the objective, which reduces the probability of overloading a single cable and improves allocation balance when the constraints are satisfied. Next, note from (51) that if Rref 0d,k is determined online from the current trajectory, a nonconvex coupling would be introduced. Therefore, we adopt a fixed-reference strat-egy: Rref 0,k and M ref  
+
+> d,k
+
+are computed from the initial trajec-tory r(0)  
+
+> k
+
+, and the moment-tracking term is constructed as a convex quadratic function of Fk,i , thereby preserving convexity in each solve. When the discrepancy between the reference and the final trajectory becomes large,    
+
+> 8IEEE TRANSACTIONS ON AEROSPACE AND ELECTRONIC SYSTEMS VOL. XX, No. XX XXXXX 2022
+
+consistency can be improved by adjusting the weight λM
+
+and/or updating the reference moment M ref 
+
+> d,k
+
+. With the above procedure, the feasible set is nonempty; since the constraint set is closed and the objective is lower bounded, an optimal solution exists. 
+
+Remark 3 Different from [9], this work transforms an offline tension-allocation problem into an online trajec-tory optimization problem that explicitly enforces tension feasibility. It is important to emphasize that, in a two-stage pipeline, if the smoothing stage does not explicitly account for the tension magnitude bound Tu and the swing/tilt angle bound αu, the subsequent tension allo-cation can easily become infeasible—especially when Tu
+
+and αu are small or when large trajectory accelerations increase the required resultant force. In such cases, there may not exist a set of tensions {Fk,i } satisfying (44) –
+
+(47) simultaneously. In contrast, by jointly optimizing the trajectory parameter vector c and the tension variables 
+
+Fk,i during planning, the proposed method maintains a higher level of feasibility and executability even under tight tension constraints. Moreover, the number of deci-sion variables nx in (52) is 
+
+nx = dim( c) + dim( F )= 3 S(n + 1) + 3 NsnC . (54) 
+
+When the polynomial order n, the number of cables nC ,and the number of sampling instants Ns are fixed, the problem size grows linearly with the number of segments 
+
+S, which is well suited for repeated solves and online replanning in large-scale scenarios. 
+
+V. Trajectory Generation and Tracking 
+
+To validate the effectiveness and feasibility of the proposed two-stage trajectory planning framework, this section compares the trajectory generation results of our method against competing baselines and evaluates tra-jectory tracking using a centralized geometric control strategy [24]. 
+
+A. Trajectory Generation Results and Analysis 
+
+We compare the proposed Enhanced Tube-RRT ∗ with a mixed-sampling Tube-RRT ∗ (STube-RRT ∗) and an adaptive-extension Tube-RRT ∗ (AETube-RRT ∗). The test environment has dimensions 50 m × 50 m × 15 m , with the start position ξo at (6 , 2, 10) m and the goal position 
+
+ξg at (40 , 40 , 5) m .Under the same iteration budget, ablation experiments were conducted using 50 random seeds. Table A lists the key parameter settings used in the trajectory generation stage. Fig. 2 illustrates a representative search process se-lected from the 50 trials (filtered based on the turning-angle sum and path length). The thick red curve represents the final path, while the blue circles denote the safety radius.                             
+
+> Symbol Value Description
+> ϵu0.2 Uniform mixture coefficient
+> pg0.2 Goal-biased sampling probability
+> κp10 Prior strength of the controller guidance
+> ϵ03Local extension step size
+> β2.5 Turning-angle penalty weight
+> α8Soft-min shaping parameter
+> d03Distance threshold at which the potential field becomes active
+> pe0.2 Random expansion probability
+> vref 1.0 Reference speed (m/s)
+> ∆t0.01 Minimum integration step size
+> wA1Acceleration cost weight
+> wL1Distance cost weight
+> dref 2.3 Scale-normalization constant (to be specified)
+
+Table I compares different algorithms using four met-rics, including the number of collision checks, the time to the first feasible solution Tfirst , the total turning angle, and the path length. The results indicate that introducing the active sampling strategy helps guide the search toward the region containing feasible solutions more quickly, thereby reducing Tfirst and improving the overall computational efficiency. However, without the potential-field term to regulate local geometry and smoothness, the generated paths tend to exhibit strong zigzag behavior, reflected by larger turning-angle sums. In contrast, incorporating the repulsive potential field significantly reduces the number of obstacle collision checks, preserves effective nodes, and suppresses extreme turning angles. Nevertheless, due to the influence of potential-field guidance and step-size filtering, the search process becomes more conservative, resulting in a rel-atively longer search time. Overall, the Enhanced Tube-RRT* produces paths with the smallest turning-angle sum and path length, achieving the highest path quality among the compared methods. Table II further summarizes the overall performance across all trials. The proposed method achieves a signif-icantly higher success rate than both STube-RRT* and AETube-RRT*. In terms of the effective sampling ratio, the proposed method significantly outperforms STube-RRT* and is comparable to AETube-RRT*. Moreover, the proposed algorithm finds the first feasible solution faster, indicating that the adaptive expansion strategy increases the probability of valid expansions. However, because the search tends to bias toward the interior of free space, the first feasible solution may occasionally appear slightly later. To further evaluate solution quality, we analyze only the successful trials. The proposed method yields a sig-nificantly shorter average path length than STube-RRT*, while the difference with AETube-RRT* is not statis-tically significant. Regarding smoothness, the average turning-angle sum of the proposed method is lower than those of both baseline algorithms, indicating smoother trajectories.  
+
+> :9
+
+(a) Enhanced Tube-RRT ∗ (b) STube-RRT ∗ (c) AETube-RRT ∗
+
+Fig. 2. Comparison of paths generated by different algorithms. The thick red curve denotes the final path and the blue circles indicate the corresponding safety radii. (a) shows the search result of the proposed Enhanced Tube-RRT ∗, which generates a smooth trajectory with relatively uniform safety radii along the path. (b) presents the path obtained by STube-RRT ∗, where the mixed-sampling strategy accelerates the discovery of feasible regions but leads to noticeable zigzag behavior due to the lack of local geometric regulation. (c) illustrates the result of AETube-RRT ∗, where the adaptive extension guided by the potential field produces relatively smoother segments but may introduce larger safety radii and longer exploration near obstacles. TABLE I Performance comparison in a representative search process. Metric STube-RRT ∗ AETube-RRT ∗ Ours Collision checks 3656 1752 1278 
+
+Tfirst (s) 2.66 13.88 1.13 Turning-angle sum (rad) 14.56 15.08 10.97 Path length (m) 7.75 7.57 7.27 
+
+To avoid selection bias caused by evaluating only successful samples, we introduce a penalized metric to incorporate failed trials into the overall utility evaluation. For a metric ms, we define 
+
+˜ms =
+
+
+
+ms, if successful ,
+
+1.1 × max 
+
+> s′∈S succ
+
+ms′ , otherwise . (55) where Ssucc denotes the set of successful trials. This formulation ensures that any failed run is strictly worse than all successful runs in the ranking. The results show that, since both baseline algorithms fail in more than half of the random seeds, the median of their penalized metrics degenerates to the penalty values (path lengths of 10 .25 and 9.53 , and turning-angle sums of 25 .34 and 23 .43 , respectively). In contrast, the median values of the proposed method are still dominated by successful samples (path length 7.69 and turning-angle sum 16 .60 ). Overall, the Enhanced Tube-RRT* demonstrates clear advantages in path quality. Under a comparable computa-tional budget, the proposed method achieves shorter paths, higher success rates, and higher effective sampling ratios, while exhibiting smaller turning-angle sums and smoother trajectories. These results verify that the proposed planner achieves an excellent balance between robustness and solution quality in dense obstacle environments. 
+
+TABLE II Overall performance comparison across 50 random seeds. Metric STube-RRT ∗ AETube-RRT ∗ Ours Success rate (%) 36 28 94 Effective sampling ratio (%) 39.08 52.17 51.83 
+
+Tfirst (s) 1.55 1.76 1.11 Turning-angle sum (rad) 18.80 17.27 17.00 Path length (m) 8.37 7.87 7.72 
+
+B. Trajectory Tracking Results 
+
+In this subsection, the reference (optimal) trajec-tory is generated by the proposed two-stage planning pipeline described above, and the centralized geometric control scheme follows [24]. The system parameters and trajectory-optimization weights are summarized in Table III. 0 10 20 30 40 50 60 70 
+
+> Time (s)
+> 0510 15 20 25 30 35 40 45
+> Position (m)
+> xp
+> xp;d
+> yp
+> yp;d
+> zp
+> zp;d
+
+(a) Load position tracking curve. 0 10 20 30 40 50 60 70        
+
+> Time (s)
+> -40 -20 020 40 60 80 100 120
+> Angle (deg)
+> ?(X)
+> ?d(X)
+> 3(Y)
+> 3d(Y)
+> A(Z)
+> Ad(Z)
+
+(b) Load attitude tracking curve. Fig. 3. Payload position and attitude tracking performance. The payload trajectory closely follows the reference trajectory throughout the mission. Although small deviations appear in the roll ϕ and pitch 
+
+θ angles during aggressive turning, they rapidly converge to the desired values, demonstrating stable tracking performance of the proposed controller. 
+
+The initial payload position is set to ξ0 = (7 , 3, 8) m ,while the target position is identical to that specified in the previous subsection. The cable tension bounds are defined as Tl = 1 N and Tu = 35 N . The angle between the cable direction and the vertical axis e3 of the inertial frame I is constrained by αl = 0 ◦ and αu = 22 ◦. The velocity and 
+
+10 IEEE TRANSACTIONS ON AEROSPACE AND ELECTRONIC SYSTEMS VOL. XX, No. XX XXXXX 2022 0550 10 
+
+> Z (m)
+
+15 40 50 30 40 
+
+Y (m) 
+
+30 
+
+X (m) 
+
+20 20 10 10 0 0                              
+
+> Reference Trajectory Payload Trajectory Quadrotor Trajectory (a) Side view. 010 20 30 40 50
+> X (m)
+> 010 20 30 40 50
+> Y (m) Reference Trajectory Payload Trajectory Quadrotor Trajectory (b) Top view. Fig. 4. Spatial trajectories of the UAV–payload cooperative transportation system. The gray cubes represent environmental obstacles. The trajectories remain collision-free with sufficient safety clearance, demonstrating the effectiveness of the proposed planning and control strategy. TABLE III System parameters and trajectory-optimization weights.
+> Symbol Value Description
+> m0(kg) 5Payload mass
+> J0(kg m 2)diag(0 .6875 ,
+> 0.59375 ,
+> 0.78333)
+> Payload inertia matrix
+> mi(kg) 1Mass of each quadrotor
+> J1(kg m 2)diag(0 .065 ,
+> 0.030 ,
+> 0.100)
+> Inertia of quadrotor 1
+> J2(kg m 2)diag(0 .052 ,
+> 0.035 ,
+> 0.095)
+> Inertia of quadrotor 2
+> J3(kg m 2)diag(0 .045 ,
+> 0.048 ,
+> 0.075)
+> Inertia of quadrotor 3
+> li(m) 0.75 Cable length
+> λf10 Weight on force-rate variation
+> λT1Weight on force magnitude
+> λshare 1Weight on force distribution balance
+> λM0.1 Weight on moment term
+
+acceleration limits of the payload are set to vmax = 2 m /s
+
+and amax = 1 m /s2, respectively. The payload position tracking results are shown in Fig. 3(a). The dashed curve represents the reference tra-jectory generated by the proposed planner, while the solid curve denotes the trajectory tracked by the controller. The actual trajectory closely follows the reference trajectory throughout the entire task. Stable tracking is maintained during acceleration, turning, and altitude variations, indi-cating that the proposed controller can effectively track the planned trajectory while satisfying the feasibility requirements for smooth payload transportation. Fig. 4 illustrates the spatial motion of the UAV–payload cooperative transportation system. The gray cubes represent environmental obstacles. From both the top and side views, it can be observed that the UAV–payload system maintains sufficient safety clearance from obstacles throughout the mission. No obvious trajectory segments approach or penetrate obstacle boundaries, demonstrating that the proposed planning and control strategy can effectively satisfy spatial constraints while ensuring trajectory feasibility. The payload attitude tracking results are presented in Fig. 3(b). The roll angle ϕ and pitch angle θ exhibit slightly increased deviations during aggressive turning segments but quickly return to the desired values. The configuration errors of the cable direction and UAV attitude are shown in Fig. 6. Both errors con-verge to the order of 10 −4 within approximately 3 s .The zoomed-in view indicates that only small bounded oscillations remain during the steady-state phase. These results demonstrate that the cable direction and UAV attitude maintain geometric consistency during trajectory tracking. The corresponding visualization is provided in Fig. 5, which further confirms that the cascaded control structure effectively suppresses coupled oscillations of the suspended system and improves payload trajectory tracking performance. Fig. 7 further presents the variations of cable swing angles and tension magnitudes during both the trajectory optimization and tracking processes. The cable swing angles remain within the prescribed constraints through-out the transportation task. Meanwhile, the cable ten-sions exhibit smooth variations without abrupt changes or prolonged slack conditions. This indicates that the sys-tem maintains stable force distribution during trajectory tracking, thereby reducing payload swing and improving transportation safety. These results verify that the proposed trajectory plan-ning and cascaded control framework enables safe and dynamically feasible aerial transportation in cluttered en-vironments. 
+
+VI. Conclusion 
+
+This paper addresses trajectory planning for a cas-caded aerial transportation system and proposes an En-    
+
+> :11 5
+> 10
+> Z (m)
+> 40
+> 30
+> Y (m)
+> 40 20 35 30
+> X (m)
+> 25
+> 10 20 15
+> 10
+> 5Reference Trajectory Payload Trajectory Quadrotor Trajectory Basis Vector b 02
+> Basis Vector b 01
+> Basis Vector b 03 Fig. 5. Visualization of the simulated trajectory tracking performance of the proposed trajectory planning and cascaded control framework. The reference trajectory, payload trajectory, and quadrotor trajectory are illustrated together with the payload body-frame basis vectors. The results show that the payload closely follows the reference path while the quadrotor maintains a smooth motion profile. The oscillations of the suspended payload are effectively suppressed throughout the maneuver, demonstrating the effectiveness of the proposed method in achieving accurate trajectory tracking and stable transportation of suspended loads.
+
+hanced Tube-RRT ∗ planner that incorporates an active mixed-sampling mechanism in the sampling stage and an adaptive expansion strategy in the extension stage, thereby jointly promoting collision-avoidance safety and trajectory smoothness. Building on the planned path, we further develop a force-feasibility-aware trajectory optimization method. Finally, closed-loop tracking of the resulting trajectory is validated using a geometric con-troller. Simulation results demonstrate the feasibility and effectiveness of the proposed planning-and-optimization framework. Future work will focus on obstacle-avoidance trajectory generation for cascaded aerial transportation systems in dynamic environments, and on extending the framework to cooperative missions and joint planning for multi-cascaded transportation systems. 
+
+APPENDIX Appendix A Proof of Theorem 1 
+
+Let n ≜ |V | denote the number of nodes in the current tree, and let μ(Xfree ) denote the volume of the free space. To ensure sufficient local connectivity and rewiring opportunities during early iterations, a density-corrected neighborhood radius is adopted: 
+
+rn = min 
+
+( γ log nρ n 
+
+1/3
+
+, 3ϵ
+
+)
+
+. (56) where γ > 0 is a constant and ρ represents a lower bound on the effective sampling density over the free space. Since the sampling distribution follows a mixture strategy that includes a uniform sampling component with weight ϵu, for any measurable subset A ⊆ Xfree the uniform component guarantees 
+
+P(ξrand ∈ A) ≥ ϵu
+
+μ(A)
+
+μ(Xfree ) . (57) Furthermore, to avoid repeated failures caused by turning-angle constraints or potential-field guidance in the adaptive expansion strategy, we assume the existence of a minimum expansion success probability pl ∈ (0 , 1] .That is, conditioned on ξrand ∈ X free , the probability of generating a valid new node is at least pl.Consequently, the probability that a valid new node is generated within region A in one iteration admits the conservative lower bound 
+
+P(ξnew ∈ A) ≥ ρ μ (A),ρ ≜ ϵu pl
+
+μ(Xfree ) . (58) Substituting this conservative bound into (56) prevents the neighborhood radius rn from becoming excessively small during early iterations due to insufficient effective sampling density. This helps maintain adequate neighbor search and rewiring opportunities throughout the tree expansion process. 
+
+Appendix B Proof of Theorem 2 
+
+Since the neighborhood radius used in this work satisfies the asymptotic connectivity condition required by RRT ∗, and the composite cost function is continuous under path perturbations and additive along trajectory segments, the asymptotic optimality of the proposed al-gorithm follows from the standard proof framework of RRT ∗ [36]. 
+
+REFERENCES           
+
+> [1] G. Li, X. Liu, and G. Loianno, “Human-aware physical hu-man–robot collaborative transportation and manipulation with multiple aerial robots,” IEEE Transactions on Robotics , vol. 41, pp. 762–781, 2025. 12 IEEE TRANSACTIONS ON AEROSPACE AND ELECTRONIC SYSTEMS VOL. XX, No. XX XXXXX 2022
+
+a0 10 20 30 40 50 60 70 
+
+Time (s) 
+
+> 00.02 0.04 0.06
+
+*q1
+
+4 6 80123
+
+#10 !40 10 20 30 40 50 60 70 
+
+Time (s)  
+
+> 00.02 0.04
+
+*q2
+
+4 6 8012 #10 !40 10 20 30 40 50 60 70 
+
+Time (s) 
+
+> 00.02 0.04 0.06
+
+*q3
+
+4 6 80123
+
+#10 !4 b0 10 20 30 40 50 60 70 
+
+Time (s) 
+
+> 00.05 0.1
+
+*R1
+
+4 6 80510 15 #10 !40 10 20 30 40 50 60 70 
+
+Time (s) 
+
+> 00.05 0.1
+
+*R2
+
+4 6 80510 15 #10 !40 10 20 30 40 50 60 70 
+
+Time (s) 
+
+> 00.05 0.1
+
+*R3
+
+4 6 80510 15 #10 !4
+
+Fig. 6. Configuration errors during trajectory tracking. (a) Cable direction configuration errors. (b) UAV attitude configuration errors. Both errors converge to the order of 10 −4 within approximately 3 s , and only small bounded oscillations remain in steady state, demonstrating geometric consistency and effective suppression of coupled oscillations. [2] G. Cortigiani, M. Malvezzi, D. Prattichizzo, and M. Pozzi, “Human-robot collaborative cable-suspended manipulation with contact distinction,” IEEE Robotics and Automation Letters ,vol. 10, no. 1, pp. 740–747, 2025. [3] P. Prajapati, R. N. Banavar, and V. Vashista, “Human-state-aware non-linear control framework for physical collaborative aerial transportation,” IEEE Control Systems Letters , vol. 9, pp. 1363– 1368, 2025. [4] R. Jin, X. Xu, Y. Yang, J. Li, M. Cao, and L. Xie, “Tethered uav autonomous knotting on environmental structures for transport,” 
+
+Cyborg and Bionic Systems , vol. 6, p. 0450, 2025. [Online]. Avail-able: https://spj.science.org/doi/abs/10.34133/cbsystems.0450 [5] Y. Huang, L. Ji, M. Gao, and S. Huang, “Research on key tech-nologies for large-load multi-unmanned aerial vehicles cooperative hanging transportation,” in 2024 5th International Conference on Computers and Artificial Intelligence Technology (CAIT) , 2024, pp. 395–400. [6] K. Sreenath and V. R. Kumar, “Dynamics, control and planning for cooperative manipulation of payloads suspended by cables from multiple quadrotor robots,” in Robotics: Science and Systems , 2013. [Online]. Available: https://api.semanticscholar. org/CorpusID:9105307 [7] H. Wang, H. Li, B. Zhou, F. Gao, and S. Shen, “Impact-aware planning and control for aerial robots with suspended payloads,” 
+
+IEEE Transactions on Robotics , vol. 40, pp. 2478–2497, 2024. [8] C. Y. Son, H. Seo, D. Jang, and H. J. Kim, “Real-time optimal trajectory generation and control of a multi-rotor with a suspended load for obstacle avoidance,” IEEE Robotics and Automation Letters , vol. 5, no. 2, pp. 1915–1922, 2020. [9] Y. Chai, Z. Zhang, H. Yu, J. Han, Y. Fang, and X. Liang, “A trajectory planning scheme for collaborative aerial transportation systems by graph-based searching and cable tension optimization,” 
+
+IEEE/ASME Transactions on Mechatronics , Aug. 2025, early Access. [10] S. Li, T. T. H. Duong, and D. Zanotto, “In-flight cable length con-trol for improved quadrotor-based suspended load transportation,” 
+
+IEEE Robotics and Automation Letters , vol. 9, no. 1, pp. 667–674, 2024. [11] Y. Chan, Y. Shu, W.-H. Chen, and K. K. Ng, “Time-optimal motion planning of cable-suspended payload quadcopters using spatial reformulation,” Aerospace Science and Technology ,vol. 169, p. 111460, 2026. [Online]. Available: https://www. sciencedirect.com/science/article/pii/S127096382501524X [12] Y. Chai, Z. Yang, X. Liang, and J. Han, “Time-optimal gap-traversal trajectory planning scheme for collaborative aerial transportation systems: An experimental research,” Aerospace Science and Technology , 2025. [Online]. Available: https: //api.semanticscholar.org/CorpusID:283684972 [13] M. Sarvaiya, G. Li, and G. Loianno, “Polyfly: Polytopic optimal planning for collision-free cable-suspended aerial payload trans-portation,” IEEE Robotics and Automation Letters , vol. 11, no. 3, pp. 2991–2998, 2026. [14] K. Wahba and W. H¨ onig, “pc-dbcbs: Kinodynamic motion plan-ning of physically-coupled robot teams,” IEEE Robotics and Automation Letters , vol. 10, no. 11, pp. 11 118–11 125, 2025. [15] X. Li, H. Nie, H. Xu, X. Liu, Z. Tan, C. Jiang, Y. Feng, and S. Mei, “Geosafe: A unified unconstrained multi-dof optimization framework for multi-uav cooperative hoisting and obstacle avoid-ance,” in 2025 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) , 2025, pp. 1013–1020. [16] X. Zhang, F. Zhang, and P. Huang, “Formation planning for tethered multirotor uav cooperative transportation with unknown payload and cable length,” IEEE Transactions on Automation Science and Engineering , vol. 21, no. 3, pp. 3449–3460, 2024. [17] H. Li, H. Wang, C. Feng, F. Gao, B. Zhou, and S. Shen, “Auto-trans: A complete planning and control framework for autonomous uav payload transportation,” IEEE Robotics and Automation Let-ters , vol. 8, no. 10, pp. 6859–6866, 2023. : 13 a0 10 20 30 40 50 60 70 
+
+Time (s) 
+
+> 02468
+> Angle (deg)
+
+Actual Desired 0 10 20 30 40 50 60 70 
+
+Time (s) 
+
+> 02468
+> Angle (deg)
+
+Actual Desired 0 10 20 30 40 50 60 70 
+
+Time (s) 
+
+> 02468
+> Angle (deg)
+
+Actual Desired b0 10 20 30 40 50 60 70 
+
+Time (s)  
+
+> 15 20 25 30
+> N
+> jT1jjTd1j
+
+4 6 816 16.5 17 0 10 20 30 40 50 60 70 
+
+Time (s)  
+
+> 15 20 25 30
+> N
+> jT2jjTd2j
+
+4 6 816 16.5 17 0 10 20 30 40 50 60 70 
+
+Time (s)  
+
+> 15 20 25 30
+> N
+> jT3jjTd3j
+
+4 6 816 16.2 16.4 16.6 16.8 
+
+Fig. 7. Rope sway angle and tension amplitude variation curve during trajectory optimization and tracking. (a) Rope swing angle variations of the three cables. (b) Cable tension magnitudes. The swing angles remain within prescribed bounds, while the tensions vary smoothly without slack, indicating stable force distribution and reduced payload oscillation. [18] A. Jonnalagadda, Y. S. Verma, M. V. Bharat, and E. Z. Ushus, “Efficient path planning in multi-agent environment of aavs with payloads,” IEEE Access , vol. 13, pp. 57 932–57 942, 2025. [19] Y. Zhong, Q. Cao, X. Liang, Y. Fang, and J. Han, “Search-based motion planning for quadrotor transporting a cable-suspended load,” in Advances in Guidance, Navigation and Control , L. Yan, H. Duan, and Y. Deng, Eds. Singapore: Springer Nature Singa-pore, 2023, pp. 3756–3764. [20] Y. Chai, Z. Zhang, H. Yu, J. Han, Y. Fang, and X. Liang, “A trajectory planning scheme for collaborative aerial transportation systems by graph-based searching and cable tension optimization,” 
+
+IEEE/ASME Transactions on Mechatronics , vol. 31, no. 1, pp. 116–127, 2026. [21] V. Spurny, M. Petrlik, V. Vonasek, and M. Saska, “Cooperative transport of large objects by a pair of unmanned aerial systems using sampling-based motion planning,” in 2019 24th IEEE In-ternational Conference on Emerging Technologies and Factory Automation (ETFA) , 2019, pp. 955–962. [22] K. Wahba, J. Ortiz-Haro, M. Toussaint, and W. H¨ onig, “Kino-dynamic motion planning for a team of multirotors transporting a cable-suspended payload in cluttered environments,” in 2024 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) , 2024, pp. 12 750–12 757. [23] X. Zhang, Y. Wang, B. Mu, and S. Y. Yoon, “Empc-based flight control and collision-free path planning for a quadrotor with unbalanced payload,” IEEE/ASME Transactions on Mechatronics ,vol. 30, no. 6, pp. 5745–5754, 2025. [24] T. Gao, K. Tomita, and A. Kamimura, “Robustness enhancement for multi-quadrotor centralized transportation system via online tuning and learning,” 2025 American Control Conference (ACC) , pp. 497–502, 2025. [Online]. Available: https://api. semanticscholar.org/CorpusID:280706294 [25] E. Sabourin and E. Lanteigne, “An application of model-free reinforcement learning to the control of aerial vehicles with slung payloads,” in 2024 IEEE 20th International Conference on Automation Science and Engineering (CASE) , 2024, pp. 2181– 2187. [26] D. Lin, J. Han, K. Li, J. Zhang, and C. Zhang, “Payload trans-porting with two quadrotors by centralized reinforcement learning method,” IEEE Transactions on Aerospace and Electronic Systems ,vol. 60, no. 1, pp. 239–251, 2024. [27] X. Li, J. Zhang, and J. Han, “Trajectory planning of load transportation with multi-quadrotors based on reinforcement learning algorithm,” Aerospace Science and Technology , vol. 116, p. 106887, 2021. [Online]. Available: https://www.sciencedirect. com/science/article/pii/S1270963821003977 [28] D. Cao, J. Zhou, X. Wang, and S. Li, “Flare: Agile flights for quadrotor cable-suspended payload system via reinforcement learning,” IEEE Robotics and Automation Letters , vol. 11, no. 3, pp. 3653–3660, 2026. [29] N. Rao, S. Sundaram, and P. Jagtap, “Temporal waypoint naviga-tion of multi-uav payload system using barrier functions,” in 2023 European Control Conference (ECC) , 2023, pp. 1–6. [30] J. Cai, B. Xian, Z. Zhou, and J. Yu, “Event-driven based online adaptive trajectory planning and control for the uav slung-payload transportation system,” Aerospace Science and Technology , vol. 163, p. 110255, 2025. [Online]. Available: https: //www.sciencedirect.com/science/article/pii/S1270963825003268 [31] S. Sun, X. Wang, D. Sanalitro, A. Franchi, M. Tognon, and J. Alonso-Mora, “Agile and cooperative aerial manipulation of a cable-suspended load,” Science Robotics , vol. 10, no. 107, p. eadu8015, 2025. [Online]. Available: https://www.science.org/doi/ abs/10.1126/scirobotics.adu8015 [32] T. Lee, “Geometric control of quadrotor uavs transporting a cable-suspended rigid body,” IEEE Transactions on Control Systems Technology , vol. 26, no. 1, pp. 255–264, 2018. [33] Y. Ning, T. Li, C. Yao, W. Du, Y. Zhang, and Y. Zhang, “TS-RIL: A two-stage robot imitation learning framework with motion 14 IEEE TRANSACTIONS ON AEROSPACE AND ELECTRONIC SYSTEMS VOL. XX, No. XX XXXXX 2022 trajectory learning and obstacle avoidance in real-world operat-ing scenarios,” Robotics and Computer-Integrated Manufacturing ,vol. 97, p. 103111, 2026. [34] P. Mao, S. Lv, and Q. Quan, “Tube rrt*: Efficient homotopic path planning for swarm robotics passing-through large-scale obstacle environments,” IEEE Robotics and Automation Letters , vol. 10, no. 3, pp. 2247–2254, 2025. [35] P. Mao, R. Fu, and Q. Quan, “Optimal virtual tube planning and control for swarm robotics,” The International Journal of Robotics Research , vol. 43, no. 5, pp. 602–627, 2024. [Online]. Available: https://doi.org/10.1177/02783649231210012 [36] S. Karaman and E. Frazzoli, “Sampling-based algorithms for optimal motion planning,” The International Journal of Robotics Research , vol. 30, no. 7, pp. 846–894, 2011. : 15

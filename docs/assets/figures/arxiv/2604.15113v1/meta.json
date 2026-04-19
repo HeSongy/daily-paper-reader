@@ -1,0 +1,62 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.15113v1/fig-001.webp",
+      "caption": "Fig. 4. Comparison of reconstructions using HRR and FHRR. The left panel shows the ground truth generated from the environment. The middle and right panels show reconstructions produced by the best-performing HRR and FHRR configurations identified in the latency–accuracy analysis.",
+      "page": 11,
+      "index": 1,
+      "width": 629,
+      "height": 238
+    },
+    {
+      "url": "assets/figures/arxiv/2604.15113v1/fig-002.webp",
+      "caption": "Table 2. The mathematical symbols used throughout this manuscript.",
+      "page": 7,
+      "index": 2,
+      "width": 327,
+      "height": 902
+    },
+    {
+      "url": "assets/figures/arxiv/2604.15113v1/fig-003.webp",
+      "caption": "Fig. 2. Pipeline latency breakdown for HRR and FHRR backends. Stacked bars show the mean per-stage latency, averaged over five random seeds. Abbreviations: MHN = Modern Hopfield Network; Res = Resonator Network; CB = codebook decoding.",
+      "page": 10,
+      "index": 3,
+      "width": 851,
+      "height": 417
+    },
+    {
+      "url": "assets/figures/arxiv/2604.15113v1/fig-004.webp",
+      "caption": "Fig. 3. Latency–accuracy tradeoff across backends, cleanup, and regression methods. The x-axis shows the mean pipeline latency, while the y-axis shows the mean squared error. The dashed curve indicates the Pareto frontier.",
+      "page": 10,
+      "index": 4,
+      "width": 629,
+      "height": 471
+    },
+    {
+      "url": "assets/figures/arxiv/2604.15113v1/fig-005.webp",
+      "caption": "Table 3. Asymptotic Complexity Comparison of HRR [16] and FHRR [17] Operations",
+      "page": 8,
+      "index": 5,
+      "width": 861,
+      "height": 238
+    },
+    {
+      "url": "assets/figures/arxiv/2604.15113v1/fig-006.webp",
+      "caption": "Fig. 1. A high-level overview of the HyperSpace framework. A high-level overview of the HyperSpace framework. (A) Inputs consist of coordinate–value pairs (x, 𝑣) . (B) Coordinates are encoded into hypervectors 𝜙𝑝 (x) via compositional positional encoding. (C) Values are encoded as hypervectors 𝜙𝑣 (𝑣) . (D) Position–value pairs are bound and bundled into a shared memory𝑚. (E) Querying is performed by positional inversion and unbinding. (F) Retrieved representations are refined via cleanup operations (resonator or modern Hopfield). (G) A regression operator decodes the representation into a scalar estimate. (H) The final output yields reconstructed values 𝑣′ at query locations.",
+      "page": 4,
+      "index": 6,
+      "width": 809,
+      "height": 409
+    },
+    {
+      "url": "assets/figures/arxiv/2604.15113v1/fig-007.webp",
+      "caption": "Table 1. The baseline implementation of HyperSpace defined through abstract algebraic terminology can will be extended by downstream VSA systems.",
+      "page": 5,
+      "index": 7,
+      "width": 1020,
+      "height": 360
+    }
+  ]
+}
