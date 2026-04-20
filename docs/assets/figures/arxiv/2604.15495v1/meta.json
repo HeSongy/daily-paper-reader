@@ -1,0 +1,46 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.15495v1/fig-001.webp",
+      "caption": "Table 4: Representative instructions generated for two scenarios. NavComposer relies on sequential RGB frames, referencing transient objects, whereas GIST leverages the Semantic Topology for permanent, structural landmarks.",
+      "page": 8,
+      "index": 1,
+      "width": 1044,
+      "height": 273
+    },
+    {
+      "url": "assets/figures/arxiv/2604.15495v1/fig-002.webp",
+      "caption": "Table 7: Formative Probe Results (𝑁 = 5). Evaluators navigated relying solely on generated verbal instructions.",
+      "page": 8,
+      "index": 2,
+      "width": 490,
+      "height": 289
+    },
+    {
+      "url": "assets/figures/arxiv/2604.15495v1/fig-003.webp",
+      "caption": "Figure 2: GIST Semantic Topology: The skeletonizationderived graph providing walking nodes (green) and traversable edges (teal), overlaid with localized products (orange).",
+      "page": 4,
+      "index": 3,
+      "width": 432,
+      "height": 441
+    },
+    {
+      "url": "assets/figures/arxiv/2604.15495v1/fig-004.webp",
+      "caption": "Figure 3: Semantic Zone Classification: Free-space pixels are assigned to 18 specific semantic zones via KD-tree voting over the localized product positions (legend displays the top 10 zones by area).",
+      "page": 4,
+      "index": 4,
+      "width": 432,
+      "height": 442
+    },
+    {
+      "url": "assets/figures/arxiv/2604.15495v1/fig-005.webp",
+      "caption": "Figure 4: Intent-aware search via the Gemini-powered web interface. Left: A multi-item recipe query (“biryani ingredients”) is decomposed into distinct physical targets. Right: An abstract query (“vegan protein”) demonstrating how the VLM infers alternative semantic categories to enable robust spatial estimation.",
+      "page": 5,
+      "index": 5,
+      "width": 506,
+      "height": 477
+    }
+  ]
+}

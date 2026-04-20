@@ -6,58 +6,40 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-04-19
-- 运行时间：2026-04-19 20:08:57 UTC
+- 最新运行日期：2026-04-20
+- 运行时间：2026-04-20 20:06:15 UTC
 - 运行状态：成功
-- 本次总论文数：12
-- 精读区：5
-- 速读区：7
+- 本次总论文数：6
+- 精读区：4
+- 速读区：2
 
 ### 今日简报（AI）
-探索机器人场景记忆与零样本世界模型，完成 12 篇论文精读与速读。  
-重点方向在于利用复杂规划与世界模型提升自主学习与空间推理能力。  
-下步可关注这些模型在真实多机协作与空间认知任务中的落地表现。
-- 详情：[/202604/19/README](/202604/19/README)
+今日聚焦多模态知识抽取与层级主动推理，共完成 6 篇文献阅读。  
+两篇高分论文展示了语义空间建模与智能推理的结合潜力。  
+建议关注人工智能在知识结构化与可解释学习上的前沿应用。
+- 详情：[/202604/20/README](/202604/20/README)
 
 ### 精读区论文标签
-1. [3D-Anchored Lookahead Planning for Persistent Robotic Scene Memory via World-Model-Based MCTS](/202604/19/2604.11302v1-3d-anchored-lookahead-planning-for-persistent-robotic-scene-memory-via-world-model-based-mcts)  
-   标签：评分：10.0/10、query:navwm
-   evidence：将3D一致的世界模型作为MCTS规划的展开预测器
-2. [Zero-shot World Models Are Developmentally Efficient Learners](/202604/19/2604.10333v1-zero-shot-world-models-are-developmentally-efficient-learners)  
+1. [GIST: Multimodal Knowledge Extraction and Spatial Grounding via Intelligent Semantic Topology](/202604/20/2604.15495v1-gist-multimodal-knowledge-extraction-and-spatial-grounding-via-intelligent-semantic-topology)  
    标签：评分：9.0/10、query:navwm
-   evidence：用于物理场景理解的零样本视觉世界模型
-3. [WM-DAgger: Enabling Efficient Data Aggregation for Imitation Learning with World Models](/202604/19/2604.11351v1-wm-dagger-enabling-efficient-data-aggregation-for-imitation-learning-with-world-models)  
+   evidence：用于复杂环境空间定位与导航的语义拓扑
+2. [Hierarchical Active Inference using Successor Representations](/202604/20/2604.15679v1-hierarchical-active-inference-using-successor-representations)  
    标签：评分：9.0/10、query:navwm
-   evidence：利用世界模型合成分布外恢复数据用于模仿学习
-4. [ComSim: Building Scalable Real-World Robot Data Generation via Compositional Simulation](/202604/19/2604.11386v1-comsim-building-scalable-real-world-robot-data-generation-via-compositional-simulation)  
+   evidence：用于导航的分层主动推理与后继表示
+3. [FineCog-Nav: Integrating Fine-grained Cognitive Modules for Zero-shot Multimodal UAV Navigation](/202604/20/2604.16298v1-finecog-nav-integrating-fine-grained-cognitive-modules-for-zero-shot-multimodal-uav-navigation)  
    标签：评分：9.0/10、query:navwm
-   evidence：利用世界模型进行自主机器人任务和数据生成
-5. [Learning Ad Hoc Network Dynamics via Graph-Structured World Models](/202604/19/2604.14811v1-learning-ad-hoc-network-dynamics-via-graph-structured-world-models)  
-   标签：评分：9.0/10、query:navwm
-   evidence：具有隐状态的图结构世界模型，用于学习网络动态
+   evidence：用于导航和环境理解的认知模块
+4. [From Topology to Trajectory: LLM-Driven World Models For Supply Chain Resilience](/202604/20/2604.11041v1-from-topology-to-trajectory-llm-driven-world-models-for-supply-chain-resilience)  
+   标签：评分：8.0/10、query:navwm
+   evidence：结合隐式轨迹演练的生成式世界模型用于规划
 
 ### 速读区论文标签
-1. [Spatial Atlas: Compute-Grounded Reasoning for Spatial-Aware Research Agent Benchmarks](/202604/19/2604.12102v1-spatial-atlas-compute-grounded-reasoning-for-spatial-aware-research-agent-benchmarks)  
+1. [SocialGrid: A Benchmark for Planning and Social Reasoning in Embodied Multi-Agent Systems](/202604/20/2604.16022v1-socialgrid-a-benchmark-for-planning-and-social-reasoning-in-embodied-multi-agent-systems)  
    标签：评分：7.0/10、query:navwm
-   evidence：用于空间感知研究智能体的空间场景图引擎
-2. [Trajectory Planning for a Multi-UAV Rigid-Payload Cascaded Transportation System Based on Enhanced Tube-RRT*](/202604/19/2604.15074v1-trajectory-planning-for-a-multi-uav-rigid-payload-cascaded-transportation-system-based-on-enhanced-tube-rrt)  
-   标签：评分：7.0/10、query:navwm
-   evidence：复杂环境中的轨迹规划
-3. [HyperSpace: A Generalized Framework for Spatial Encoding in Hyperdimensional Representations](/202604/19/2604.15113v1-hyperspace-a-generalized-framework-for-spatial-encoding-in-hyperdimensional-representations)  
-   标签：评分：7.0/10、query:navwm
-   evidence：超维表示中的空间编码
-4. [CDPR: Cross-modal Diffusion with Polarization for Reliable Monocular Depth Estimation](/202604/19/2604.11097v1-cdpr-cross-modal-diffusion-with-polarization-for-reliable-monocular-depth-estimation)  
+   evidence：评估具身多智能体环境中的规划与导航
+2. [Discovering quantum phenomena with Interpretable Machine Learning](/202604/20/2604.16015v1-discovering-quantum-phenomena-with-interpretable-machine-learning)  
    标签：评分：6.0/10、query:navwm
-   evidence：将深度预测重新表述为隐空间中的去噪过程
-5. [Latent-Condensed Transformer for Efficient Long Context Modeling](/202604/19/2604.12452v2-latent-condensed-transformer-for-efficient-long-context-modeling)  
-   标签：评分：6.0/10、query:navwm
-   evidence：低维隐空间投影与语义隐向量
-6. [MERRIN: A Benchmark for Multimodal Evidence Retrieval and Reasoning in Noisy Web Environments](/202604/19/2604.13418v1-merrin-a-benchmark-for-multimodal-evidence-retrieval-and-reasoning-in-noisy-web-environments)  
-   标签：评分：6.0/10、query:navwm
-   evidence：评估在噪声网络环境中导航的搜索增强智能体的基准
-7. [Doc-V*:Coarse-to-Fine Interactive Visual Reasoning for Multi-Page Document VQA](/202604/19/2604.13731v1-doc-vcoarse-to-fine-interactive-visual-reasoning-for-multi-page-document-vqa)  
-   标签：评分：6.0/10、query:navwm
-   evidence：智能体通过语义检索和有针对性的页面获取进行主动导航
+   evidence：利用变分自编码器学习相空间的解释性表示
 
 
 <div class="dpr-home-promo-card">

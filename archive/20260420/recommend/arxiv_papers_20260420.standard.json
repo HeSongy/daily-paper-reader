@@ -1,0 +1,245 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-04-20T20:03:44.139419+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 4,
+    "deep_cap": 6,
+    "deep_selected": 4,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2604.15495v1",
+      "source": "arxiv",
+      "title": "GIST: Multimodal Knowledge Extraction and Spatial Grounding via Intelligent Semantic Topology",
+      "abstract": "Navigating complex, densely packed environments like retail stores, warehouses, and hospitals poses a significant spatial grounding challenge for humans and embodied AI. In these spaces, dense visual features quickly become stale given the quasi-static nature of items, and long-tail semantic distributions challenge traditional computer vision. While Vision-Language Models (VLMs) help assistive systems navigate semantically-rich spaces, they still struggle with spatial grounding in cluttered environments. We present GIST (Grounded Intelligent Semantic Topology), a multimodal knowledge extraction pipeline that transforms a consumer-grade mobile point cloud into a semantically annotated navigation topology. Our architecture distills the scene into a 2D occupancy map, extracts its topological layout, and overlays a lightweight semantic layer via intelligent keyframe and semantic selection. We demonstrate the versatility of this structured spatial knowledge through critical downstream Human-AI interaction tasks: (1) an intent-driven Semantic Search engine that actively infers categorical alternatives and zones when exact matches fail; (2) a one-shot Semantic Localizer achieving a 1.04 m top-5 mean translation error; (3) a Zone Classification module that segments the walkable floor plan into high-level semantic regions; and (4) a Visually-Grounded Instruction Generator that synthesizes optimal paths into egocentric, landmark-rich natural language routing. In multi-criteria LLM evaluations, GIST outperforms sequence-based instruction generation baselines. Finally, an in-situ formative evaluation (N=5) yields an 80% navigation success rate relying solely on verbal cues, validating the system's capacity for universal design.",
+      "authors": [
+        "Shivendra Agrawal",
+        "Bradley Hayes"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CV",
+        "cs.HC",
+        "cs.RO"
+      ],
+      "published": "2026-04-16T19:59:52+00:00",
+      "link": "https://arxiv.org/pdf/2604.15495v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "semantic topology for spatial grounding and navigation in complex environments",
+      "llm_evidence_cn": "用于复杂环境空间定位与导航的语义拓扑",
+      "llm_evidence": "用于复杂环境空间定位与导航的语义拓扑",
+      "canonical_evidence": "用于复杂环境空间定位与导航的语义拓扑",
+      "llm_tldr_en": "Transforms point clouds into semantic topologies to improve spatial grounding and navigation for embodied AI.",
+      "llm_tldr_cn": "将点云转换为语义拓扑，以提升具身智能在复杂环境中的空间定位与导航能力。",
+      "llm_tldr": "将点云转换为语义拓扑，以提升具身智能在复杂环境中的空间定位与导航能力。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.15679v1",
+      "source": "arxiv",
+      "title": "Hierarchical Active Inference using Successor Representations",
+      "abstract": "Active inference, a neurally-inspired model for inferring actions based on the free energy principle (FEP), has been proposed as a unifying framework for understanding perception, action, and learning in the brain. Active inference has previously been used to model ecologically important tasks such as navigation and planning, but scaling it to solve complex large-scale problems in real-world environments has remained a challenge. Inspired by the existence of multi-scale hierarchical representations in the brain, we propose a model for planning of actions based on hierarchical active inference. Our approach combines a hierarchical model of the environment with successor representations for efficient planning. We present results demonstrating (1) how lower-level successor representations can be used to learn higher-level abstract states, (2) how planning based on active inference at the lower-level can be used to bootstrap and learn higher-level abstract actions, and (3) how these learned higher-level abstract states and actions can facilitate efficient planning. We illustrate the performance of the approach on several planning and reinforcement learning (RL) problems including a variant of the well-known four rooms task, a key-based navigation task, a partially observable planning problem, the Mountain Car problem, and PointMaze, a family of navigation tasks with continuous state and action spaces. Our results represent, to our knowledge, the first application of learned hierarchical state and action abstractions to active inference in FEP-based theories of brain function.",
+      "authors": [
+        "Prashant Rangarajan",
+        "Rajesh P. N. Rao"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.CV"
+      ],
+      "published": "2026-04-17T04:05:37+00:00",
+      "link": "https://arxiv.org/pdf/2604.15679v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "hierarchical active inference and successor representations for navigation",
+      "llm_evidence_cn": "用于导航的分层主动推理与后继表示",
+      "llm_evidence": "用于导航的分层主动推理与后继表示",
+      "canonical_evidence": "用于导航的分层主动推理与后继表示",
+      "llm_tldr_en": "Combines hierarchical active inference with successor representations for efficient large-scale navigation planning.",
+      "llm_tldr_cn": "结合分层主动推理与后继表示，实现高效的大规模导航规划。",
+      "llm_tldr": "结合分层主动推理与后继表示，实现高效的大规模导航规划。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.16298v1",
+      "source": "arxiv",
+      "title": "FineCog-Nav: Integrating Fine-grained Cognitive Modules for Zero-shot Multimodal UAV Navigation",
+      "abstract": "UAV vision-language navigation (VLN) requires an agent to navigate complex 3D environments from an egocentric perspective while following ambiguous multi-step instructions over long horizons. Existing zero-shot methods remain limited, as they often rely on large base models, generic prompts, and loosely coordinated modules. In this work, we propose FineCog-Nav, a top-down framework inspired by human cognition that organizes navigation into fine-grained modules for language processing, perception, attention, memory, imagination, reasoning, and decision-making. Each module is driven by a moderate-sized foundation model with role-specific prompts and structured input-output protocols, enabling effective collaboration and improved interpretability. To support fine-grained evaluation, we construct AerialVLN-Fine, a curated benchmark of 300 trajectories derived from AerialVLN, with sentence-level instruction-trajectory alignment and refined instructions containing explicit visual endpoints and landmark references. Experiments show that FineCog-Nav consistently outperforms zero-shot baselines in instruction adherence, long-horizon planning, and generalization to unseen environments. These results suggest the effectiveness of fine-grained cognitive modularization for zero-shot aerial navigation. Project page: https://smartdianlab.github.io/projects-FineCogNav.",
+      "authors": [
+        "Dian Shao",
+        "Zhengzheng Xu",
+        "Peiyang Wang",
+        "Like Liu",
+        "Yule Wang",
+        "Jieqi Shi",
+        "Jing Huo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-04-17T17:59:48+00:00",
+      "link": "https://arxiv.org/pdf/2604.16298v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "cognitive modules for navigation and environment understanding",
+      "llm_evidence_cn": "用于导航和环境理解的认知模块",
+      "llm_evidence": "用于导航和环境理解的认知模块",
+      "canonical_evidence": "用于导航和环境理解的认知模块",
+      "llm_tldr_en": "A top-down framework integrating cognitive modules for zero-shot multimodal UAV navigation.",
+      "llm_tldr_cn": "一种集成认知模块的自顶向下框架，用于零样本多模态无人机导航。",
+      "llm_tldr": "一种集成认知模块的自顶向下框架，用于零样本多模态无人机导航。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索智能体如何利用隐空间进行导航与环境理解",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.11041v1",
+      "source": "arxiv",
+      "title": "From Topology to Trajectory: LLM-Driven World Models For Supply Chain Resilience",
+      "abstract": "Semiconductor supply chains face unprecedented resilience challenges amidst global geopolitical turbulence. Conventional Large Language Model (LLM) planners, when confronting such non-stationary \"Policy Black Swan\" events, frequently suffer from Decision Paralysis or a severe Grounding Gap due to the absence of physical environmental modeling. This paper introduces ReflectiChain, a cognitive agentic framework tailored for resilient macroeconomic supply chain planning. The core innovation lies in the integration of Latent Trajectory Rehearsal powered by a generative world model, which couples reflection-in-action (System 2 deliberation) with delayed reflection-on-action. Furthermore, we leverage a Retrospective Agentic RL mechanism to enable autonomous policy evolution during the deployment phase (test-time). Evaluations conducted on our high-fidelity benchmark, Semi-Sim, demonstrate that under extreme scenarios such as export bans and material shortages, ReflectiChain achieves a 250% improvement in average step rewards over the strongest LLM baselines. It successfully restores the Operability Ratio (OR) from a deficient 13.3% to over 88.5% while ensuring robust gradient convergence. Ablation studies further underscore that the synergy between physical grounding constraints and double-loop learning is fundamental to bridging the gap between semantic reasoning and physical reality for long-horizon strategic planning.",
+      "authors": [
+        "Jia Luo"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-04-13T06:14:15+00:00",
+      "link": "https://arxiv.org/pdf/2604.11041v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "generative world model with latent trajectory rehearsal for planning",
+      "llm_evidence_cn": "结合隐式轨迹演练的生成式世界模型用于规划",
+      "llm_evidence": "结合隐式轨迹演练的生成式世界模型用于规划",
+      "canonical_evidence": "结合隐式轨迹演练的生成式世界模型用于规划",
+      "llm_tldr_en": "Introduces a cognitive agentic framework using world models and latent rehearsal for supply chain planning.",
+      "llm_tldr_cn": "引入了一种利用世界模型和隐式演练进行供应链规划的认知智能体框架。",
+      "llm_tldr": "引入了一种利用世界模型和隐式演练进行供应链规划的认知智能体框架。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2604.16022v1",
+      "source": "arxiv",
+      "title": "SocialGrid: A Benchmark for Planning and Social Reasoning in Embodied Multi-Agent Systems",
+      "abstract": "As Large Language Models (LLMs) transition from text processors to autonomous agents, evaluating their social reasoning in embodied multi-agent settings becomes critical. We introduce SocialGrid, an embodied multi-agent environment inspired by Among Us that evaluates LLM agents on planning, task execution, and social reasoning. Our evaluations reveal that even the strongest open model (GPT-OSS-120B) achieves below 60% accuracy in task completion and planning, with agents getting stuck in repetitive behaviors or failing to navigate basic obstacles. Since poor navigation confounds evaluation of social intelligence, SocialGrid offers an optional Planning Oracle to isolate social reasoning from planning deficits. While planning assistance improves task completion, social reasoning remains a bottleneck: agents fail to detect deception at near-random chance regardless of scale, relying on shallow heuristics rather than accumulating behavioral evidence. SocialGrid provides automatic failure analysis and fine-grained metrics, enabling developers to diagnose and improve their agents. We also establish a competitive leaderboard using Elo ratings from adversarial league play.",
+      "authors": [
+        "Hikaru Shindo",
+        "Hanzhao Lin",
+        "Lukas Helff",
+        "Patrick Schramowski",
+        "Kristian Kersting"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.LG",
+        "cs.MA"
+      ],
+      "published": "2026-04-17T12:51:46+00:00",
+      "link": "https://arxiv.org/pdf/2604.16022v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "evaluating planning and navigation in embodied multi-agent environments",
+      "llm_evidence_cn": "评估具身多智能体环境中的规划与导航",
+      "llm_evidence": "评估具身多智能体环境中的规划与导航",
+      "canonical_evidence": "评估具身多智能体环境中的规划与导航",
+      "llm_tldr_en": "A benchmark for evaluating planning and social reasoning in embodied multi-agent systems.",
+      "llm_tldr_cn": "一个用于评估具身多智能体系统中规划与社交推理能力的基准测试。",
+      "llm_tldr": "一个用于评估具身多智能体系统中规划与社交推理能力的基准测试。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.16015v1",
+      "source": "arxiv",
+      "title": "Discovering quantum phenomena with Interpretable Machine Learning",
+      "abstract": "Interpretable machine learning techniques are becoming essential tools for extracting physical insights from complex quantum data. We build on recent advances in variational autoencoders to demonstrate that such models can learn physically meaningful and interpretable representations from a broad class of unlabeled quantum datasets. From raw measurement data alone, the learned representation reveals rich information about the underlying structure of quantum phase spaces. We further augment the learning pipeline with symbolic methods, enabling the discovery of compact analytical descriptors that serve as order parameters for the distinct regimes emerging in the learned representations. We demonstrate the framework on experimental Rydberg-atom snapshots, classical shadows of the cluster Ising model, and hybrid discrete-continuous fermionic data, revealing previously unreported phenomena such as a corner-ordering pattern in the Rydberg arrays. These results establish a general framework for the automated and interpretable discovery of physical laws from diverse quantum datasets. All methods are available through qdisc, an open-source Python library designed to make these tools accessible to the broader community.",
+      "authors": [
+        "Paulin de Schoulepnikoff",
+        "Hendrik Poulsen Nautrup",
+        "Hans J. Briegel",
+        "Gorka Muñoz-Gil"
+      ],
+      "primary_category": "quant-ph",
+      "categories": [
+        "quant-ph",
+        "cond-mat.stat-mech",
+        "cs.LG"
+      ],
+      "published": "2026-04-17T12:44:38+00:00",
+      "link": "https://arxiv.org/pdf/2604.16015v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "uses variational autoencoders to learn interpretable representations of phase spaces",
+      "llm_evidence_cn": "利用变分自编码器学习相空间的解释性表示",
+      "llm_evidence": "利用变分自编码器学习相空间的解释性表示",
+      "canonical_evidence": "利用变分自编码器学习相空间的解释性表示",
+      "llm_tldr_en": "Uses VAEs to learn interpretable latent representations from complex physical data to discover quantum phenomena.",
+      "llm_tldr_cn": "利用变分自编码器从复杂物理数据中学习可解释的隐空间表示，以发现量子现象。",
+      "llm_tldr": "利用变分自编码器从复杂物理数据中学习可解释的隐空间表示，以发现量子现象。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
