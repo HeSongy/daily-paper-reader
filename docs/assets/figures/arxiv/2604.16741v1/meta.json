@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.16741v1/fig-001.webp",
+      "caption": "Fig. 3. Qualitative examples of group-conv (top) vs. edge-MPC (bottom). Green trajectories show the robot trajectories. Red dots are pedestrians. Black enclosures are the group representations. Blue dots are the goals.",
+      "page": 6,
+      "index": 1,
+      "width": 512,
+      "height": 239
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16741v1/fig-002.webp",
+      "caption": "Fig. 4. Left: The robot used in the real world experiment. Middle: The crossing scenario. Yellow trajectories illustrate edge-MPC’s behavior. Blue trajectories illustrate crowdattn-RL’s behavior. edge-MPC tried to walk behind the groups while crowdattn-RL often cut in front. Right: The flow scenario. edge-MPC performed a wide maneuver to avoid all the groups while crowdattn-RL followed the group in front and cut through the two incoming groups.",
+      "page": 7,
+      "index": 2,
+      "width": 948,
+      "height": 252
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16741v1/fig-003.webp",
+      "caption": "TABLE I RESULTS IN THE PERFECT PERCEPTION SETTING.",
+      "page": 5,
+      "index": 3,
+      "width": 502,
+      "height": 496
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16741v1/fig-004.webp",
+      "caption": "TABLE II RESULTS IN THE LIDAR SETTING",
+      "page": 5,
+      "index": 4,
+      "width": 504,
+      "height": 363
+    }
+  ]
+}

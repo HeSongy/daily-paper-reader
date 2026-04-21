@@ -1,0 +1,62 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.18463v1/fig-001.webp",
+      "caption": "Fig. 1 Performance breakdown on DESPITE hard-split by danger type, entity, and data source. The heatmap uses 4 colour gradients: blue for feasibility, green for safety, orange for safety intention, and purple for safety precision. Darker shades indicate higher performance (0–100% scale). Category abbreviations: Phy (Physical), Psy (Psychosocial/Normative), H (Human), R (Robot), O (Others), AF (ALFRED), NS (NEISS), BD (BDDL), VH (VirtualHome), NB (NormBank).",
+      "page": 15,
+      "index": 1,
+      "width": 906,
+      "height": 483
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18463v1/fig-002.webp",
+      "caption": "Fig. 2 Easy versus hard split comparison on DESPITE with unseen models. Performance of three held-out models (not included in the main experiments) on random samples from the easy split (a) and the hard split (b). Even on the easy split, the best-performing held-out model (Mistral-Large, 675B parameters) achieves only 64% safe-andfeasible, and Kimi-K2-Instruct (1T parameters) reaches 60%, indicating that these tasks remain non-trivial despite their lower difficulty calibration. All three models show substantially lower performance on the hard split, consistent with the intended stratification. Categories: feasible and safe, feasible but unsafe, and infeasible (n = 100 per split per model).",
+      "page": 15,
+      "index": 2,
+      "width": 905,
+      "height": 1085
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18463v1/fig-003.webp",
+      "caption": "Fig. 4 Task factors affecting safe planning difficulty. We ran seven panel models on all 12,279 DESPITE tasks and computed per-task difficulty separately for each metric as the fraction of models that failed. Rows show feasibility (i), safety (ii), and safety intention (iii) difficulty. Columns show plan length (a), safety effort (b), danger and task categories (c), and redundant action sensitivity (d). Column a: Violin plots of plan length distributions. More complex tasks, reflected by longer reference plans, tend to have higher difficulty for all three metrics, with a stronger association for feasibility (Cohen’s d = 0.99) than for safety (d = 0.51) or safety intention (d = 0.21). Column b: Distributions of safety effort, the number of additional actions the reference safe feasible plan requires compared to the reference unsafe feasible plan. Safety effort is associated with safety and safety intention difficulty (d = 0.57 and 0.63) but not feasibility difficulty (d = −0.12). Negative safety efforts indicate tasks where the reference unsafe feasible plan is longer, e.g., unnecessarily reheating food already at the correct temperature. Column c: Stacked area plots showing danger and task categories across difficulty. Physical and psychosocial (normative) dangers show opposite trends: physical dangers dominate high feasibility difficulty (70.6% to 88.2%), while normative dangers dominate high safety and safety intention difficulty (18.4% to 40.0% for safety; 15.7% to 42.5% for safety intention). Column d: Redundant action sensitivity. Irrelevant actions, 2 to 64 added without affecting danger logic, degrade all metrics. Feasibility drops by −21.0% and safety intention by −17.3%, and their combined effect accounts for the overall safety degradation of −37.9%.",
+      "page": 7,
+      "index": 3,
+      "width": 902,
+      "height": 671
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18463v1/fig-004.webp",
+      "caption": "Table 1 Comparison of embodied AI safety benchmarks. Eval. level : S = semantic (instruction refusal), P = planning (action sequence safety), I = interactive (step-by-step execution with emergent risks in a simulator). Symbolic: whether tasks are grounded in a formal language such as PDDL. Hazard coverage combines hazard type and entity at risk. Types: Phy = physical (thermal, mechanical, chemical, electrical); Psy = psychosocial/normative (privacy, social norms). Entity labels indicate which entities face harm: H = a human explicitly represented as a state variable or object in the scenario (e.g., child near(table)); H* = human harm addressed in the hazard taxonomy but humans not modeled as scene entities; R = robot self-damage; O = property, environment, or animals. Valid.: D = deterministic (formal checker, reproducible binary verdicts); E = execution-based (simulator with state checking); L = LLM-as-judge (may vary across runs). Setting: Dom = domestic/household only; Div = diverse (workplaces, public spaces, outdoor environments).",
+      "page": 14,
+      "index": 4,
+      "width": 910,
+      "height": 449
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18463v1/fig-005.webp",
+      "caption": "Table 2 Disclosed alignment methods do not explain the safety awareness gap. Each row shows the highest-SI variant per provider and model generation, evaluated on the DESPITE hard split (1,044 tasks). Entries reflect publicly available descriptions, which vary in completeness and granularity across providers; no entry can be assumed to represent the full training pipeline. The line separates the three models with SI substantially above the open-source range (38–57%) from the rest. No evaluated model documents training specifically for embodied planning safety. SI = safety intention (defined in Methods); SFT = Supervised Fine-Tuning; RL = Reinforcement Learning; DPO = Direct Preference Optimization; GRPO = Group Relative Policy Optimization.",
+      "page": 14,
+      "index": 5,
+      "width": 914,
+      "height": 288
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18463v1/fig-006.webp",
+      "caption": "Fig. 5 DESPITE dataset and generation pipeline. a, Dataset composition by data source, task setting, danger group, danger type, and entity in danger. The 12,279 tasks span over various settings with both physical dangers (mechanical, thermal, chemical, electrical) and normative dangers (privacy, trust violations). Entities at risk include humans, robots, and others (environment, surrounding objects). b, Planning complexity distribution. Each cell shows task count at that (average plan length, safety effort) coordinate. The distribution centers around (5, 1): typical tasks require approximately five actions to solve, with safe plans requiring one more action than the unsafe but feasible ones. c, Data generation pipeline. Heterogeneous sources (task planning benchmarks, social norm database, hospital injury records) pass through source-specific adapters into a unified danger formalization schema. Code generation produces Python scripts defining each planning task, with iterative refinement through execution and quality checks. Final human review ensures logical completeness and practical validity. This pipeline achieves $0.011 API cost per validated task, enabling cost-efficient scaling to 12,279 tasks.",
+      "page": 12,
+      "index": 6,
+      "width": 902,
+      "height": 900
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18463v1/fig-007.webp",
+      "caption": "Fig. 3 Scaling analysis of safe planning across 18 open-source models. Horizontal lines mark the performance of GPT-5 high on each metric for reference. Shaded bands show 95% bootstrap confidence intervals (CIs) on the regression line from 10,000 resamples to quantify uncertainty in the trend estimates. β denotes the log-linear slope in percentage points per order of magnitude; R2 values report the fraction of cross-model variance explained by the regression; higher values indicate a tighter fit between predictor and outcome. a, Feasibility rate versus model size. b, Safety rate versus model size. The ratio of safety to feasibility slopes, βS/βF = 0.45, with a 95% CI of [0.34, 0.55]; excludes 1.0, meaning the slower scaling of safety is statistically reliable. c, Safety intention versus model size. Models cluster between 38–57% SI regardless of size, with βSI/βF = 0.17 (95% CI: [0.05, 0.34]), indicating that safety awareness improves far more slowly than planning ability as models scale. d, Safety rate versus F × SI for all 23 models; proprietary models are shown only in this panel. The regression closely tracks the identity line, validating the multiplicative decomposition S ≈ F × SI across the full model range.",
+      "page": 5,
+      "index": 7,
+      "width": 898,
+      "height": 857
+    }
+  ]
+}

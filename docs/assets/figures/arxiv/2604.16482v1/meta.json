@@ -1,0 +1,62 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.16482v1/fig-001.webp",
+      "caption": "Figure 1. Evolution of spatial memory representations along two competing demands: geometric completeness and memory efficiency. Sparse features (1) traded completeness for efficiency; neural methods (2) recovered completeness via learned compression; scene graphs (3) added semantic abstraction. The scene graph box is dashed to indicate that the 48 MB figure reflects only the graph abstraction layer [26]; the required metric-semantic backend [54] adds scene-dependent cost (dashed arrow), shifting the true system footprint leftward. The scene graph’s vertical position reflects its semantic completeness (objects, rooms, places) rather than geometric fidelity.",
+      "page": 1,
+      "index": 1,
+      "width": 487,
+      "height": 307
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16482v1/fig-002.webp",
+      "caption": "Figure 3. Accuracy vs. map size (Mmap) by benchmark. Left: Sparse (EuRoC, linear scale). Right: Neural (Replica, log scale); dashed = Pareto front. Lower-left is better. Point-SLAM’s measured 2.9 GB checkpoint (vs. 80 MB survey estimate) moves it far right, off the Pareto front. Plotting Mpeak instead would further shift high-α systems rightward.",
+      "page": 6,
+      "index": 2,
+      "width": 489,
+      "height": 298
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16482v1/fig-003.webp",
+      "caption": "Figure 2. Taxonomy of spatial memory representations with representative citations and typical efficiency metrics (gray). ATE = absolute trajectory error on standard benchmarks; map sizes are representative for building-scale environments. 3DGS = 3D Gaussian Splatting. Semantic maps include open-vocabulary approaches leveraging vision-language models such as CLIP.",
+      "page": 2,
+      "index": 3,
+      "width": 1036,
+      "height": 356
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16482v1/fig-004.webp",
+      "caption": "Figure 4. Runtime GPU memory on Replica/room0 (1 Hz sampling, A100-SXM4-80GB, baseline subtracted). All four systems independently measured (⋄). Co-SLAM stays flat at ∼1.3GB (bounded hash). NICE-SLAM oscillates between 3–7 GB due to periodic global mapping passes (absolute peak 10.1 GB, Table 3). Point-SLAM stabilizes at 5–6 GB after initialization. SplaTAM grows monotonically to ∼12.7GB as Gaussians accumulate (peak 14.0 GB).",
+      "page": 7,
+      "index": 4,
+      "width": 481,
+      "height": 323
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16482v1/fig-005.webp",
+      "caption": "Table 5. Memory dynamics taxonomy. Consol. = consolidation, Hier = hierarchical, Mono = monolithic. ∆M = reported memory reduction. α from Table 3 where available; note that forgetting reduces Mmap but not α.",
+      "page": 7,
+      "index": 5,
+      "width": 496,
+      "height": 298
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16482v1/fig-006.webp",
+      "caption": "Table 2. Neural SLAM on Replica (synthetic). Eff. = 103/(ATE× Mmap), higher is better. †: CVPR/ECCV 2024 or later.",
+      "page": 4,
+      "index": 6,
+      "width": 496,
+      "height": 421
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16482v1/fig-007.webp",
+      "caption": "Table 3. Unified efficiency analysis across spatial memory paradigms. Overhead factor α = Mpeak/Mmap; αCPU denotes CPU RSS, αGPU denotes GPU allocation (see Section 4). Cross-benchmark caveat: sparse systems are evaluated on EuRoC (real-world, stereo-inertial) and neural systems on Replica (synthetic, RGB-D); ATE and memory values are not directly comparable across horizontal dividers. Within-benchmark comparisons are valid; cross-paradigm conclusions should be drawn from α and scaling behavior. Per-value provenance notes are in Tables 1 and 2.",
+      "page": 5,
+      "index": 7,
+      "width": 1036,
+      "height": 689
+    }
+  ]
+}

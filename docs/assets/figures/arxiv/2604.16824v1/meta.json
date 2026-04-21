@@ -1,0 +1,70 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.16824v1/fig-001.webp",
+      "caption": "Fig. 3: CUSUM dynamics and contrastive imagination. In the gray zone (τA < Gt < A), SAFEDREAM forks the current state into attack futures (red dashed, upward) and benign futures (blue dashed, downward). A large vulnerability gap Vt triggers a proactive alarm (⋆) while Gt is still below A. Conversations that jump past the gray zone receive a direct alarm (×). Benign conversations entering the gray zone produce small Vt and no alarm.",
+      "page": 6,
+      "index": 1,
+      "width": 739,
+      "height": 411
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16824v1/fig-002.webp",
+      "caption": "Fig. 1: SAFEDREAM achieves the best Lead–FPR trade-off and outperforms all baselines across benchmarks. (a) Lead vs. FPR on XGuard: Lead measures how many turns earlier a jailbreak is detected, and FPR is the false alarm rate. SAFEDREAM (blue star) achieves the best trade-off between Lead and FPR. (b,c) Radar charts on XGuard and SafeMTData comparing SAFEDREAM against baselines across five metrics (axes individually normalized for readability). SAFEDREAM dominates all baselines on all metrics across both benchmarks.",
+      "page": 2,
+      "index": 2,
+      "width": 822,
+      "height": 331
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16824v1/fig-003.webp",
+      "caption": "Table 1: Main results across three benchmarks. We report AUROC, F1, FPR, and Lead (turns of early warning before compliance; higher is better). AUC here refers to Area Under the ROC Curve (AUROC). Full results with all metrics are in Appendix C.1.",
+      "page": 7,
+      "index": 3,
+      "width": 823,
+      "height": 482
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16824v1/fig-004.webp",
+      "caption": "Fig. 2: SAFEDREAM overview. At each turn t, the frozen LLM provides hidden-state observations ht, which are projected into a safety-grounded latent space st via the concept cone. The safety state zt is obtained by enriching st through cross-attention. A lightweight Transformer learns transition dynamics by predicting zt+1 conditioned on user actions. A discriminator maps each zt to a risk score rt. CUSUM accumulates risk scores across turns to detect safety state shifts; when evidence is ambiguous (gray zone), contrastive imagination rolls out both attack and benign futures to quantify vulnerability and enable early detection.",
+      "page": 3,
+      "index": 4,
+      "width": 826,
+      "height": 379
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16824v1/fig-005.webp",
+      "caption": "Table 7: Full results on SafeDialBench (4K conversations, 7 attack strategies, bilingual). †See Table 6 caption for EWR note.",
+      "page": 17,
+      "index": 5,
+      "width": 818,
+      "height": 307
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16824v1/fig-006.webp",
+      "caption": "Table 8: Full results on SafeMTData (Ren et al., 2025) (1.7K conversations, actor-network attacks). †See Table 6 caption for EWR note.",
+      "page": 17,
+      "index": 6,
+      "width": 818,
+      "height": 307
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16824v1/fig-007.webp",
+      "caption": "Fig. 4: Hyperparameter sensitivity. (a) Horizon H=3 maximizes F1 and Lead. (b) Trajectory count M=8 saturates the benefit. (c) Full cone (K=5) consistently best. Stars mark selected values.",
+      "page": 9,
+      "index": 7,
+      "width": 822,
+      "height": 265
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16824v1/fig-008.webp",
+      "caption": "Table 6: Full results on XGuard-Train (primary benchmark; 30K conversations, 13 risk categories, adaptive multi-agent attacks). †EWR measures the fraction of dialogues where SAFEDREAM detects earlier than each baseline; it is undefined when SAFEDREAM is the reference method.",
+      "page": 16,
+      "index": 8,
+      "width": 818,
+      "height": 307
+    }
+  ]
+}

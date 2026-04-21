@@ -1,0 +1,1457 @@
+Title: On the Emergence of Syntax by Means of Local Interaction
+
+URL Source: https://arxiv.org/pdf/2604.17857v1
+
+Published Time: Tue, 21 Apr 2026 01:58:08 GMT
+
+Number of Pages: 20
+
+Markdown Content:
+On the Emergence of Syntax by Means of Local 
+
+# Interaction 
+
+Zichao Wei 
+
+Saarland University 
+
+> ziwe00001@stud.uni-saarland.de
+
+# Abstract 
+
+A two-dimensional neural cellular automaton (NCA) with only 18,658 parame -
+
+ters, supervised by a single bit of boundary signal that spans the entire sequence, 
+
+is trained on the membership problem of an arithmetic-expression grammar. 
+
+After training, its internal  𝐿  × 𝐿  grid spontaneously organizes into an ordered, 
+
+spatially extended representation. This representation satisfies three operational 
+
+criteria for syntactic processing (expressive power beyond the regular languages, 
+
+100% structural length generalization up to  𝐿  = 1000, and an internal organi -
+
+zation correlated with grammatical structure), and it emerges independently on 
+
+four distinct context-free grammars while remaining entirely absent on a regular 
+
+language. It is quantitatively correlated with the CKY chart (Pearson  𝑟  ≈ 0.71), 
+
+but it is not a copy of CKY: its states are continuous rather than discrete, its 
+
+organization is column-uniform rather than cell-precise, and it spontaneously 
+
+regenerates after perturbation. We name this structure  Proto-CKY  and read it 
+
+as a  physical prototype : a concrete instantiation, on a physical substrate, of a 
+
+mathematical ideal (CKY). Between the physical prototype and its corresponding 
+
+mathematical ideal there is a systematic, measurable gap. That gap is itself 
+
+information about the physical substrate, not a defect. 
+
+# 1 Introduction 
+
+Neural language models produce syntactically well-formed language; this is an empirical fact 
+
+[1] . But when we open these systems up, we do not find an explicit structure isomorphic to the 
+
+syntactic objects familiar from classical linguistics: non-terminals, derivation rules, and discrete 
+
+parse trees do not appear in their weights and states in that form  [2] , [3] , [4] , and yet their outputs 
+
+remain, to a substantial degree, syntactically legal. 
+
+LLMs let us see that this is possible, but they do not tell us how it happens. Their scale is itself 
+
+an obstacle: they are too large for us to locate inside them a precise site at which “structured 
+
+processing appears.” Existing internal probes  [5] , [6]  tend to carry strong priors, which makes it 
+
+difficult for them to address the question we want to ask directly. Let us therefore step back and ask 
+
+the same question of a system simple enough to be watched in full: can a small, directly observable 
+
+system also, on its own, handle a language that requires hierarchical structure? We do not take it 
+
+as a model of LLMs; we take it only as an independent instance of the phenomenon. 
+
+The strategy of this paper is to bypass natural language and start from a formal language with a 
+
+precise mathematical description: an arithmetic-expression grammar. This grammar comes with 
+
+a fully determined reference point: the CKY algorithm  [7]  gives a zero-error parser for it. Against 
+
+this reference point we construct a minimal system: an 18,658-parameter two-dimensional neural 
+
+cellular automaton  [8] , supervised only by a 1-bit boundary signal that spans the entire sequence. 
+
+> Preprint.
+
+What we observe is the spontaneous emergence of an internal structure. On the  𝐿  × 𝐿  grid,  𝐿 2 ×
+
+𝐶  − 1 activations that receive no supervision self-organize into an ordered, spatially extended 
+
+representation. It satisfies the three operational criteria for syntactic processing that we state in 
+
+the next section. It is quantitatively correlated with the CKY chart (Pearson  𝑟  ≈ 0.71), but it is 
+
+not a copy of CKY: its states are continuous, its organization is column-uniform, and it regen -
+
+erates spontaneously after perturbation. It emerges independently on four distinct context-free 
+
+grammars; it does not emerge at all on a regular language. We name this structure  Proto-CKY .
+
+The empirical observation itself is worth opening up. The rest of the paper is organized as follows: 
+
+the background section gives three operational criteria for “syntactic processing” together with 
+
+a working definition of local interaction; the experimental setup and the main results show that 
+
+the three criteria are simultaneously satisfied; the subsequent sections rule out several alternative 
+
+explanations (that it is not noise, not a copy of CKY, not a coincidence), and report additional 
+
+observations about the internal structure of Proto-CKY. Finally, in the Discussion, we return to a 
+
+harder and more primitive question:  what exactly is the relation between the thing we have 
+
+observed and the mathematical object it seems to point to? 
+
+# 2 Background 
+
+2.1  An operational definition of syntactic processing 
+
+The object of study in this paper, as we said in the Introduction, is an emergent, continuous, finite-
+
+precision internal structure; by definition it is not the kind of symbolic object that formal language 
+
+theory takes as its primitive. If we are to judge honestly whether it “exhibits syntactic processing,” 
+
+we need a definition that does not presuppose symbolic structure. Otherwise we either force it 
+
+into an ill-fitting shape, or cheat to make it align. 
+
+Let us therefore adopt a behavioral working definition. It does not try to adjudicate the traditional 
+
+disputes (formalist vs. functionalist, constituency vs. dependency, innate vs. learned), and its only 
+
+commitments are to observable behavior and to inspectable internal organization. 
+
+Concretely, we say that a system  exhibits syntactic processing  if it satisfies all three of the 
+
+following: 
+
+1.  Expressive power beyond the regular languages.  The system correctly handles at least one 
+
+class of phenomena expressible only by a CFG  [9]  (such as nested matching at arbitrary depth), 
+
+with a behavioral envelope that plainly exceeds what any finite-state machine can reach. 
+
+2.  Structural productivity.  On inputs outside the training distribution, whether legal or illegal, 
+
+the system responds in systematic, structured ways, rather than arbitrarily or on the basis of 
+
+surface statistics alone. This criterion rules out lookup tables and shallow template-matchers. 
+
+3.  Syntactically relevant internal organization.  The internal states of the system sponta -
+
+neously take on an organization correlated with linguistic structure, and this organization does 
+
+not appear on tasks for which syntax is unnecessary. This criterion rules out black boxes that 
+
+happen to be correct: it requires that “getting it right” be accompanied by “the inside reflecting 
+
+syntax.” 
+
+A word on these three.  We deliberately do not require flawless classification on all legal and 
+
+illegal inputs. Consider an obvious example: humans. No one would deny that humans command 
+
+syntax, yet humans are fooled by garden-path sentences  [10] , [11] , break down on center-
+
+embedding at depth  ≥ 3 [12] , [13] , and disagree among themselves on marginal grammaticality 
+
+judgments  [14] . That a physical system handling hierarchical structure exhibits boundary quirks 
+
+of this kind does not mean it is absent from syntactic processing; what the three criteria demand 
+
+is structured productivity aligned with grammar, not zero error. In the experimental sections we 
+
+honestly report how well the system satisfies each criterion, including both its modes of success 
+
+and its boundary biases. 
+
+The first two criteria are behavioral: they specify what an input-output relation must look like to 
+
+count as “getting it right.” The third is representational; it requires that “getting it right” passes 
+
+through some internal organization. Together they form a falsifiable working definition. Note 
+
+2that the third criterion is difficult to verify directly for biological language processors (it requires 
+
+neuroscientific tools) but, for a controlled artificial system, it is among the most directly observable. 
+
+As for the experimental task, we pick an arithmetic-expression grammar as our representative. 
+
+This grammar has the typical features of hierarchical structure (operator precedence, recursive 
+
+nesting), and it shares the core syntactic features of natural language while dropping natural 
+
+language’s other complications (semantics, ambiguity, long-distance dependencies). It is complex 
+
+enough to genuinely require hierarchical analysis, yet simple enough to be controlled and inter -
+
+preted. 
+
+2.2  The CKY chart as a reference point 
+
+The CKY algorithm is the classic parser for context-free grammars: convert the grammar to 
+
+Chomsky normal form, and fill a two-dimensional chart bottom-up by dynamic programming, 
+
+in  𝑂 (𝑛 3) time. For our purposes the algorithmic details are not the point; what matters is the 
+
+geometry of the chart and the way it is filled. The chart is a triangular table whose entry  (𝑖 , 𝑗 )
+
+records the set of non-terminals that can derive the substring  [𝑖 , 𝑗 ]. Each cell is computed once, 
+
+exactly; the order of filling is globally choreographed by span length; and the cells themselves do 
+
+not interact. This is a top-down, fully discrete data structure. CKY is a data structure orchestrated 
+
+by an external algorithm; the chart has no internal dynamics of its own. We use CKY in this paper 
+
+as a precise reference point: it returns a zero-error answer on any legal input, and each of its cells 
+
+has a sharp symbolic meaning, which allows us to place it alongside the NCA’s internal activations 
+
+cell by cell. 
+
+2.3  Local interaction 
+
+The traditional computational models of syntactic processing (CKY, the Earley parser, shift-reduce, 
+
+attention  [15] ) share a common feature: they all depend on some form of global coordination. CKY 
+
+is filled by an external algorithm in order of span length. Earley maintains a state set spanning 
+
+the entire input. Attention lets every token access every other token at every layer. Whatever the 
+
+implementation, there is at some level a coordination mechanism that reaches beyond the local. 
+
+Let us pursue the opposite direction: can syntactic processing arise from local interaction alone? 
+
+We say that a system operates by  local interaction  if it satisfies the following four constraints: 
+
+1.  Local connectivity.  The state at any position depends only on a fixed-size neighborhood, 
+
+independent of the overall system size. 
+
+2.  Rule sharing.  All positions use the same update rule, independent of coordinates. 
+
+3.  No external coordination.  There is no external algorithm that decides which positions update 
+
+when, and no global synchronization across neighborhoods. 
+
+4.  Simultaneous evolution.  All positions update in parallel at the same discrete time step; time 
+
+is homogeneous. 
+
+Together these four define a centerless computational model: no global scheduler, no privileged 
+
+position, no direct communication across neighborhoods. Any global property that appears must 
+
+emerge spontaneously from the iteration of local interaction. 
+
+This is a stronger constraint than “a convolutional neural network.” A deep convolutional network 
+
+still has a hierarchical structure and a definite number of layers; it implicitly prescribes the 
+
+“rounds” in which information propagates. Here we require a single local rule applied repeatedly 
+
+until convergence, with no architectural partitioning into rounds. This is precisely the definition 
+
+of a cellular automaton. 
+
+2.4  Neural cellular automata 
+
+Cellular automata (CA) are the standard mathematical model of local interaction: every cell 
+
+updates synchronously under a shared rule that sees only its local neighborhood. Neural cellular 
+
+automata (NCA) replace the hand-designed rule with a learned convolutional network: 
+
+𝒉 𝑡 +1(𝑥 ) = 𝑓 (𝒉 𝑡 (𝒩︀  (𝑥 ))) (1) 
+
+3where  𝒩︀  (𝑥 ) is the local neighborhood of  𝑥 , and  𝑓  is shared across all positions and all time steps. 
+
+It is straightforward to verify that an NCA satisfies the four constraints of local interaction: the 
+
+neighborhood is fixed, the rule is shared, no external scheduler exists, and updates are synchro -
+
+nous. 
+
+A crucial difference from CKY is that the NCA is not orchestrated by any external algorithm: there 
+
+is no “fill by span length” schedule; any global property must accumulate spontaneously from the 
+
+repeated iteration of a single local rule. Its states are continuous (taking values in  [0, 1] rather than 
+
+{0, 1}), its capacity is fixed by its parameter count, and the number of iterations is finite. What 
+
+happens when we place such a system on a formal-language problem for which a precise symbolic 
+
+reference (CKY) exists is the main experimental question of the paper. 
+
+2.5  Relation to prior work 
+
+In asking this question, we enter into conversation with three existing strands. 
+
+The first is  linguistic structure inside neural networks.  That neural networks acquire, 
+
+implicitly, representations correlated with linguistic structure is a well-established observation, 
+
+with a clear lineage. Manning et al.  [16]  surveyed the evidence that self-supervised training 
+
+yields language-like structure inside ANNs; Lake and Baroni  [17]  tightened the pressure test on 
+
+compositional generalization; McCoy et al.  [18]  warned that “getting it right” does not always 
+
+mean “getting it right for the right reasons.” We share the source of this strand’s question (neural 
+
+systems perform structured processing, but in what form?) while shrinking the question to a scale 
+
+at which the inside can be inspected in full, rather than measuring behavioral signatures on a 
+
+large model. 
+
+The second is  the expressive power of neural networks on formal languages : which classes 
+
+of language RNNs and Transformers can recognize, how much memory they require, and where 
+
+the boundary of Turing completeness lies  [19] , [20] , [21] , [22] , [23] . This line cares about  upper 
+
+bounds  on architectures; we ask instead  what internal form emerges when an architecture 
+
+does succeed.  We inherit the methodology of this tradition (using formal languages as a controlled 
+
+test bed), but our question lies off its track. 
+
+The third is  neural cellular automata . Since Mordvintsev et al.  [8]  first introduced them, NCAs 
+
+have been applied to 3D construction  [24] , self-classification  [25] , control tasks  [26] , and attention-
+
+augmented variants  [27] . The present paper is a first application of NCAs to the membership 
+
+problem on a formal language. 
+
+# 3 Experimental Setup 
+
+The main task is the membership problem on the arithmetic-expression grammar: 
+
+𝐸  → 𝐸  + 𝑇  | 𝑇  , 𝑇  → 𝑇  × 𝐹  | 𝐹  , 𝐹  → (𝐸 ) | id  (2) 
+
+Converted to Chomsky normal form this yields 5 tokens, 11 non-terminals, and 9 binary rules. 
+
+Given a token sequence, the model decides whether it is a legal expression. The grammar has 
+
+operator precedence and recursive nesting; its CKY chart is non-trivial. 
+
+The model is a 2D NCA defined on an  𝐿  × 𝐿  grid, with  𝐶  = 2 state channels and 18,658 parame -
+
+ters. The grid is indexed by the matrix convention: cell  (𝑖 , 𝑗 ) lies in the  𝑖 -th row (corresponding 
+
+to the  𝑖 -th token of the sequence) and the  𝑗 -th column (corresponding to the  𝑗 -th token). At  𝑡  = 0
+
+the grid is completely uniform (all zeros). The update rule is: 
+
+𝒉 𝑡 +1(𝑖 , 𝑗 ) = 𝜎 (𝑊 ℎ ⋅ relu (𝑊 2 ⋅ relu (𝑊 1 ⋅ [𝒆 𝑖 ; 𝒆 𝑗 ; 𝑊 𝑠 𝒉 𝑡 (𝑖 , 𝑗 )]))) (3) 
+
+where  𝒆 𝑖 , 𝒆 𝑗  ∈ ℝ𝑑  are the learned embeddings of the  𝑖 -th and  𝑗 -th tokens ( 𝑑  = 16),  𝑊 𝑠  projects 
+
+the current state into the embedding space,  𝑊 1, 𝑊 2 are  3 × 3 convolution kernels,  𝑊 ℎ is a  1 × 1
+
+output head, and  𝜎  is the sigmoid. Token information is injected externally at every step; it is not 
+
+stored on the grid. 
+
+4It is easy to check that this architecture satisfies the four constraints of local interaction given 
+
+above: the receptive field is a  3 × 3 neighborhood (local connectivity);  𝑊 1, 𝑊 2, 𝑊 ℎ are shared 
+
+across all spatial positions and time steps (rule sharing); no external algorithm dictates update 
+
+order (no external coordination); all cells are updated in parallel at the same discrete step (simul -
+
+taneous evolution). This is a standard cellular automaton; the only difference is that the rule is 
+
+learned rather than hand-designed. 
+
+The supervision signal is only 1 bit: the upper-right cell  (0, 𝐿  − 1), that is, the position that spans 
+
+the entire sequence, has channel 0 trained by BCE loss to predict the legality of the sequence. The 
+
+remaining  𝐿 2 × 𝐶  − 1 grid values receive no supervision whatsoever. Training data is generated 
+
+on the fly (batch size 64), with sequence length  𝐿  ≤ 12 and balanced positive and negative samples. 
+
+Negative samples are constructed by four strategies: random token sequences, mismatched paren -
+
+theses, double operators, and missing operators. For each training sample, the number of NCA 
+
+iterations is sampled uniformly from  [3, max (6, 2𝐿 )], forcing the model to produce correct predic -
+
+tions at varying iteration depths. The optimizer is Adam (learning rate  10−3); training converges 
+
+within roughly 2000 gradient steps. 
+
+At test time the NCA is iterated until convergence ( max |𝒉 𝑡 +1 − 𝒉 𝑡 | < 𝜀  = 0.01), with a step cap 
+
+of  max (50, 𝐿 ), generous for short sequences and scaling linearly with length for long ones. OOD 
+
+evaluation uses a balanced protocol: at each test length we use 100 legal flat expressions and 100 
+
+constructively illegal sequences, avoiding any dependence on a CKY verifier so that evaluation is 
+
+possible at arbitrary length. 
+
+To probe universality we train the same architecture on four additional languages (varying only 
+
+the training data): Dyck-1 (matched parentheses, 2 tokens), Dyck-2 (two kinds of parentheses, 4 
+
+tokens)  [28] , and NL Agreement (subject-verb agreement, 7 tokens)  [29] , [30] , which together form 
+
+three context-free grammars, plus  𝑎 ∗𝑏 ∗ (a regular language) as a control. 
+
+# 4 Experiments 
+
+4.1  The emergence of syntax 
+
+We have laid down three criteria for syntactic processing (expressive power beyond the regular 
+
+languages, systematic productivity, and syntactically relevant internal organization), and we have 
+
+established that our model is a system driven by local interaction alone. The question now is: can 
+
+such a system satisfy all three at once? 
+
+Training converges within about 2000 steps. The converged model reaches 100% classification 
+
+accuracy on the training distribution ( 𝐿  ≤ 12). Is that enough? Plainly not. A lookup table, a 
+
+surface-statistics heuristic, or a black box that happens to fit the training distribution could all 
+
+do the same. The first criterion demands more than correctness; it demands that correctness be 
+
+achieved on a task that exceeds the regular languages. Membership for arithmetic expressions 
+
+genuinely requires the expressive power of a context-free grammar (nested parentheses require 
+
+counting to arbitrary depth); in that sense, the first criterion is met. 
+
+The second criterion demands systematic productivity. If the model had merely memorized the 
+
+statistics of the training distribution, it should fail rapidly outside that distribution. In fact, on 
+
+sequences far longer than training ( 𝐿  = 50, 100, 500, all the way to  𝐿  = 1000, more than 80 times 
+
+the training length), the model maintains 100% accuracy ( Figure 1 ). 
+
+A detail worth explaining. Training samples are generated on the fly within the window  𝐿  ≤ 12,
+
+and in that window the overwhelming majority of randomly sampled legal expressions are flat; 
+
+expressions of nesting depth  ≥ 2 account for only a small fraction of the training set. Consequently 
+
+the main model generalizes in the flat direction all the way to very long sequences, but on purely 
+
+nested inputs of depth  ≥ 2 it in fact fails from the start. This is not an architectural defect but 
+
+a bias of the training distribution: once we explicitly raise the nesting depth in training (deep 
+
+augmentation), the same architecture generalizes to depth 10 on pure nested inputs and depth 7 
+
+on mixed depth-length inputs ( Figure 2 ). 
+
+5Between length generalization and depth generalization there is a trade-off: under a single set of 
+
+weights, a model can either handle flat but arbitrarily long inputs or handle nested but length-
+
+limited inputs, but not both at the same time. This trade-off also appears on a Transformer baseline 
+
+of comparable scale; it is not peculiar to NCAs (Appendix A)  [31] , [32] , [33] .
+
+Either way, a structured mechanism that operates stably outside the training distribution has 
+
+emerged: past the boundary of any finite-state machine in the length direction, and into nesting 
+
+structures never seen during training in the depth direction. The second criterion is met. 
+
+Figure 1: Length generalization. Left: balanced OOD accuracy across seven lengths from the 
+
+training regime ( 𝐿  ≤ 12) through  𝐿  = 1000; accuracy stays at 100% across the entire range. Right: 
+
+convergence steps scale near-linearly with sequence length. 
+
+Figure 2: Depth generalization on pure-nested (left) and mixed depth-length (right) inputs, for 
+
+the main model (Standard) and the deep-augmented variant (Deep-augmented). The main model 
+
+handles only depths 0 and 1; the deep-augmented variant reaches depth 10 on pure nested and 
+
+depth 7 on mixed. Deep augmentation recovers depth generalization without changing the archi -
+
+tecture. 
+
+The third criterion is the most important and also the hardest. It demands that the way the model 
+
+gets things right must pass through some internal organization. An input-output black box, even if 
+
+it satisfies the first two, does not count as syntactic processing: the essence of syntax is processing 
+
+of structure, not merely response to structured inputs. We must open the model up. 
+
+Consider the state at the beginning of inference: the  𝐿  × 𝐿  grid is entirely uniform; every cell 
+
+is zero, with no information about the input, let alone any structure. After iterative relaxation, 
+
+the grid self-organizes into a highly ordered pattern of activations. This fact deserves emphasis: 
+
+𝐿 2 × 𝐶  − 1 grid values receive no supervision at all, and their ordered organization is entirely 
+
+spontaneous. 
+
+6Figure 3: Top row: NCA grid (channel 0) at iteration steps  𝑡  = 1..5 and after convergence, from 
+
+a zero initialization. Bottom row: CKY chart (NT  𝐸  indicator) revealed incrementally by span 
+
+length; masked cells mark spans not yet computed. Both processes fill the upper-triangular chart 
+
+from smallest spans outward; NCA does so by local wavefront, CKY by an external span-length 
+
+schedule. Columns align at corresponding progression positions, not at identical step counts. 
+
+We name this ordered representation  Proto-CKY  (Figure 3 ). It shares a geometry with the CKY 
+
+chart (both organize token pairs on a span lattice), but its internal mechanism differs substantially 
+
+from CKY’s: CKY fills the chart by discrete enumeration; Proto-CKY converges on the grid by 
+
+continuous relaxation. CKY is orchestrated by an external algorithm that proceeds in order of span 
+
+length; Proto-CKY is produced by a single local rule applied repeatedly until it reaches an attractor. 
+
+The “Proto-” here does not refer to a “pre-syntactic stage” in the evolutionary-linguistics sense; 
+
+the reason behind the name is deferred to the Discussion. For now, treat it as a descriptive label. 
+
+At this point all three criteria are satisfied. But satisfying them is not yet a complete argument. We 
+
+must also rule out several ways in which Proto-CKY might fail to count as “syntactically relevant 
+
+internal organization.” That is the task of the next three sections. 
+
+4.2  Proto-CKY is not noise 
+
+A natural skepticism is that the ordered representation is merely a byproduct of 2D NCA architec -
+
+tures on any sequence-classification task. If so, it should appear indifferently across tasks, whether 
+
+or not they involve hierarchical structure. 
+
+Conversely, if the ordered representation is genuinely syntax-related, it should recur on different 
+
+syntactic tasks. We train the same architecture on three other context-free grammars (Dyck-1 
+
+with matched parentheses, Dyck-2 with two kinds of parentheses, NL Agreement for subject-verb 
+
+agreement), varying only the training data and no part of the architecture. All four grammars 
+
+independently produce ordered representations ( Figure 4 ). Four unrelated grammars, one local 
+
+rule, and an internal organization of similar form emerges spontaneously on every one of them. 
+
+7Figure 4: Converged NCA grids for the four context-free grammars (arithmetic, Dyck-1, Dyck-2, 
+
+NL Agreement), all sharing the same architecture and training procedure and differing only in 
+
+training data. The ordered representation emerges independently on each grammar. 
+
+Taken together, the two sets of results draw a clean dichotomy: ordered representations emerge 
+
+in full on grammars that require hierarchical constituency analysis, and are entirely absent on 
+
+the regular language. This dichotomy aligns exactly with the natural scope of chart parsing: chart 
+
+parsing is designed for hierarchical constituency analysis and is superfluous on regular languages. 
+
+A system that was never told chart parsing exists spontaneously displays the same range of 
+
+applicability as chart parsing. 
+
+4.3  Proto-CKY is not a copy of CKY 
+
+Given that Proto-CKY aligns functionally with the CKY chart, one might question whether the 
+
+NCA is merely imitating CKY internally. If so, the emergence would be less striking: just a learned 
+
+clone of a known algorithm. 
+
+Let us check directly. If the NCA were copying CKY, its internal activations should match the CKY 
+
+chart closely; we should expect a correlation coefficient near 1. The measured Pearson correlation 
+
+is  𝑟  = 0.709 (for the start non-terminal  𝐸 , on the representative expression  id + id * id ; the 
+
+randomly-initialized baseline is  𝑟  ≈ −0.087 with standard deviation  0.077). There is a systematic 
+
+positive correlation, but  𝑟  = 0.71 is far from a copy. The two are related, but they are clearly not 
+
+the same object ( Figure 5 ). 
+
+8A more direct way to see this is to look at the converged grid. In the CKY chart, each cell 
+
+(𝑖 , 𝑗 ) records precisely the set of non-terminals that derive the substring  [𝑖 , 𝑗 ], and different cells 
+
+can be entirely different. Proto-CKY’s activations, by contrast, show pronounced column-level 
+
+uniformity: cells in the same column tend to have similar activation values. The converged grid 
+
+looks more like a textured continuous field than like a discrete lookup table. The NCA appears to 
+
+encode some overall property on a per-token basis, rather than recording a non-terminal set on a 
+
+per-span basis. 
+
+Figure 5: Left: Pearson  𝑟  between NCA channel activations and CKY-chart non-terminal indicators 
+
+on the representative expression  id + id * id , broken down by non-terminal. Right: aggregate 
+
+𝑟  between channel 0 and the E non-terminal on 200 samples, compared to a randomly-initialized 
+
+NCA baseline. The aggregate correlation is well above random but far below unity. 
+
+Our understanding of the internal structure of Proto-CKY remains rather limited. But one thing is 
+
+clear: it is not a copy of CKY. It shares a function with CKY (organizing tokens into hierarchical 
+
+constituents), but it realizes that function differently, and in a way we do not yet fully understand. 
+
+Two radically different computational mechanisms, discrete enumeration and continuous relax -
+
+ation, converge functionally; this is in itself striking. 
+
+4.4  Proto-CKY is not a coincidence 
+
+So far we have ruled out two alternatives: Proto-CKY is not architectural noise, and it is not a 
+
+copy of CKY. But it could still be fragile, a coincidence that requires a particular random seed or a 
+
+particular hyperparameter setting. 
+
+Consider the simplest robustness check. We train the same architecture on 10 different random 
+
+seeds. All 10 runs produce an ordered representation; 9 of them reach 100% balanced OOD accuracy 
+
+on  𝐿  = 500, and the tenth reaches 93.3%. The Pearson  𝑟  measured per seed has a mean of  0.60
+
+(standard deviation  0.10), consistent with the  𝑟  = 0.71 observed for the single seed. In a capacity 
+
+ablation, reducing the hidden dimension from  𝑑  = 16 to  𝑑  = 4 (shrinking the parameter count 
+
+from 18,658 to 1,210, a reduction of 15 times) preserves 100% OOD accuracy at  𝐿  = 500, and the 
+
+ordered representation still appears. Proto-CKY is not picky about training conditions ( Table 1 ). 
+
+9Table 1: Robustness across random seeds and model capacities. Top: 10-seed stability at the main 
+
+𝑑  = 16 configuration; the worst seed reaches 93.3% on  𝐿  = 500 OOD, the other nine reach 100%. 
+
+Bottom: single-seed runs across hidden dimensions; the model remains stable down to roughly 
+
+1/15 of the main parameter count. 
+
+Setting  Params  In-dist  𝐿  = 500 OOD  Pearson  𝑟 
+
+Seed stability  (𝑑  = 16, 10 seeds) 
+
+Best seed  18,658  100%  100%  –
+
+Worst seed  18,658  100%  93.3%  –
+
+Mean ± std  18,658  99.98 ± 0.06%  99.33 ± 2.11%  0.60 ± 0.10 
+
+Capacity ablation  (single seed) 
+
+𝑑  = 4 1,210  97.4%  100%  –
+
+𝑑  = 8 4,722  99.6%  100%  –
+
+𝑑  = 16 (main)  18,658  100%  100%  0.71 
+
+𝑑  = 32 74,178  100%  100%  –
+
+The final set of experiments reveals something stronger than robustness. If we inject Gaussian 
+
+noise ( 𝜎  = 1.0) into the grid at an arbitrary step during inference, or reset the entire state to zero, 
+
+the model recovers to 100% accuracy in every case, at the cost of additional convergence steps. The 
+
+structure, once destroyed, spontaneously regenerates. This is not the behavior of a fragile artifact 
+
+—fragile things, once broken, do not regrow on their own ( Figure 6 ). 
+
+Figure 6: Causal interventions. Injecting Gaussian noise at various inference steps, resetting the 
+
+state to zero, and region freezing all recover full accuracy (with extra convergence steps), while 
+
+spatial shuffling every step collapses the dynamics. Structure is regenerated from local rules once 
+
+the geometry is intact. 
+
+4.5  Properties of Proto-CKY 
+
+The four preceding sections form the main chain of evidence for emergence. Beyond them we 
+
+also note a few properties of Proto-CKY that do not directly serve the argument, but that provide 
+
+additional constraints on our understanding of the phenomenon. 
+
+Consider a thought experiment: if Proto-CKY were a precision clock, with each gear playing a 
+
+precise causal role, then removing any single part should break the function. It does not. Freezing 
+
+70% of the grid cells (chosen at random) during inference drops accuracy from 100% to 85%; freezing 
+
+50% still yields 92%, and freezing 30% still yields 99%. Most cells are not irreplaceable parts; they 
+
+are redundant. 
+
+But Proto-CKY is not robust to every intervention. Randomly shuffling the spatial positions of 
+
+cells at every inference step (keeping all values intact, only rearranging their positions on the 
+
+grid) collapses accuracy from 100% to 54%, and 76% of samples fail to converge within the 
+
+iteration cap. This suggests that Proto-CKY’s function depends on its spatial organization, not on 
+
+the values of individual cells within that organization: values can be replaced or perturbed, but 
+
+10 their relative positions on the grid cannot be scrambled.  Table 2  consolidates the full intervention 
+
+sweep, including noise injection and state reset (which both recover) and finer-grained region-
+
+freeze variants. 
+
+Table 2: Causal interventions during inference. Noise injection, state reset, and single spatial shuf -
+
+fles all recover; sustained shuffling collapses the dynamics. Region freezing degrades gracefully 
+
+with the fraction frozen; the upper-triangle freeze (which disables chart-area computation) yields 
+
+the same accuracy as random 70% freezing, suggesting an empirical heuristic floor of about 85% 
+
+on this task. 
+
+Intervention  Configuration  Accuracy  Note 
+
+Noise injection  𝜎  ∈ [0.1, 1.0], at step 1–5  100%  recovers 
+
+State reset  reset at step 1, 2, 3, 5, 10  100%  recovers 
+
+Spatial shuffle (single)  at step 1, 2, 3, or 5  100%  recovers 
+
+Spatial shuffle (sustained)  at every step  54.0%  76% non-conv. 
+
+Region freeze  random 30% of cells  98.7% 
+
+Region freeze  random 50% of cells  92.3% 
+
+Region freeze  random 70% of cells  84.7% 
+
+Region freeze  random 90% of cells  60.3% 
+
+Region freeze  upper triangle (chart area)  85.3%  heuristic floor 
+
+Region freeze  lower triangle (non-chart)  100% 
+
+Region freeze  diagonal  92.7% 
+
+# 5 Discussion 
+
+5.1  What have we observed? 
+
+Let us step back and ask this question. 
+
+In the preceding sections we observed an ordered, spontaneously emerging internal representation 
+
+—it satisfies three operational criteria; it is quantitatively correlated with the CKY chart without 
+
+being equal to it; it appears stably across seeds, grammars, and capacities; it self-repairs after 
+
+perturbation; its geometric organization unfolds along a span lattice. We gave it a name: Proto-
+
+CKY.  But what kind of thing have we actually observed? 
+
+Following the traditional manner of description (“a neural network that has learned CKY behav -
+
+ior”) runs immediately into trouble. “Learned CKY behavior” implies that the observed object is a 
+
+behavioral pattern, abstractable into an input-output relation. But what we see is not a behavior. 
+
+What we see is  a spatially extended, self-sustaining, ordered structure : an object that can be opened 
+
+up, inspected cell by cell, systematically ablated. It has properties that no behavior-level description 
+
+can capture: redundancy, robustness to local freezing, fragility under spatial shuffling, self-repair. 
+
+These are not properties of “what the network does,” but of “what kind of thing this structure is.” 
+
+This brings us back to an earlier, more primitive question:  what is “syntax”?  In the usage of 
+
+formal language theory, “syntax” names a symbolic object—context-free grammars, derivation 
+
+rules, parse trees, the CKY algorithm. It is zero-error, unbounded in capacity, and independent 
+
+of its physical substrate. It is mathematically complete; its “existence” does not depend on any 
+
+particular implementation. 
+
+But the word “syntax” has another use. When we say “humans command syntax,” we plainly do 
+
+not mean a mathematical object; we mean a processing activity that takes place on a physical 
+
+substrate: finite-capacity, fooled by garden-paths, collapsing at depth 3 or more, disagreeing among 
+
+individuals on marginal grammaticality. What humans “command” is not the object in Plato’s 
+
+11 heaven. It is a physical process, which is broadly aligned with that mathematical object in function 
+
+but which retains a distance peculiar to physical realization. 
+
+The word “syntax” has in fact always carried two ontologically distinct meanings: one mathemat -
+
+ical object, one physical process. These two meanings are rarely made explicit, because in the 
+
+formal language tradition the mathematical object is taken, by default, as the primary subject of 
+
+study, and the physical realization is relegated to “engineering detail.” But when we confront an 
+
+object that has emerged spontaneously from local rules, this default ordering no longer holds. 
+
+What emerges is, by definition, not a mathematical object; it is physical. It cannot satisfy any of 
+
+the three conditions: zero error, unbounded capacity, substrate-independence. 
+
+Proto-CKY belongs to the latter. It is not an instance of “syntax” in the sense of a mathematical 
+
+object—it belongs to the family where “humans command syntax” also sits, a physical process 
+
+carrying all the hallmarks of physical realization. The reason we named it Proto-CKY is that its 
+
+relation to CKY is that of a physical prototype to its corresponding mathematical ideal: aligned in 
+
+function, kept at a measurable distance in form. 
+
+The rest of this section unfolds along this judgment: first we look at how the relation between a 
+
+mathematical ideal and its physical prototype can be concretely described ( Section 5.2 ), then we 
+
+analyze the geometry and dynamics of Proto-CKY, and finally we list the open questions it leaves 
+
+behind. 
+
+5.2  Alignment and distance 
+
+Placing CKY and Proto-CKY side by side and asking “are they the same thing” immediately 
+
+runs into a category error—one is an object defined symbolically, the other is a physical process 
+
+on a GPU. A more productive framing gives up “are they equivalent” in favor of:  what is the 
+
+systematic gap between the physical instance and the mathematical ideal? 
+
+Under this framing, our experiments give the following answer: 
+
+• Non-trivial functional alignment : the three operational criteria are met; the ordered 
+
+representation emerges stably on four context-free grammars; it is quantitatively corre -
+
+lated with the CKY chart ( 𝑟  ≈ 0.71). 
+
+• Significant formal distance : continuous rather than discrete; column-uniform rather 
+
+than cell-precise; with measurable boundary biases on certain edge constructions. 
+
+We should not expect a continuous system to replicate a discrete algorithm exactly, or a physical 
+
+process to replicate a mathematical object exactly. This distance is not where the paper fails; it 
+
+is the paper’s main finding. If Proto-CKY were merely a numerical approximation to CKY (the 
+
+same function realized in finite precision), all its properties should trail those of CKY: column-
+
+level uniformity should not appear (each cell of CKY is computed independently); self-repair under 
+
+noise should not appear either (a numerical approximation does not regrow after being broken). 
+
+What Proto-CKY shows is precisely these deviations. They tell us that it has a structure of its own, 
+
+not a shadow of CKY but a different class of object. 
+
+This perspective gives Proto-CKY a coherent interpretation and points to a direction that can be 
+
+pursued at length:  given a mathematical ideal, what does its physical prototype look like? 
+
+This framing has an entire tradition in physics—the systematic juxtaposition of theory against 
+
+experiment. In linguistics, by contrast, this distinction has not been handled with the same rigor: 
+
+formalized grammars and the actual language processing that happens on physical substrates 
+
+(whether human or LLM) are often taken by default to be the same object, and any gap between 
+
+them is treated as an “implementation detail.” This default identification may in fact be an implicit 
+
+premise of the long-running dispute between the formalist tradition and its rivals. We do not claim 
+
+the authority to adjudicate it at the small scale of the present paper, but Proto-CKY makes the 
+
+distinction visible in a specific case. 
+
+5.3  Geometry supplies a coordinate system 
+
+12 Part of an explanation for the emergence of Proto-CKY comes from the geometry of the 2D grid. 
+
+Consider information propagation under a  3 × 3 receptive field: cell  (𝑖 , 𝑗 ) sits on both row  𝑖  and 
+
+column  𝑗 , so it is the cell that can be reached, along the shortest path, by influence from both token 
+
+𝑖  and token  𝑗 . The upper triangle (the span lattice indexed by pairs  (𝑖 , 𝑗 )) is therefore the natural 
+
+coordinate system for token-pair interaction under this locality constraint. 
+
+At the same time, the readout at position  (0, 𝐿  − 1) can only see its  3 × 3 neighborhood. For the 
+
+1-bit boundary supervision to depend on global information, the model  must  organize some inter -
+
+mediate representation on the interior grid to propagate distant information. Geometry provides a 
+
+natural coordinate system, and local supervision forces information to traverse the grid—together 
+
+they form an inductive bias toward span-like organization. 
+
+But geometry explains only the coordinate system, not the contents. The most obvious point: if 
+
+the model were merely using cell  (𝑖 , 𝑗 ) to encode some combined property of token  𝑖  and token 
+
+𝑗 , why is it that, in the final converged state, activations along the same column tend to become 
+
+uniform? 
+
+5.4  Dynamics is also necessary 
+
+The self-repair experiments hint that, beyond the coordinate system, there is a story at the level 
+
+of dynamics. The perfect recovery after noise injection and state reset means that Proto-CKY is 
+
+not just a static pattern that training has “placed” in the right position—it behaves more like an 
+
+attractor of a dynamical system, pulled back when displaced. The collapse under spatial shuffling, 
+
+on the other hand, suggests that the existence of this attractor depends on the correct spatial 
+
+structure: you can break the values, they recover; you cannot scramble the geometry, or the 
+
+attractor itself disappears. 
+
+Geometry supplies the coordinate system, but what drives the system to  converge along it to 
+
+an ordered state  is dynamics. The specific mechanism, how a local rule produces global order 
+
+through iteration, we cannot answer at present. 
+
+5.5  Open questions 
+
+Even granting the geometry-plus-dynamics framework, many phenomena remain unexplained. 
+
+Proto-CKY’s activations show a marked column-level uniformity: cells in the same column tend 
+
+to have similar values. This pattern has no counterpart in the CKY chart—each cell of CKY is 
+
+computed independently. The NCA appears to encode some overall property on a per-token basis, 
+
+rather than recording a non-terminal set on a per-span basis. Why? 
+
+The CKY chart uses only the upper triangle ( 𝑖  ≤ 𝑗 ). The NCA grid has no such constraint—the 
+
+lower triangle also participates in updates and information propagation. What role does the lower 
+
+triangle play in the function of Proto-CKY? More interestingly, the activation pattern of the lower 
+
+triangle is symmetric with that of the upper triangle, yet local freezing experiments suggest the 
+
+lower triangle is in fact unnecessary for function. Is it a redundant byproduct of the propagation 
+
+process? An alternative path occasionally exploited on some samples? Or do the lower-triangle 
+
+activations carry, in the model’s own view, a physical referent different from what a CKY chart 
+
+expresses? 
+
+Finally, perhaps most fundamentally: the multiple properties of Proto-CKY (self-repair under noise, 
+
+robustness to local freezing, fragility under spatial shuffling) together suggest, in the physical 
+
+picture, something closer to a crystal than to a clock. A clock’s order comes from deliberate 
+
+engineering, where every gear has a precise causal role. A crystal’s order comes from physical 
+
+conditions: you can introduce impurities and it is largely unchanged; heating melts it, cooling 
+
+recrystallizes it; but change the lattice constant and the same crystal no longer forms. This is not 
+
+a rigorous theory, but it suggests a direction: perhaps we should not ask “what does each cell of 
+
+Proto-CKY do?” but “what conditions make this kind of order inevitable?” 
+
+# 6 Conclusion 
+
+13 Structured, productive sequence processing can emerge spontaneously under minimal 
+
+physical constraints  [34] . The form it emerges in, at least in the one instance we have 
+
+observed, is a physical prototype, not a mathematical object. 
+
+More concretely: under the physical constraints of 18,658 parameters, 1 bit of boundary supervi -
+
+sion, and purely local interaction, an ordered internal structure emerges spontaneously. It satisfies 
+
+the three operational criteria for syntactic processing. It is quantitatively correlated with the 
+
+CKY chart (Pearson  𝑟  ≈ 0.71) but is not a copy: its states are continuous rather than discrete, its 
+
+organization is column-uniform rather than cell-precise, and it regenerates spontaneously after 
+
+perturbation. It emerges independently on four distinct context-free grammars and not at all on 
+
+the regular language, a dichotomy that aligns exactly with the natural scope of chart parsing. It is 
+
+stable across random seeds and capacities. We name this structure  Proto-CKY .
+
+The name reflects the judgment given in the Discussion: Proto-CKY and classical symbolic syntax 
+
+belong to ontologically distinct categories. The former is a physical process (finite, continuous, 
+
+heuristic, self-repairing) aligned in function with a mathematical ideal but separated from it by a 
+
+systematic, measurable gap. That gap is itself information about the physical substrate on which 
+
+it sits; it is not a defect. 
+
+Taken as a starting point, Proto-CKY turns an object that would otherwise be hard to observe 
+
+directly, namely  the form in which structured sequence-processing capacity emerges in 
+
+local-rule systems without explicit symbolic representation , into a concrete instance that 
+
+can be opened up in full, inspected cell by cell, and systematically ablated. On such an instance, 
+
+many questions can now be asked meaningfully: what its internal mechanism specifically is, 
+
+whether it generalizes to other families of formal languages, whether there are comparable 
+
+properties between it and real biological language processing, and whether it is of the same kind 
+
+as what happens inside large-scale neural language models. This paper does not answer these 
+
+questions, but they can now be asked on a concrete, inspectable object. 
+
+Syntax in the physical sense, as an object of study, is quite different from symbolic syntax. What 
+
+this paper reports is one instance of it. 
+
+# References                    
+
+> [1] T. B. Brown et al. , “Language Models Are Few-Shot Learners,” no. arXiv:2005.14165. arXiv, July 2020.
+> doi: 10.48550/arXiv.2005.14165 .
+> [2] J. Hewitt and C. D. Manning, “A Structural Probe for Finding Syntax in Word Representations,” in
+> Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational
+> Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers) , J. Burstein, C. Doran, and T.
+> Solorio, Eds., Minneapolis, Minnesota: Association for Computational Linguistics, June 2019, pp. 4129–
+> 4138. doi: 10.18653/v1/N19-1419 .
+> [3] I. Tenney, D. Das, and E. Pavlick, “BERT Rediscovers the Classical NLP Pipeline,” in Proceedings of the
+> 57th Annual Meeting of the Association for Computational Linguistics , A. Korhonen, D. Traum, and L.
+> Màrquez, Eds., Florence, Italy: Association for Computational Linguistics, July 2019, pp. 4593–4601. doi:
+> 10.18653/v1/P19-1452 .
+> [4] Y. Belinkov and J. Glass, “Analysis Methods in Neural Language Processing: A Survey,” Transactions of
+> the Association for Computational Linguistics , vol. 7, pp. 49–72, 2019, doi: 10.1162/tacl_a_00254 .
+> [5] J. Hewitt and P. Liang, “Designing and Interpreting Probes with Control Tasks,” in Proceedings of the
+> 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint
+> Conference on Natural Language Processing (EMNLP-IJCNLP) , K. Inui, J. Jiang, V. Ng, and X. Wan, Eds.,
+> Hong Kong, China: Association for Computational Linguistics, Nov. 2019, pp. 2733–2743. doi: 10.18653/
+> v1/D19-1275 .
+> [6] T. Pimentel, J. Valvoda, R. H. Maudslay, R. Zmigrod, A. Williams, and R. Cotterell, “Information-
+> Theoretic Probing for Linguistic Structure,” in Proceedings of the 58th Annual Meeting of the Association
+> for Computational Linguistics , D. Jurafsky, J. Chai, N. Schluter, and J. Tetreault, Eds., Online: Association
+> for Computational Linguistics, July 2020, pp. 4609–4622. doi: 10.18653/v1/2020.acl-main.420 .
+> [7] D. H. Younger, “Recognition and Parsing of Context-Free Languages in Time N3,” Information and
+> Control , vol. 10, no. 2, pp. 189–208, Feb. 1967, doi: 10.1016/S0019-9958(67)80007-X .
+
+14 [8]  A. Mordvintsev, E. Randazzo, E. Niklasson, and M. Levin, “Growing Neural Cellular Automata,”  Distill ,
+
+vol. 5, no. 2, p. e23, Feb. 2020, doi:  10.23915/distill.00023 .
+
+[9]  N. Chomsky, “Three Models for the Description of Language,”  IEEE Transactions on Information Theory ,
+
+vol. 2, no. 3, pp. 113–124, Sept. 1956, doi:  10.1109/TIT.1956.1056813 .
+
+[10]  T. G. Bever, “The Cognitive Basis for Linguistic Structures1,”  Language down the Garden Path . Oxford 
+
+University Press, pp. 1–80, Aug. 2013. doi:  10.1093/acprof:oso/9780199677139.003.0001 .
+
+[11]  L. Frazier and K. Rayner, “Making and Correcting Errors during Sentence Comprehension: Eye Move -
+
+ments in the Analysis of Structurally Ambiguous Sentences,”  Cognitive Psychology , vol. 14, no. 2, pp. 
+
+178–210, Apr. 1982, doi:  10.1016/0010-0285(82)90008-1 .
+
+[12]  G. A. Miller and N. Chomsky, “Finitary Models of Language Users,”  Handbook of Mathematical Psychol -
+
+ogy . John Wiley & Sons., pp. 2–419, 1963. 
+
+[13]  E. Gibson, “Linguistic Complexity: Locality of Syntactic Dependencies,”  Cognition , vol. 68, no. 1, pp. 1– 
+
+76, Aug. 1998, doi:  10.1016/S0010-0277(98)00034-1 .
+
+[14]  C. T. Schütze,  The Empirical Base of Linguistics . Language Science Press, 2016. doi:  10.17169/ 
+
+langsci.b89.100 .
+
+[15]  A. Vaswani  et al. , “Attention Is All You Need,” in  Advances in Neural Information Processing Systems ,
+
+Curran Associates, Inc., 2017. 
+
+[16]  C. D. Manning, K. Clark, J. Hewitt, U. Khandelwal, and O. Levy, “Emergent Linguistic Structure in 
+
+Artificial Neural Networks Trained by Self-Supervision,”  Proceedings of the National Academy of Sciences ,
+
+vol. 117, no. 48, pp. 30046–30054, Dec. 2020, doi:  10.1073/pnas.1907367117 .
+
+[17]  B. M. Lake and M. Baroni, “Generalization without Systematicity: On the Compositional Skills of 
+
+Sequence-to-Sequence Recurrent Networks,” no. arXiv:1711.00350. arXiv, June 2018. doi:  10.48550/ 
+
+arXiv.1711.00350 .
+
+[18]  R. T. McCoy, E. Pavlick, and T. Linzen, “Right for the Wrong Reasons: Diagnosing Syntactic Heuristics 
+
+in Natural Language Inference,” in  Proceedings of the 57th Annual Meeting of the Association for 
+
+Computational Linguistics , A. Korhonen, D. Traum, and L. Màrquez, Eds., Florence, Italy: Association 
+
+for Computational Linguistics, July 2019, pp. 3428–3448. doi:  10.18653/v1/P19-1334 .
+
+[19]  H. T. Siegelmann and E. D. Sontag, “On the Computational Power of Neural Nets,” in  Proceedings of the 
+
+Fifth Annual Workshop on Computational Learning Theory , in COLT '92. New York, NY, USA: Association 
+
+for Computing Machinery, July 1992, pp. 440–449. doi:  10.1145/130385.130432 .
+
+[20]  G. Weiss, Y. Goldberg, and E. Yahav, “Extracting Automata from Recurrent Neural Networks Using 
+
+Queries and Counterexamples,” no. arXiv:1711.09576. arXiv, Feb. 2020. doi:  10.48550/arXiv.1711.09576 .
+
+[21]  J. Hewitt, M. Hahn, S. Ganguli, P. Liang, and C. D. Manning, “RNNs Can Generate Bounded Hierarchical 
+
+Languages with Optimal Memory,” in  Proceedings of the 2020 Conference on Empirical Methods in Natural 
+
+Language Processing (EMNLP) , B. Webber, T. Cohn, Y. He, and Y. Liu, Eds., Online: Association for 
+
+Computational Linguistics, Nov. 2020, pp. 1978–2010. doi:  10.18653/v1/2020.emnlp-main.156 .
+
+[22]  S. Yao, B. Peng, C. Papadimitriou, and K. Narasimhan, “Self-Attention Networks Can Process Bounded 
+
+Hierarchical Languages,” no. arXiv:2105.11115. arXiv, Mar. 2023. doi:  10.48550/arXiv.2105.11115 .
+
+[23]  S. Bhattamishra, K. Ahuja, and N. Goyal, “On the Ability and Limitations of Transformers to Recognize 
+
+Formal Languages,” no. arXiv:2009.11264. arXiv, Oct. 2020. doi:  10.48550/arXiv.2009.11264 .
+
+[24]  S. Sudhakaran  et al. , “Growing 3D Artefacts and Functional Machines with Neural Cellular Automata,” 
+
+no. arXiv:2103.08737. arXiv, June 2021. doi:  10.48550/arXiv.2103.08737 .
+
+[25]  E. Randazzo, A. Mordvintsev, E. Niklasson, M. Levin, and S. Greydanus, “Self-Classifying MNIST Digits,” 
+
+Distill , vol. 5, no. 8, p. e27.002, Aug. 2020, doi:  10.23915/distill.00027.002 .
+
+[26]  A. Variengien, S. Nichele, T. Glover, and S. Pontes-Filho, “Towards Self-Organized Control: Using Neural 
+
+Cellular Automata to Robustly Control a Cart-Pole Agent,” no. arXiv:2106.15240. arXiv, July 2021. doi: 
+
+10.48550/arXiv.2106.15240 .
+
+[27]  M. Tesfaldet, D. Nowrouzezahrai, and C. Pal, “Attention-Based Neural Cellular Automata,” no. 
+
+arXiv:2211.01233. arXiv, Nov. 2022. doi:  10.48550/arXiv.2211.01233 .
+
+[28]  M. Suzgun, S. Gehrmann, Y. Belinkov, and S. M. Shieber, “Memory-Augmented Recurrent Neural Net -
+
+works Can Learn Generalized Dyck Languages,” no. arXiv:1911.03329. arXiv, Nov. 2019. doi:  10.48550/ 
+
+arXiv.1911.03329 .
+
+15 [29]  T. Linzen, E. Dupoux, and Y. Goldberg, “Assessing the Ability of LSTMs to Learn Syntax-Sensitive 
+
+Dependencies,”  Transactions of the Association for Computational Linguistics , vol. 4, pp. 521–535, 2016, 
+
+doi:  10.1162/tacl_a_00115 .
+
+[30]  R. Marvin and T. Linzen, “Targeted Syntactic Evaluation of Language Models,” in  Proceedings of the 2018 
+
+Conference on Empirical Methods in Natural Language Processing , E. Riloff, D. Chiang, J. Hockenmaier, 
+
+and J. Tsujii, Eds., Brussels, Belgium: Association for Computational Linguistics, Oct. 2018, pp. 1192– 
+
+1202. doi:  10.18653/v1/D18-1151 .
+
+[31]  G. Delétang  et al. , “Neural Networks and the Chomsky Hierarchy,” no. arXiv:2207.02098. arXiv, Feb. 
+
+2023. doi:  10.48550/arXiv.2207.02098 .
+
+[32]  C. Anil  et al. , “Exploring Length Generalization in Large Language Models,” no. arXiv:2207.04901. arXiv, 
+
+Nov. 2022. doi:  10.48550/arXiv.2207.04901 .
+
+[33]  H. Zhou  et al. , “What Algorithms Can Transformers Learn? A Study in Length Generalization,” no. 
+
+arXiv:2310.16028. arXiv, Oct. 2023. doi:  10.48550/arXiv.2310.16028 .
+
+[34]  P. W. Anderson, “More Is Different: Broken Symmetry and the Nature of the Hierarchical Structure of 
+
+Science,”  Science , vol. 177, no. 4047, pp. 393–396, Aug. 1972, doi:  10.1126/science.177.4047.393 .
+
+[35]  N. Chomsky and M. Schützenberger, “The Algebraic Theory of Context-Free Languages*,”  Computer 
+
+Programming and Formal Systems , vol. 35. in Studies in Logic and the Foundations of Mathematics, vol. 
+
+35. Elsevier, pp. 118–161, 1963. doi:  10.1016/S0049-237X(08)72023-8 .
+
+[36]  N. Chomsky, “Three Factors in Language Design,”  Linguistic Inquiry , vol. 36, no. 1, pp. 1–22, Jan. 2005, 
+
+doi:  10.1162/0024389052993655 .
+
+[37]  J. E. Hopcroft and J. D. Ullman,  Introduction to Automata Theory, Languages, and Computation . Addison-
+
+Wesley, 1979. 
+
+[38]  J. Wei  et al. , “Emergent Abilities of Large Language Models,” no. arXiv:2206.07682. arXiv, Oct. 2022. doi: 
+
+10.48550/arXiv.2206.07682 .
+
+[39]  Z. Wei, “On the Spatiotemporal Dynamics of Generalization in Neural Networks,” no. arXiv:2602.01651. 
+
+arXiv, Feb. 2026. doi:  10.48550/arXiv.2602.01651 .
+
+# A Appendix A: A contrast on a different architecture 
+
+The main paper reports Proto-CKY as a physical prototype emerging under minimal physical 
+
+constraints, with a specific internal geometry: a continuous field organized along a span lattice, 
+
+column-uniform, and self-repairing. A natural contrast to ask is: what does the same task look like 
+
+on an architecture with an entirely different structure, such as a Transformer? Does it develop the 
+
+same geometry? Or does it take an altogether different path? 
+
+This appendix reports the parallel experiments on a Transformer baseline. The main conclusions 
+
+fall into three layers: (i) with enough parameters, the Transformer reaches length generalization, 
+
+but the path it takes is sharply different from the NCA’s. It relies on the aggregation mechanism 
+
+known as an attention sink, not on any spatial geometry. (ii) On depth generalization, the Trans -
+
+former and the NCA behave alike: under standard training both handle only flat inputs, and deep 
+
+augmentation lets both handle nested inputs but at a loss of length generalization. (iii) The length-
+
+vs-depth trade-off holds on both architectural families, so this limitation is more likely a property 
+
+of the training protocol itself than of any particular architectural choice. 
+
+A.1  A scale threshold 
+
+16 Figure 7: Length generalization of four Transformer configurations, compared to the main NCA 
+
+(d=16, 18,658 parameters). All four Transformers reach 100% at  𝐿  ≤ 12 (train). In OOD, d=8, 
+
+d=16, d=32 collapse to near chance by  𝐿  = 50; d=64 (165,953 parameters,  ∼ 9× NCA) generalizes 
+
+perfectly to  𝐿  = 1000.
+
+We train four Transformer configurations as baselines: 1-layer  𝑑  = 8 (9,121 parameters), 2-layer 
+
+𝑑  = 16 (23,057 parameters), 2-layer  𝑑  = 32 (58,401 parameters), and 2-layer  𝑑  = 64 (165,953 para -
+
+meters). All four reach 100% on the training distribution  𝐿  ≤ 12, same as the NCA. Beyond the 
+
+training length, however, their fates diverge sharply ( Figure 7 ). 
+
+The first three Transformers ( 𝑑  = 8, 𝑑  = 16, 𝑑  = 32) collapse to near-chance by  𝐿  = 50; 𝑑  = 32,
+
+even at 58k parameters (about 3× the NCA), does not survive. Only at  𝑑  = 64 (about 9× the NCA) 
+
+does length generalization abruptly appear, and it holds all the way to  𝐿  = 1000. Between 58k and 
+
+166k parameters, the Transformer jumps from “no generalization at all” to “perfect generalization”: 
+
+somewhere inside that narrow interval, a capability phase transition takes place. 
+
+The NCA crosses this phase transition already at 18k parameters, nearly an order of magnitude 
+
+below the Transformer threshold. But “parameter efficiency” is only the surface of the story. The 
+
+question worth asking next is: is what  𝑑  = 64 has achieved the same thing? 
+
+A.2  Attention is not local 
+
+17 Figure 8: Attention weight matrices for TF  𝑑  = 64 (layer 0 and layer 1) on several probe inputs. 
+
+Instead of a local band around the diagonal, weights concentrate on a few fixed key positions near 
+
+the start of the sequence, a pattern known as  attention sink .
+
+If what  𝑑  = 64 has learned were a kind of local processing similar to the NCA’s (with attention 
+
+weights concentrated between adjacent tokens), then it might share a mechanistic basis with the 
+
+NCA, and the main paper’s inductive bias argument about “local geometry” would no longer be 
+
+a necessary condition for the emergence of Proto-CKY. We test this hypothesis by inspecting the 
+
+attention weight matrices. 
+
+For a range of representative expressions (the flat  id + id * id , flat extensions of various lengths, 
+
+and constructions of nesting depth 2 and 4), we extract the attention matrices from both layers of 
+
+𝑑  = 64. If weights concentrated along the diagonal, we should see a band structure around it. 
+
+What we see is not that ( Figure 8 ). All attention matrices display an  aggregation column  pattern: 
+
+a few specific key positions (typically among the first tokens of the sequence) absorb almost all of 
+
+the attention from every query, while the remaining positions are nearly entirely ignored. Every 
+
+token sends its information to the same few sink points, and then reads an answer back from 
+
+those sinks. 
+
+To quantify this observation, we define a locality score: for each attention matrix we compute the 
+
+attention-weighted mean distance between query and key, normalized by sequence length. Strictly 
+
+diagonal attention gives roughly 0; uniform attention gives roughly 1/3. The scores we measure 
+
+lie between 0.28 and 0.38, not only non-local but slightly more dispersed than uniform (because 
+
+the weights are concentrated on aggregation columns far from the diagonal). 
+
+18 This mechanism is known in the Transformer literature as an attention sink.  𝑑  = 64 has not 
+
+degenerated into an implicit NCA; it has learned an architecturally different aggregation-routing 
+
+strategy. This answers the question of this section: what  𝑑  = 64 does is not the same thing. 
+
+A.3  Depth generalization: both architectures fail, both are rescued by deep augmentation 
+
+Figure 9: Depth generalization for TF  𝑑  = 64, standard and deep-augmented. Standard training 
+
+handles only depths 0 and 1; the deep-augmented variant reaches depth 7 on pure nested inputs but 
+
+loses length generalization (see text). The pattern (standard fails, deep-augmented rescues depth 
+
+at the cost of length) mirrors what the main NCA shows in  Figure 2 .
+
+The second contrast is more decisive. We test  𝑑  = 64 on pure nested inputs  (((…(id )…))) and on 
+
+mixed depth-length inputs, with depth 0 through 10. Under standard training,  𝑑  = 64 is correct 
+
+on depths 0 and 1 (inside the training distribution) and then fails from depth 2 onward. The same 
+
+model is at 100% accuracy on flat inputs at  𝐿  = 1000, and at 0% on the simple nesting  ((id )) at 
+
+𝐿  = 5.
+
+This matches the behavior of the standard NCA reported in the main paper ( Figure 2 ) exactly. 
+
+Neither architectural family achieves depth generalization under standard training. 
+
+We therefore also train a deep-augmented variant of  𝑑  = 64, explicitly raising the nesting depth in 
+
+the training distribution, using the same deep-augmentation protocol as the main NCA. The deep-
+
+augmented  𝑑  = 64 handles up to pure nesting depth 7, comparable to the depth coverage of the 
+
+deep-augmented NCA. But this variant also shows a marked regression on length: accuracy drops 
+
+to around 74.5% at  𝐿  = 100, 82% at  𝐿  = 500, and 75% at  𝐿  = 1000 (Figure 9 ). 
+
+In other words, both architectural families exhibit the same trade-off: under a single set of weights, 
+
+one can do well on length or on depth, but not both. The trade-off is therefore more likely a 
+
+property of the training-protocol family (on-the-fly generation, a  𝐿  ≤ 12 window, and the current 
+
+loss structure) than a property of any particular architecture. 
+
+A.4  Two kinds of success, one shared limitation 
+
+Putting the observations together: 
+
+• Transformer  𝑑  = 64 reaches length generalization given enough parameters, but does 
+
+so through a  non-local  aggregation mechanism (attention sink). The NCA reaches the 
+
+same length generalization through a  local wavefront  mechanism. The two have no 
+
+recognizable isomorphism at the mechanism level, even when they agree at the behav -
+
+ioral level. 
+
+• Depth generalization requires explicit augmentation of the training data, impartially, on 
+
+both architectural families. Proto-CKY-style hierarchical organization does not emerge 
+
+“automatically”; it requires a training distribution that covers hierarchical structure. 
+
+• The length-vs-depth trade-off holds on both architectural families. This limitation is more 
+
+likely tied to the current training protocol than to any particular architectural choice. 
+
+19 These observations do not weaken the main paper’s claim; they clarify it. The main paper does not 
+
+claim that “the NCA does something the Transformer cannot.” A sufficiently large Transformer 
+
+reaches the same behavioral-level generalization. What the main paper claims is something 
+
+narrower and cleaner:  when this behavior is observed on a minimal 18k-parameter, purely-
+
+local-interaction system, what does its internal form look like?  The answer is an ordered 
+
+grid, aligned with the geometry of the CKY chart and filled in by a local wavefront. The 
+
+Transformer’s way of succeeding on the same task is not the same: it lies not on the geometry of 
+
+the CKY chart but on the topology of attention sinks. Both architectures can “get it right”; only 
+
+one of them produces Proto-CKY. 
+
+20
