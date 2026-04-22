@@ -1,0 +1,513 @@
+Title: Shepherding UAV Swarm with Action Prediction Based on Movement Constraints
+
+URL Source: https://arxiv.org/pdf/2604.17189v1
+
+Published Time: Tue, 21 Apr 2026 01:02:14 GMT
+
+Number of Pages: 19
+
+Markdown Content:
+FULL PAPER 
+
+Shepherding UAV Swarm with Action Prediction Based on Movement Constraints 
+
+Yusuke Tsunoda a, Yusuke Goto a,and Takao Sato a
+
+> a
+
+Graduate School of Engineering, University of Hyogo, Hyogo, Japan; 
+
+ARTICLE HISTORY 
+
+Compiled April 21, 2026 
+
+ABSTRACT 
+
+In this study, we propose a new sheepdog-inspired control method for a swarm of small unmanned aerial vehicles (UAVs), which predicts the swarm behavior while explicitly accounting for the motion constraints of real robots. Sheepdog-inspired guidance control refers to a framework in which a small number of navigator agents (sheepdog agents) indirectly drive a large number of autonomous agents (a flock of sheep agents) so as to steer the group toward a target position. In conventional studies on sheepdog-inspired guidance, both types of agents have typically been modeled as point masses, and the guidance law for the navigator agents has been designed using simple interaction vectors based on the instantaneous relative posi-tions between the agents. However, when implementing such methods on real robots such as drones, it is necessary to consider each agent’s motion constraints, includ-ing upper bounds on velocity and acceleration. Moreover, we argue that guidance can be made more efficient by predicting the future behavior of the autonomous swarm that is observable to the navigator agents. To this end, we propose a three-dimensional guidance control law based on behavior prediction of autonomous agents under motion constraints, inspired by the Dynamic Window Approach (DWA). At each control cycle, the navigator agent generates a set of feasible motion candidates that satisfy its motion constraints, and predicts the short-horizon swarm evolution using an internal model of the autonomous agents maintained within the navigator agent. The motion candidates are then evaluated according to criteria such as the progress velocity toward the target, the positioning strategy with respect to the swarm, and safety margins, and the optimal motion is selected to achieve safe and efficient guidance. Numerical simulation results demonstrate the effectiveness of the proposed guidance control law. 
+
+KEYWORDS 
+
+Swarm robotics, Unmanned Aerial Vehicle, Shepherding, Predictive control, Motion constraint 
+
+Unmanned aerial vehicles (UAVs), particularly multicopter-type UAVs (drones), have attracted increasing attention in recent years due to rapid advances in minia-turization and cost reduction, and swarm control of drones has been actively studied as an advanced operational paradigm. In swarm guidance methods, an autonomous distributed control system is often adopted, where each agent determines its actions based on locally available observations, and the desired collective guidance behavior emerges as a result. Since this scheme does not require each robot to communicate with all other robots as a prerequisite, it offers excellent scalability and enables the construction of systems that are inherently robust. However, because each agent must    
+
+> CONTACT Yusuke Tsunoda Email: tsunoda@eng.u-hyogo.ac.jp
+> arXiv:2604.17189v1 [cs.RO] 19 Apr 2026 ("!
+> (#),$%&& )
+> ･･･  ･･･
+> ("!
+> (#'(),$%&& )
+> ("!
+> (#)(),$%&& )
+
+Autonomous 
+
+Agent 
+
+!! !!
+
+!! + #"#$% 
+
+!! + #"#$% 
+
+Motion candidates considering 
+
+velocity and acceleration constrains 
+
+Boids model like motion generation 
+
+Navigator 
+
+Agent 
+
+l The navigator drone generates motion candidates under motion constraints 
+
+and uses them to predict the short -term motion of a group of autonomous agents. 
+
+l The navigator drone, inspired by the Dynamic Window Approach (DWA), 
+
+selects guidance actions that optimize the designed evaluation function. Figure 1. Conceptual diagram of the proposed approach. The navigator agent generates candidate motions that satisfy its motion constraints, predicts the swarm behavior under each candidate motion using an internal model of the autonomous agents, evaluates the candidates based on criteria such as progress toward the goal and safety margins, and selects the optimal motion to achieve safe and efficient guidance. 
+
+decide its behavior using only limited information, the design of the underlying “local interaction rules” becomes a fundamental yet challenging issue. As a design principle, bio-inspired approaches that draw on collective animal behaviors have been widely ex-plored. Among them, sheepdog-inspired swarm control has received considerable atten-tion in recent years. Sheepdog-inspired swarm control is motivated by “shepherding,” in which sheepdogs drive a flock of sheep, and it is a system in which a small number of 
+
+navigator agents (corresponding to sheepdogs) approach a large swarm of autonomous agents (corresponding to sheep) and induce their evasive behavior, thereby steering the swarm toward a target location [1]. In particular, only the navigator agents have access to information about the target, and they exploit their superior mobility to actively approach the autonomous agents, whereas the autonomous agents act solely based on their own local observations. Consequently, communication capabilities can ideally be concentrated in the navigator agents, which is expected to reduce communication load and the overall system cost when implemented in real drone swarm control. A substantial body of research on sheepdog-inspired swarm control already exists. Most studies model the guided autonomous swarm using flocking models such as the boids model and then propose guidance laws for the navigator agents that can steer the swarm efficiently. A wide variety of guidance strategies have been reported, includ-ing the centroid-tracking approach [2,3], dynamic target switching [4], farthest-agent targeting control [2], and the outmost pushing strategy [5]. However, many existing studies assume that the navigator agents can acquire the surrounding environment and the positions of autonomous agents without limitation, and/or that the robots 2can instantaneously generate ideal velocities and accelerations. As a result, system models that explicitly incorporate the motion constraints and performance limits of real robots have not been sufficiently established. In addition, guidance control is often designed as a simple interaction model based only on the instantaneous relative posi-tions among agents at each time step. While such simplification can enable effective guidance for a particular assumed swarm model with a simple strategy, it may leave little room to design guidance controllers that generalize to more diverse models of autonomous swarms. In this study, we revisit the conventional shepherding system model and propose a new prediction-based shepherding control method for a swarm of small UAVs that explicitly leverages the motion constraints of the autonomous agents. With implemen-tation on real drone swarms in mind, we impose upper bounds on the magnitudes of velocity and acceleration for each agent as shown in Fig. 1. Building on this con-strained model, and inspired by the Dynamic Window Approach (DWA), we present a guidance strategy in which a navigator agent predicts the possible behaviors of the autonomous agents in response to its own candidate actions and then selects the action that minimizes (or maximizes) a predefined evaluation function. A related line of work on shepherding with model predictive control is reported in [6]; however, that study focuses on a different problem setting, namely the presence of heterogeneous agents embedded in the autonomous swarm that do not exhibit avoidance behavior toward the sheepdog agents. Numerical simulation results demonstrate the effectiveness of the proposed guidance system. The remainder of this paper is organized as follows. Section 1 describes the problem formulation of the shepherding task considered in this study. Section 2 presents the behavioral model of the autonomous swarm to be guided. Section 3 explains the guid-ance strategy for the navigator agent, which is based on predicting the autonomous swarm behavior under motion constraints, inspired by the Dynamic Window Approach (DWA). Section 4 reports numerical simulation results of the proposed system and provides discussions. Finally, Section 5 concludes the paper. Throughout this paper, we use the following notation. Let R denote the set of real numbers, R+ the set of positive real numbers, and N the set of natural numbers. Let Rn
+
+denote the set of n-dimensional real-valued vectors, and let ∥ · ∥ denote the L2-norm. 
+
+1. Problem Formulation 
+
+In sheepdog-inspired guidance, cooperation among multiple navigator agents is an important research topic. As a fundamental step, however, this study focuses on a sheepdog system consisting of a single navigator agent and N ∈ N autonomous agents. Each agent is modeled as a second-order integrator subject to velocity and acceleration constraints. Let ∆ t ∈ R+ [s] be the sampling period, let k = 0 , 1, 2, . . . be the discrete-time index, and let tk = k∆t [s] be the discrete time. When an input acceleration 
+
+a(tk) [m /s2] is applied at each step, the state is updated according to the following difference equations. The equations of motion for the autonomous agents and the navigator agent are given in (1) and (2), respectively. 3
+
+ps,i (tk+1 ) = ps,i (tk) + vs,i (tk)∆ t
+
+vs,i (tk+1 ) = vs,i (tk) + as,i (tk)∆ t
+
+∥vs,i hor (tk)∥ ≤ vs, max hor ,
+
+−vs, max down ≤ vs,i ver (tk) ≤ vs, max up 
+
+∥as,i hor (tk)∥ ≤ as, max hor ,
+
+−as, max down ≤ as,i ver (tk) ≤ as, max up 
+
+i = 1 , 2, . . . , N, 
+
+(1) 
+
+
+
+pd(tk+1 ) = pd(tk) + vd(tk)∆ t, 
+
+vd(tk+1 ) = vd(tk) + ad(tk)∆ t, 
+
+∥vd hor (tk)∥ ≤ vd, max hor ,
+
+−vd, max down ≤ vd ver (tk) ≤ vd, max up ,
+
+∥ad hor (tk)∥ ≤ ad, max hor ,
+
+−ad, max down ≤ ad ver (tk) ≤ ad, max up ,
+
+(2) where p ∈ R3 [m] denotes the position vector, v ∈ R3 [m /s] the velocity vector, and 
+
+a ∈ R3 [m /s2] the acceleration vector. The subscript s, i refers to the i-th autonomous agent, while the subscript d refers to the navigator agent. In addition, the superscripts hor and ver indicate the horizontal and vertical components, respectively. To allow dif-ferent maximum values for ascending and descending motions, we impose the vertical velocity constraint in the form −v∗,max down ≤ v∗,ver (tk) ≤ v∗,max up for ∗ ∈ { s, d }. Sim-ilarly, the vertical acceleration is constrained as −a∗,max down ≤ a∗,ver (tk) ≤ a∗,max up .The objective of this study is to guide the multi-agent system governed by the above equations of motion by designing the autonomous-agent inputs {as,i (tk)}Ni=1 
+
+and the navigator-agent input ad(tk) such that the target-reaching condition (3) and the collision-avoidance constraint (4) shown below are satisfied simultaneously. lim  
+
+> k→∞
+
+∥ps,i (tk) − pgoal ∥ → ε, i = 1 , 2, . . . , N, (3) Here, pgoal ∈ R3 [m] denotes the position vector of the goal location, and ε ∈ R+
+
+is a sufficiently small positive constant. From the perspective of implementation on real drones, each agent is approximated as a rigid sphere with an identical radius 
+
+rindiv ∈ R+ [m]. We require that the occupied regions of any two agents do not overlap at any time. That is, we impose the collision-avoidance constraint given by 
+
+∥ps,i (tk) − ps,j (tk)∥ ≥ 2rindiv ,
+
+∀k ≥ 0, ∀i, j ∈ { 1, . . . , N }, i ̸ = j, 
+
+∥pd(tk) − ps,i (tk)∥ ≥ 2rindiv ,
+
+∀k ≥ 0, ∀i ∈ { 1, . . . , N }.
+
+(4) Regarding the sensing mechanism and the information available to each agent, we assume a common observation radius of Rs ∈ R+ [m] for the autonomous agents and an 4: Navigator agent : Autonomous agent 
+
+!!
+
+> "#$
+
+(#%)
+
+# ①： cohesion ②： separation 
+
+# ③： alignment 
+
+!!
+
+> &'(
+
+(#%)
+
+!!
+
+> )*+
+
+(#%)
+
+# ④： evasion 
+
+!!
+
+> #"&
+
+(#%)Figure 2. Conceptual diagram of the autonomous agent model inspired by the Boids model 
+
+observation radius of Rd ∈ R+ [m] for the navigator agent. Each agent determines its action by referencing the states of agents within its sensing range while distinguishing the agent type (autonomous agent or navigator). In addition to this local information, the navigator agent is assumed to have access to the position of the goal location. Equation (5) defines the observation model for each agent and the construction of the input a(tk). 
+
+I = {1, . . . , N } ∪ { d},
+
+(pk(tk), vk(tk)) = 
+
+
+
+(ps,k (tk), vs,k (tk)) ,
+
+(k = 1 , . . . , N ),
+
+(pd(tk), vd(tk)) ,
+
+(k = d),Rk =
+
+(
+
+Rs, (k = 1 , . . . , N ),Rd, (k = d),
+
+Nk(tk) = { ℓ ∈ I \ { k} | ∥ pℓ(tk) − pk(tk)∥ ≤ Rk} ,
+
+Ok(tk) = { (pℓ(tk), vℓ(tk)) | ℓ ∈ N k(tk)} ,
+
+as,i (tk) = πs(ps,i (tk), vs,i (tk), Oi(tk)) ,i = 1 , . . . , N, 
+
+ad(tk) = πd(pd(tk), vd(tk), Od(tk), pgoal ) .
+
+(5) where, in eq. (5), I denotes the index set of all agents, Nk(tk) denotes the index set 5of agents observed by agent k at time tk, and Ok(tk) denotes the set of information observed by agent k at time tk.
+
+2. Proposal of autonomous agent model 
+
+As a representative motion model for autonomous agents that has been widely used in the literature, a model based on the Boids model [7] is well known as shown in Fig. 2. It is composed of the following four interaction rules: 1. Cohesion: nearby agents are attracted to each other. 2. Separation: nearby agents keep distance to avoid collisions. 3. Alignment: nearby agents match their velocities. 4. Evasion: agents evade the navigator agent. On the other hand, there also exist models that omit the alignment term, in which autonomous agents do not reference the velocity information of surrounding agents and instead move based solely on relative positional relationships [8]. In the former class of models, the alignment term allows motion to propagate rapidly through the swarm, making it easier for the entire group to translate as a coherent body. However, depending on the specific formulation of alignment, a residual propulsive component may remain even in situations where the swarm should come to rest, which can cause undesired drifting and necessitate re-collection of the swarm. In contrast, since the lat-ter class of models does not use velocity information, drifting tends to be suppressed compared to models with alignment; nevertheless, because the interaction structure depends only on relative positions, the “intention to move” can be difficult to prop-agate across the swarm, potentially resulting in behaviors where the swarm becomes excessively tightly bound and less responsive as a group. Based on these considerations, the desirable swarm behavior as a guidance target can be summarized as follows: 1. When the navigator agent intervenes, the induced motion propagates within the swarm so that the swarm moves as a cohesive unit. 2. When the intervention becomes weak, no excessive propulsive component re-mains, and the swarm tends toward rest. Therefore, this study constructs a reference-velocity model for autonomous agents that simultaneously achieves (i) coherent collective motion through motion propagation within the swarm and (ii) convergence toward rest without residual propulsion when the intervention of the navigator agent weakens. Specifically, we define the reference velocity of autonomous agent i, vref  
+
+> s,i
+
+(tk) ∈
+
+R3 [m /s], as the weighted sum of four interaction terms corresponding to cohesion, separation, alignment, and evasion, as follows: 
+
+vref  
+
+> s,i
+
+(tk) = wcoh vcoh  
+
+> i
+
+(tk) + wsep vsep  
+
+> i
+
+(tk)+ wali vali  
+
+> i
+
+(tk) + wesc vesc  
+
+> i
+
+(tk), (6) where tk denotes the discrete time, and wcoh , w sep , w ali , w esc ∈ R+ are the weights for the respective terms. Each interaction term is computed solely from the information 
+
+Oi(tk) of agents contained in the observation set Ni(tk) defined in Section 1. In what follows, we decompose the observation set Ni(tk) into the sets of observed autonomous 6agents and observed navigator agent(s) as 
+
+N si (tk) = { j ∈ N i(tk) | j is an autonomous agent },
+
+N di (tk) = { j ∈ N i(tk) | j is a navigator agent }. (7) 
+
+2.0.0.1. Distance Correction for Collision Avoidance. The separation term plays a crucial role in collision avoidance. In an idealized setting where agents can track arbitrary velocities and are not subject to acceleration limits, non-collision can be guaranteed by defining the separation term as a repulsive force inversely propor-tional to the inter-agent distance. However, in the present study, since each agent is subject to velocity and acceleration constraints, providing a separation term that pre-vents collisions in the ideal setting does not necessarily ensure that a sufficient evasive maneuver can be realized. To enhance safety under such constraints, we inflate each agent using a safety radius 
+
+rsafe ∈ R+ [m] that satisfies rindiv < r safe , and we redefine the inter-agent distance as the minimum distance after inflation. Let the center-to-center distance between autonomous agents i and j be 
+
+dij (tk) = ∥ps,i (tk) − ps,j (tk)∥, (8) and define the inflated distance that accounts for the agent radii as 
+
+hij (tk) = dij (tk) − 2rsafe . (9) When the separation term is specified in an inversely proportional form, using hij (tk)directly may cause the separation term to diverge as the distance approaches zero near imminent collision. Therefore, we smooth the distance as ¯dij (tk) = 
+
+q
+
+max  hij (tk), 02 + δ2. (10) Here, δ > 0 is a smoothing parameter. With this definition, even when the safety regions of agents overlap, ¯dij (tk) is lower-bounded by δ and thus never becomes zero. 
+
+2.0.0.2. Cohesion Term. The cohesion term encourages autonomous agents to aggregate. Let N si (tk) denote the set of neighboring autonomous agents of autonomous agent i at time tk, and let |N si (tk)| be its cardinality. We define the mean position of the neighbors as ¯ps,i (tk) = 
+
+
+
+1
+
+|N si (tk)|
+
+X   
+
+> j∈N si(tk)
+
+ps,j (tk), |N si (tk)| > 0,
+
+ps,i (tk), |N si (tk)| = 0 ,
+
+(11) and then specify the cohesion term as 
+
+vcoh  
+
+> i
+
+(tk) = ¯ ps,i (tk) − ps,i (tk). (12) 
+
+2.0.0.3. Separation Term. The separation term encourages nearby autonomous agents to maintain a safe distance, thereby contributing to collision avoidance and 7inter-agent spacing. Using the center-to-center distance dij (tk) between autonomous agents i and j defined in (8), we define the unit vector from agent j to agent i as 
+
+eij (tk) = ps,i (tk) − ps,j (tk)
+
+dij (tk) . (13) Using the smoothed inflated distance ¯dij (tk) defined in (10), we then define the sepa-ration term as 
+
+vsep  
+
+> i
+
+(tk) = X   
+
+> j∈N si(tk)
+
+eij (tk)¯dij (tk)2 . (14) Since ¯dij (tk) is lower-bounded by δ even when the safety regions overlap, the separation term does not diverge. Moreover, the inverse-square dependence 1 / ¯dij (tk)2 yields a local interaction: it induces strong avoidance at short range, while its influence decays rapidly at longer distances. 
+
+2.0.0.4. Alignment Term. The alignment term plays the role of propagating the motion induced by the navigator agent throughout the swarm. By defining it as a function of the mean velocity that includes a virtual neighboring agent with zero velocity, we endow the model with the property that the swarm velocity naturally decays when the intervention from the navigator agent becomes weak. As in the cohesion term, let N si (tk) be the set of neighboring autonomous agents ob-served by autonomous agent i, and let |N si (tk)| be its cardinality. Then, the alignment term is given as follows: 
+
+vali  
+
+> i
+
+(tk) = 
+
+vs,i (tk) + P   
+
+> j∈N si(tk)
+
+vs,j (tk)
+
+|N si (tk)| + 1 + wv
+
+. (15) Here, wv ∈ R+ represents the “number of virtual neighboring agents with zero veloc-ity.” By including the agent’s own velocity vs,i (tk) in the average and setting wv > 0, we obtain vali  
+
+> i
+
+(tk) = vs,i (tk)/(1 + wv) even when no neighboring agents are present. Hence, the alignment term acts in a direction that attenuates the velocity. As a result, this formulation suppresses the phenomenon that the swarm continues to drift due to inertia when the intervention from the navigator agent is weak. 
+
+2.0.0.5. Evasion Term. The evasion term functions as an external force exerted by the navigator agent on the autonomous agents and constitutes the primary driving mechanism induced by the intervention of the navigator agent. Let N di (tk) denote the set of navigator agent(s) observed by autonomous agent i. Define the relative position between agent i and a navigator agent d as ¯did (tk) = 
+
+q
+
+max( did (tk) − 2rsafe , 0) 2 + δ2. (16) 8Figure 3. Conceptual diagram of collecting and driving 
+
+Then, the evasion term is given by 
+
+vesc  
+
+> i
+
+(tk) = X   
+
+> d∈N di(tk)
+
+rid (tk)
+
+did (tk) · 1¯did (tk)2 . (17) This term is a repulsive interaction obtained by weighting the unit direction vector pointing away from the navigator agent by the inverse square of the modified distance. The inflation together with the smoothing parameter δ prevents excessively large in-puts at extremely short distances while still providing sufficiently strong avoidance responses when agents approach each other. When the navigator agent moves outside the sensing range, N di (tk) becomes the empty set and the velocity component induced by the evasion term becomes zero. Any residual velocity then naturally decays through the alignment term, which helps ensure that the swarm comes to rest near the goal and/or under non-intervention conditions. 
+
+3. Proposal of navigator agent controller 
+
+In this section, we design the input acceleration ad(tk) of the navigator agent. Since the autonomous agents do not necessarily form a single connected group and may split into multiple aggregates (clusters), it is necessary to define a strategy that determines (i) which group should be treated as the guidance target and (ii) toward which di-rection that group should be driven. To this end, we introduce clustering based on DBSCAN [9] and switch between a collection strategy and a guidance strategy. More-over, if the navigator agent relies only on instantaneous geometric relationships, the resulting guidance law may fail to track continuously varying velocities and swarm shapes, potentially leading to inefficient behavior. Inspired by the Dynamic Window 9Figure 4. Conceptual diagram of ignore region 
+
+Approach (DWA) [10], we adopt a framework that generates motion candidates under constraints, predicts the short-horizon outcome, and selects an action based on an evaluation function. Specifically, the navigator agent generates feasible motion candi-dates within its constraints, evaluates them according to multiple criteria, and selects the motion that is considered optimal. 
+
+3.1. Selection of the guidance target by clustering 
+
+Fig. 3 shows an overview diagram of the guidance strategy for the guidance agent. At every fixed period Tperiod [s], the navigator agent clusters the observed autonomous agents using DBSCAN. When multiple clusters exist and the inter-cluster separation is sufficiently large, the navigator agent selects the largest cluster as the main cluster 
+
+Cmain (tk) and selects the cluster farthest from the main cluster as the target cluster 
+
+Ctgt (tk). It then switches to the collection mode , in which the target cluster is col-lected (merged) into the main cluster. In contrast, when only a single cluster exists, or when all clusters other than the main cluster exist only along the path toward the goal (Fig. 4), the navigator agent sets the target cluster to be the main cluster (i.e., 
+
+Cmain (tk) = Ctgt (tk)) and switches to the guidance mode , in which the swarm is steered toward the goal position. Furthermore, in the collection mode, to prevent mode chattering caused by changes in the cluster structure, we record the autonomous agents belonging to the main cluster and the target cluster at the moment when the collection mode starts. Until 10 Figure 5. Conceptual diagram of acceleration candidate generation 
+
+the collection process terminates, at each clustering cycle, we define the main cluster and the target cluster as the clusters that contain the largest number of the recorded agents, respectively. In addition, to account for the possibility that the navigator agent may temporarily lose observation of the main cluster during collection, we maintain a record of the main-cluster position so that guidance can be continued even when the main cluster is out of the sensing range. 
+
+3.2. Motion selection of the navigator agent 
+
+In this study, we select the input ad(tk) from feasible motion candidates under constraints using a DWA-inspired framework of “candidate generation–short-horizon prediction–evaluation and selection.” For the admissible accelerations, we discretize the horizontal component in terms of its heading and magnitude, and discretize the vertical component in terms of its magnitude. For each sampled acceleration a(m) 
+
+> d
+
+ob-tained from the Cartesian product of these discretizations, we also discretize the length of the accelerating segment along the predicted trajectory, denoted by Nacc ∈ R+. In this way, we generate a finite set of motion candidates over the prediction horizon 
+
+Tpred ∈ R+ [s]. Figure 5 illustrates the concept of candidate generation. For each generated motion candidate, we predict the response of the autonomous swarm over the horizon Tpred using the autonomous-agent model. As with clustering, this prediction is performed every Tperiod .Each candidate is evaluated from two perspectives: terminal evaluation and path evaluation . The evaluation consists of the following criteria. 
+
+3.2.0.1. Terminal evaluation. 
+
+• Velocity cost c(m)vel : the speed and heading of the target cluster. 11 Figure 6. Heat map of velocity evaluation 
+
+• Positioning cost c(m)pos : the relative positioning of the navigator agent with respect to the target cluster. 
+
+• Observation-maintenance cost c(m)obs : the risk of losing observation. 
+
+3.2.0.2. Path evaluation. 
+
+• Split-avoidance cost c(m)split : the risk of inducing fragmentation (splitting). We compute the weighted sum of these criteria (see (18)) and adopt the candidate that yields the best (i.e., smallest) evaluation value: 
+
+J(m) =wvel c(m)vel + wpos c(m)pos + wobs c(m)obs 
+
++ wsplit c(m)split + wclear c(m)clear + walt c(m)alt . (18) Here, wvel , w pos , w obs , w split , w clear , w alt ∈ R+ are the weights for the respective evalu-ation criteria. 
+
+3.2.1. Velocity evaluation 
+
+In the velocity evaluation, we compute the mean velocity of the target cluster at the end of the prediction horizon, denoted by ¯ v(m)s , and assign a better score when the velocity component toward the goal direction is larger. The evaluation is designed to decay as the cluster approaches the goal and to be ignored when the heading deviation exceeds a prescribed threshold. The velocity-evaluation cost is defined as 
+
+c(m)vel = − γ(m) v(m)scale η(m). (19) Here, γ(m) is a coefficient determined by the velocity heading, v(m)scale is the normalized velocity component toward the goal direction, and η(m) is a scaling factor based on the distance to the goal. Figure 6 shows a heat map of the velocity evaluation. 12 Figure 7. Heat map of position evaluation (top: far, bottom: near) 
+
+3.2.2. Position evaluation 
+
+The position evaluation assesses the positioning of the navigator agent with respect to the target cluster. The evaluation mainly depends on the angle and distance: when the navigator agent is initially close to the cluster, it favors a position behind the autonomous agents and at a short distance; when it is initially far, it emphasizes how much the navigator agent can approach the cluster over the horizon. We smoothly switch between these regimes according to the initial distance. The position-evaluation cost is defined as 
+
+c(m)pos = −
+
+
+
+(1 − gfar )R(m)align + gfar R(m)prog 
+
+
+
+. (20) Here, gfar ∈ [0 , 1] is a weight determined by the initial distance, R(m)align is the near-range positioning score, and R(m)prog is the far-range positioning score. Figure 7 shows heat maps of the position evaluation for cases with far/near initial distances. In the figure, the black dots represent autonomous agents belonging to the target cluster, and the arrows originating from them indicate the goal direction. 13 3.2.3. Observation-maintenance evaluation 
+
+The observation-maintenance evaluation penalizes a high risk of losing observation by focusing on the minimum distance between the navigator agent and the autonomous agents. Let the threshold be defined as the observation radius Rd minus a constant 
+
+βobs ∈ R+, and let d(m)  
+
+> id min
+
+be the minimum distance between the navigator agent and the autonomous agents at the end of the horizon. We define the cost as 
+
+δ(m)obs = max 
+
+
+
+0, d (m)  
+
+> id min
+
+− (Rd − βobs )
+
+
+
+,c(m)obs = δ(m)obs 
+
+
+
+1 + δ(m)obs 
+
+
+
+.
+
+(21) By including a quadratic term, this formulation penalizes more strongly when the distance exceeds the observation-maintenance threshold by a large margin, while the linear term ensures a non-negligible penalty even for minor violations. 
+
+3.2.4. Split-avoidance evaluation 
+
+When moving to the rear of the swarm, if the navigator agent traverses across the interior of the swarm, the swarm may be fragmented. Therefore, we penalize motion candidates that cross in front of the autonomous agents in the target cluster at close range. We define the split-avoidance cost per step as 
+
+c(m)split (tk+j )= 1
+
+|Ctgt |
+
+X
+
+> i∈Ctgt
+
+w(m) 
+
+> i
+
+(tk+j ) b(m) 
+
+> isplit
+
+(tk+j ) ξ(m) 
+
+> isplit
+
+(tk+j ), (22) where Ctgt is the set of agents in the target cluster and |Ctgt | is its cardinality. Here, 
+
+w(m) 
+
+> i
+
+(tk+j ) is a weight that increases as the distance between the navigator agent and autonomous agent i decreases, b(m) 
+
+> isplit
+
+(tk+j ) is a weight that increases when the navi-gator agent is located in front of autonomous agent i, and ξ(m) 
+
+> isplit
+
+(tk+j ) is a coefficient that decreases as autonomous agent i approaches the goal. Figure 8 shows a heat map of the split-avoidance evaluation. 
+
+3.2.5. Safety evaluation 
+
+The safety evaluation considers both collision risk and altitude. For collision-risk eval-uation, we penalize cases where the minimum distance to any autonomous agent be-comes smaller than 2 rsafe . For altitude evaluation, we penalize cases where the altitude of the navigator agent and/or autonomous agents falls below a prescribed threshold. As in the observation-maintenance evaluation, we employ a combination of quadratic and linear terms. Note that motion candidates that result in collision or violate the minimum-altitude constraint are excluded from evaluation. The per-step costs for col-lision risk and altitude are defined by (23) and (24), respectively, and the final costs are taken as the maximum value over the prediction horizon: 
+
+c(m)clear (tk+j ) = δ(m)clear (tk+j )
+
+
+
+1 + δ(m)clear (tk+j )
+
+
+
+, (23) 14 Figure 8. Heat map of split avoidance evaluation 
+
+c(m)alt (tk+j ) = δ(m)alt (tk+j )
+
+
+
+1 + δ(m)alt (tk+j )
+
+
+
+, (24) where δ(m)clear (tk+j ) and δ(m)alt (tk+j ) denote the violation magnitudes associated with col-lision risk and altitude, respectively. 
+
+4. Simulation Verification 
+
+To verify the effectiveness of the proposed model, we conducted numerical simulations. The simulation uses MATLAB 2025b, and the numerical solution employs a Euler method. The simulation duration was set to 200 [s], and the sampling period was set to ∆ t = 0 .06 [s]. The simulation environment and initial states of each agent are shown in Fig. 9. Blue circles represent autonomous agents, red stars represent guided agents, and black crosses denote the goal location pgoal . We consider a scenario with one navigator agent and 14 autonomous agents, where the autonomous agents were initially dispersed. The goal position pgoal is [0 , −100 , 40] T [m]. Fig. 10, Fig. 11, and Fig. 12 show the guidance snapshot, guidance trajectory, and the evolution of each agent’s distance to its target location, respectively. As shown in Fig. 11, we confirm that the navigator agent collects the separated clusters and guides the swarm toward the goal location. Furthermore, as shown in Fig. 12, navigation is completed in approximately 150 [s] despite being distributed across multiple clusters. 15 Figure 9. Initial positions of each agent 
+
+5. Conclusion 
+
+This study proposed a prediction-based shepherding model that leverages motion con-straints of autonomous agents, with the aim of application to drone-swarm guidance. By combining clustering-based target selection with DWA-inspired prediction and mo-tion selection, we developed a comprehensive guidance strategy. Numerical simulations confirmed that, even when the autonomous agents are initially dispersed, the navigator agent can guide the swarm without leaving agents behind. Future work will address the optimal design of the proposed evaluation function and its implementation on real drone swarms. 
+
+Acknowledgements 
+
+This research was supported in part by grants-in-aid for JSPS KAKENHI Grant Number JP25K17629 and JST Moonshot Research and Development Program JP-MJMS2032 (Innovation in Construction of Infrastructure with Cooperative AI and Multi Robots Adapting to Various Environments). 
+
+References 
+
+[1] Long NK, Sammut K, Sgarioto D, et al. A comprehensive review of shepherding as a bio-inspired swarm-robotics guidance approach. IEEE Transactions on Emerging Topics in Computational Intelligence. 2020;4(4):523–537. [2] Tsunoda Y, Sueoka Y, Sato Y, et al. Analysis of local-camera-based shepherding naviga-tion. Advanced Robotics. 2018;32(23):1217–1228. 
+
+16 [3] Tsunoda Y, Sueoka Y, Wada T, et al. Theoretical analysis of mobile control method for group agents motivated by sheepdog shepherding. Transactions of the Society of Instru-ment and Control Engineers. 2019;55(8):507–515. [4] Str¨ ombom D, Mann RP, Wilson AM, et al. Solving the shepherding problem: heuristics for herding autonomous, interacting agents. Journal of The Royal Society Interface. 2014; 11(100):20140719. [5] Zhang S, Lei X, Duan M, et al. A distributed outmost push approach for multirobot herding. IEEE Transactions on Robotics. 2024;40:1706–1723. [6] Fujioka A, Ogura M, Wakamiya N. Shepherding algorithm for heterogeneous flock with model-based discrimination. Advanced Robotics. 2022;0(0):1–16. [7] Reynolds CW. Flocks, herds and schools: A distributed behavioral model. In: Proceedings of the 14th Annual Conference on Computer Graphics and Interactive Techniques; New York, NY, USA. Association for Computing Machinery; 1987. p. 25–34. [8] Tsunoda Y, Sueoka Y, Wada T, et al. Design of mobile control for multiple agents inspired by sheepdog shepherding and its verification. Transactions of the Institute of Systems, Control and Information Engineers. 2021(in japanese);34(7):191–198. [9] Ester M, Kriegel HP, Sander J, et al. A density-based algorithm for discovering clusters in large spatial databases with noise. In: Proceedings of the Second International Conference on Knowledge Discovery and Data Mining. AAAI Press; 1996. p. 226–231; KDD’96. [10] Fox D, Burgard W, Thrun S. The dynamic window approach to collision avoidance. IEEE Robotics & Automation Magazine. 1997;4(1):23–33. 
+
+17 Figure 10. Snapshots of the guidance process 
+
+18 Figure 11. Simulation result (sparse initial positions) 
+
+Figure 12. Distance to goal (sparse initial positions) 
+
+19

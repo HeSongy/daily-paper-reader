@@ -1,0 +1,102 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.17189v1/fig-001.webp",
+      "caption": "Figure 5. Conceptual diagram of acceleration candidate generation",
+      "page": 11,
+      "index": 1,
+      "width": 550,
+      "height": 460
+    },
+    {
+      "url": "assets/figures/arxiv/2604.17189v1/fig-002.webp",
+      "caption": "Figure 8. Heat map of split avoidance evaluation",
+      "page": 15,
+      "index": 2,
+      "width": 681,
+      "height": 560
+    },
+    {
+      "url": "assets/figures/arxiv/2604.17189v1/fig-003.webp",
+      "caption": "Figure 1. Conceptual diagram of the proposed approach. The navigator agent generates candidate motions that satisfy its motion constraints, predicts the swarm behavior under each candidate motion using an internal model of the autonomous agents, evaluates the candidates based on criteria such as progress toward the goal and safety margins, and selects the optimal motion to achieve safe and efficient guidance.",
+      "page": 2,
+      "index": 3,
+      "width": 761,
+      "height": 502
+    },
+    {
+      "url": "assets/figures/arxiv/2604.17189v1/fig-004.webp",
+      "caption": "Figure 4. Conceptual diagram of ignore region",
+      "page": 10,
+      "index": 4,
+      "width": 674,
+      "height": 560
+    },
+    {
+      "url": "assets/figures/arxiv/2604.17189v1/fig-005.webp",
+      "caption": "Figure 10. Snapshots of the guidance process",
+      "page": 18,
+      "index": 5,
+      "width": 715,
+      "height": 1069
+    },
+    {
+      "url": "assets/figures/arxiv/2604.17189v1/fig-006.webp",
+      "caption": "Figure 7. Heat map of position evaluation (top: far, bottom: near)",
+      "page": 13,
+      "index": 6,
+      "width": 427,
+      "height": 698
+    },
+    {
+      "url": "assets/figures/arxiv/2604.17189v1/fig-007.webp",
+      "caption": "Figure 12. Distance to goal (sparse initial positions)",
+      "page": 19,
+      "index": 7,
+      "width": 654,
+      "height": 300
+    },
+    {
+      "url": "assets/figures/arxiv/2604.17189v1/fig-008.webp",
+      "caption": "Figure 11. Simulation result (sparse initial positions)",
+      "page": 19,
+      "index": 8,
+      "width": 756,
+      "height": 362
+    },
+    {
+      "url": "assets/figures/arxiv/2604.17189v1/fig-009.webp",
+      "caption": "Figure 6. Heat map of velocity evaluation",
+      "page": 12,
+      "index": 9,
+      "width": 704,
+      "height": 324
+    },
+    {
+      "url": "assets/figures/arxiv/2604.17189v1/fig-010.webp",
+      "caption": "Figure 3. Conceptual diagram of collecting and driving",
+      "page": 9,
+      "index": 10,
+      "width": 765,
+      "height": 456
+    },
+    {
+      "url": "assets/figures/arxiv/2604.17189v1/fig-011.webp",
+      "caption": "Figure 2. Conceptual diagram of the autonomous agent model inspired by the Boids model",
+      "page": 5,
+      "index": 11,
+      "width": 577,
+      "height": 533
+    },
+    {
+      "url": "assets/figures/arxiv/2604.17189v1/fig-012.webp",
+      "caption": "Figure 9. Initial positions of each agent",
+      "page": 16,
+      "index": 12,
+      "width": 814,
+      "height": 494
+    }
+  ]
+}
