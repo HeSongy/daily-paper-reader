@@ -1,0 +1,46 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.20349v1/fig-001.webp",
+      "caption": "FIG. 5. Cumulative probability of absolute ranging residuals for UWB, WiFi, and BLE.",
+      "page": 6,
+      "index": 1,
+      "width": 496,
+      "height": 423
+    },
+    {
+      "url": "assets/figures/arxiv/2604.20349v1/fig-002.webp",
+      "caption": "FIG. 1. The measurement plate equipped with all sensors. The platform is used in static mode: it is moved manually between reference points and remains stationary with a fixed orientation for 3 min at each point while all sensors record in parallel. No data is collected during transit.",
+      "page": 3,
+      "index": 2,
+      "width": 516,
+      "height": 334
+    },
+    {
+      "url": "assets/figures/arxiv/2604.20349v1/fig-003.webp",
+      "caption": "FIG. 2. 2D locations of measurement points inside and outside the hall shown on a geo-referenced aerial image (North-up). The arrows indicate the orientation of the local Cartesian coordinate frame. Base imagery ©2025 Google Earth. [27]",
+      "page": 3,
+      "index": 3,
+      "width": 517,
+      "height": 531
+    },
+    {
+      "url": "assets/figures/arxiv/2604.20349v1/fig-004.webp",
+      "caption": "FIG. 3. Layout map showing measurement grid (A1-A13, B1-B6, T1-T6) with WiFi, UWB, and BLE anchor points overlaid on test site in the local Cartesian coordinate frame. Note that the axis orientation differs from Fig. 2 as the two figures represent different coordinate reference systems (see Table 2).",
+      "page": 4,
+      "index": 4,
+      "width": 380,
+      "height": 496
+    },
+    {
+      "url": "assets/figures/arxiv/2604.20349v1/fig-005.webp",
+      "caption": "FIG. 4. Processing workflow from measurements to processed output.",
+      "page": 5,
+      "index": 5,
+      "width": 516,
+      "height": 506
+    }
+  ]
+}

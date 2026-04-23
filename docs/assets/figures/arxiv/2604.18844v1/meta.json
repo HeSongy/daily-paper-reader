@@ -1,0 +1,254 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-001.webp",
+      "caption": "Table 1: Summary of key parameters of pulsars.",
+      "page": 11,
+      "index": 1,
+      "width": 1215,
+      "height": 446
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-002.webp",
+      "caption": "Figure 18: Growth of pulsar phase prediction error due to timing model extrapolation.",
+      "page": 43,
+      "index": 2,
+      "width": 806,
+      "height": 560
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-003.webp",
+      "caption": "Figure 7: Required observation duration as a function of instrument effective area to achieve 5 km range accuracy, for different pulsars. The Crab pulsar shows the best performance due to its high photon flux.",
+      "page": 25,
+      "index": 3,
+      "width": 814,
+      "height": 446
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-004.webp",
+      "caption": "Figure 14: Solar constraint effect in 3D. The pulsar remains continuously visible if it lies sufficiently far above or below the orbital plane.",
+      "page": 38,
+      "index": 4,
+      "width": 570,
+      "height": 429
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-005.webp",
+      "caption": "Figure 23: LEO circular orbit with an altitude of 600 km and an orbital period of about 1.6 hours.",
+      "page": 53,
+      "index": 5,
+      "width": 490,
+      "height": 450
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-006.webp",
+      "caption": "Figure 9: Navigation range accuracy as a function of observation duration for an instrument effective area of 200 cm2. Results are obtained using the NICER data.",
+      "page": 29,
+      "index": 6,
+      "width": 814,
+      "height": 441
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-007.webp",
+      "caption": "Figure 15: Pulsar visibility during an Earth-Jupiter transfer, limited by the solar constraint (FOV = 40◦, start date = 01 Oct 2025). Grey regions indicate times when the pulsar is blocked by the Sun.",
+      "page": 39,
+      "index": 7,
+      "width": 814,
+      "height": 508
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-008.webp",
+      "caption": "Figure 5: Navigation range accuracy as a function of observation duration for an instrument effective area of 200 cm2. Results are obtained using the analytical SNR formulation.",
+      "page": 22,
+      "index": 8,
+      "width": 814,
+      "height": 435
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-009.webp",
+      "caption": "Figure 11: RTN-component position estimation errors along an Earth-Jupiter transfer trajectory when navigating with a single pulsar. The x-axis indicates the spacecraft’s observing position along the trajectory, represented by the time since Earth departure.",
+      "page": 34,
+      "index": 9,
+      "width": 814,
+      "height": 650
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-010.webp",
+      "caption": "Figure 1: Spatial distribution of the 14 pulsars included in the catalogue, represented in Galactic coordinates. The two young pulsars, Crab and B1509-58, are indicated by star symbols, while binary pulsars are denoted by black circles. The colour scale represents the maximum achievable navigation accuracy (in km) from a single observation of each pulsar using a detector with an effective area of 200 cm 2. For further details, see the observation-based measurement approach described in Section 3.2.",
+      "page": 10,
+      "index": 10,
+      "width": 803,
+      "height": 520
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-011.webp",
+      "caption": "Table 5: Launch date and the initial orbital conditions for a LEO satellite.",
+      "page": 54,
+      "index": 11,
+      "width": 606,
+      "height": 211
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-012.webp",
+      "caption": "Figure 17: Pulsar visibility due to the Earth shadow for a LEO satellite at an altitude of 600 km (FOV = 40◦). Grey regions indicate times when the pulsar is blocked by the Earth.",
+      "page": 42,
+      "index": 12,
+      "width": 814,
+      "height": 512
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-013.webp",
+      "caption": "Figure 8: Phase accuracy as a function of observation duration for an instrument effective area of 200 cm2. Results are obtained using the NICER data.",
+      "page": 28,
+      "index": 13,
+      "width": 814,
+      "height": 437
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-014.webp",
+      "caption": "Figure 24: Navigation filter performance in the RTN frame for the LEO satellite when pulsar combination #1 is used (Crab, B1937+21 and J0030+0451). The filter is run for 5 hours.",
+      "page": 55,
+      "index": 14,
+      "width": 806,
+      "height": 357
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-015.webp",
+      "caption": "Figure 25: Navigation filter performance in the RTN frame for the LEO satellite when pulsar combination #2 is used (B1937+21, J0030+0451, J0437-4715). The filter is run for 5 hours.",
+      "page": 55,
+      "index": 15,
+      "width": 806,
+      "height": 355
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-016.webp",
+      "caption": "Figure 20: Navigation filter performance in the spacecraft RTN frame for a segment of the Earth-Jupiter transfer orbit when pulsar combination #1 is used (Crab, J0030+0451 and J0437-4715). The filter starts to diverge after about 20 days, due to the large extrapolation error growth of the Crab’s timing model.",
+      "page": 50,
+      "index": 16,
+      "width": 806,
+      "height": 357
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-017.webp",
+      "caption": "Figure 12: RTN-component position estimation errors along a LEO satellite orbit at an altitude of 600 km when navigating with a single pulsar. The x-axis indicates the satellite’s observing position along its orbit, represented by its true anomaly θ.",
+      "page": 36,
+      "index": 17,
+      "width": 814,
+      "height": 650
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-018.webp",
+      "caption": "Figure 19: Earth-Jupiter interplanetary transfer orbit with a transfer duration of about three years.",
+      "page": 49,
+      "index": 18,
+      "width": 490,
+      "height": 429
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-019.webp",
+      "caption": "Figure 3: Geometrical outline of the XNAV scheme.",
+      "page": 19,
+      "index": 19,
+      "width": 570,
+      "height": 531
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-020.webp",
+      "caption": "Figure 22: Navigation filter performance in the spacecraft RTN frame for a segment of the Earth-Jupiter transfer orbit when pulsar combination #3 is used (J1012+5307, J0030+0451, J0437-4715). The filter remains converged throughout the 365-day simulation.",
+      "page": 51,
+      "index": 20,
+      "width": 806,
+      "height": 355
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-021.webp",
+      "caption": "Figure 21: Navigation filter performance in the spacecraft RTN frame for a segment of the Earth-Jupiter transfer orbit when pulsar combination #2 is used (J2124-3358, J0030+0451, J0437-4715). The filter remains converged throughout the 365-day simulation.",
+      "page": 51,
+      "index": 21,
+      "width": 806,
+      "height": 357
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-022.webp",
+      "caption": "Figure 2: Pulse profiles shown over two rotation cycles of the selected 14 pulsars forming the catalogue. The black and shaded grey are the NICER folded profiles and errors, while the blue curves are the Gaussian-composite profile templates.",
+      "page": 17,
+      "index": 22,
+      "width": 814,
+      "height": 452
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-023.webp",
+      "caption": "Figure 16: Pulsar visibility under the Earth shadow effect illustrated in 2D.",
+      "page": 41,
+      "index": 23,
+      "width": 814,
+      "height": 521
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-024.webp",
+      "caption": "Figure 26: Navigation filter performance in the RTN frame for the LEO satellite when pulsar combination #3 is used (B1937+21, J0030+0451, J1012+5307). The filter is run for 5 hours.",
+      "page": 56,
+      "index": 24,
+      "width": 806,
+      "height": 357
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-025.webp",
+      "caption": "Table 6: Navigation filter performance (3σ errors) for the LEO satellite in the satellite RTN frame when different pulsar combinations are used.",
+      "page": 56,
+      "index": 25,
+      "width": 810,
+      "height": 232
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-026.webp",
+      "caption": "Figure 6: Contours of navigation range accuracy as a function of instrument effective area and observation duration, shown for three representative pulsars.",
+      "page": 24,
+      "index": 26,
+      "width": 410,
+      "height": 1037
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-027.webp",
+      "caption": "Figure 13: Pulsar visibility under the solar constraint effect in 2D. A pulsar becomes temporarily unobservable when the spacecraft enters the solar constraint cone.",
+      "page": 37,
+      "index": 27,
+      "width": 570,
+      "height": 462
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-028.webp",
+      "caption": "Figure 10: Comparison of analytical range accuracy (y-axis) and observation-derived range accuracy (x-axis) for each pulsar. Points lying above the y = x line indicate pulsars where the theoretical estimate over-predicts the observation-derived values, while points below the line indicate under-prediction.",
+      "page": 31,
+      "index": 28,
+      "width": 814,
+      "height": 571
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-029.webp",
+      "caption": "Table 4: Navigation filter performance (3σ errors) for the Earth-Jupiter interplanetary spacecraft in the spacecraft RTN frame when different pulsar combinations are used.",
+      "page": 52,
+      "index": 29,
+      "width": 810,
+      "height": 227
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-030.webp",
+      "caption": "Figure 4: Flowchart of signal processing for XNAV.",
+      "page": 20,
+      "index": 30,
+      "width": 652,
+      "height": 619
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18844v1/fig-031.webp",
+      "caption": "Table 3: Launch and arrival dates for the Earth-Jupiter transfer orbit, along with the spacecraft initial orbital conditions for simulation.",
+      "page": 48,
+      "index": 31,
+      "width": 709,
+      "height": 387
+    }
+  ]
+}

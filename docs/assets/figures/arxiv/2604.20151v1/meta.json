@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.20151v1/fig-001.webp",
+      "caption": "Fig. 1. In vitro 3D vascular phantom used, with first phase of thrombectomy (navigation from the femoral artery to the internal carotid artery (ICA)) navigation tasks labeled and displayed. A1: Common iliac artery to superior aspect of descending aorta, A2L: superior aspect of descending aorta to left common carotid artery (CCA), a superhuman task when using a straight catheter tip. A2R: superior aspect of descending aorta to right CCA, A3L: left CCA to left ICA, A3R: right CCA to right ICA.",
+      "page": 2,
+      "index": 1,
+      "width": 437,
+      "height": 502
+    },
+    {
+      "url": "assets/figures/arxiv/2604.20151v1/fig-002.webp",
+      "caption": "Fig. 4. Examples of in vitro failure modes with areas highlighted by red circle. (a) Wrong branch catheterization during A2L - the wire has entered the left subclavian artery, (b) entering the LCCA during A2L but not utilizing the catheter effectively to reach the target further up the branch, (c) device leaving the phantom through the origin of the ascending aorta during A2R, and (d) unable to recover from device coiling during A3R.",
+      "page": 5,
+      "index": 2,
+      "width": 412,
+      "height": 412
+    },
+    {
+      "url": "assets/figures/arxiv/2604.20151v1/fig-003.webp",
+      "caption": "TABLE I IN SILICO WORLD MODEL PERFORMANCE AND GUIDEWIRE TIP SAFETY METRICS ON THE HOLD-OUT SET. ARROWS (↑/↓) INDICATE WHETHER HIGHER OR LOWER VALUES ARE PREFERRED, RESPECTIVELY. TIP FORCE AND SPEED ARE REPORTED AS MEAN AND MAXIMUM VALUES, AVERAGED OVER ALL EVALUATION EPISODES FOR A GIVEN TASK. ASTERISKS DENOTE SIGNIFICANT DIFFERENCES BETWEEN TD-MPC2 AND SAC (* p < 0.05, ** p < 0.01, *** p < 0.001). MEAN ROW (BOTTOM) SHOWS AVERAGES ACROSS ALL TASKS (n = 250).",
+      "page": 5,
+      "index": 3,
+      "width": 1032,
+      "height": 361
+    },
+    {
+      "url": "assets/figures/arxiv/2604.20151v1/fig-004.webp",
+      "caption": "TABLE II IN VITRO WORLD MODEL PERFORMANCE. ARROWS (↑/↓) INDICATE WHETHER HIGHER OR LOWER VALUES ARE PREFERRED, RESPECTIVELY. ASTERISKS DENOTE SIGNIFICANT DIFFERENCES BETWEEN TD-MPC2 AND SAC (* p < 0.05, ** p < 0.01, *** p < 0.001). MEAN ROW (BOTTOM) SHOWS AVERAGES ACROSS ALL TASKS (n = 25).",
+      "page": 5,
+      "index": 4,
+      "width": 496,
+      "height": 312
+    }
+  ]
+}

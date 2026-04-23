@@ -1,0 +1,742 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-04-23T20:26:13.189293+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 7,
+    "deep_cap": 6,
+    "deep_selected": 6,
+    "quick_candidates": 12,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2604.14732v2",
+      "source": "arxiv",
+      "title": "World-Value-Action Model: Implicit Planning for Vision-Language-Action Systems",
+      "abstract": "Vision-Language-Action (VLA) models have emerged as a promising paradigm for building embodied agents that ground perception and language into action. However, most existing approaches rely on direct action prediction, lacking the ability to reason over long-horizon trajectories and evaluate their consequences, which limits performance in complex decision-making tasks. In this work, we introduce World-Value-Action (WAV) model, a unified framework that enables implicit planning in VLA systems. Rather than performing explicit trajectory optimization, WAV model learn a structured latent representation of future trajectories conditioned on visual observations and language instructions. A learned world model predicts future states, while a trajectory value function evaluates their long-horizon utility. Action generation is then formulated as inference in this latent space, where the model progressively concentrates probability mass on high-value and dynamically feasible trajectories. We provide a theoretical perspective showing that planning directly in action space suffers from an exponential decay in the probability of feasible trajectories as the horizon increases. In contrast, latent-space inference reshapes the search distribution toward feasible regions, enabling efficient long-horizon decision making. Extensive simulations and real-world experiments demonstrate that the WAV model consistently outperforms state-of-the-art methods, achieving significant improvements in task success rate, generalization ability, and robustness, especially in long-horizon and compositional scenarios. Code is available at https://github.com/Win-commit/WAV.",
+      "authors": [
+        "Runze Li",
+        "Hongyin Zhang",
+        "Junxi Jin",
+        "Qixin Zeng",
+        "Zifeng Zhuang",
+        "Yiqi Tang",
+        "Shangke Lyu",
+        "Donglin Wang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.LG"
+      ],
+      "published": "2026-04-16T07:46:05+00:00",
+      "link": "https://arxiv.org/pdf/2604.14732v2",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "structured latent representation of future trajectories and world model for planning",
+      "llm_evidence_cn": "未来轨迹的结构化隐空间表示与用于规划的世界模型",
+      "llm_evidence": "未来轨迹的结构化隐空间表示与用于规划的世界模型",
+      "canonical_evidence": "未来轨迹的结构化隐空间表示与用于规划的世界模型",
+      "llm_tldr_en": "Proposes a World-Value-Action model using latent representations for implicit planning in embodied agents.",
+      "llm_tldr_cn": "提出了一种利用隐空间表示进行具身智能体隐式规划的世界-价值-动作模型。",
+      "llm_tldr": "提出了一种利用隐空间表示进行具身智能体隐式规划的世界-价值-动作模型。",
+      "llm_tags": [
+        "query:navwm:composite"
+      ],
+      "matched_query_tag": "query:navwm:composite",
+      "matched_query_text": "Papers central to 隐空间、导航与世界模型相关论文检索, especially work that connects or combines: 研究隐空间表示及其在智能系统中的作用; 智能体在复杂环境中的导航策略与学习方法; 世界模型的结构与在自主系统中的应用; 探索表示学习在构建世界模型与导航中的运用; 基于隐空间表示的规划与决策模型; 空间表示与认知映射的算法及模型; 检索关于隐空间表示在世界模型和导航中的研究论文; 寻找利用世界模型进行强化学习或规划的最新研究; 探索智能体如何利用隐空间进行导航与环境理解.",
+      "matched_requirement_id": "req-composite-navwm",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.18486v1",
+      "source": "arxiv",
+      "title": "OneVL: One-Step Latent Reasoning and Planning with Vision-Language Explanation",
+      "abstract": "Chain-of-Thought (CoT) reasoning has become a powerful driver of trajectory prediction in VLA-based autonomous driving, yet its autoregressive nature imposes a latency cost that is prohibitive for real-time deployment. Latent CoT methods attempt to close this gap by compressing reasoning into continuous hidden states, but consistently fall short of their explicit counterparts. We suggest that this is due to purely linguistic latent representations compressing a symbolic abstraction of the world, rather than the causal dynamics that actually govern driving. Thus, we present OneVL (One-step latent reasoning and planning with Vision-Language explanations), a unified VLA and World Model framework that routes reasoning through compact latent tokens supervised by dual auxiliary decoders. Alongside a language decoder that reconstructs text CoT, we introduce a visual world model decoder that predicts future-frame tokens, forcing the latent space to internalize the causal dynamics of road geometry, agent motion, and environmental change. A three-stage training pipeline progressively aligns these latents with trajectory, language, and visual objectives, ensuring stable joint optimization. At inference, the auxiliary decoders are discarded and all latent tokens are prefilled in a single parallel pass, matching the speed of answer-only prediction. Across four benchmarks, OneVL becomes the first latent CoT method to surpass explicit CoT, delivering state-of-the-art accuracy at answer-only latency, and providing direct evidence that tighter compression, when guided in both language and world-model supervision, produces more generalizable representations than verbose token-by-token reasoning. Project Page: https://xiaomi-embodied-intelligence.github.io/OneVL",
+      "authors": [
+        "Jinghui Lu",
+        "Jiayi Guan",
+        "Zhijian Huang",
+        "Jinlong Li",
+        "Guang Li",
+        "Lingdong Kong",
+        "Yingyan Li",
+        "Han Wang",
+        "Shaoqing Xu",
+        "Yuechen Luo",
+        "Fang Li",
+        "Chenxu Dang",
+        "Junli Wang",
+        "Tao Xu",
+        "Jing Wu",
+        "Jianhua Wu",
+        "Xiaoshuai Hao",
+        "Wen Zhang",
+        "Tianyi Jiang",
+        "Lingfeng Zhang",
+        "Lei Zhou",
+        "Yingbo Tang",
+        "Jie Wang",
+        "Yinfeng Gao",
+        "Xizhou Bu",
+        "Haochen Tian",
+        "Yihang Qiu",
+        "Feiyang Jia",
+        "Lin Liu",
+        "Yigu Ge",
+        "Hanbing Li",
+        "Yuannan Shen",
+        "Jianwei Cui",
+        "Hongwei Xie",
+        "Bing Wang",
+        "Haiyang Sun",
+        "Jingwei Zhao",
+        "Jiahui Huang",
+        "Pei Liu",
+        "Zeyu Zhu",
+        "Yuncheng Jiang",
+        "Zibin Guo",
+        "Chuhong Gong",
+        "Hanchao Leng",
+        "Kun Ma",
+        "Naiyang Wang",
+        "Guang Chen",
+        "Kuiyuan Yang",
+        "Hangjun Ye",
+        "Long Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL",
+        "cs.RO"
+      ],
+      "published": "2026-04-20T16:37:22+00:00",
+      "link": "https://arxiv.org/pdf/2604.18486v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "unified VLA and World Model framework using latent tokens for planning",
+      "llm_evidence_cn": "统一的VLA与世界模型框架，利用隐空间标记进行规划",
+      "llm_evidence": "统一的VLA与世界模型框架，利用隐空间标记进行规划",
+      "canonical_evidence": "统一的VLA与世界模型框架，利用隐空间标记进行规划",
+      "llm_tldr_en": "OneVL integrates world models and latent reasoning for efficient, real-time autonomous driving planning.",
+      "llm_tldr_cn": "OneVL结合世界模型与隐空间推理，实现高效实时的自动驾驶规划。",
+      "llm_tldr": "OneVL结合世界模型与隐空间推理，实现高效实时的自动驾驶规划。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.19683v1",
+      "source": "arxiv",
+      "title": "Mask World Model: Predicting What Matters for Robust Robot Policy Learning",
+      "abstract": "World models derived from large-scale video generative pre-training have emerged as a promising paradigm for generalist robot policy learning. However, standard approaches often focus on high-fidelity RGB video prediction, this can result in overfitting to irrelevant factors, such as dynamic backgrounds and illumination changes. These distractions reduce the model's ability to generalize, ultimately leading to unreliable and fragile control policies. To address this, we introduce the Mask World Model (MWM), which leverages video diffusion architectures to predict the evolution of semantic masks instead of pixels. This shift imposes a geometric information bottleneck, forcing the model to capture essential physical dynamics and contact relations while filtering out visual noise. We seamlessly integrate this mask dynamics backbone with a diffusion-based policy head to enable robust end-to-end control. Extensive evaluations demonstrate the superiority of MWM on the LIBERO and RLBench simulation benchmarks, significantly outperforming the state-of-the-art RGB-based world models. Furthermore, real-world experiments and robustness evaluation (via random token pruning) reveal that MWM exhibits superior generalization capabilities and robust resilience to texture information loss.",
+      "authors": [
+        "Yunfan Lou",
+        "Xiaowei Chi",
+        "Xiaojie Zhang",
+        "Zezhong Qian",
+        "Chengxuan Li",
+        "Rongyu Zhang",
+        "Yaoxu Lyu",
+        "Guoyu Song",
+        "Chuyao Fu",
+        "Haoxuan Xu",
+        "Pengwei Wang",
+        "Shanghang Zhang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-04-21T17:05:37+00:00",
+      "link": "https://arxiv.org/pdf/2604.19683v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "World models for robot policy learning using semantic masks to capture physical dynamics",
+      "llm_evidence_cn": "用于机器人策略学习的世界模型，通过语义掩码捕捉物理动力学",
+      "llm_evidence": "用于机器人策略学习的世界模型，通过语义掩码捕捉物理动力学",
+      "canonical_evidence": "用于机器人策略学习的世界模型，通过语义掩码捕捉物理动力学",
+      "llm_tldr_en": "Introduces Mask World Model (MWM) to improve robot policy learning by predicting semantic masks instead of pixels.",
+      "llm_tldr_cn": "引入掩码世界模型（MWM），通过预测语义掩码而非像素来提升机器人策略学习的鲁棒性。",
+      "llm_tldr": "引入掩码世界模型（MWM），通过预测语义掩码而非像素来提升机器人策略学习的鲁棒性。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.19683v2",
+      "source": "arxiv",
+      "title": "Mask World Model: Predicting What Matters for Robust Robot Policy Learning",
+      "abstract": "World models derived from large-scale video generative pre-training have emerged as a promising paradigm for generalist robot policy learning. However, standard approaches often focus on high-fidelity RGB video prediction, this can result in overfitting to irrelevant factors, such as dynamic backgrounds and illumination changes. These distractions reduce the model's ability to generalize, ultimately leading to unreliable and fragile control policies. To address this, we introduce the Mask World Model (MWM), which leverages video diffusion architectures to predict the evolution of semantic masks instead of pixels. This shift imposes a geometric information bottleneck, forcing the model to capture essential physical dynamics and contact relations while filtering out visual noise. We seamlessly integrate this mask dynamics backbone with a diffusion-based policy head to enable robust end-to-end control. Extensive evaluations demonstrate the superiority of MWM on the LIBERO and RLBench simulation benchmarks, significantly outperforming the state-of-the-art RGB-based world models. Furthermore, real-world experiments and robustness evaluation (via random token pruning) reveal that MWM exhibits superior generalization capabilities and robust resilience to texture information loss.",
+      "authors": [
+        "Yunfan Lou",
+        "Xiaowei Chi",
+        "Xiaojie Zhang",
+        "Zezhong Qian",
+        "Chengxuan Li",
+        "Rongyu Zhang",
+        "Yaoxu Lyu",
+        "Guoyu Song",
+        "Chuyao Fu",
+        "Haoxuan Xu",
+        "Pengwei Wang",
+        "Shanghang Zhang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-04-21T17:05:37+00:00",
+      "link": "https://arxiv.org/pdf/2604.19683v2",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "world model for robust robot policy learning",
+      "llm_evidence_cn": "用于鲁棒机器人策略学习的世界模型",
+      "llm_evidence": "用于鲁棒机器人策略学习的世界模型",
+      "canonical_evidence": "用于鲁棒机器人策略学习的世界模型",
+      "llm_tldr_en": "Introduces Mask World Model to capture essential physical dynamics by predicting semantic masks.",
+      "llm_tldr_cn": "引入掩码世界模型（MWM），通过预测语义掩码来捕捉核心物理动力学。",
+      "llm_tldr": "引入掩码世界模型（MWM），通过预测语义掩码来捕捉核心物理动力学。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.20151v1",
+      "source": "arxiv",
+      "title": "Toward Safe Autonomous Robotic Endovascular Interventions using World Models",
+      "abstract": "Autonomous mechanical thrombectomy (MT) presents substantial challenges due to highly variable vascular geometries and the requirements for accurate, real-time control. While reinforcement learning (RL) has emerged as a promising paradigm for the automation of endovascular navigation, existing approaches often show limited robustness when faced with diverse patient anatomies or extended navigation horizons. In this work, we investigate a world-model-based framework for autonomous endovascular navigation built on TD-MPC2, a model-based RL method that integrates planning and learned dynamics. We evaluate a TD-MPC2 agent trained on multiple navigation tasks across hold out patient-specific vasculatures and benchmark its performance against the state-of-the-art Soft Actor-Critic (SAC) algorithm agent. Both approaches are further validated in vitro using patient-specific vascular phantoms under fluoroscopic guidance. In simulation, TD-MPC2 demonstrates a significantly higher mean success rate than SAC (58% vs. 36%, p < 0.001), and mean tip contact forces of 0.15 N, well below the proposed 1.5 N vessel rupture threshold. Mean success rates for TD-MPC2 (68%) were comparable to SAC (60%) in vitro, but TD-MPC2 achieved superior path ratios (p = 0.017) at the cost of longer procedure times (p < 0.001). Together, these results provide the first demonstration of autonomous MT navigation validated across both hold out in silico data and fluoroscopy-guided in vitro experiments, highlighting the promise of world models for safe and generalizable AI-assisted endovascular interventions.",
+      "authors": [
+        "Harry Robertshaw",
+        "Nikola Fischer",
+        "Han-Ru Wu",
+        "Andrea Walker Perez",
+        "Weiyuan Deng",
+        "Benjamin Jackson",
+        "Christos Bergeles",
+        "Alejandro Granados",
+        "Thomas C Booth"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.LG"
+      ],
+      "published": "2026-04-22T03:32:18+00:00",
+      "link": "https://arxiv.org/pdf/2604.20151v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "world-model-based framework for autonomous navigation using model-based RL",
+      "llm_evidence_cn": "基于世界模型和模型强化学习的自主导航框架",
+      "llm_evidence": "基于世界模型和模型强化学习的自主导航框架",
+      "canonical_evidence": "基于世界模型和模型强化学习的自主导航框架",
+      "llm_tldr_en": "Investigates a world-model-based RL framework for safe autonomous navigation in robotic medical interventions.",
+      "llm_tldr_cn": "研究基于世界模型的强化学习框架，用于机器人医疗干预中的安全自主导航。",
+      "llm_tldr": "研究基于世界模型的强化学习框架，用于机器人医疗干预中的安全自主导航。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "寻找利用世界模型进行强化学习或规划的最新研究",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.19536v1",
+      "source": "arxiv",
+      "title": "LiveVLN: Breaking the Stop-and-Go Loop in Vision-Language Navigation",
+      "abstract": "Recent navigation systems achieve strong benchmark results, yet real-world deployment often remains visibly stop-and-go. This bottleneck arises because the sense-inference-execution loop is still blocking: after each new observation, the controller must wait for sensing, transmission, and inference before motion can continue. Reducing action-generation cost alone therefore does not remove redundant waiting. To address this issue, we present LiveVLN, a training-free framework for more continuous embodied navigation by augmenting pretrained VLM navigators with multi-step action continuation. Instead of pausing for each full sense-and-inference round, LiveVLN overlaps execution with the processing of newly arrived observations, allowing refreshed future actions to be handed off before the current executable prefix is exhausted. This design keeps actions continuously available during motion, reducing idle waiting and enabling smoother online execution. The framework operates at runtime and can be integrated with compatible pretrained VLM navigators. Across R2R and RxR, LiveVLN preserves benchmark performance while reducing waiting time and improving action availability. In real-world deployments, it cuts average episode waiting time by up to $77.7\\%$ and shortens wall-clock episode time by $12.6\\%$ on StreamVLN and $19.6\\%$ on NaVIDA, yielding more coherent execution during deployment. Code is available at https://github.com/NIneeeeeem/LiveVLN.",
+      "authors": [
+        "Xiangchen Wang",
+        "Weiye Zhu",
+        "Teng Wang",
+        "TianTian Geng",
+        "Zekai Zhang",
+        "Zhiyuan Qi",
+        "Jinyu Yang",
+        "Feng Zheng"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-04-21T14:55:51+00:00",
+      "link": "https://arxiv.org/pdf/2604.19536v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "continuous embodied navigation framework",
+      "llm_evidence_cn": "连续具身导航框架",
+      "llm_evidence": "连续具身导航框架",
+      "canonical_evidence": "连续具身导航框架",
+      "llm_tldr_en": "Introduces LiveVLN to enable continuous vision-language navigation by overlapping execution with inference.",
+      "llm_tldr_cn": "引入LiveVLN框架，通过执行与推理重叠实现更连续的视觉语言导航。",
+      "llm_tldr": "引入LiveVLN框架，通过执行与推理重叠实现更连续的视觉语言导航。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2604.20289v1",
+      "source": "arxiv",
+      "title": "X-Cache: Cross-Chunk Block Caching for Few-Step Autoregressive World Models Inference",
+      "abstract": "Real-time world simulation is becoming a key infrastructure for scalable evaluation and online reinforcement learning of autonomous driving systems. Recent driving world models built on autoregressive video diffusion achieve high-fidelity, controllable multi-camera generation, but their inference cost remains a bottleneck for interactive deployment. However, existing diffusion caching methods are designed for offline video generation with multiple denoising steps, and do not transfer to this scenario. Few-step distilled models have no inter-step redundancy left for these methods to reuse, and sequence-level parallelization techniques require future conditioning that closed-loop interactive generation does not provide. We present X-Cache, a training-free acceleration method that caches along a different axis: across consecutive generation chunks rather than across denoising steps. X-Cache maintains per-block residual caches that persist across chunks, and applies a dual-metric gating mechanism over a structure- and action-aware block-input fingerprint to independently decide whether each block should recompute or reuse its cached residual. To prevent approximation errors from permanently contaminating the autoregressive KV cache, X-Cache identifies KV update chunks (the forward passes that write clean keys and values into the persistent cache) and unconditionally forces full computation on these chunks, cutting off error propagation. We implement X-Cache on X-world, a production multi-camera action-conditioned driving world model built on multi-block causal DiT with few-step denoising and rolling KV cache. X-Cache achieves 71% block skip rate with 2.6x wall-clock speedup while maintaining minimum degradation.",
+      "authors": [
+        "Yixiao Zeng",
+        "Jianlei Zheng",
+        "Chaoda Zheng",
+        "Shijia Chen",
+        "Mingdian Liu",
+        "Tongping Liu",
+        "Tengwei Luo",
+        "Yu Zhang",
+        "Boyang Wang",
+        "Linkun Xu",
+        "Siyuan Lu",
+        "Bo Tian",
+        "Xianming Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-04-22T07:36:59+00:00",
+      "link": "https://arxiv.org/pdf/2604.20289v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Real-time world simulation for autonomous driving systems and reinforcement learning",
+      "llm_evidence_cn": "用于自动驾驶系统和强化学习的实时世界模拟",
+      "llm_evidence": "用于自动驾驶系统和强化学习的实时世界模拟",
+      "canonical_evidence": "用于自动驾驶系统和强化学习的实时世界模拟",
+      "llm_tldr_en": "Presents X-Cache to accelerate inference for autoregressive world models in autonomous driving.",
+      "llm_tldr_cn": "提出X-Cache以加速自动驾驶中自回归世界模型的推理过程。",
+      "llm_tldr": "提出X-Cache以加速自动驾驶中自回归世界模型的推理过程。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "寻找利用世界模型进行强化学习或规划的最新研究",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2604.17677v1",
+      "source": "arxiv",
+      "title": "Semantic Entanglement in Vector-Based Retrieval: A Formal Framework and Context-Conditioned Disentanglement Pipeline for Agentic RAG Systems",
+      "abstract": "Retrieval-Augmented Generation (RAG) systems depend on the geometric properties of vector representations to retrieve contextually appropriate evidence. When source documents interleave multiple topics within contiguous text, standard vectorization produces embedding spaces in which semantically distinct content occupies overlapping neighborhoods. We term this condition semantic entanglement. We formalize entanglement as a model-relative measure of cross-topic overlap in embedding space and define an Entanglement Index (EI) as a quantitative proxy. We argue that higher EI constrains attainable Top-K retrieval precision under cosine similarity retrieval. To address this, we introduce the Semantic Disentanglement Pipeline (SDP), a four-stage preprocessing framework that restructures documents prior to embedding. We further propose context-conditioned preprocessing, in which document structure is shaped by patterns of operational use, and a continuous feedback mechanism that adapts document structure based on agent performance. We evaluate SDP on a real-world enterprise healthcare knowledge base comprising over 2,000 documents across approximately 25 sub-domains. Top-K retrieval precision improves from approximately 32% under fixed-token chunking to approximately 82% under SDP, while mean EI decreases from 0.71 to 0.14. We do not claim that entanglement fully explains RAG failure, but that it captures a distinct preprocessing failure mode that downstream optimization cannot reliably correct once encoded into the vector space.",
+      "authors": [
+        "Nick Loghmani"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-04-20T00:24:34+00:00",
+      "link": "https://arxiv.org/pdf/2604.17677v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "geometric properties of vector representations and semantic entanglement in embedding spaces",
+      "llm_evidence_cn": "向量表示的几何属性与嵌入空间中的语义纠缠",
+      "llm_evidence": "向量表示的几何属性与嵌入空间中的语义纠缠",
+      "canonical_evidence": "向量表示的几何属性与嵌入空间中的语义纠缠",
+      "llm_tldr_en": "Formalizes semantic entanglement in vector spaces and proposes a disentanglement pipeline for agentic systems.",
+      "llm_tldr_cn": "形式化了向量空间中的语义纠缠，并为智能体系统提出了一种解纠缠流水线。",
+      "llm_tldr": "形式化了向量空间中的语义纠缠，并为智能体系统提出了一种解纠缠流水线。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.15153v2",
+      "source": "arxiv",
+      "title": "Compressing Sequences in the Latent Embedding Space: $K$-Token Merging for Large Language Models",
+      "abstract": "Large Language Models (LLMs) incur significant computational and memory costs when processing long prompts, as full self-attention scales quadratically with input length. Token compression aims to address this challenge by reducing the number of tokens representing inputs. However, existing prompt-compression approaches primarily operate in token space and overlook inefficiencies in the latent embedding space. In this paper, we propose K-Token Merging, a latent-space compression framework that merges each contiguous block of K token embeddings into a single embedding via a lightweight encoder. The compressed sequence is processed by a LoRA-adapted LLM, while generation remains in the original vocabulary. Experiments on structural reasoning (Textualized Tree), sentiment classification (Amazon Reviews), and code editing (CommitPackFT) show that K-Token Merging lies on the Pareto frontier of performance vs. compression, achieving up to 75% input length reduction with minimal performance degradation. Code is available at https://github.com/shsjxzh/K-Token-Merging.",
+      "authors": [
+        "Zihao Xu",
+        "John Harvill",
+        "Ziwei Fan",
+        "Yizhou Sun",
+        "Hao Ding",
+        "Hao Wang"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-04-16T15:32:45+00:00",
+      "link": "https://arxiv.org/pdf/2604.15153v2",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "latent-space compression framework for sequence representation",
+      "llm_evidence_cn": "用于序列表示的隐空间压缩框架",
+      "llm_evidence": "用于序列表示的隐空间压缩框架",
+      "canonical_evidence": "用于序列表示的隐空间压缩框架",
+      "llm_tldr_en": "Proposes K-Token Merging to compress sequences in the latent embedding space for efficient LLM processing.",
+      "llm_tldr_cn": "提出 K-Token 合并方法，在隐空间嵌入中压缩序列以提高大模型处理效率。",
+      "llm_tldr": "提出 K-Token 合并方法，在隐空间嵌入中压缩序列以提高大模型处理效率。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.17821v2",
+      "source": "arxiv",
+      "title": "WebUncertainty: Dual-Level Uncertainty Driven Planning and Reasoning For Autonomous Web Agent",
+      "abstract": "Recent advancements in large language models (LLMs) have empowered autonomous web agents to execute natural language instructions directly on real-world webpages. However, existing agents often struggle with complex tasks involving dynamic interactions and long-horizon execution due to rigid planning strategies and hallucination-prone reasoning. To address these limitations, we propose WebUncertainty, a novel autonomous agent framework designed to tackle dual-level uncertainty in planning and reasoning. Specifically, we design a Task Uncertainty-Driven Adaptive Planning Mechanism that adaptively selects planning modes to navigate unknown environments. Furthermore, we introduce an Action Uncertainty-Driven Monte Carlo tree search (MCTS) Reasoning Mechanism. This mechanism incorporates the Confidence-induced Action Uncertainty (ConActU) strategy to quantify both aleatoric uncertainty (AU) and epistemic uncertainty (EU), thereby optimizing the search process and guiding robust decision-making. Experimental results on the WebArena and WebVoyager benchmarks demonstrate that WebUncertainty achieves superior performance compared to state-of-the-art baselines.",
+      "authors": [
+        "Lingfeng Zhang",
+        "Yongan Sun",
+        "Jinpeng Hu",
+        "Hui Ma",
+        "Yang Ying",
+        "Kuien Liu",
+        "Zenglin Shi",
+        "Meng Wang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-04-20T05:19:49+00:00",
+      "link": "https://arxiv.org/pdf/2604.17821v2",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "adaptive planning to navigate unknown environments for autonomous agents",
+      "llm_evidence_cn": "自主智能体在未知环境中的自适应规划导航",
+      "llm_evidence": "自主智能体在未知环境中的自适应规划导航",
+      "canonical_evidence": "自主智能体在未知环境中的自适应规划导航",
+      "llm_tldr_en": "Develops WebUncertainty to handle planning and reasoning uncertainty for agents in dynamic environments.",
+      "llm_tldr_cn": "开发WebUncertainty框架，解决智能体在动态环境中的规划与推理不确定性。",
+      "llm_tldr": "开发WebUncertainty框架，解决智能体在动态环境中的规划与推理不确定性。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.16801v1",
+      "source": "arxiv",
+      "title": "Continuous Limits of Coupled Flows in Representation Learning",
+      "abstract": "While modern representation learning relies heavily on global error signals, decentralized algorithms driven by local interactions offer a fundamental distributed alternative. However, the macroscopic convergence properties of these discrete dynamics on continuous data manifolds remain theoretically unresolved, notoriously suffering from parameter explosion. We bridge this gap by formalizing decentralized learning as a coupled slow-fast dynamical system on Riemannian manifolds. First, using measure-theoretic limits, we prove that the discrete spatial transitions converge uniformly to an overdamped Langevin stochastic differential equation. Second, via the Itô-Poisson resolvent and a stochastic extension of LaSalle's Invariance Principle, we establish that the representation weights unconditionally avoid divergence and align strictly with the principal eigenspace of the spatial measure. Finally, we construct a joint Lyapunov functional for the fully coupled spatial-parametric flow. This proves global dissipativity and demonstrates that orthogonally disentangled, linearly separable features emerge spontaneously at the stationary limit. Our framework bridges discrete algorithms with continuous stochastic analysis, providing a formal theoretical baseline for decentralized representation learning.",
+      "authors": [
+        "Zilin Li",
+        "Weiwei Xu",
+        "Xuchun Tong",
+        "Xuanbo Lu",
+        "Xuanqi Zhao"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-04-18T03:19:54+00:00",
+      "link": "https://arxiv.org/pdf/2604.16801v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "decentralized learning on continuous data manifolds",
+      "llm_evidence_cn": "连续数据流形上的去中心化学习",
+      "llm_evidence": "连续数据流形上的去中心化学习",
+      "canonical_evidence": "连续数据流形上的去中心化学习",
+      "llm_tldr_en": "Formalizes decentralized representation learning as a dynamical system on Riemannian manifolds.",
+      "llm_tldr_cn": "将去中心化表示学习形式化为黎曼流形上的动力系统。",
+      "llm_tldr": "将去中心化表示学习形式化为黎曼流形上的动力系统。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.18844v1",
+      "source": "arxiv",
+      "title": "Pulsar Selection Criteria and Performance Evaluation of Autonomous X-ray Pulsar Navigation Systems",
+      "abstract": "Current space missions primarily depend on Earth-based Guidance, Navigation, and Control (GNC) systems involving human-in-the-loop operations. X-ray pulsar-based navigation offers a promising alternative by using the very precise periodic X-ray emissions from pulsars for fully autonomous state estimation. This study presents a comprehensive analysis of pulsar selection criteria that significantly influence overall navigation performance. Observational data from the NICER mission is used to derive realistic estimates of measurement noise. Key mission-level constraints, including pulsed flux, pulsar visibility, geometric configuration, and long-term timing stability, are integrated into the pulsar selection process, addressing limitations of existing studies. An extended Kalman filter (EKF) is used for onboard spacecraft state estimation. The proposed system is evaluated in two scenarios: a Low Earth Orbit (LEO) satellite at 600 km altitude and an interplanetary transfer from Earth to Jupiter. Simulation results show that including the Crab pulsar yields position errors below 7 km in LEO and 20 km during interplanetary transfer with an instrument effective area of 200~cm$^2$; however, the Crab's limited timing stability leads to filter divergence after 20 days without timing model updates. In contrast, more stable pulsars enable long-term autonomy but with reduced accuracy. These results highlight the trade-offs involved in pulsar selection for autonomous navigation and the need to balance competing objectives. Overall, this study demonstrates the feasibility of X-ray pulsar-based navigation and marks a key step towards fully autonomous spacecraft operations.",
+      "authors": [
+        "Sui Chen",
+        "Emilie Parent",
+        "Nanda Rea",
+        "Francesco Topputo"
+      ],
+      "primary_category": "astro-ph.IM",
+      "categories": [
+        "astro-ph.IM",
+        "astro-ph.HE"
+      ],
+      "published": "2026-04-20T21:10:22+00:00",
+      "link": "https://arxiv.org/pdf/2604.18844v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Autonomous state estimation and navigation using X-ray pulsar emissions",
+      "llm_evidence_cn": "利用X射线脉冲星发射进行自主状态估计与导航",
+      "llm_evidence": "利用X射线脉冲星发射进行自主状态估计与导航",
+      "canonical_evidence": "利用X射线脉冲星发射进行自主状态估计与导航",
+      "llm_tldr_en": "Evaluates pulsar selection criteria for autonomous X-ray pulsar-based spacecraft navigation systems.",
+      "llm_tldr_cn": "评估了用于航天器自主X射线脉冲星导航系统的脉冲星选择标准和性能。",
+      "llm_tldr": "评估了用于航天器自主X射线脉冲星导航系统的脉冲星选择标准和性能。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.17821v1",
+      "source": "arxiv",
+      "title": "WebUncertainty: Dual-Level Uncertainty Driven Planning and Reasoning For Autonomous Web Agent",
+      "abstract": "Recent advancements in large language models (LLMs) have empowered autonomous web agents to execute natural language instructions directly on real-world webpages. However, existing agents often struggle with complex tasks involving dynamic interactions and long-horizon execution due to rigid planning strategies and hallucination-prone reasoning. To address these limitations, we propose WebUncertainty, a novel autonomous agent framework designed to tackle dual-level uncertainty in planning and reasoning. Specifically, we design a Task Uncertainty-Driven Adaptive Planning Mechanism that adaptively selects planning modes to navigate unknown environments. Furthermore, we introduce an Action Uncertainty-Driven Monte Carlo tree search (MCTS) Reasoning Mechanism. This mechanism incorporates the Confidence-induced Action Uncertainty (ConActU) strategy to quantify both aleatoric uncertainty (AU) and epistemic uncertainty (EU), thereby optimizing the search process and guiding robust decision-making. Experimental results on the WebArena and WebVoyager benchmarks demonstrate that WebUncertainty achieves superior performance compared to state-of-the-art baselines.",
+      "authors": [
+        "Lingfeng Zhang",
+        "yongan sun",
+        "Jinpeng Hu",
+        "Hui Ma",
+        "yang ying",
+        "Kuien Liu",
+        "Zenglin Shi",
+        "Meng Wang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-04-20T05:19:49+00:00",
+      "link": "https://arxiv.org/pdf/2604.17821v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "adaptive planning to navigate unknown environments",
+      "llm_evidence_cn": "在未知环境中导航的自适应规划",
+      "llm_evidence": "在未知环境中导航的自适应规划",
+      "canonical_evidence": "在未知环境中导航的自适应规划",
+      "llm_tldr_en": "A framework using dual-level uncertainty to improve planning and reasoning for autonomous web agents.",
+      "llm_tldr_cn": "一种利用双层不确定性驱动的框架，旨在提升自主智能体在复杂环境中的规划与推理能力。",
+      "llm_tldr": "一种利用双层不确定性驱动的框架，旨在提升自主智能体在复杂环境中的规划与推理能力。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.19087v1",
+      "source": "arxiv",
+      "title": "OLLM: Options-based Large Language Models",
+      "abstract": "We introduce Options LLM (OLLM), a simple, general method that replaces the single next-token prediction of standard LLMs with a \\textit{set of learned options} for the next token, indexed by a discrete latent variable. Instead of relying on temperature or sampling heuristics to induce diversity, OLLM models variation explicitly: a small latent space parametrizes multiple plausible next-token options which can be selected or searched by a downstream policy. Architecturally, OLLM is a lightweight \"plug-in\" that inserts two layers: an encoder and a decoder, before the output head, allowing almost any pretrained LLM to be converted with minimal additional parameters. We apply OLLM to a 1.7B-parameter backbone (only $1.56\\%$ of parameters trainable) trained on OpenMathReasoning and evaluated on OmniMath. The SOTA LoRA-adapted baselines peak at $51\\%$ final answer correctness, while OLLM's option set allows up to $\\sim 70\\%$ under optimal latent selection. We then train a compact policy in the latent space that emits latents to control generation. Operating in a low-dimensional option space makes reward optimization far more sample-efficient and substantially reduces common misalignments (e.g., language switching or degenerate reasoning), as the policy is constrained to options learned during SFT. Crucially, this alignment arises from model structure rather than additional KL or handcrafted alignment losses. Our results demonstrate that optionized next-token modeling enhances controllability, robustness, and efficiency in math reasoning, and highlight latent-space policy learning as a promising direction for reinforcement learning in LLMs.",
+      "authors": [
+        "Shashank Sharma",
+        "Janina Hoffmann",
+        "Vinay Namboodiri"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-04-21T04:59:37+00:00",
+      "link": "https://arxiv.org/pdf/2604.19087v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "discrete latent variable for modeling variation in options",
+      "llm_evidence_cn": "用于建模选项变化的离散隐变量",
+      "llm_evidence": "用于建模选项变化的离散隐变量",
+      "canonical_evidence": "用于建模选项变化的离散隐变量",
+      "llm_tldr_en": "Uses a discrete latent space to parameterize multiple next-token options for downstream policy selection.",
+      "llm_tldr_cn": "利用离散隐空间参数化多个预测选项，供下游策略进行选择或搜索。",
+      "llm_tldr": "利用离散隐空间参数化多个预测选项，供下游策略进行选择或搜索。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.17857v2",
+      "source": "arxiv",
+      "title": "On the Emergence of Syntax by Means of Local Interaction",
+      "abstract": "Can syntactic processing emerge spontaneously from purely local interaction? We present a concrete instance on a minimal system: an 18,658-parameter two-dimensional neural cellular automaton (NCA), supervised by nothing more than a 1-bit boundary signal, is trained on the membership problem of an arithmetic-expression grammar. After training, its internal $L \\times L$ grid spontaneously self-organizes into an ordered, spatially extended representation that we name Proto-CKY. This representation satisfies three operational criteria for syntactic processing: expressive power beyond the regular languages, structural generalization beyond the training distribution, and an internal organization quantitatively aligned with grammatical structure (Pearson $r \\approx 0.71$). It emerges independently on four context-free grammars and regenerates spontaneously after perturbation. Proto-CKY is functionally aligned with the CKY algorithm but formally distinct from it: it is a physical prototype, a concrete instantiation of a mathematical ideal on a physical substrate, and the systematic distance between the two carries information about the substrate itself.",
+      "authors": [
+        "Zichao Wei"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-04-20T06:10:50+00:00",
+      "link": "https://arxiv.org/pdf/2604.17857v2",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "spontaneously self-organized spatially extended representation in neural cellular automata",
+      "llm_evidence_cn": "神经元细胞自动机中自发组织的空延展表示",
+      "llm_evidence": "神经元细胞自动机中自发组织的空延展表示",
+      "canonical_evidence": "神经元细胞自动机中自发组织的空延展表示",
+      "llm_tldr_en": "Explores how spatial representations and syntactic processing emerge from local interactions in neural systems.",
+      "llm_tldr_cn": "探索神经系统中局部交互如何自发产生空间表示与语法处理能力。",
+      "llm_tldr": "探索神经系统中局部交互如何自发产生空间表示与语法处理能力。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.19953v1",
+      "source": "arxiv",
+      "title": "LatentGandr: Visual Exploration of Generative AI Latent Space via Local Embeddings",
+      "abstract": "Generative AI has demonstrated significant potential in creative design, enabling the rapid generation of visual content and imaginative concepts. Although deep AI models achieve effective featurization in the latent space, navigating the space remains a challenge. Current techniques, such as GANSlider and SliderSpace, use multiple sliders to generate high-dimensional vectors in generative AI's latent space. Despite applying (global) PCA to reduce the number of sliders, these approaches struggle with scalability and usability as the number of control dimensions increases. In this paper, we introduce LatentGandr, a visual analytics technique that facilitates latent space exploration by extracting locally linear dimensions from embeddings in high-dimensional latent spaces. By analyzing the topology and local curvature of the embeddings, LatentGandr automatically identifies local neighborhoods and computes their principal components using localized PCA. These local principal components are visualized as interactive image grids, allowing users to efficiently explore and control the generative process, providing an intuitive means to refine the generation of novel content and concepts. To evaluate the effectiveness of LatentGandr, we conducted a study comparing it to GANSlider, the current state-of-the-art visualization interface for generative AI models. The results offer insights into how localized exploration techniques can enhance user interaction with these models.",
+      "authors": [
+        "Mingwei Li",
+        "Suyang Li",
+        "Daisuke Sakurai",
+        "Bei Wang",
+        "Remco Chang"
+      ],
+      "primary_category": "cs.HC",
+      "categories": [
+        "cs.HC"
+      ],
+      "published": "2026-04-21T20:00:04+00:00",
+      "link": "https://arxiv.org/pdf/2604.19953v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "navigating and exploring high-dimensional latent spaces",
+      "llm_evidence_cn": "在高维隐空间中进行导航与探索",
+      "llm_evidence": "在高维隐空间中进行导航与探索",
+      "canonical_evidence": "在高维隐空间中进行导航与探索",
+      "llm_tldr_en": "Introduces LatentGandr for visual exploration of generative AI latent spaces using local embeddings.",
+      "llm_tldr_cn": "引入LatentGandr，通过局部嵌入实现生成式AI隐空间的视觉探索。",
+      "llm_tldr": "引入LatentGandr，通过局部嵌入实现生成式AI隐空间的视觉探索。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.20349v1",
+      "source": "arxiv",
+      "title": "Descriptor: A Hybrid Indoor and Indoor-Outdoor Positioning Multi-Technology Dataset (HYMN)",
+      "abstract": "This article introduces the HYMN (HYbrid Multi-technology Navigation) dataset: a multi-system, and time synchronized dataset for localization research based on opportunistic signals collected in an indoor-outdoor scenario. HYMN comprises measurement data collected in an industrial hall setting for five different positioning systems including Ultra-Wideband (UWB), Bluetooth Low Energy (BLE), WiFi, 5G, and Global Navigation Satellite System (GNSS). Unlike existing datasets that focus on single technologies or purely indoor/outdoor scenarios, HYMN combines five positioning technologies with explicit coverage of indoor-outdoor transitions, enabling multi-sensor fusion research for seamless localization. Each instance of data is identified through a unique measurement id and it represents time-stamped observations relevant for each system respectively along with the ground truth information. HYMN is designed to support a wide range of localization tasks including multi-sensor fingerprinting, cross-technology fusion, and seamless indoor-outdoor positioning. The synchronized measurements from GNSS and other terrestrial systems enable researchers to investigate how heterogeneous signals complement each other to overcome individual technology limitations such as GNSS degradation in covered areas or terrestrial system variability in dynamic environments.",
+      "authors": [
+        "Muhammad Ammad",
+        "Albrecht Michler",
+        "Paul Schwarzbach",
+        "Jonas Ninnemann",
+        "Hagen Ußler",
+        "Oliver Michler"
+      ],
+      "primary_category": "eess.SP",
+      "categories": [
+        "eess.SP"
+      ],
+      "published": "2026-04-22T08:52:50+00:00",
+      "link": "https://arxiv.org/pdf/2604.20349v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "multi-technology dataset for indoor-outdoor navigation",
+      "llm_evidence_cn": "室内外导航多技术数据集",
+      "llm_evidence": "室内外导航多技术数据集",
+      "canonical_evidence": "室内外导航多技术数据集",
+      "llm_tldr_en": "Provides a synchronized multi-sensor dataset for hybrid indoor-outdoor positioning and localization.",
+      "llm_tldr_cn": "提供了一个同步的多传感器数据集，用于混合室内外定位与导航研究。",
+      "llm_tldr": "提供了一个同步的多传感器数据集，用于混合室内外定位与导航研究。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

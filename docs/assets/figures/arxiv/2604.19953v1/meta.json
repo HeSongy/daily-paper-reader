@@ -1,0 +1,94 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.19953v1/fig-001.webp",
+      "caption": "Figure 8: Distribution of distances (the lower the better) from data points to their projections with different projection methods using the AFHQ Wild Animals dataset.",
+      "page": 6,
+      "index": 1,
+      "width": 521,
+      "height": 283
+    },
+    {
+      "url": "assets/figures/arxiv/2604.19953v1/fig-002.webp",
+      "caption": "Figure 7: Singular value spectra as a function of scale for the AFHQ wild animal dataset, with an intrinsic dimension estimate of 5. Vertical lines indicate the optimal scale range where noise levels remain low, and curvature-induced distortions are minimal. No significant curvature was observed among the dimensions.",
+      "page": 6,
+      "index": 2,
+      "width": 525,
+      "height": 291
+    },
+    {
+      "url": "assets/figures/arxiv/2604.19953v1/fig-003.webp",
+      "caption": "Figure 9: Distribution of pairwise distances between data points in a local neighborhood using UMAP, Global PCA, and Local PCA. With both: (top) Euclidean and (bottom) geodesic distances, Local PCA outperforms the other two with distributions centered at the smallest values, indicating superior locality preservation.",
+      "page": 7,
+      "index": 3,
+      "width": 521,
+      "height": 556
+    },
+    {
+      "url": "assets/figures/arxiv/2604.19953v1/fig-004.webp",
+      "caption": "Figure 10: GANSlider interface used in the study.",
+      "page": 7,
+      "index": 4,
+      "width": 525,
+      "height": 439
+    },
+    {
+      "url": "assets/figures/arxiv/2604.19953v1/fig-005.webp",
+      "caption": "Figure 12: A comparison of the result. Top (left to right): target image, image reconstructed by GANSlider and image reconstructed by LatentGandr Bottom: We observed that, although LatentGandr produced higher measured distances to the target (lower is better), the generated image appeared more visually aligned with the target.",
+      "page": 8,
+      "index": 5,
+      "width": 525,
+      "height": 436
+    },
+    {
+      "url": "assets/figures/arxiv/2604.19953v1/fig-006.webp",
+      "caption": "Figure 11: Kernel density estimation of distances to the target images for the two interfaces.",
+      "page": 8,
+      "index": 6,
+      "width": 521,
+      "height": 283
+    },
+    {
+      "url": "assets/figures/arxiv/2604.19953v1/fig-007.webp",
+      "caption": "Figure 2: Intuition behind our approach. (a) We begin with the observation that interpolation between two points in D-dimensional space traces out a 1D line segment. (b) This idea naturally extends to a 2D plane when interpolating among three points. (c) By allowing a small error tolerance ε, additional points can be approximated within the same 2D plane, forming a locally linear neighborhood. (d) Finally, we relax the 2D constraint and generalize this approach to higher-dimensional subspaces within RD to accommodate more complex local structures.",
+      "page": 4,
+      "index": 7,
+      "width": 519,
+      "height": 567
+    },
+    {
+      "url": "assets/figures/arxiv/2604.19953v1/fig-008.webp",
+      "caption": "Figure 13: A sample of target-finding sequences in the two interfaces (top: GANSlider, bottom: LatentGandr), with the last image representing the target.",
+      "page": 9,
+      "index": 8,
+      "width": 525,
+      "height": 458
+    },
+    {
+      "url": "assets/figures/arxiv/2604.19953v1/fig-009.webp",
+      "caption": "Figure 5: Local PCA scatterplots in LatentGandr.",
+      "page": 5,
+      "index": 9,
+      "width": 525,
+      "height": 362
+    },
+    {
+      "url": "assets/figures/arxiv/2604.19953v1/fig-010.webp",
+      "caption": "Figure 6: LatentGandr that incorporates GANSlider which shows local PCA as with filmstrip sliders. Using AFHQ cat dataset as an example.",
+      "page": 5,
+      "index": 10,
+      "width": 525,
+      "height": 250
+    },
+    {
+      "url": "assets/figures/arxiv/2604.19953v1/fig-011.webp",
+      "caption": "Figure 3: Examples of singular value spectra as a function of scale, as illustrated in [19], show data occupying S9 within a 100-dimensional ambient space. The top nine singular values correspond to the intrinsic dimensions, the tenth reflects curvature effects, and the remaining 90 capture noise in the data. Vertical lines show the optimal scale range where noise levels remain low and curvature-induced distortions are not as dominant.",
+      "page": 5,
+      "index": 11,
+      "width": 525,
+      "height": 281
+    }
+  ]
+}
