@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.21357v1/fig-001.webp",
+      "caption": "Table 2: Quantitative Results of Each Method",
+      "page": 7,
+      "index": 1,
+      "width": 946,
+      "height": 552
+    },
+    {
+      "url": "assets/figures/arxiv/2604.21357v1/fig-002.webp",
+      "caption": "Figure 2: The workflow of traditional geocoding methods and our end-to-end geocoding method. (a) Workflow of traditional vector-retrieval-based geocoding: The input address is first transformed into a query vector through an embedding model. This vector is then used to retrieve a set of candidate vectors from a large vector database, followed by a reranking stage to identify the best-matched vector. Finally, associated metadata is retrieved, from which the corresponding geographic coordinates are extracted. (b) Workflow of our end-to-end geocoding: The input query is fed directly into ReaGeo, a decoder-only LLM which is supervised fine-tuned with the CoT method, enabling step-by-step spatial reasoning. To further enhance the model’s capability in resolving relative location descriptions, reinforcement learning with relative positional guidance is employed. ReaGeo generates the geohash sequence in an autoregressive manner, which is subsequently decoded into geographic coordinates.",
+      "page": 4,
+      "index": 2,
+      "width": 950,
+      "height": 563
+    },
+    {
+      "url": "assets/figures/arxiv/2604.21357v1/fig-003.webp",
+      "caption": "Table 6: Quantitative Results of Each Method on the Singapore Dataset",
+      "page": 12,
+      "index": 3,
+      "width": 873,
+      "height": 323
+    },
+    {
+      "url": "assets/figures/arxiv/2604.21357v1/fig-004.webp",
+      "caption": "Figure 4: Visualization of single-point location prediction. The markers 2–5 correspond to predicted positions guided by relative-position cues around landmark 1.",
+      "page": 9,
+      "index": 4,
+      "width": 461,
+      "height": 350
+    }
+  ]
+}
