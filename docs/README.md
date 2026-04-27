@@ -6,46 +6,40 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-04-26
-- 运行时间：2026-04-26 20:27:25 UTC
+- 最新运行日期：2026-04-27
+- 运行时间：2026-04-27 20:22:37 UTC
 - 运行状态：成功
-- 本次总论文数：8
+- 本次总论文数：6
 - 精读区：4
-- 速读区：4
+- 速读区：2
 
 ### 今日简报（AI）
-深入理解交互式视频世界模型与人机协作型后训练模型，完成 8 篇论文整理。  
-重点关注 WorldMark 与 Hi‑WM 对世界模型统一与可扩展性的突破。  
-建议普通读者从人机共建世界模型的新趋势入手，关注未来机器人智能发展。
-- 详情：[/202604/26/README](/202604/26/README)
+智能体建模与自主导航成为今日研究焦点，共完成 6 篇论文阅读。  
+重点推荐《Agentic World Modeling》探讨具身智能的基础规律，以及自预测表示提升无人机目标导航能力。  
+建议读者关注智能体如何自主学习世界模型，以理解未来通用 AI 的发展路径。
+- 详情：[/202604/27/README](/202604/27/README)
 
 ### 精读区论文标签
-1. [WorldMark: A Unified Benchmark Suite for Interactive Video World Models](/202604/26/2604.21686v1-worldmark-a-unified-benchmark-suite-for-interactive-video-world-models)  
+1. [Agentic World Modeling: Foundations, Capabilities, Laws, and Beyond](/202604/27/2604.22748v1-agentic-world-modeling-foundations-capabilities-laws-and-beyond)  
+   标签：评分：10.0/10、query:navwm
+   evidence：智能体在环境中导航和操作的世界模型分类法
+2. [Self-Predictive Representation for Autonomous UAV Object-Goal Navigation](/202604/27/2604.21130v1-self-predictive-representation-for-autonomous-uav-object-goal-navigation)  
    标签：评分：9.0/10、query:navwm
-   evidence：具有标准化轨迹的交互式视频世界模型统一基准
-2. [Hi-WM: Human-in-the-World-Model for Scalable Robot Post-Training](/202604/26/2604.21741v1-hi-wm-human-in-the-world-model-for-scalable-robot-post-training)  
-   标签：评分：9.0/10、query:navwm
-   evidence：学习到的世界模型作为机器人策略改进的可重用校正基质
-3. [Multi-Step Gaussian Process Propagation for Adaptive Path Planning](/202604/26/2604.19148v1-multi-step-gaussian-process-propagation-for-adaptive-path-planning)  
+   evidence：用于无人机强化学习导航的自我预测表示
+3. [Instruction-as-State: Environment-Guided and State-Conditioned Semantic Understanding for Embodied Navigation](/202604/27/2604.18223v1-instruction-as-state-environment-guided-and-state-conditioned-semantic-understanding-for-embodied-navigation)  
    标签：评分：8.0/10、query:navwm
-   evidence：基于世界信念的机器人探索自适应路径规划
-4. [Navigating the Clutter: Waypoint-Based Bi-Level Planning for Multi-Robot Systems](/202604/26/2604.21138v1-navigating-the-clutter-waypoint-based-bi-level-planning-for-multi-robot-systems)  
+   evidence：以感知状态为条件的指令即状态导航
+4. [Cross-Stage Coherence in Hierarchical Driving VQA: Explicit Baselines and Learned Gated Context Projectors](/202604/27/2604.22560v1-cross-stage-coherence-in-hierarchical-driving-vqa-explicit-baselines-and-learned-gated-context-projectors)  
    标签：评分：8.0/10、query:navwm
-   evidence：针对复杂环境下多机器人系统的任务与运动规划联合优化
+   evidence：自动驾驶中感知、预测和规划的跨阶段上下文传递
 
 ### 速读区论文标签
-1. [Latent Fourier Transform](/202604/26/2604.17986v1-latent-fourier-transform)  
+1. [Advancing Vision Transformer with Enhanced Spatial Priors](/202604/27/2604.18549v1-advancing-vision-transformer-with-enhanced-spatial-priors)  
    标签：评分：6.0/10、query:navwm
-   evidence：用于生成模型控制的隐空间傅里叶变换
-2. [Randomly Initialized Networks Can Learn from Peer-to-Peer Consensus](/202604/26/2604.18390v1-randomly-initialized-networks-can-learn-from-peer-to-peer-consensus)  
+   evidence：视觉骨干网络中的显式空间先验与距离衰减
+2. [Disentangling Damage from Operational Variability: A Label-Free Self-Supervised Representation Learning Framework for Output-Only Structural Damage Identification](/202604/27/2604.19658v1-disentangling-damage-from-operational-variability-a-label-free-self-supervised-representation-learning-framework-for-output-only-structural-damage-identification)  
    标签：评分：6.0/10、query:navwm
-   evidence：学习对下游任务有用的表示
-3. [Learning Reasoning World Models for Parallel Code](/202604/26/2604.20926v1-learning-reasoning-world-models-for-parallel-code)  
-   标签：评分：6.0/10、query:navwm
-   evidence：用于预测并行代码中工具结果和推理的世界模型
-4. [ReaGeo: Reasoning-Enhanced End-to-End Geocoding with LLMs](/202604/26/2604.21357v1-reageo-reasoning-enhanced-end-to-end-geocoding-with-llms)  
-   标签：评分：6.0/10、query:navwm
-   evidence：空间关系推理与地理编码
+   evidence：具有隐空间表示的解耦表示学习
 
 
 <div class="dpr-home-promo-card">

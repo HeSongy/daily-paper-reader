@@ -1,0 +1,150 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.18549v1/fig-001.webp",
+      "caption": "Fig. 4: Comparison between 2D grouping/shuffling and our 1D grouping/shuffling.",
+      "page": 6,
+      "index": 1,
+      "width": 422,
+      "height": 375
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18549v1/fig-002.webp",
+      "caption": "Fig. 3: Illustration of Grouped EuSA (EuSAg) and Dilated EuSA (EuSAd). Different colors represent different groups.",
+      "page": 6,
+      "index": 2,
+      "width": 864,
+      "height": 318
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18549v1/fig-003.webp",
+      "caption": "TABLE 11: Evaluation of the model’s robustness.",
+      "page": 11,
+      "index": 3,
+      "width": 848,
+      "height": 446
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18549v1/fig-004.webp",
+      "caption": "TABLE 10: Comparison with the state-of-the-art on ADE20K.",
+      "page": 11,
+      "index": 4,
+      "width": 929,
+      "height": 520
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18549v1/fig-005.webp",
+      "caption": "Fig. 6: Illustration of EVT’s resource consumption and performance with progressively increasing resolutions",
+      "page": 15,
+      "index": 5,
+      "width": 1068,
+      "height": 206
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18549v1/fig-006.webp",
+      "caption": "Fig. 7: Visualization results of different models. Three models are DeiT-B (Top1-acc 81.8%), DeiT-B+Manhattan distance (Top1-acc 82.4%), DeiT-B+Euclidean (Top1-acc 82.7%).",
+      "page": 15,
+      "index": 6,
+      "width": 464,
+      "height": 622
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18549v1/fig-007.webp",
+      "caption": "Fig. 1: FLOPs v.s. Top-1 accuracy on ImageNet-1K.",
+      "page": 2,
+      "index": 7,
+      "width": 862,
+      "height": 341
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18549v1/fig-008.webp",
+      "caption": "TABLE 8: Comparison with other backbones using ”3×+MS“ schedule on COCO.",
+      "page": 10,
+      "index": 8,
+      "width": 1002,
+      "height": 420
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18549v1/fig-009.webp",
+      "caption": "TABLE 9: Comparison to other backbones using ”1×“ schedule on COCO.",
+      "page": 10,
+      "index": 9,
+      "width": 940,
+      "height": 557
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18549v1/fig-010.webp",
+      "caption": "TABLE 19: Ablation study on different models. All experiments are conducted based on the EVT-S. Throughput is measured by A100 80G with the batch size of 64.",
+      "page": 14,
+      "index": 10,
+      "width": 464,
+      "height": 273
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18549v1/fig-011.webp",
+      "caption": "Fig. 2: Overall Architecture of EVT.",
+      "page": 3,
+      "index": 11,
+      "width": 864,
+      "height": 527
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18549v1/fig-012.webp",
+      "caption": "TABLE 13: Ablation Studies.",
+      "page": 13,
+      "index": 12,
+      "width": 944,
+      "height": 323
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18549v1/fig-013.webp",
+      "caption": "TABLE 5: Architectures for ImageNet classification with resolution 224× 224. k is the number of tokens for each group. h is the number of heads. r is the expand ratio of FFN.",
+      "page": 8,
+      "index": 13,
+      "width": 1040,
+      "height": 476
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18549v1/fig-014.webp",
+      "caption": "TABLE 6: Detailed hyper-parameters for training variants of EVT on ImageNet.",
+      "page": 8,
+      "index": 14,
+      "width": 477,
+      "height": 421
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18549v1/fig-015.webp",
+      "caption": "Fig. 5: Loss curves for Euclidean distance and Manhattan distance. The experiments are conducted based on EVT-T.",
+      "page": 12,
+      "index": 15,
+      "width": 429,
+      "height": 315
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18549v1/fig-016.webp",
+      "caption": "TABLE 12: Inference throughputs of different models. Models are tested on resolution of 224× 224. We benchmark the throughputs on a single NVIDIA A100 GPU with batch size of 64.",
+      "page": 12,
+      "index": 16,
+      "width": 486,
+      "height": 833
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18549v1/fig-017.webp",
+      "caption": "TABLE 7: Comparison with the state-of-the-art on ImageNet-1K classification.",
+      "page": 9,
+      "index": 17,
+      "width": 1012,
+      "height": 779
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18549v1/fig-018.webp",
+      "caption": "Fig. 8: Visualization of EVT and Swin-Transformer’s attention map.",
+      "page": 16,
+      "index": 18,
+      "width": 798,
+      "height": 911
+    }
+  ]
+}
