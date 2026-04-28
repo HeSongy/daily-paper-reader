@@ -1,0 +1,562 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-04-28T20:56:14.470494+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 6,
+    "deep_cap": 6,
+    "deep_selected": 6,
+    "quick_candidates": 8,
+    "quick_skim_target": 11,
+    "quick_selected": 8
+  },
+  "deep_dive": [
+    {
+      "id": "2604.21363v1",
+      "source": "arxiv",
+      "title": "A Deployable Embodied Vision-Language Navigation System with Hierarchical Cognition and Context-Aware Exploration",
+      "abstract": "Bridging the gap between embodied intelligence and embedded deployment remains a key challenge in intelligent robotic systems, where perception, reasoning, and planning must operate under strict constraints on computation, memory, energy, and real-time execution. In vision-language navigation (VLN), existing approaches often face a fundamental trade-off between strong reasoning capabilities and efficient deployment on real-world platforms. In this paper, we present a deployable embodied VLN system that achieves both high efficiency and robust high-level reasoning on real-world robotic platforms. To achieve this, we decouple the system into three asynchronous modules: a real-time perception module for continuous environment sensing, a memory integration module for spatial-semantic aggregation, and a reasoning module for high-level decision making. We incrementally construct a cognitive memory graph to encode scene information, which is further decomposed into subgraphs to enable reasoning with a vision-language model (VLM). To further improve navigation efficiency and accuracy, we also leverage the cognitive memory graph to formulate the exploration problem as a context-aware Weighted Traveling Repairman Problem (WTRP), which minimizes the weighted waiting time of viewpoints. Extensive experiments in both simulation and real-world robotic platforms demonstrate improved navigation success and efficiency over existing VLN approaches, while maintaining real-time performance on resource-constrained hardware.",
+      "authors": [
+        "Kuan Xu",
+        "Ruimeng Liu",
+        "Yizhuo Yang",
+        "Denan Liang",
+        "Tongxing Jin",
+        "Shenghai Yuan",
+        "Chen Wang",
+        "Lihua Xie"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-04-23T07:27:00+00:00",
+      "link": "https://arxiv.org/pdf/2604.21363v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "embodied vision-language navigation system with hierarchical cognition and context-aware exploration",
+      "llm_evidence_cn": "具有分层认知和上下文感知探索的具身视觉语言导航系统",
+      "llm_evidence": "具有分层认知和上下文感知探索的具身视觉语言导航系统",
+      "canonical_evidence": "具有分层认知和上下文感知探索的具身视觉语言导航系统",
+      "llm_tldr_en": "Presents a deployable VLN system that balances high-level reasoning with efficient real-world robotic deployment.",
+      "llm_tldr_cn": "提出一种可部署的具身视觉语言导航系统，平衡了高层推理与实际机器人部署的效率。",
+      "llm_tldr": "提出一种可部署的具身视觉语言导航系统，平衡了高层推理与实际机器人部署的效率。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.23648v1",
+      "source": "arxiv",
+      "title": "Safe Navigation in Unknown and Cluttered Environments via Direction-Aware Convex Free-Region Generation",
+      "abstract": "Convex free regions provide a structured and optimization-friendly representation of collision-free space for robot navigation in unknown and cluttered environments. However, existing methods typically enlarge local collision-free regions mainly according to surrounding obstacle geometry. In cluttered environments, such strategies may fail to generate regions that both accommodate robot geometry and preserve traversable extension along candidate motion directions, thereby limiting downstream traversal, especially in narrow passages. Even when such a region is available, safe motion generation remains challenging, because safety checking at discretized trajectory samples does not guarantee continuously collision-free motion when robot geometry is modeled explicitly. To address these issues, we propose a navigation framework that jointly incorporates candidate motion directions and robot geometry into convex free-region generation, and achieves continuously collision-free motion through continuous-safe trajectory generation. Within each region, the framework performs geometry-aware target pose selection and trajectory generation, together with Lipschitz-based continuous safety certification and local refinement. The resulting free regions and candidate motions are maintained in a region-based graph to support incremental planning. Quantitative results in cluttered 2D navigation scenarios show that the proposed method generates free regions better aligned with downstream traversal and enables reliable collision-free navigation, while additional 3D and real-world experiments on a quadrupedal robot and a UAV demonstrate the extensibility and practical applicability of the framework. The open-source project can be found at https://github.com/ZhichengSong6/FRGraph.",
+      "authors": [
+        "Zhicheng Song",
+        "Yongjian Li",
+        "Kai Chen",
+        "Yulin Li",
+        "Fan Shi",
+        "Jun Ma"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-04-26T10:37:01+00:00",
+      "link": "https://arxiv.org/pdf/2604.23648v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "navigation in unknown and cluttered environments via convex free-region representation",
+      "llm_evidence_cn": "通过凸自由区域表示在未知和拥挤环境中进行导航",
+      "llm_evidence": "通过凸自由区域表示在未知和拥挤环境中进行导航",
+      "canonical_evidence": "通过凸自由区域表示在未知和拥挤环境中进行导航",
+      "llm_tldr_en": "Proposes a direction-aware convex free-region generation method for safe robot navigation in cluttered environments.",
+      "llm_tldr_cn": "提出一种方向感知的凸自由区域生成方法，用于机器人在拥挤环境中的安全导航。",
+      "llm_tldr": "提出一种方向感知的凸自由区域生成方法，用于机器人在拥挤环境中的安全导航。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.22497v1",
+      "source": "arxiv",
+      "title": "Catheter Monitoring in Intelligent Endovascular Navigation Systems: Interactive Simulations and Mixed Reality for Enhanced Navigational Awareness",
+      "abstract": "Purpose: Developing and testing a framework that integrates real-time catheter shape reconstruction, interactive simulations, and mixed reality visualization to enable accurate monitoring of catheter-vessel interactions during endovascular navigation.   Methods: A finite element model (FEM) of the venous pathway from the right femoral vein to the inferior vena cava was generated from computed tomography data and implemented into an interactive simulation. Catheter motion was imposed as boundary condition, and catheter-vessel contact was modeled with a Lagrange multiplier formulation to compute vessel deformation. The framework was tested in-vitro using a sensorized catheter with Fiber Bragg Grating and electromagnetic sensors as it was advanced through a silicone replica of the vascular anatomy. Real-time sensor read-outs fed the simulation, and the updated catheter and vessel geometries were streamed to Hololens 2. The performance and accuracy of FEM-computed vessel wall displacement were validated against experimental ground-truth obtained via stereo frames triangulation.   Results: The simulated time exceeded the real temporal extent by 12% during initial navigation and by 45% when the catheter reached the most tortuous portion. Hololens 2 rendering remained stable at 35-40 frames per second. The median relative displacement error between FEM-computed and ground-truth vessel wall displacements remained below 1 mm and 2.33 mm for these two phases, respectively.   Conclusion: The study demonstrates the feasibility of integrating interactive biomechanical simulation with real-time sensor data to enable continuous monitoring of catheter-vessel interactions, with mixed reality visualization serving as a user interface to support operator decision-making.",
+      "authors": [
+        "Veronica Ruozzi",
+        "Giovanni Battista Regazzo",
+        "Maria Chiara Palumbo",
+        "Wim-Alexander Beckers",
+        "Mouloud Ourak",
+        "Xiu Zhang",
+        "Francesca Perico",
+        "Alessandro Caimi",
+        "Emmanuel Vander Poorten",
+        "Emiliano Votta"
+      ],
+      "primary_category": "cs.HC",
+      "categories": [
+        "cs.HC",
+        "math.NA"
+      ],
+      "published": "2026-04-24T12:23:42+00:00",
+      "link": "https://arxiv.org/pdf/2604.22497v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "intelligent endovascular navigation systems and real-time catheter monitoring",
+      "llm_evidence_cn": "智能血管内导航系统与实时导管监测",
+      "llm_evidence": "智能血管内导航系统与实时导管监测",
+      "canonical_evidence": "智能血管内导航系统与实时导管监测",
+      "llm_tldr_en": "Integrates simulations and mixed reality for enhanced awareness in intelligent navigation systems.",
+      "llm_tldr_cn": "集成模拟与混合现实技术，增强智能导航系统中的环境感知能力。",
+      "llm_tldr": "集成模拟与混合现实技术，增强智能导航系统中的环境感知能力。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.23886v1",
+      "source": "arxiv",
+      "title": "MUSIC: Learning Muscle-Driven Dexterous Hand Control",
+      "abstract": "We present a data-driven approach for physics-based, muscle-driven dexterous control that enables musculoskeletal hands to perform precise piano playing for novel pieces of music outside the reference dataset. Our approach combines high-frequency muscle-level control with low-frequency latent-space coordination in a hierarchical architecture. At the low level, general single-hand policies are trained via reinforcement learning to generate dynamic muscle-tendon activations while tracking trajectories from a large reference motion dataset. The resulting tracking policies are then distilled into variational autoencoder (VAE) models, yielding smooth and structured latent spaces that abstract away low-level muscle dynamics. For the high level, we train piece-specific policies to operate in this latent space, coordinating bimanual motions based on specific goals, denoted by note events extracted from given musical scores, to synthesize performances beyond the reference data. In addition, we present an enhanced musculoskeletal hand model that supports fine control of fingers for accurate low-level motion tracking and diverse high-level motion synthesis. We evaluate the control pipeline of our approach on a diverse piano repertoire spanning multiple musical styles and technical demands. Results demonstrate that our approach can synthesize coordinated bimanual motions with accurate key presses, and achieve the state-of-the-art performance of piano playing in physics-based dexterous control. We also show that our musculoskeletal hand model demonstrates superior biomechanical stability and tracking precision compared to the existing model, and validate that our musculoskeletal hand model and muscle-driven controller can generate physiologically plausible activation patterns that align with human electromyography (EMG) recordings.",
+      "authors": [
+        "Pei Xu",
+        "Yufei Ye",
+        "Shuchun Sun",
+        "Yu Ding",
+        "Elizabeth Schumann",
+        "C. Karen Liu"
+      ],
+      "primary_category": "cs.GR",
+      "categories": [
+        "cs.GR",
+        "cs.AI"
+      ],
+      "published": "2026-04-26T21:05:34+00:00",
+      "link": "https://arxiv.org/pdf/2604.23886v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "latent-space coordination in hierarchical architecture for control",
+      "llm_evidence_cn": "分层控制架构中的隐空间协调",
+      "llm_evidence": "分层控制架构中的隐空间协调",
+      "canonical_evidence": "分层控制架构中的隐空间协调",
+      "llm_tldr_en": "Uses VAE-based latent spaces to abstract muscle dynamics for high-level reinforcement learning and control.",
+      "llm_tldr_cn": "利用基于VAE的隐空间抽象肌肉动力学，实现高层强化学习与控制。",
+      "llm_tldr": "利用基于VAE的隐空间抽象肌肉动力学，实现高层强化学习与控制。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.23970v1",
+      "source": "arxiv",
+      "title": "LLM-Guided Agentic Floor Plan Parsing for Accessible Indoor Navigation of Blind and Low-Vision People",
+      "abstract": "Indoor navigation remains a critical accessibility challenge for the blind and low-vision (BLV) individuals, as existing solutions rely on costly per-building infrastructure. We present an agentic framework that converts a single floor plan image into a structured, retrievable knowledge base to generate safe, accessible navigation instructions with lightweight infrastructure. The system has two phases: a multi-agent module that parses the floor plan into a spatial knowledge graph through a self-correcting pipeline with iterative retry loops and corrective feedback; and a Path Planner that generates accessible navigation instructions, with a Safety Evaluator agent assessing potential hazards along each route. We evaluate the system on the real-world UMBC Math and Psychology building (floors MP-1 and MP-3) and on the CVC-FP benchmark. On MP-1, we achieve success rates of 92.31%, 76.92%, and 61.54% for short, medium, and long routes, outperforming the strongest single-call baseline (Claude 3.7 Sonnet) at 84.62%, 69.23%, and 53.85%. On MP-3, we reach 76.92%, 61.54%, and 38.46%, compared to the best baseline at 61.54%, 46.15%, and 23.08%. These results show consistent gains over single-call LLM baselines and demonstrate that our workflow is a scalable solution for accessible indoor navigation for BLV individuals.",
+      "authors": [
+        "Aydin Ayanzadeh",
+        "Tim Oates"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CV",
+        "cs.HC",
+        "cs.MA"
+      ],
+      "published": "2026-04-27T02:32:44+00:00",
+      "link": "https://arxiv.org/pdf/2604.23970v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "indoor navigation and spatial knowledge graph",
+      "llm_evidence_cn": "室内导航与空间知识图谱",
+      "llm_evidence": "室内导航与空间知识图谱",
+      "canonical_evidence": "室内导航与空间知识图谱",
+      "llm_tldr_en": "An agentic framework for parsing floor plans into spatial graphs for accessible indoor navigation.",
+      "llm_tldr_cn": "一种将平面图解析为空间知识图谱的智能体框架，用于辅助室内导航。",
+      "llm_tldr": "一种将平面图解析为空间知识图谱的智能体框架，用于辅助室内导航。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.24039v1",
+      "source": "arxiv",
+      "title": "AgenticCache: Cache-Driven Asynchronous Planning for Embodied AI Agents",
+      "abstract": "Embodied AI agents increasingly rely on large language models (LLMs) for planning, yet per-step LLM calls impose severe latency and cost. In this paper, we show that embodied tasks exhibit strong plan locality, where the next plan is largely predictable from the current one. Building on this, we introduce AgenticCache, a planning framework that reuses cached plans to avoid per-step LLM calls. In AgenticCache, each agent queries a runtime cache of frequent plan transitions, while a background Cache Updater asynchronously calls the LLM to validate and refine cached entries. Across four multi-agent embodied benchmarks, AgenticCache improves task success rate by 22% on average across 12 configurations (4 benchmarks x 3 models), reduces simulation latency by 65%, and lowers token usage by 50%. Cache-based plan reuse thus offers a practical path to low-latency, low-cost embodied agents. Code is available at https://github.com/hojoonleokim/MLSys26_AgenticCache.",
+      "authors": [
+        "Hojoon Kim",
+        "Yuheng Wu",
+        "Thierry Tambe"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.CL"
+      ],
+      "published": "2026-04-27T04:51:15+00:00",
+      "link": "https://arxiv.org/pdf/2604.24039v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "planning for embodied AI agents in complex benchmarks",
+      "llm_evidence_cn": "具身智能体在复杂基准测试中的规划",
+      "llm_evidence": "具身智能体在复杂基准测试中的规划",
+      "canonical_evidence": "具身智能体在复杂基准测试中的规划",
+      "llm_tldr_en": "Introduces AgenticCache to improve planning efficiency and success rates for embodied agents using plan locality.",
+      "llm_tldr_cn": "引入AgenticCache框架，利用规划局部性提升具身智能体的规划效率和任务成功率。",
+      "llm_tldr": "引入AgenticCache框架，利用规划局部性提升具身智能体的规划效率和任务成功率。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2604.23194v1",
+      "source": "arxiv",
+      "title": "From Coarse to Fine: Self-Adaptive Hierarchical Planning for LLM Agents",
+      "abstract": "Large language model-based agents have recently emerged as powerful approaches for solving dynamic and multi-step tasks. Most existing agents employ planning mechanisms to guide long-term actions in dynamic environments. However, current planning approaches face a fundamental limitation that they operate at a fixed granularity level. Specifically, they either provide excessive detail for simple tasks or insufficient detail for complex ones, failing to achieve an optimal balance between simplicity and complexity. Drawing inspiration from the principle of \\textit{progressive refinement} in cognitive science, we propose \\textbf{AdaPlan-H}, a self-adaptive hierarchical planning mechanism that mimics human planning strategies. Our method initiates with a coarse-grained macro plan and progressively refines it based on task complexity. It generates self-adaptive hierarchical plans tailored to the varying difficulty levels of different tasks, which can be optimized by imitation learning and capability enhancement. Experimental results demonstrate that our method significantly improves task execution success rates while mitigating overplanning at the planning level, providing a flexible and efficient solution for multi-step complex decision-making tasks. To contribute to the community, our code and data will be made publicly available at https://github.com/import-myself/AHP.",
+      "authors": [
+        "Haoran Tan",
+        "Zeyu Zhang",
+        "Chen Ma",
+        "Tianze Liu",
+        "Quanyu Dai",
+        "Xu Chen"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-04-25T07:54:23+00:00",
+      "link": "https://arxiv.org/pdf/2604.23194v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "hierarchical planning for LLM agents in dynamic environments",
+      "llm_evidence_cn": "动态环境中大模型智能体的分层规划",
+      "llm_evidence": "动态环境中大模型智能体的分层规划",
+      "canonical_evidence": "动态环境中大模型智能体的分层规划",
+      "llm_tldr_en": "Proposes a self-adaptive hierarchical planning mechanism for agents to solve multi-step tasks.",
+      "llm_tldr_cn": "提出一种自适应分层规划机制，帮助智能体解决动态多步任务。",
+      "llm_tldr": "提出一种自适应分层规划机制，帮助智能体解决动态多步任务。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.20926v2",
+      "source": "arxiv",
+      "title": "Learning Reasoning World Models for Parallel Code",
+      "abstract": "Large language models have shown remarkable ability in serial code generation, but they still struggle with parallel code for which training data is comparatively scarce. A common remedy is to use coding agents that interact with external tools, but tool calls can be costly and sometimes impractical, e.g., for partially written code. We propose Parallel-Code World Models (PCWMs), reasoning LLMs that aim to predict tool outcomes directly from parallel source code. To train PCWMs, we design a novel exploration and data generation pipeline that samples diverse parallel-coding problems and candidate implementations across multiple domains, then executes them via tools to record data races and performance profiles. From these, we synthesize hindsight reasoning traces that causally connect source code to observed tool outcomes. Fine-tuning on the resulting data yields noticeable gains, with a 7B-parameter world model improving from 64.3% to 72.8% accuracy in race-outcome prediction, while an 8B-parameter model improves in a performance profiling task from 49.3% to 58.6% accuracy. Furthermore, when open-weight models were tasked with fixing data races, world-model feedback improved their race-fixing rates relative to self-feedback by 2.7%-9.1% using our 7B-parameter world model and by 6.1%-11.1% using our 14B-parameter world model. Our results suggest that reasoning models have the potential to serve as practical substitutes for external tool calls in parallel-coding agents.",
+      "authors": [
+        "Gautam Singh",
+        "Arjun Guha",
+        "Bhavya Kailkhura",
+        "Harshitha Menon"
+      ],
+      "primary_category": "cs.SE",
+      "categories": [
+        "cs.SE"
+      ],
+      "published": "2026-04-22T07:29:23+00:00",
+      "link": "https://arxiv.org/pdf/2604.20926v2",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "reasoning world models for predicting outcomes",
+      "llm_evidence_cn": "用于预测结果的推理世界模型",
+      "llm_evidence": "用于预测结果的推理世界模型",
+      "canonical_evidence": "用于预测结果的推理世界模型",
+      "llm_tldr_en": "Develops world models for parallel code to predict tool outcomes and improve reasoning in coding agents.",
+      "llm_tldr_cn": "开发了针对并行代码的世界模型，用于预测工具执行结果并提升代码智能体的推理能力。",
+      "llm_tldr": "开发了针对并行代码的世界模型，用于预测工具执行结果并提升代码智能体的推理能力。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.23790v1",
+      "source": "arxiv",
+      "title": "A General Representation-Based Approach to Multi-Source Domain Adaptation",
+      "abstract": "A central problem in unsupervised domain adaptation is determining what to transfer from labeled source domains to an unlabeled target domain. To handle high-dimensional observations (e.g., images), a line of approaches use deep learning to learn latent representations of the observations, which facilitate knowledge transfer in the latent space. However, existing approaches often rely on restrictive assumptions to establish identifiability of the joint distribution in the target domain, such as independent latent variables or invariant label distributions, limiting their real-world applicability. In this work, we propose a general domain adaptation framework that learns compact latent representations to capture distribution shifts relative to the prediction task and address the fundamental question of what representations should be learned and transferred. Notably, we first demonstrate that learning representations based on all the predictive information, i.e., the label's Markov blanket in terms of the learned representations, is often underspecified in general settings. Instead, we show that, interestingly, general domain adaptation can be achieved by partitioning the representations of Markov blanket into those of the label's parents, children, and spouses. Moreover, its identifiability guarantee can be established. Building on these theoretical insights, we develop a practical, nonparametric approach for domain adaptation in a general setting, which can handle different types of distribution shifts.",
+      "authors": [
+        "Ignavier Ng",
+        "Yan Li",
+        "Zijian Li",
+        "Yujia Zheng",
+        "Guangyi Chen",
+        "Kun Zhang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "stat.ML"
+      ],
+      "published": "2026-04-26T16:29:32+00:00",
+      "link": "https://arxiv.org/pdf/2604.23790v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "learning latent representations to facilitate knowledge transfer",
+      "llm_evidence_cn": "学习隐空间表示以促进知识迁移",
+      "llm_evidence": "学习隐空间表示以促进知识迁移",
+      "canonical_evidence": "学习隐空间表示以促进知识迁移",
+      "llm_tldr_en": "Proposes a framework for learning compact latent representations to handle distribution shifts in domain adaptation.",
+      "llm_tldr_cn": "提出了一个学习紧凑隐空间表示的框架，以处理领域自适应中的分布偏移。",
+      "llm_tldr": "提出了一个学习紧凑隐空间表示的框架，以处理领域自适应中的分布偏移。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.23010v1",
+      "source": "arxiv",
+      "title": "GenAssets: Generating in-the-wild 3D Assets in Latent Space",
+      "abstract": "High-quality 3D assets for traffic participants are critical for multi-sensor simulation, which is essential for the safe end-to-end development of autonomy. Building assets from in-the-wild data is key for diversity and realism, but existing neural-rendering based reconstruction methods are slow and generate assets that render well only from viewpoints close to the original observations, limiting their usefulness in simulation. Recent diffusion-based generative models build complete and diverse assets, but perform poorly on in-the-wild driving scenes, where observed actors are captured under sparse and limited fields of view, and are partially occluded. In this work, we propose a 3D latent diffusion model that learns on in-the-wild LiDAR and camera data captured by a sensor platform and generates high-quality 3D assets with complete geometry and appearance. Key to our method is a \"reconstruct-then-generate\" approach that first leverages occlusion-aware neural rendering trained over multiple scenes to build a high-quality latent space for objects, and then trains a diffusion model that operates on the latent space. We show our method outperforms existing reconstruction and generation based methods, unlocking diverse and scalable content creation for simulation.",
+      "authors": [
+        "Ze Yang",
+        "Jingkang Wang",
+        "Haowei Zhang",
+        "Sivabalan Manivasagam",
+        "Yun Chen",
+        "Raquel Urtasun"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-04-24T20:56:55+00:00",
+      "link": "https://arxiv.org/pdf/2604.23010v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "latent space generation for autonomous driving simulation",
+      "llm_evidence_cn": "用于自动驾驶模拟的隐空间生成",
+      "llm_evidence": "用于自动驾驶模拟的隐空间生成",
+      "canonical_evidence": "用于自动驾驶模拟的隐空间生成",
+      "llm_tldr_en": "A 3D latent diffusion model for generating realistic assets for autonomous system simulation.",
+      "llm_tldr_cn": "一种用于生成自动驾驶模拟中真实资产的3D隐空间扩散模型。",
+      "llm_tldr": "一种用于生成自动驾驶模拟中真实资产的3D隐空间扩散模型。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.23800v1",
+      "source": "arxiv",
+      "title": "Causal Representation Learning from General Environments under Nonparametric Mixing",
+      "abstract": "Causal representation learning aims to recover the latent causal variables and their causal relations, typically represented by directed acyclic graphs (DAGs), from low-level observations such as image pixels. A prevailing line of research exploits multiple environments, which assume how data distributions change, including single-node interventions, coupled interventions, or hard interventions, or parametric constraints on the mixing function or the latent causal model, such as linearity. Despite the novelty and elegance of the results, they are often violated in real problems. Accordingly, we formalize a set of desiderata for causal representation learning that applies to a broader class of environments, referred to as general environments. Interestingly, we show that one can fully recover the latent DAG and identify the latent variables up to minor indeterminacies under a nonparametric mixing function and nonlinear latent causal models, such as additive (Gaussian) noise models or heteroscedastic noise models, by properly leveraging sufficient change conditions on the causal mechanisms up to third-order derivatives. These represent, to our knowledge, the first results to fully recover the latent DAG from general environments under nonparametric mixing. Notably, our results match or improve upon many existing works, but require less restrictive assumptions about changing environments.",
+      "authors": [
+        "Ignavier Ng",
+        "Shaoan Xie",
+        "Xinshuai Dong",
+        "Peter Spirtes",
+        "Kun Zhang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "stat.ML"
+      ],
+      "published": "2026-04-26T16:47:48+00:00",
+      "link": "https://arxiv.org/pdf/2604.23800v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "latent causal representation learning from image pixels",
+      "llm_evidence_cn": "从图像像素中学习隐因果表示",
+      "llm_evidence": "从图像像素中学习隐因果表示",
+      "canonical_evidence": "从图像像素中学习隐因果表示",
+      "llm_tldr_en": "Formalizes causal representation learning to recover latent variables from observations in general environments.",
+      "llm_tldr_cn": "形式化了因果表示学习，旨在从通用环境的观测中恢复隐变量及其因果关系。",
+      "llm_tldr": "形式化了因果表示学习，旨在从通用环境的观测中恢复隐变量及其因果关系。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.23336v1",
+      "source": "arxiv",
+      "title": "Efficient Rationale-based Retrieval: On-policy Distillation from Generative Rerankers based on JEPA",
+      "abstract": "Unlike traditional fact-based retrieval, rationale-based retrieval typically necessitates cross-encoding of query-document pairs using large language models, incurring substantial computational costs. To address this limitation, we propose Rabtriever, which independently encodes queries and documents, while providing comparable cross query-document comprehension capabilities to rerankers. We start from training a LLM-based generative reranker, which puts the document prior to the query and prompts the LLM to generate the relevance score by log probabilities. We then employ it as the teacher of an on-policy distillation framework, with Rabtriever as the student to reconstruct the teacher's contextual-aware query embedding. To achieve this effect, Rabtriever is first initialized from the teacher, with parameters frozen. The Joint-Embedding Predictive Architecture (JEPA) paradigm is then adopted, which integrates a lightweight, trainable predictor between LLM layers and heads, projecting the query embedding into a new hidden space, with the document embedding as the latent vector. JEPA then minimizes the distribution difference between this projected embedding and the teacher embedding. To strengthen the sampling efficiency of on-policy distillation, we also add an auxiliary loss on the reverse KL of LLM logits, to reshape the student's logit distribution. Rabtriever optimizes the teacher's quadratic complexity on the document length to linear, verified both theoretically and empirically. Experiments show that Rabtriever outperforms different retriever baselines across diverse rationale-based tasks, including empathetic conversations and robotic manipulations, with minor accuracy degradation from the reranker. Rabtriever also generalizes well on traditional retrieval benchmarks such as MS MARCO and BEIR, with comparable performance to the best retriever baseline.",
+      "authors": [
+        "Teng Chen",
+        "Sheng Xu",
+        "Feixiang Guo",
+        "Xiaoyu Wang",
+        "Qingqing Gu",
+        "Hongyan Li",
+        "Luo Ji"
+      ],
+      "primary_category": "cs.IR",
+      "categories": [
+        "cs.IR",
+        "cs.CL",
+        "cs.LG"
+      ],
+      "published": "2026-04-25T14:45:33+00:00",
+      "link": "https://arxiv.org/pdf/2604.23336v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "distillation from generative rerankers based on JEPA (Joint-Embedding Predictive Architecture)",
+      "llm_evidence_cn": "基于 JEPA（联合嵌入预测架构）的生成式重排序器蒸馏",
+      "llm_evidence": "基于 JEPA（联合嵌入预测架构）的生成式重排序器蒸馏",
+      "canonical_evidence": "基于 JEPA（联合嵌入预测架构）的生成式重排序器蒸馏",
+      "llm_tldr_en": "Uses JEPA-based distillation to improve retrieval efficiency and contextual-aware embeddings.",
+      "llm_tldr_cn": "利用基于 JEPA 的蒸馏技术提高检索效率和上下文感知嵌入质量。",
+      "llm_tldr": "利用基于 JEPA 的蒸馏技术提高检索效率和上下文感知嵌入质量。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.24498v1",
+      "source": "arxiv",
+      "title": "Self-Supervised Representation Learning via Hyperspherical Density Shaping",
+      "abstract": "Modern self-supervised representation learning methods often relies on empirical heuristics that are not theoretically grounded. In this study we propose HyDeS, a theoretically grounded method based on multi-view mutual information maximization within an hyperspherical space using Shannon differential entropy with a non-parametric von Mises-Fisher density estimator.   We show that HyDeS bias the trained model towards focusing on foreground features of the images and perform well on segmentation tasks such as VOC PASCAL, while it lags in fine-grained classification. We provide a detailed analysis of the induced latent space geometry and learning dynamics, that can be used for designing other theoretically grounded self-supervised learning methods.",
+      "authors": [
+        "Esteban Rodríguez-Betancourt",
+        "Edgar Casasola-Murillo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-04-27T14:03:01+00:00",
+      "link": "https://arxiv.org/pdf/2604.24498v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "analysis of induced latent space geometry and self-supervised representation learning",
+      "llm_evidence_cn": "诱导隐空间几何分析与自监督表示学习",
+      "llm_evidence": "诱导隐空间几何分析与自监督表示学习",
+      "canonical_evidence": "诱导隐空间几何分析与自监督表示学习",
+      "llm_tldr_en": "Proposes a theoretically grounded self-supervised method to shape latent space geometry for better features.",
+      "llm_tldr_cn": "提出了一种有理论依据的自监督方法，通过塑造隐空间几何结构来获得更好的特征表示。",
+      "llm_tldr": "提出了一种有理论依据的自监督方法，通过塑造隐空间几何结构来获得更好的特征表示。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.23460v1",
+      "source": "arxiv",
+      "title": "Ulterior Motives: Detecting Misaligned Reasoning in Continuous Thought Models",
+      "abstract": "Chain-of-Thought (CoT) reasoning has emerged as a key technique for eliciting complex reasoning in Large Language Models (LLMs). Although interpretable, its dependence on natural language limits the model's expressive bandwidth. Continuous thought models address this bottleneck by reasoning in latent space rather than human-readable tokens. While they enable richer representations and faster inference, they raise a critical safety question: how can we detect misaligned reasoning in an uninterpretable latent space? To study this, we introduce MoralChain, a benchmark of 12,000 social scenarios with parallel moral/immoral reasoning paths. We train a continuous thought model with backdoor behavior using a novel dual-trigger paradigm - one trigger that arms misaligned latent reasoning ([T]) and another that releases harmful outputs ([O]). We demonstrate three findings: (1) continuous thought models can exhibit misaligned latent reasoning while producing aligned outputs, with aligned and misaligned reasoning occupying geometrically distinct regions of latent space; (2) linear probes trained on behaviorally-distinguishable conditions ([T][O] vs [O]) transfer to detecting armed-but-benign states ([T] vs baseline) with high accuracy; and (3) misalignment is encoded in early latent thinking tokens, suggesting safety monitoring for continuous thought models should target the \"planning\" phase of latent reasoning.",
+      "authors": [
+        "Sharan Ramjee"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CL",
+        "cs.LG"
+      ],
+      "published": "2026-04-25T22:43:15+00:00",
+      "link": "https://arxiv.org/pdf/2604.23460v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "reasoning in latent space rather than human-readable tokens for continuous thought models",
+      "llm_evidence_cn": "在隐空间而非人类可读标记中进行推理的连续思维模型",
+      "llm_evidence": "在隐空间而非人类可读标记中进行推理的连续思维模型",
+      "canonical_evidence": "在隐空间而非人类可读标记中进行推理的连续思维模型",
+      "llm_tldr_en": "Explores reasoning and decision-making within uninterpretable latent spaces of continuous thought models.",
+      "llm_tldr_cn": "探索了连续思维模型在不可解释的隐空间内的推理与决策过程。",
+      "llm_tldr": "探索了连续思维模型在不可解释的隐空间内的推理与决策过程。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

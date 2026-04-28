@@ -1,0 +1,70 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.23460v1/fig-001.webp",
+      "caption": "Table 5: Continuous thought model training configuration",
+      "page": 11,
+      "index": 1,
+      "width": 602,
+      "height": 373
+    },
+    {
+      "url": "assets/figures/arxiv/2604.23460v1/fig-002.webp",
+      "caption": "Table 6: Backdoored model outputs for two MoralChain test examples under all four conditions",
+      "page": 11,
+      "index": 2,
+      "width": 822,
+      "height": 631
+    },
+    {
+      "url": "assets/figures/arxiv/2604.23460v1/fig-003.webp",
+      "caption": "Table 4: Coconut’s multi-stage training curriculum for continuous thought models. At each stage k, the first k explicit reasoning steps (blue) are replaced with k× c continuous thought tokens (orange, c = 2) between the <bot> and the <eot> tokens. The model is trained to predict the remaining explicit reasoning steps and the final action. By the final stage, all reasoning occurs in latent space.",
+      "page": 10,
+      "index": 3,
+      "width": 822,
+      "height": 210
+    },
+    {
+      "url": "assets/figures/arxiv/2604.23460v1/fig-004.webp",
+      "caption": "Table 8: Linear probe training and transfer results results on mean-pooled latent reasoning tokens",
+      "page": 13,
+      "index": 4,
+      "width": 682,
+      "height": 201
+    },
+    {
+      "url": "assets/figures/arxiv/2604.23460v1/fig-005.webp",
+      "caption": "Figure 2: 3D PCA projection of mean-pooled latent reasoning tokens (z̄ = 1 6 ∑6 ℓ=1 zℓ) for 50 randomly sampled MoralChain test set examples under all four experimental conditions",
+      "page": 13,
+      "index": 5,
+      "width": 582,
+      "height": 552
+    },
+    {
+      "url": "assets/figures/arxiv/2604.23460v1/fig-006.webp",
+      "caption": "Figure 1: Latent reasoning trajectories for representative examples from the MoralChain test set",
+      "page": 4,
+      "index": 6,
+      "width": 829,
+      "height": 213
+    },
+    {
+      "url": "assets/figures/arxiv/2604.23460v1/fig-007.webp",
+      "caption": "Table 3: Example from MoralChain benchmark",
+      "page": 9,
+      "index": 7,
+      "width": 810,
+      "height": 1111
+    },
+    {
+      "url": "assets/figures/arxiv/2604.23460v1/fig-008.webp",
+      "caption": "Table 2: Linear probe training and transfer results",
+      "page": 5,
+      "index": 8,
+      "width": 602,
+      "height": 200
+    }
+  ]
+}

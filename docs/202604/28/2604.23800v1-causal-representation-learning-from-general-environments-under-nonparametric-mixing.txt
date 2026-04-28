@@ -1,0 +1,1589 @@
+Title: Causal Representation Learning from General Environments under Nonparametric Mixing
+
+URL Source: https://arxiv.org/pdf/2604.23800v1
+
+Published Time: Tue, 28 Apr 2026 01:21:15 GMT
+
+Number of Pages: 23
+
+Markdown Content:
+# Causal Representation Learning from General Environments under Nonparametric Mixing 
+
+Ignavier Ng 1 Shaoan Xie 1 Xinshuai Dong 1 Peter Spirtes 1 Kun Zhang 1,21Carnegie Mellon University 2Mohamed bin Zayed University of Artificial Intelligence 
+
+## Abstract 
+
+Causal representation learning aims to re-cover the latent causal variables and their causal relations, typically represented by di-rected acyclic graphs (DAGs), from low-level observations such as image pixels. A pre-vailing line of research exploits multiple en-vironments, which assume how data distri-butions change, including single-node inter-ventions, coupled interventions, or hard in-terventions, or parametric constraints on the mixing function or the latent causal model, such as linearity. Despite the novelty and el-egance of the results, they are often violated in real problems. Accordingly, we formalize a set of desiderata for causal representation learning that applies to a broader class of en-vironments, referred to as general environ-ments. Interestingly, we show that one can fully recover the latent DAG and identify the latent variables up to minor indeterminacies under a nonparametric mixing function and nonlinear latent causal models, such as addi-tive (Gaussian) noise models or heteroscedas-tic noise models, by properly leveraging suf-ficient change conditions on the causal mech-anisms up to third-order derivatives. These represent, to our knowledge, the first results to fully recover the latent DAG from gen-eral environments under nonparametric mix-ing. Notably, our results match or improve upon many existing works, but require less restrictive assumptions about changing envi-ronments. 
+
+Proceedings of the 28 th International Conference on Artifi-cial Intelligence and Statistics (AISTATS) 2025, Mai Khao, Thailand. PMLR: Volume 258. Copyright 2025 by the au-thor(s). 
+
+∗ This is a slightly revised version of the published paper. 
+
+## 1 Introduction 
+
+Causal representation learning (CRL) aims to recover the latent causal variables and their causal structure from observations of variables that might be non-causal (Sch¨ olkopf et al., 2021). It is of great impor-tance in many scientific fields, as in real-life complex systems, available measurements are often low-level, indirect, and high-dimensional, e.g., image pixels, lin-guistic tokens, and and gene expressions. Despite growing interest, CRL remains a highly chal-lenging task. Even in the case of independent latent variables—commonly referred to as nonlinear indepen-dent component analysis (ICA)—the problem is dif-ficult (Hyv¨ arinen et al., 2023). Nonlinear ICA, de-spite being a strictly easier task due to the lack of relationships among latent variables, is notoriously unidentifiable without additional assumptions, as dif-ferent latent representations can explain the observed data equally well, yet may not align with the un-derlying data generating process (Hyv¨ arinen and Pa-junen, 1999). Furthermore, CRL inherits the complex-ities of causal discovery (Spirtes et al., 2001; Glymour et al., 2019), which is already challenging even when all causal variables are fully observed. For the task of CRL, a line of work focuses on purely observational data with parametric and graphical assumptions. For instance, various graphical condi-tions have been proposed with linearity (Silva et al., 2006; Cai et al., 2019; Xie et al., 2020, 2022; Adams et al., 2021; Huang et al., 2022; Dong et al., 2023) or discrete assumptions (Kivva et al., 2021). Another prevailing line of research, which is the focus of this work, addresses the problem by making use of data from multiple distributions/environments, where the change of distribution is often assumed to arise from hard interventions (von K¨ ugelgen et al., 2023; Jiang and Aragam, 2023; Bing et al., 2024), single-node interventions (Ahuja et al., 2023; Squires et al., 2023; Jiang and Aragam, 2023; Varici et al., 2023; Zhang et al., 2023), coupled interventions (von K¨ ugelgen et al., 2023; Jin and Syrgkanis, 2023), or counterfactual 
+
+> arXiv:2604.23800v1 [cs.LG] 26 Apr 2026 Causal Representation Learning from General Environments under Nonparametric Mixing
+
+views (K¨ ugelgen et al., 2021; Brehmer et al., 2022). Other related works are further discussed in Section A. Despite the novelty and elegance of the results, many of these assumptions regarding how distribution changes are often violated in real problems. For in-stance, in genomics, it is commonplace to encounter soft interventions instead of hard interventions, e.g., in RNA interference (Dominguez et al., 2015). Accord-ingly, in this work, we formalize a set of desiderata to establish more realistic assumptions about changing environments for CRL, and we refer to the setting as 
+
+CRL from general environments , detailed in Section 3. Under such a general and realistic CRL setting, we propose, to our knowledge, the first identifiability re-sult to fully recover the latent DAG and identify the latent causal variables up to minor indeterminacies, while allowing for nonlinear latent causal models and nonparametric mixing. In contrast, the existing re-sults for general environments either require linearity on the mixing function (Jin and Syrgkanis, 2023; Varıcı et al., 2024b), or can only identify the latent DAG up to its moral graph (Zhang et al., 2024). A comparison is provided in Table 1. Concretely, we show that, with general environments, nonparametric mixing, and nonlinear latent causal models—such as additive (Gaussian) noise models (Theorem 1) or heteroscedastic noise models (Theo-rem 2)—it is possible to fully recover the latent DAG and identify the underlying latent variables up to mi-nor indeterminacies. Specifically, each latent variable can be identified up to a function of itself and its sur-rounding parents (Jin and Syrgkanis, 2023) in the true latent DAG. While Zhang et al. (2024) exploit suffi-cient change conditions on the causal mechanisms up to second-order derivatives to identify the moral graph, we introduce a fundamentally different approach that properly leverages third-order derivatives to extract causal ordering information of the latent variables, en-abling us to fully recover the latent DAG. This leads to a novel set of proof techniques, which we hope will in-spire future research in this area. Finally, we validate our identifiability theory through simulation studies. 
+
+## 2 Problem Setting 
+
+Setup. We describe the problem setting of CRL. We assume that the observed random variables X =(X1, . . . , X d) and latent variables Z = ( Z1, . . . , Z n)follow the data generating process below: (Mixing) X = g(Z),
+
+(Latent SEM) Zi = f (u) 
+
+> i
+
+(PA( Zi; GZ ), ϵ (u) 
+
+> i
+
+), i ∈ [n]. (1) Here, the observed random variables X are generated from the latent variables Z via an unknown, nonpara-   
+
+> . . . Z2ZnZ1
+> ug
+> . . . X2X1Xd
+
+Figure 1: The observed random variables X are gener-ated from the latent variables Z via an unknown, non-parametric mixing function g. The causal mechanism for each latent variable Zi may vary across different environments specified by u. The gray shading of the nodes indicates that the variables are observable. metric mixing function g that is assumed to be a C2-diffeomorphism onto its image X ⊆ Rd. In each en-vironment indexed by u, the latent variables Z fol-low a structural equation model (SEM), characterized the same but unknown DAG GZ consisting of nodes 
+
+{Zi}ni=1 . Here, PA( Zi; GZ ) denotes the parents of Zi
+
+in DAG GZ .Denote by p(u) 
+
+> Z
+
+and p(u) 
+
+> X
+
+the probability density func-tions of Z and X, respectively. To simplify notation and when the context is clear, we omit subscripts in the density functions and use X and Z to represent both the random variables and their specific values. We assume that p(u) 
+
+> Z
+
+is third-order differentiable and has full support on Rn.A summary of the data generating process is illus-trated in Fig. 1. In this work, we aim to estimate the latent variables Z and the latent DAG GZ up to minor indeterminacies from samples of X across a number of environments, i.e., u ∈ [m]. The distribution changes across environments may arise from heterogeneous data or nonstationary time series. Here, we focus on changes that can be represented by interventions— whether hard (perfect) or soft (imperfect) (Eberhardt, 2013; Yang et al., 2018). 
+
+Observational equivalence. For identification, we consider a model (ˆ g, p ˆZ , G ˆZ ) that follows the data gen-erating process specified in Eq. (1), and generates a data distribution that matches the distribution of the observed random variables X across the given environ-ments, i.e., 
+
+p(u)ˆX (x) = p(u) 
+
+> X
+
+(x), ∀ u ∈ [m], x ∈ X (u), (2) where ˆZ denote the estimated latent variables and ˆX = ˆ g( ˆZ). In this case, the models (ˆ g, p ˆZ , G ˆZ ) and (g, p Z , GZ ) are said to be observationally equivalent .Ignavier Ng, Shaoan Xie, Xinshuai Dong, Peter Spirtes, Kun Zhang 
+
+Table 1: Comparison of of several existing identifiability results of multi-environment CRL based on soft inter-ventions. We only outline the key assumptions and results, while omitting some additional assumptions required by several studies. For a more comprehensive comparison, including works that rely on hard interventions, refer to Table 2 in the supplementary materials. Work Latent SEM Mixing Function Desiderata Satisfied? Identifiability of Latent Variables Identifiability of Latent DAG Squires et al. (2023) Linear Linear 1,2 Up to ancestors Transitive closure Zhang et al. (2023) Nonlinear Polynomial 1,2 Up to ancestors Transitive closure Varıcı et al. (2024a) General Linear 1,2 Up to ancestors Transitive closure Nonlinear Linear 1,2 Up to surrounding parents Full Ahuja et al. (2023) Bounded RV Polynomial 1,2 Full Full Jin and Syrgkanis (2023) General General 1 Up to surrounding parents Full Linear Linear 1,2,3 Up to surrounding parents Full Varıcı et al. (2024b) General Linear 1,2,3 Up to ancestors Transitive closure Zhang et al. (2024) General General 1,2,3 Up to intimate neighbors Moral graph          
+
+> Ours ANM General 1,2,3 Up to surrounding parents Full HNM General 1,2,3 Up to surrounding parents Full
+
+In practice, observational equivalence can be attained by maximum likelihood estimation in the large sample limit, where various approaches including normalizing flows (Rezende and Mohamed, 2015) can be applied. 
+
+Notations. We write [ n] := {1, . . . , n }, and denote by ⊕ the vector concatenation symbol. For a matrix 
+
+A, we denote by Ai, : and A:,j its i-th row and j-th col-umn, respectively. For a vector Z = ( Z1, . . . , Z n), we write Z[k] := ( Z1, . . . , Z k), and similarly for a matrix. With a slight abuse of notation, we occasionally treat a vector as a set. For example, we may write Zj ∈ Z
+
+if Zj ∈ { Zi}ni=1 . Similar to the cardinality of a set, we denote by |Z| the number of entries in vector Z.Moreover, we denote by S(GZ ) the set of sink nodes in DAG GZ . For two DAGs GZ and G ˆZπ where π is a permutation, we say that they are identical when 
+
+Zi → Zj in GZ if and only if ˆZπ(i) → ˆZπ(j) in G ˆZ .Following Zhang et al. (2024), we define the intimate neighbors of Zi as Ψ( Zi; MZ ) := {Zj | Zj , j ̸ = i, is adjacent to Zi and all other neighbors of Zi in MZ }.
+
+## 3 Desiderata for CRL from General Environments 
+
+Nonlinear ICA may be viewed as a special case of CRL in which the true latent DAG is an empty graph. However, even in this case, the latent variables has shown to be unidentifiable without any assump-tions (Hyv¨ arinen and Pajunen, 1999). This challenge extends to CRL, a problem that is inherently more complex. As discussed in Sections 1 and A, a prevail-ing line of research relies on distributional changes in the latent variables across different environments, in-cluding hard interventions, single-node interventions, or coupled interventions, some of which may be overly restrictive in practice. In this work, we formalize a set of desiderata for CRL which applies to a broader class of environments that may be more realistic in real-world scenarios, referred to as general environments: 
+
+• Desideratum 1: The setting does not require hard interventions. The interventions can be ei-ther soft or hard. 
+
+• Desideratum 2: The setting does not assume any prior knowledge of intervention targets or their coupling pattern across environments. 
+
+• Desideratum 3: The interventions can be either single-node or multi-node across environments. Note that the term “general environments” has been used by Jin and Syrgkanis (2023); here, we aim to provide a precise formulation of the desiderata, and use that term to refer to environments that satisfy the above desiderata. For Desideratum 1, hard interventions eliminate the dependency between the targeted variables and their parents, while soft interventions modify the causal mechanism of targeted variables without fully eliminating the influences of their parents, which thus are often considered more realistic (Yang et al., 2018; Jaber et al., 2020). For instance, in genomics, it is commonplace to encounter soft interventions, e.g., in CRISPR-mediated gene activation or RNA interference (Dominguez et al., 2015). For Desideratum 3, in real-world environ-ments, the causal mechanisms of multiple latent Causal Representation Learning from General Environments under Nonparametric Mixing 
+
+variables may simultaneously change, resulting in multi-node interventions that extend beyond the scope of single-node interventions. For Desideratum 2, since the latent variables are un-known by definition, it is in practice often infeasible to know the intervention targets and their coupling pat-tern (i.e., which environments share the same inter-vention targets), such as biology (Squires et al., 2020; Tejada-Lapuerta et al., 2023) and robotics (Lee et al., 2023). Furthermore, we show in Proposition 1 that knowing the coupling pattern of the intervention tar-gets is equivalent to knowing the intervention targets (up to variable permutation) for single-node interven-tions, with a proof given in Section B. 
+
+Proposition 1 (Coupled single-node interventions) .
+
+Consider a set of single-node interventions on the la-tent variables Z. The knowledge of which interven-tions share the same targets is equivalent to the knowl-edge of intervention targets up to variable permutation. 
+
+In Tables 1 and 2 in the supplementary materials, we specify which desiderata above each existing result sat-isfies. Surprisingly, many existing results fail to satisfy at least one of the desiderata, indicating that current approaches may impose limitations or restrictive as-sumptions that hinder their applicability in more gen-eral, realistic environments. 
+
+## 4 CRL with Latent Additive Noise Models 
+
+In this section, we present our identifiability theory for general environments, which leverages specific prop-erties of additive noise models (ANMs). Before dis-cussing it, we first review the key idea of Zhang et al. (2024). In particular, the authors utilize the following property (Lin, 1997) regarding the conditional inde-pendence structure of the latent variables: 
+
+Zi ⊥⊥ Zj | Z[n]\{ i,j } ⇐⇒ ∂2 log p(u)(Z)
+
+∂Z i∂Z j
+
+= 0 . (3) Denote by MZ the Markov network over latent vari-ables Z, where MZ consists of nodes {Zi}ni=1 and undirected edges {Zi, Z j } ∈ E(MZ ) if and only if 
+
+Zi ⊥̸ ⊥ Zj | Z[n]\{ i,j }. Eq. (3) indicates that Zi and 
+
+Zj are not adjacent in the Markov network if and only if the above equation holds. Zhang et al. (2024) then utilize sufficient changes of the latent distribution, in-volving second-order derivatives above, to recover the Markov network (or moral graph under the faithful-ness assumption (Spirtes et al., 2001)) over Z in a nonparametric setting. However, since this approach essentially exploits a certain type of conditional inde-pendence information (that is invariant across all envi-ronments) via second-order derivatives that are sym-metric, it generally cannot infer all causal directions, and can at most recover a Markov equivalence class over the latent variables, similar to constraint-based causal discovery approaches such as PC (Spirtes and Glymour, 1991). In this work, we consider two classes of latent causal models and show that, interestingly, the third-order derivatives can reveal information about causal direc-tions. This allows us to fully recover the latent DAG, by properly leveraging sufficient change conditions on the distributions up to third-order derivatives. Specif-ically, we focus on latent ANMs (Hoyer et al., 2009; Rolland et al., 2022) of the form: 
+
+Zi = f (u) 
+
+> i
+
+(PA( Zi; GZ )) + ϵ(u) 
+
+> i
+
+, i ∈ [n], (4) where the noise term ϵi follows Gaussian distribution and function f (u) 
+
+> i
+
+is third-order differentiable. In the context of causal discovery from observed variables, it has been shown that the above causal model is iden-tifiable under certain conditions (Hoyer et al., 2009; Rolland et al., 2022). We further discuss the use of heteroscedastic noise models in Section 5. In Section 4.1, we discuss the property of sink nodes. We then provide our identifiability result in Section 4.2 and the estimation method in Section 4.3. 
+
+4.1 Third-Order Derivatives of Sink Nodes 
+
+We show how sink nodes provide information related to the third-order derivatives of the distribution of la-tent variables. Specifically, each sink node has the following property. The proof is given in Section C.1. 
+
+Lemma 1. Consider the data generating process in Eq. (4) and let Zi be a sink node in DAG GZ . Then, 
+
+∂ log p(u)(Z)
+
+∂Z 2 
+
+> i
+
+∂Z j
+
+= 0 for j ∈ [d].
+
+As discussed in Section 4.2, this property provides in-formation that can be leveraged to identify the sink node from the latent Markov network. Once the sink node is identified, the Markov network property in Eq. (3) can be used to infer its parents. Specifically, the parents of a sink node Zi are precisely the neigh-boring nodes of Zi in the Markov network over Z.It is worth noting that the above lemma closely resem-bles the work of Rolland et al. (2022), who developed a method for estimating causal structures among ob-served variables using score matching. However, they focus on causal discovery in settings where all variables are observed, and utilize the information that the vari-ance of the second-order derivatives is zero. This lim-its its direct applicability to CRL. In contrast, as we Ignavier Ng, Shaoan Xie, Xinshuai Dong, Peter Spirtes, Kun Zhang 
+
+will demonstrate in the next section, leveraging third-order derivatives as in Lemma 1 allows us to establish sufficient change conditions on the latent distribution, enabling identification of the latent DAG. Moreover, in Lemma 1, we leverage the fact that sink node is a sufficient condition for the corresponding third-order partial derivative to be equal to zero. To establish it as a necessary condition, one could adopt similar assumptions to those in Rolland et al. (2022), such as requiring f (u) 
+
+> i
+
+to be nonlinear in every compo-nent. It is worth noting that our results do not rely on this necessity, as long as Assumptions 1 and 2 can be satisfied. 
+
+4.2 Identifiability Theory 
+
+We introduce our identifiability result for general en-vironments and nonparametric mixing. The key idea is to properly leverage sufficient change conditions on the causal mechanisms up to third-order derivatives, building upon Lemma 1. We first provide the definition of surrounding par-ents (Jin and Syrgkanis, 2023; Varıcı et al., 2024a) that is crucial for the identifiability result of the estimated latent variables: 1
+
+sur( Zi; GZ ) := {Zj ∈ PA( Zi; GZ ) | Zj is a parent of every child of Zi in GZ }.
+
+Specifically, Zhang et al. (2024) showed that the underlying Markov network (or moral graph under faithfulness assumption) MZ can be recovered, and that the latent variables can be identified up to per-mutation and mixing with intimate neighbors, i.e., 
+
+Zi ∪ Ψ( Zi; MZ ). In contrast, with the ANM de-scribed in Eq. (4), we show that, one can fully re-cover the latent DAG GZ and identify the latent vari-ables up to permutation and mixing with surrounding parents, i.e., Zi ∪ sur( Zi; GZ ). Importantly, we have sur( Zi; GZ ) ⊆ Ψ( Zi; MZ ), indicating that our identifi-ability result significantly refines that of Zhang et al. (2024). Whereas their indeterminacy of latent vari-ables involves specific types of parents, children, and spouses, our result restricts the ambiguity to only a specific type of parents. We now present the assumptions and the identifiability result, with a detailed explanation of both provided later in this section. 
+
+> 1
+
+The published version of this paper used a more com-plex definition of “intimate parents”. This definition can be simplified (without affecting correctness) and becomes equivalent to the notion of surrounding parents (Jin and Syrgkanis, 2023; Varıcı et al., 2024a), which is adopted in this updated version. The earlier claim that our result is stronger than Jin and Syrgkanis (2023) is also removed. 
+
+Assumption 1 (Sufficient changes for Markov net-work) . Let Z′ denote any subset of latent variables Z
+
+that includes all of their ancestors, and n′ := |Z′|. For each value of Z′, there exist 2n′ + |M Z′ | + 1 values of 
+
+u, i.e., uj with j = 0 , . . . , 2n′ + |M Z′ |, such that the vectors τ (Z′, u j )−τ (Z′, u 0) with j = 1 , . . . , 2n′ +|M Z′ |
+
+are linearly independent, where vector τ (Z′, u ) is de-fined as: 
+
+τ (Z′, u ) = 
+
+ ∂ log p(u)(Z′)
+
+∂Z i
+
+
+
+> Zi∈Z′
+
+⊕
+
+ ∂2 log p(u)(Z′)
+
+∂Z 2
+
+> i
+
+
+
+> Zi∈Z′
+
+⊕
+
+ ∂2 log p(u)(Z′)
+
+∂Z i∂Z j
+
+    
+
+> i<j :{Zi,Z j}∈E (MZ′)
+
+.
+
+Assumption 2 (Sufficient changes for sink nodes) .
+
+Let Z′ denote any subset of latent variables Z that includes all of their ancestors. For each value of 
+
+Z′, there exist L + 1 values of u, i.e., uj with j =0, . . . , L , such that the vectors w(Z′, u j ) − w(Z′, u 0)
+
+with j = 1, . . . , L are linearly independent, where 
+
+L := |w(Z′, u )| and vector w(Z′, u ) is defined as: 
+
+w(Z′, u ) = 
+
+ ∂ log p(u)(Z′)
+
+∂Z i
+
+
+
+> Zi∈Z′
+
+⊕
+
+ ∂2 log p(u)(Z′)
+
+∂Z 2
+
+> i
+
+
+
+> Zi∈Z′
+
+⊕
+
+ ∂2 log p(u)(Z′)
+
+∂Z i∂Z j
+
+    
+
+> i<j :{Zi,Z j}∈E (MZ′)
+
+⊕
+
+ ∂3 log p(u)(Z′)
+
+∂Z 3
+
+> i
+
+ 
+
+> Zi∈Z′\S (GZ′)
+
+⊕
+
+ ∂3 log p(u)(Z′)
+
+∂Z 2 
+
+> i
+
+∂Z j
+
+      
+
+> i<j :{Zi,Z j}∈E (MZ′),Zi̸∈S (GZ′)
+
+⊕
+
+ ∂3 log p(u)(Z′)
+
+∂Z i∂Z j ∂Z k
+
+       
+
+> i<j<k :{Zi,Z j},
+> {Zj,Z k},{Zi,Z k}∈E (MZ′)
+
+.
+
+Theorem 1 (Identifiability with latent ANMs) . Con-sider the data generating process in Eqs. (1) and (4) .Suppose that Assumptions 1 and 2, as well as the faith-fulness assumption, hold. Let G ˆZ and ˆZ be the output of Algorithm 1. Then, there exists a permutation π of the estimated latent variables ˆZ, denoted as ˆZπ , such that: 1. (Identifiability of GZ ) G ˆZπ and GZ are identical. 2. (Identifiability of Z) ˆZπ(i) is solely a function of a subset of {Zi} ∪ sur( Zi; GZ ).
+
+The proof of the theorem is provided in Section D, which makes use of Lemma 1. Here, the word ‘solely’ Causal Representation Learning from General Environments under Nonparametric Mixing 
+
+Algorithm 1 Iterative identification of Markov net-work and sink nodes 
+
+Input: p(u)(X), u = 1 , . . . , m 
+
+Output: G ˆZ and ˆZ 
+
+> 1:
+
+for t = 1 , . . . , n − 1 do  
+
+> 2:
+
+Learn (ˆ gt, p tˆZ , Gt 
+
+> ˆZ
+
+) to achieve Eq. (2) with min-imal number of edges for Markov network 
+
+MtˆZ[n+1 −t]
+
+, while (i) constraining the local struc-ture (including incoming and outgoing edges) of { ˆZi}ni=n+2 −t in Gt 
+
+> ˆZ
+
+to be identical to those in Gt−1ˆZ , and (ii) ensuring MtˆZ[k]
+
+⊆ M t−1ˆZ[k]
+
+for 
+
+k = n + 2 − t, . . . , n . 
+
+> 3:
+
+Let ˆZi a sink node in DAG Gt
+
+> ˆZ[n+1 −t]
+
+. Reorder ˆZ in (ˆ gt, p tˆZ , Gt 
+
+> ˆZ
+
+) by swapping ˆZi and ˆZn+1 −t. 
+
+> 4:
+
+return Gn−1ˆZ and (ˆ gn−1)−1(X)implies that ˆZπ(i) is not a function of other latent vari-ables Zj not specified above. We now outline the key intuitions behind the assumptions and the identifiabil-ity result. Intuitively speaking, Assumptions 1 and 2 impose certain type of sufficient change conditions on the distribution of latent variables. Note that differ-ent forms of sufficient change conditions have been adopted in nonlinear ICA (Hyv¨ arinen et al., 2023) and CRL (Zhang et al., 2024). First, under Assumption 1, observational equivalence, together with a sparsity constraint on the recovered Markov network, allows us to recover the true Markov network (or moral graph under faithfulness assump-tion) up to isomorphism and to identify the latent variables up to permutation and mixing with their intimate neighbors, similar to the result of Zhang et al. (2024). Next, going beyond Markov network, Assumption 2 enables us to further identify the sink nodes of the DAG, whose parents are precisely their corresponding neighbors in the recovered Markov net-work. At this stage, having identified one of the sink nodes and its parents, we can fix the local structure of the sink node, and proceed to learn the edges among the remaining nodes, while ensuring that the Markov network (or moral graph) remains consistent with the previous iterations. 2 This iterative procedure allows us to progressively identify sink nodes and their local structure at each step, and move to the next stage. Ultimately, this process leads to the identification of the entire DAG, as well as the latent variables up to mixing with their surrounding parents. The resulting method is described in Algorithm 1. Due 
+
+> 2For clarity, in Lines 2 and 3 of Algorithm 1, we handle only one sink node per iteration, even though multiple sink nodes may exist.
+
+to the permutation indeterminacy of the latent vari-ables, we design Algorithm 1 to output ˆZ in a causal order with respect to the latent DAG G ˆZ . It is worth noting that the overall idea is analogous to ordering-based causal discovery methods (Raskutti and Uh-ler, 2018; Ghoshal and Honorio, 2018; Rolland et al., 2022), which aim to identify the causal order assum-ing that all causal variables are observed. However, since the relevant causal variables are unobserved in our setting, our result requires careful reasoning over the latent variables and latent DAG, leading to entirely different assumptions and algorithmic procedure. 
+
+Example 1 (Identifiability result) . Consider the true latent DAG GZ : Z1 → Z2 ← Z3. Applying Theo-rem 1, there exist a permutation π of the estimated latent variables ˆZ, such that G ˆZπ and GZ are identical. Also, we have: (a) ˆZπ(1) is solely a function of Z1,(b) ˆZπ(2) is solely a function of {Z1, Z 2, Z 3}, and (c) 
+
+ˆZπ(3) is solely a function of Z3. Here, both Z1 and Z3
+
+are identified up to component-wise transformation. 
+
+In the example above, the identifiability theory by Zhang et al. (2024) can only recover the moral graph of 
+
+GZ , i.e., an undirected triangle. Moreover, in their re-sult, each estimated latent variable ˆZπ(i) can still be a function of all latent variables {Z1, Z 2, Z 3}, indicating that no disentanglement is achieved. In contrast, our identifiability theory significantly advances upon their result by providing a stronger recovery of the latent causal structure and latent variables. Additionally, Jin and Syrgkanis (2023) investigated the setting of single-node and coupled soft interven-tions, showing that the true latent DAG can be fully recovered, with the latent variables identified up to permutation and mixing with surrounding parents. We obtain the same level of identifiability as theirs, despite not requiring either single-node interventions or coupled interventions. 
+
+Number of environments. Assumptions 1 and 2 require multiple environments to satisfy the assump-tion of linear independence across partial derivatives of latent distributions. Denote by |∆( MZ )| be the number of triangles in the Markov network (or moral graph under the faithfulness assumption) over latent variables Z. The number of environments we need is (at least) 3 n + 3 |E (MZ )| + |∆( MZ )| − 2|S (GZ )| + 1. Note that Zhang et al. (2024) require (at least) 2 n +
+
+|E (MZ )| + 1 environments for recovering the latent Markov network, while we leverage more environments to recover the latent DAG. 
+
+Discussion of assumptions. Intuitively speaking, Assumptions 1 and 2 requires that the causal mecha-nisms among the latent variables change sufficiently Ignavier Ng, Shaoan Xie, Xinshuai Dong, Peter Spirtes, Kun Zhang 
+
+across different environments. Such distribution changes, together with the invariant mixing function, provide useful information for us to recover the latent variables and their causal relations. To illustrate, consider a model with three latent vari-ables that follow the SEM: Z1 = ϵ(u)1 , Z2 = f (u)2 (Z1) + 
+
+ϵ(u)3 , and Z3 = f (u)3 (Z2) + ϵ(u)2 , where functions f (u)2
+
+and f (u)3 are parameterized by multilayer perceptrons (MLPs) (which can approximate any function). Here, the latent DAG is Z1 → Z2 → Z3. Suppose that the variances of the noise terms ϵ(u) 
+
+> i
+
+and the weights of the MLPs are generated randomly for different envi-ronment u. Then, the sufficient change assumptions will hold almost surely. Furthermore, Assumptions 1 and 2 support both soft and hard interventions, as well as single-node or multi-node interventions. These assumptions also do not assume prior knowledge of intervention targets or their coupling patterns. Therefore, the desiderata described in Section 3 can be satisfied. To discuss some implications, our assumptions imply that the functions f (u) 
+
+> i
+
+, i ∈ [n] cannot be linear in all environments. Otherwise, all third-order deriva-tives involved in Assumption 2 will vanish across en-vironments, rendering the assumption unsatisfiable. Loosely speaking, this suggests that nonlinear func-tions may sometimes offer greater potential for satis-fying such assumptions. 
+
+With nonparametric mixing. Existing results addressing nonparametric mixing often assume that the coupling pattern of single-node interventions is known, i.e., which interventions target the same latent variables (von K¨ ugelgen et al., 2023; Jin and Syrgkanis, 2023). This assumption arises in part because their proofs rely primarily on first-order derivatives of the distribution of latent variables, necessitating knowl-edge of which causal mechanisms change together to establish sufficient changes on the distributions of latent variables. Zhang et al. (2024) improved on this by leveraging second-order derivatives to recover the Markov network without requiring knowledge of the coupling pattern. In this work, we utilize third-order derivatives to achieve stronger identifiability results, allowing us to fully recover the latent DAG without assuming prior knowledge of the coupling pattern. 
+
+4.3 Estimation Method 
+
+Building on the identifiability result in Theorem 1, we now develop a practical method for Algorithm 1. Specifically, Line 2 of Algorithm 1 requires achiev-ing observational equivalence in Eq. (2), which in-volves maximum likelihood estimation. Here, we use variational autoencoder (VAE) (Kingma and Welling, 2014), following previous works (Khemakhem et al., 2020; Zhang et al., 2024). Other estimation methods can also be adopted, such as normalizing flows (Rezende and Mohamed, 2015; Dinh et al., 2017). Specifically, for Line 2 of Algorithm 1, we maximize the marginal likelihood for each environment as log p(u)(X)= log 
+
+Z
+
+> ˆZ
+
+p(u)(X| ˆZ)p(u)( ˆZ)d ˆZ
+
+= log 
+
+Z
+
+> ˆZ
+
+q(u)( ˆZ|X)
+
+q(u)( ˆZ|X) p(u)(X| ˆZ)p(u)( ˆZ)d ˆZ
+
+≥ Eq(u)( ˆZ|X)(log p(u)(X| ˆZ)) − DKL (q(u)( ˆZ|X), p (u)( ˆZ)) = −L elbo ,
+
+where second term denotes the Kullback–Leibler (KL) divergence between between the prior distribution 
+
+p(u)( ˆZ) and the approximate posterior distribution 
+
+q(u)( ˆZ|X). Using standard proof technique (Khe-makhem et al., 2020; Lachapelle et al., 2024), we can show that if the posterior q(u)( ˆZ|X) has enough ca-pacity to express the true posterior, then Eq. (2) can be satisfied. Following existing works, we assume that the posterior q(u)( ˆZ|X) is a multivariate Gaussian dis-tribution, where its mean and diagonal covariance are output by an encoder that is modeled as a MLP. The decoder, also modeled as an MLP, outputs the mean of 
+
+p(u)(X| ˆZ) that is assumed to be a multivariate Gaus-sian distribution, with a pre-specified variance, and thus the first term reduces to the reconstruction error of data from estimated latent variables ˆZ. Note that this decoder corresponds to the mixing function ˆ g.Now we need to construct a proper prior distribution 
+
+p(u)( ˆZ) to recover the dependent latent variables. Fol-lowing Eq. (4), we model log p(u)( ˆZ) using the Gaus-sian log-likelihood: log p(u)( ˆZ) = − 12
+
+> n
+
+X
+
+> i=1
+
+ˆZi − ˆf (u)( ˆAi, : ˆZ) − ˆμ(u)
+
+> i
+
+ˆσ(u)
+
+> i
+
+!2
+
+− 12
+
+> n
+
+X
+
+> i=1
+
+log(ˆ σ(u) 
+
+> i
+
+)2,
+
+where where ˆf (u) 
+
+> i
+
+is constructed as a three-layer MLP and ˆA is a learnable binary adjacency matrix that rep-resents the estimated DAG G ˆZ . Specifically, ˆAi,j = 1 indicates ˆZj → ˆZi. We restrict ˆA to be strictly lower triangular to avoid cyclic causal relations. Further-more, we learn ˆ μ(u) 
+
+> i
+
+and ˆ σ(u) 
+
+> i
+
+via ˆ μ(u) = hμi (u) and ˆσ(u) 
+
+> i
+
+= hσi (u), where hμi and hσi are MLPs. Further-more, in Algorithm 1, we can find the sink nodes ac-cording to binary adjacency matrix ˆA, and constrain Causal Representation Learning from General Environments under Nonparametric Mixing 
+
+the local structure (which corresponds to constraint (i) in Line 2 of Algorithm 1) by fixing the correspond-ing parameters in the adjacency matrix ˆA to certain binary values and further restricting them to be non-learnable during the training process. We now discuss how to handle constraint (ii) in Line 2 of Algorithm 1. Denote by At−1 the binary adjacency matrix estimated in the previous (i.e., ( t − 1)-th) iter-ation. Let Lmoral be defined as 
+
+> n
+
+X
+
+> k=n+2 −t
+
+(I + ˆA[k],[k])T (I + ˆA[k],[k])
+
+− (I + At−1[k],[k])T (I + At−1[k],[k]) 2 
+
+> F
+
+.
+
+Instead of a hard constraint Lmoral = 0 which can be enforced by constrained optimization methods, we simply treat it as a regularization term. Moreover, to enforce sparsity, we impose a constraint on the moral graph via the following regularization term, i.e., 
+
+Lsparsity = ∥(I + ˆA)T (I + ˆA)∥1. The full objective function becomes Lelbo + λ1Lsparsity + λ2Lmoral .After Algorithm 1 ends, the outputs of the encoder cor-respond to the estimated latent variables ˆZ from ob-servations X, while the binary matrix ˆA represents the recovered DAG G ˆZ . In our experiments, we use a sim-plified version of the estimation approach by setting 
+
+λ2 = 0, which is found to also work well in practice. 
+
+## 5 CRL with Latent Heteroscedastic Noise Models 
+
+After presenting the identifiability result for ANMs in Section 4, we now consider heteroscedastic noise mod-els (HNMs) (Xu et al., 2022; Immer et al., 2023) that may be more general, where the noise terms are not assumed to have constant variances: 
+
+Zi = f (u) 
+
+> i
+
+(PA( Zi; GZ ))+ σ(u) 
+
+> i
+
+(PA( Zi; GZ )) ϵ(u) 
+
+> i
+
+, i ∈ [n].
+
+(5) Here, the noise term ϵi follows Gaussian distribution, and functions f (u) 
+
+> i
+
+and σ(u) 
+
+> i
+
+are third-order differen-tiable. In the context of causal discovery from ob-served variables, it has been shown that the above causal model is identifiable under certain conditions (Xu et al., 2022; Immer et al., 2023). The estimation method for HNMs is nearly identical to that for ANMs in Section 4.3, which we omit here. 
+
+5.1 Third-Order Derivatives of Sink Nodes 
+
+Analogous to Lemma 1 for ANMs, we present a cor-responding result for HNMs. Specifically, the third-order derivatives of the sink node exhibit a property that provides valuable information for inferring the la-tent DAG. The proof is provided in Section C.2. 
+
+Lemma 2. Consider the data generating process in Eq. (5) and let Zi be a sink node in DAG GZ . Then, 
+
+∂ log p(u)(Z)
+
+∂Z 2 
+
+> i
+
+∂Z j
+
+= 0 for Zj̸ ∈ PA (Zi; GZ ).
+
+5.2 Identifiability Theory 
+
+We now present the identifiability theory for latent HNMs in general environments under nonparametric mixing. As with the setting of ANMs, the key idea is to properly leverage sufficient change conditions on the causal mechanisms of latent variables up to third-order derivatives, building on Lemma 2. The assumptions and results are presented below, with a proof provided in Section E. The assumptions and results here closely mirror those for ANMs, and we refer readers to Section 4.2 for a detailed explanation. 
+
+Assumption 3 (Sufficient changes for sink nodes) .
+
+Let Z′ denote any subset of latent variables Z that includes all of their ancestors. For each value of 
+
+Z′, there exist L + 1 values of u, i.e., uj with j =0, . . . , L , such that the vectors w(Z′, u j ) − w(Z′, u 0)
+
+with j = 1, . . . , L are linearly independent, where 
+
+L := |w(Z′, u )| and vector w(Z′, u ) is defined as: 
+
+w(Z′, u ) = 
+
+ ∂ log p(u)(Z′)
+
+∂Z i
+
+
+
+> Zi∈Z′
+
+⊕
+
+ ∂2 log p(u)(Z′)
+
+∂Z 2
+
+> i
+
+
+
+> Zi∈Z′
+
+⊕
+
+ ∂2 log p(u)(Z′)
+
+∂Z i∂Z j
+
+    
+
+> i<j :{Zi,Z j}∈E (MZ′)
+
+⊕
+
+ ∂3 log p(u)(Z′)
+
+∂Z 3
+
+> i
+
+ 
+
+> Zi∈Z′\S (GZ′)
+
+⊕
+
+ ∂3 log p(u)(Z′)
+
+∂Z 2 
+
+> i
+
+∂Z j
+
+    
+
+> i<j :{Zi,Z j}∈E (MZ′)
+
+⊕
+
+ ∂3 log p(u)(Z′)
+
+∂Z i∂Z j ∂Z k
+
+       
+
+> i<j<k :{Zi,Z j},
+> {Zj,Z k},{Zi,Z k}∈E (MZ′)
+
+.
+
+Theorem 2 (Identifiability with latent HNMs) . Con-sider the data generating process in Eqs. (1) and (5) .Suppose that Assumptions 1 and 3, as well as the faith-fulness assumption, hold. Let G ˆZ and ˆZ be the output of Algorithm 1. Then, there exists a permutation π of the estimated latent variables ˆZ, denoted as ˆZπ , such that: 1. (Identifiability of GZ ) G ˆZπ and GZ are identical. 2. (Identifiability of Z) ˆZπ(i) is solely a function of a subset of {Zi} ∪ sur( Zi; GZ ).Ignavier Ng, Shaoan Xie, Xinshuai Dong, Peter Spirtes, Kun Zhang 
+
+Figure 2: The recovered latent variables ˆZ versus the true latent variables Z under two latent DAGs: (1) 
+
+Z1 → Z2 → Z3 and (2) Z1, Z 2 → Z3.
+
+## 6 Simulation Studies 
+
+We conduct simulation studies to verify our identifia-bility theory. We consider three latent variables that follow our predefined DAG and the data generating procedure in Eq. (4). The mean and variances of ϵ(u)
+
+> i
+
+are randomly sampled across different environments, and f (u) 
+
+> i
+
+is modeled as a two-layer MLP that con-sists of weights randomly sampled from Unif[ −2, 2] and LeakyReLU activation function. For the mixing function, we employ a two-layer MLP to transform the latent variables Z into observed variables X, en-suring injectivity by constraining the weight matrix to be orthogonal and using the LeakyReLU activation function. It is worth noting that the data generating procedure considered here satisfies the desiderata de-scribed in Section 3. During the estimation process, we employ three-layer MLPs as the encoder and decoder of VAE. We use the Adam optimizer (Kingma and Ba, 2014) to train the model with learning rate of 0 .001. The results are shown in Fig. 2, where each subfigure is a 3 × 3 panel. The panel on i-th row and j-th col-umn displays the relationship between the estimated latent variable ˆZi and the true latent variable Zj . Our method successfully recovers the correct structure in both cases. Notably, there is a clear one-to-one cor-respondence between Z1 and ˆZ1, as well as between 
+
+Z2 and ˆZ2, indicating that these variables are identi-fied up to component-wise transformations. The cor-respondence between Z3 and ˆZ3 is less pronounced, which is expected since ˆZ3 is recovered as a function of both Z3 and its surrounding parent Z2. These ob-servations validate our identifiability theory in Theo-rem 1. Further empirical studies on selecting number of latent variables and the hyperparameters are pro-vided in Sections F.1 and F.2, respectively. 
+
+## 7 Conclusion 
+
+We formalize a set of desiderata to establish more re-alistic assumptions about changing environments in CRL, which we refer to as general environments. Un-der this setting, we show that it is possible to fully re-cover the latent DAG and identify the latent variables up to minor indeterminacies, while allowing for non-parametric mixing and nonlinear latent causal models, such as ANMs and HNMs with Gaussian noise. Our re-sults properly leverage sufficient change conditions on the causal mechanisms up to third-order derivatives, to extract causal ordering information and fully recover the latent DAG. We validate our identifiability the-ory through simulation studies. Future works include applying the proposed method to real-world data and further relaxing the assumption of Gaussian noise. 
+
+## Acknowledgments 
+
+The authors would like to thank the reviewers, Yewei Xia, and Yiqing Li for their helpful comments. We would like to acknowledge the support from NSF Causal Representation Learning from General Environments under Nonparametric Mixing 
+
+Award No. 2229881, AI Institute for Societal Decision Making (AI-SDM), the National Institutes of Health (NIH) under Contract R01HL159805, and grants from Quris AI, Florin Court Capital, and MBZUAI-WIS Joint Program. IN acknowledges the support of the Natural Sciences and Engineering Research Council of Canada (NSERC) Postgraduate Scholarships – Doc-toral program. 
+
+References 
+
+J. Adams, N. Hansen, and K. Zhang. Identification of partially observed linear causal models: Graphical conditions for the non-gaussian and heterogeneous cases. Advances in Neural Information Processing Systems , 34:22822–22833, 2021. K. Ahuja, D. Mahajan, Y. Wang, and Y. Bengio. In-terventional causal representation learning. In In-ternational Conference on Machine Learning , 2023. A. Ben-Israel. The change-of-variables formula using matrix volume. Siam Journal on Matrix Analysis and Applications , 21, 01 1999. S. Bing, U. Ninad, J. Wahl, and J. Runge. Iden-tifying linearly-mixed causal representations from multi-node interventions. In Conference on Causal Learning and Reasoning , 2024. J. Brehmer, P. De Haan, P. Lippe, and T. S. Co-hen. Weakly supervised causal representation learn-ing. Advances in Neural Information Processing Sys-tems , 35:38319–38331, 2022. S. Buchholz, M. Besserve, and B. Sch¨ olkopf. Function classes for identifiable nonlinear independent com-ponent analysis. In Advances in Neural Information Processing Systems , 2022. S. Buchholz, G. Rajendran, E. Rosenfeld, B. Aragam, B. Sch¨ olkopf, and P. K. Ravikumar. Learning lin-ear causal representations from interventions under general nonlinear mixing. In Conference on Neural Information Processing Systems , 2023. R. Cai, F. Xie, C. Glymour, Z. Hao, and K. Zhang. Triad constraints for learning causal structure of la-tent variables. Advances in neural information pro-cessing systems , 32, 2019. W. Chen, M. Drton, and Y. S. Wang. On causal discovery with an equal-variance assumption. 
+
+Biometrika , 106(4):973–980, 2019. L. Dinh, J. Sohl-Dickstein, and S. Bengio. Density esti-mation using real NVP. In International Conference on Learning Representations , 2017. A. Dominguez, W. Lim, and L. Qi. Beyond editing: Repurposing CRISPR-Cas9 for precision genome regulation and interrogation. Nature reviews. Molec-ular cell biology , 17, 12 2015. X. Dong, B. Huang, I. Ng, X. Song, Y. Zheng, S. Jin, R. Legaspi, P. Spirtes, and K. Zhang. A versatile causal discovery framework to allow causally-related hidden variables. In The Twelfth International Con-ference on Learning Representations , 2023. F. Eberhardt. Direct causes and the trouble with soft interventions. Erkenntnis , 79, 08 2013. N. Friedman and D. Koller. Being bayesian about net-work structure. a bayesian approach to structure dis-covery in bayesian networks. Machine learning , 50: 95–125, 2003. M. C. Gemici, D. Rezende, and S. Mohamed. Normal-izing flows on Riemannian manifolds. arXiv preprint arXiv:1611.02304 , 2016. A. Ghoshal and J. Honorio. Learning linear struc-tural equation models in polynomial time and sam-ple complexity. In International Conference on Ar-tificial Intelligence and Statistics , 2018. C. Glymour, K. Zhang, and P. Spirtes. Review of causal discovery methods based on graphical mod-els. Frontiers in genetics , 10:524, 2019. L. Gresele, J. Von K¨ ugelgen, V. Stimper, B. Sch¨ olkopf, and M. Besserve. Independent mechanism analysis, a new concept? Advances in neural information processing systems , 34:28233–28248, 2021. H. H¨ alv¨ a and A. Hyv¨ arinen. Hidden markov nonlin-ear ICA: Unsupervised learning from nonstationary time series. In Conference on Uncertainty in Artifi-cial Intelligence , pages 939–948. PMLR, 2020. H. H¨ alv¨ a, S. Le Corff, L. Leh´ ericy, J. So, Y. Zhu, E. Gassiat, and A. Hyv¨ arinen. Disentangling identi-fiable features from noisy data with structured non-linear ICA. Advances in Neural Information Pro-cessing Systems , 34, 2021. P. Hoyer, D. Janzing, J. M. Mooij, J. Peters, and B. Sch¨ olkopf. Nonlinear causal discovery with ad-ditive noise models. In Advances in Neural Infor-mation Processing Systems , 2009. B. Huang, C. J. H. Low, F. Xie, C. Glymour, and K. Zhang. Latent hierarchical causal structure dis-covery with rank constraints. Advances in Neu-ral Information Processing Systems , 35:5549–5561, 2022. A. Hyvarinen and H. Morioka. Unsupervised feature extraction by time-contrastive learning and nonlin-ear ica. Advances in neural information processing systems , 29, 2016. A. Hyvarinen and H. Morioka. Nonlinear ica of tem-porally dependent stationary sources. In Artificial Intelligence and Statistics , pages 460–469. PMLR, 2017. Ignavier Ng, Shaoan Xie, Xinshuai Dong, Peter Spirtes, Kun Zhang 
+
+A. Hyv¨ arinen and P. Pajunen. Nonlinear independent component analysis: Existence and uniqueness re-sults. Neural networks , 12(3):429–439, 1999. A. Hyvarinen, H. Sasaki, and R. Turner. Nonlinear ICA using auxiliary variables and generalized con-trastive learning. In International Conference on Artificial Intelligence and Statistics , 2019. A. Hyv¨ arinen, I. Khemakhem, and H. Morioka. Non-linear independent component analysis for princi-pled disentanglement in unsupervised deep learning. 
+
+Patterns , 4(10):100844, 2023. ISSN 2666-3899. A. Immer, C. Schultheiss, J. E. Vogt, B. Sch¨ olkopf, P. B¨ uhlmann, and A. Marx. On the identifiability and estimation of causal location-scale noise models. In International Conference on Machine Learning ,2023. A. Jaber, M. Kocaoglu, K. Shanmugam, and E. Bareinboim. Causal discovery from soft interven-tions with unknown targets: Characterization and learning. In Advances in Neural Information Pro-cessing Systems , 2020. Y. Jiang and B. Aragam. Learning nonparametric la-tent causal graphs with unknown interventions. In 
+
+Thirty-seventh Conference on Neural Information Processing Systems , 2023. J. Jin and V. Syrgkanis. Learning causal rep-resentations from general environments: Identifi-ability and intrinsic ambiguity. arXiv preprint arXiv:2311.12267 , 2023. I. Khemakhem, D. Kingma, R. Monti, and A. Hyvari-nen. Variational autoencoders and nonlinear ica: A unifying framework. In International conference on artificial intelligence and statistics , pages 2207– 2217. PMLR, 2020. D. P. Kingma and J. Ba. Adam: A method for stochastic optimization. International Conference on Learning Representations , 2014. D. P. Kingma and M. Welling. Auto-encoding varia-tional Bayes. In International Conference on Learn-ing Representations , 2014. B. Kivva, G. Rajendran, P. Ravikumar, and B. Aragam. Learning latent causal graphs via mix-ture oracles. Advances in Neural Information Pro-cessing Systems , 34:18087–18101, 2021. A. Kori, P. Sanchez, K. Vilouras, B. Glocker, and S. A. Tsaftaris. A causal ordering prior for un-supervised representation learning. arXiv preprint arXiv:2307.05704 , 2023. J. V. K¨ ugelgen, Y. Sharma, L. Gresele, W. Brendel, B. Sch¨ olkopf, M. Besserve, and F. Locatello. Self-supervised learning with data augmentations prov-ably isolates content from style. In Advances in Neu-ral Information Processing Systems , 2021. S. Lachapelle, P. R. L´ opez, Y. Sharma, K. Ev-erett, R. L. Priol, A. Lacoste, and S. Lacoste-Julien. Nonparametric partial disentanglement via mechanism sparsity: Sparse actions, interventions and sparse temporal dependencies. arXiv preprint arXiv:2401.04890 , 2024. W.-Y. Lam, B. Andrews, and J. Ramsey. Greedy re-laxations of the sparsest permutation algorithm. In 
+
+Uncertainty in Artificial Intelligence , pages 1052– 1062. PMLR, 2022. T. E. Lee, S. Vats, S. Girdhar, and O. Kroemer. SCALE: Causal learning and discovery of robot ma-nipulation skills using simulation. In 7th Annual Conference on Robot Learning , 2023. W. Liang, A. Keki´ c, J. von K¨ ugelgen, S. Buchholz, M. Besserve, L. Gresele, and B. Sch¨ olkopf. Causal component analysis. In Thirty-seventh Conference on Neural Information Processing Systems , 2023. J. Lin. Factorizing multivariate function classes. Ad-vances in neural information processing systems , 10, 1997. P. Lippe, S. Magliacane, S. L¨ owe, Y. M. Asano, T. Co-hen, and S. Gavves. CITRIS: Causal identifiabil-ity from temporal intervened sequences. In Interna-tional Conference on Machine Learning , 2022. Y. Liu, Z. Zhang, D. Gong, M. Gong, B. Huang, A. van den Hengel, K. Zhang, and J. Q. Shi. Iden-tifying weight-variant latent causal models. arXiv preprint arXiv:2208.14153 , 2023. Y. Liu, Z. Zhang, D. Gong, M. Gong, B. Huang, A. van den Hengel, K. Zhang, and J. Q. Shi. Iden-tifiable latent polynomial causal models through the lens of change. In International Conference on Learning Representations , 2024. F. Montagna, A. Mastakouri, E. Eulig, N. Noceti, L. Rosasco, D. Janzing, B. Aragam, and F. Lo-catello. Assumption violations in causal discovery and the robustness of score matching. In Advances in Neural Information Processing Systems , 2023a. F. Montagna, N. Noceti, L. Rosasco, K. Zhang, and F. Locatello. Causal discovery with score matching on additive models with arbitrary noise. In Confer-ence on Causal Learning and Reasoning , 2023b. F. Montagna, N. Noceti, L. Rosasco, K. Zhang, and F. Locatello. Scalable causal discovery with score matching. In M. van der Schaar, C. Zhang, and D. Janzing, editors, Proceedings of the Second Con-ference on Causal Learning and Reasoning , pages 752–771, 2023c. Causal Representation Learning from General Environments under Nonparametric Mixing 
+
+H. Morioka and A. Hyv¨ arinen. Causal representation learning made identifiable by grouping of observa-tional variables. In International Conference on Ma-chine Learning , 2024. G. Raskutti and C. Uhler. Learning directed acyclic graph models based on sparsest permutations. Stat ,7(1):e183, 2018. D. J. Rezende and S. Mohamed. Variational inference with normalizing flows. In International Conference on International Conference on Machine Learning ,2015. P. Rolland, V. Cevher, M. Kleindessner, C. Russell, D. Janzing, B. Sch¨ olkopf, and F. Locatello. Score matching enables causal discovery of nonlinear ad-ditive noise models. In International Conference on Machine Learning , 2022. P. Sanchez, X. Liu, A. Q. O’Neil, and S. A. Tsaftaris. Diffusion models for causal discovery via topological ordering. In International Conference on Learning Representations , 2023. B. Sch¨ olkopf, F. Locatello, S. Bauer, N. R. Ke, N. Kalchbrenner, A. Goyal, and Y. Bengio. Towards causal representation learning. Proceedings of the IEEE , 109(5):612–634, 2021. X. Shen, F. Liu, H. Dong, Q. Lian, Z. Chen, and T. Zhang. Weakly supervised disentangled gener-ative causal representation learning. Journal of Ma-chine Learning Research , 23(241):1–55, 2022. R. Silva, R. Scheines, C. Glymour, and P. Spirtes. Learning the structure of linear latent variable mod-els. Journal of Machine Learning Research , 7(8): 191–246, 2006. URL http://jmlr.org/papers/ v7/silva06a.html .L. Solus, Y. Wang, and C. Uhler. Consistency guaran-tees for greedy permutation-based causal inference algorithms. Biometrika , 108(4):795–814, 2021. P. Sorrenson, C. Rother, and U. K¨ othe. Dis-entanglement by nonlinear ICA with general incompressible-flow networks (GIN). arXiv preprint arXiv:2001.04872 , 2020. P. Spirtes and C. Glymour. An algorithm for fast re-covery of sparse causal graphs. Social Science Com-puter Review , 9:62–72, 1991. P. Spirtes, C. Glymour, and R. Scheines. Causation, Prediction, and Search . MIT press, 2nd edition, 2001. C. Squires, Y. Wang, and C. Uhler. Permutation-based causal structure learning with unknown intervention targets. In Conference on Uncertainty in Artificial Intelligence , pages 1039–1048. PMLR, 2020. C. Squires, A. Seigal, S. S. Bhate, and C. Uhler. Linear causal disentanglement via interventions. In Inter-national Conference on Machine Learning , 2023. A. Taleb and C. Jutten. Source separation in post-nonlinear mixtures. IEEE Transactions on signal Processing , 47(10):2807–2820, 1999. A. Tejada-Lapuerta, P. Bertin, S. Bauer, H. Aliee, Y. Bengio, and F. J. Theis. Causal machine learning for single-cell genomics. arXiv preprint arXiv:2310.14935 , 2023. M. Teyssier and D. Koller. Ordering-based search: A simple and effective algorithm for learning bayesian networks. arXiv preprint arXiv:1207.1429 , 2012. B. Varici, E. Acarturk, K. Shanmugam, A. Ku-mar, and A. Tajer. Score-based causal represen-tation learning with interventions. arXiv preprint arXiv:2301.08230 , 2023. B. Varıcı, E. Acart¨ urk, K. Shanmugam, A. Kumar, and A. Tajer. Score-based causal representation learning: Linear and general transformations. arXiv preprint arXiv:2402.00849 , 2024a. B. Varıcı, E. Acart¨ urk, K. Shanmugam, and A. Tajer. Linear causal representation learning from un-known multi-node interventions. arXiv preprint arXiv:2406.05937 , 2024b. T. Verma and J. Pearl. Causal networks: Semantics and expressiveness. In Machine intelligence and pat-tern recognition , volume 9, pages 69–76. Elsevier, 1990. J. von K¨ ugelgen, M. Besserve, L. Wendong, L. Gresele, A. Keki´ c, E. Bareinboim, D. Blei, and B. Sch¨ olkopf. Nonparametric identifiability of causal representa-tions from unknown interventions. In Advances in Neural Information Processing Systems , 2023. Y. Wang and M. I. Jordan. Desiderata for representa-tion learning: A causal perspective. arXiv preprint arXiv:2109.03795 , 2021. F. Xie, R. Cai, B. Huang, C. Glymour, Z. Hao, and K. Zhang. Generalized independent noise condition for estimating latent variable causal graphs. In Ad-vances in Neural Information Processing Systems ,2020. F. Xie, B. Huang, Z. Chen, Y. He, Z. Geng, and K. Zhang. Identification of linear non-gaussian la-tent hierarchical structure. In International Con-ference on Machine Learning , pages 24370–24387. PMLR, 2022. D. Xu, D. Yao, S. Lachapelle, P. Taslakian, J. von K¨ ugelgen, F. Locatello, and S. Magliacane. A spar-sity principle for partially observable causal repre-sentation learning. In International Conference on Machine Learning , 2024. Ignavier Ng, Shaoan Xie, Xinshuai Dong, Peter Spirtes, Kun Zhang 
+
+S. Xu, A. Marx, O. Mian, and J. Vreeken. Causal infer-ence with heteroscedastic noise models. In Proceed-ings of the AAAI Workshop on Information Theo-retic Causal Inference and Discovery , 2022. K. Yang, A. Katcoff, and C. Uhler. Characterizing and learning equivalence classes of causal DAGs un-der interventions. In International Conference on Machine Learning , 2018. M. Yang, F. Liu, Z. Chen, X. Shen, J. Hao, and J. Wang. CausalVAE: Disentangled representation learning via neural structural causal models. In 
+
+IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2021. D. Yao, D. Xu, S. Lachapelle, S. Magliacane, P. Taslakian, G. Martius, J. von K¨ ugelgen, and F. Locatello. Multi-view causal representation learn-ing with partial observability. In International Con-ference on Learning Representations , 2024. W. Yao, G. Chen, and K. Zhang. Temporally disentan-gled representation learning. In Advances in Neural Information Processing Systems , 2022. J. Zhang, K. Greenewald, C. Squires, A. Srivastava, K. Shanmugam, and C. Uhler. Identifiability guar-antees for causal disentanglement from soft interven-tions. Advances in Neural Information Processing Systems , 2023. K. Zhang, S. Xie, I. Ng, and Y. Zheng. Causal rep-resentation learning from multiple distributions: A general setting. In International Conference on Ma-chine Learning , 2024. Y. Zheng and K. Zhang. Generalizing nonlinear ICA beyond structural sparsity. Advances in Neural In-formation Processing Systems , 2023. Y. Zheng, I. Ng, and K. Zhang. On the identifiability of nonlinear ICA: Sparsity and beyond. In Advances in Neural Information Processing Systems , 2022. 
+
+## Checklist 
+
+1. For all models and algorithms presented, check if you include: (a) A clear description of the mathematical set-ting, assumptions, algorithm, and/or model. [Yes] The assumptions are clearly stated in each theorem statement. (b) An analysis of the properties and complexity (time, space, sample size) of any algorithm. [Not Applicable] The primary focus of this work is on identifiability theory. (c) (Optional) Anonymized source code, with specification of all dependencies, including external libraries. 2. For any theoretical claim, check if you include: (a) Statements of the full set of assumptions of all theoretical results. [Yes] The assumptions are clearly stated in each theorem statement. (b) Complete proofs of all theoretical results. [Yes] The proofs are provided in the supple-mentary materials. (c) Clear explanations of any assumptions. [Yes] 3. For all figures and tables that present empirical results, check if you include: (a) The code, data, and instructions needed to reproduce the main experimental results (ei-ther in the supplemental material or as a URL). [Yes] (b) All the training details (e.g., data splits, hy-perparameters, how they were chosen). [Yes] The details are explained in Section 6. (c) A clear definition of the specific measure or statistics and error bars (e.g., with respect to the random seed after running experiments multiple times). [Not Applicable] (d) A description of the computing infrastructure used. (e.g., type of GPUs, internal cluster, or cloud provider). [Not Applicable] 4. If you are using existing assets (e.g., code, data, models) or curating/releasing new assets, check if you include: (a) Citations of the creator If your work uses ex-isting assets. [Not Applicable] (b) The license information of the assets, if ap-plicable. [Not Applicable] (c) New assets either in the supplemental mate-rial or as a URL, if applicable. [Not Applica-ble] (d) Information about consent from data providers/curators. [Not Applicable] (e) Discussion of sensible content if applicable, e.g., personally identifiable information or of-fensive content. [Not Applicable] 5. If you used crowdsourcing or conducted research with human subjects, check if you include: (a) The full text of instructions given to partici-pants and screenshots. [Not Applicable] (b) Descriptions of potential participant risks, with links to Institutional Review Board (IRB) approvals if applicable. [Not Appli-cable] (c) The estimated hourly wage paid to partici-pants and the total amount spent on partic-ipant compensation. [Not Applicable] Causal Representation Learning from General Environments under Nonparametric Mixing 
+
+# Appendices 
+
+## A Extended Discussion of Related Works 
+
+Nonlinear ICA. Despite the lack of dependence among latent variables, nonlinear ICA is a challenging problem because the latent variables are generally not identifiable without any further assumptions (Hyv¨ arinen and Pajunen, 1999). Existing work in nonlinear ICA often relies on assumptions about changing distributions where different distributions are indicated by auxiliary variables such as time indices and domain indices (Hyvarinen and Morioka, 2016, 2017; Hyvarinen et al., 2019; Khemakhem et al., 2020; Sorrenson et al., 2020; Lachapelle et al., 2024; H¨ alv¨ a and Hyv¨ arinen, 2020; H¨ alv¨ a et al., 2021; Yao et al., 2022) or specific constraints on the mixing function, including function classes (Hyv¨ arinen and Pajunen, 1999; Taleb and Jutten, 1999; Gresele et al., 2021; Buchholz et al., 2022) or sparsity constraint (Zheng et al., 2022; Zheng and Zhang, 2023). 
+
+Causal representation learning. CRL aims to recover the latent variables and their causal relations from data. Without any further assumptions, the identifiability of the hidden generating process is known to be im-possible. One line of work focuses on purely observational data by adding parametric and graphical assumptions. In the linear case, Silva et al. (2006) recover the Markov equivalence class for the one-factor model, while Xie et al. (2020); Cai et al. (2019) estimate the latent variables and their relations by assuming non-Gaussian noises and at least twice measured variables as pure children as latent ones, which is later extended to latent hierar-chical structure (Xie et al., 2022). Moreover, Adams et al. (2021) provides necessary and sufficient graphical conditions for the identification of linear non-Gaussian model with latent variables. As for the linear Gaussian case, Huang et al. (2022) leverage rank deficiency constraints of sub-covariance matrix over observed variables to identify latent hierarchical structure, which is later extended by Dong et al. (2023) to structures where all variables including latent and observed ones are allowed to be flexibly related. In the discrete setting, Kivva et al. (2021) also provide identification results for latent causal graphs up to Markov equivalence, by assuming a mixture model with specific graphical assumptions. Due to the difficulty of using purely observational data for CRL, researchers have also been working on another line of thought where data from multiple environments are available and the changes of distributions are often assumed to arise from soft or hard interventions. Specifically, Squires et al. (2023) assume linear SEM and mixing function and leverage single-node interventions for the identifiability, Varici et al. (2023) consider nonlinear SEM and linear mixing function, Varici et al. (2023); Buchholz et al. (2023); Jiang and Aragam (2023) concern the setting of the nonparametric latent SEM and linear mixing function, which is further generalized by Ahuja et al. (2023) to nonparametric SEM and polynomial mixing functions, and Brehmer et al. (2022); von K¨ ugelgen et al. (2023); Jiang and Aragam (2023) consider the general nonparametric settings for both the causal model and mixing function. From the perspective of assumptions about interventions, Squires et al. (2023) make use of single-node interventions, Brehmer et al. (2022) rely on counterfactual pre- and post-intervention views, von K¨ ugelgen et al. (2023) utilize paired interventions per node, and Zhang et al. (2023) explore soft interventions. Other works include Yang et al. (2021); Shen et al. (2022); Liang et al. (2023) that require more supervision information, Kori et al. (2023) that require a causal ordering prior, Yao et al. (2024); Xu et al. (2024) that focus on multi-view data, Morioka and Hyv¨ arinen (2024) that leverage certain graphical constraint, Ahuja et al. (2023); Wang and Jordan (2021) that utilize further constraint on the latent support, and Lippe et al. (2022) that provides results for interventions on known targets. At the same time, many of the existing results rely on assumptions about interventions that may be overly restrictive in practice. As such, we formalize a set of desiderata about realistic assumptions about changing environments, which we refer to as CRL from general environments. Under this setting, we propose the first identifiability result that allows nonlinear SEM and nonparametric mixing, while the two strongest existing works either have to require linear mixing (Varıcı et al., 2024b), or can only identify the latent DAG up to moral graph (Zhang et al., 2024). 
+
+Ordering-based causal discovery. The idea that a causal DAG can be partially represented by a topological ordering has a long history (Verma and Pearl, 1990). Such a line of thought typically searches the ordering space Ignavier Ng, Shaoan Xie, Xinshuai Dong, Peter Spirtes, Kun Zhang 
+
+Table 2: Comparison of of several existing identifiability results of multi-environment CRL based on hard or soft interventions. We only outline the key assumptions and results, while omitting some additional assumptions required by several studies. ‘Env.’ stands for environments. Work Latent Mixing Desiderata General Identifiability of Identifiability of SEM Function Satisfied? Env.? Latent Variables Latent DAG Liu et al. (2023) General Linear 3 No Full Full Squires et al. (2023) Linear Linear 2 No Full Full Linear Linear 1,2 No Up to ancestors Transitive closure Buchholz et al. (2023) Linear General 2 No Full Full Linear General 1,2 No Partial order Zhang et al. (2023) Nonlinear Polynomial 1,2 No Up to ancestors Transitive closure Liu et al. (2024) Polynomial General 3 No Full Full Varıcı et al. (2024a) General Linear 2 No Full Full General Linear 1,2 No Up to ancestors Transitive closure Nonlinear Linear 1,2 No Up to surrounding Full General General 2 No Full Full Ahuja et al. (2023) General Polynomial 2 No Full Full Bounded RV Polynomial 1,2 No Full Full von K¨ ugelgen et al. (2023) General General None No Full Full Jin and Syrgkanis (2023) General General 1 No Up to surrounding Full Linear Linear 1,2,3 Yes Up to surrounding Full Bing et al. (2024) General Linear 2,3 No Full Full Varıcı et al. (2024b) ANM Linear 2,3 No Full Full General Linear 1,2,3 Yes Up to ancestors Transitive closure Zhang et al. (2024) General General 1,2,3 Yes Up to intimate neighbors Moral graph            
+
+> Ours ANM General 1,2,3 Yes Up to surrounding parents Full HNM General 1,2,3 Yes Up to surrounding parents Full
+
+instead of the DAG space, e.g., with greedy Markov Chain Monte Carlo (Friedman and Koller, 2003), greedy hill-climbing (Teyssier and Koller, 2012), restricted maximum likelihood estimators (Teyssier and Koller, 2012), and sparsest permutation (Raskutti and Uhler, 2018; Lam et al., 2022; Solus et al., 2021). Further, assumptions about functional causal models and noise variances can also be made (Ghoshal and Honorio, 2018; Chen et al., 2019) to sequentially identify leave nodes based on the estimated precision matrix. More recently, score-matching based methods for causal discovery have been proposed. This line of work typically assumes nonlinear additive Gaussian noise models (Rolland et al., 2022), while other settings are also considered (Montagna et al., 2023a,c,b; Sanchez et al., 2023). 
+
+## B Proof of Proposition 1 
+
+Proposition 1 (Coupled single-node interventions) . Consider a set of single-node interventions on the latent variables Z. The knowledge of which interventions share the same targets is equivalent to the knowledge of intervention targets up to variable permutation. Proof. The “ ⇐” side is trivial. We now prove the “ ⇒” side. For all single-node interventions I(1) , . . . , I (m), sup-pose that we know which of them share the same targets. That is, we can perform a partition of {I(1) , . . . , I (m)}
+
+into {I 1, . . . , In}, such that (1) the interventions in Ii share the same targets, and (2) the interventions in Ii do not share the same targets with the interventions in Ij , j ̸ = i. Now suppose we perform a random permutation 
+
+π of Z, denoted as Zπ , and assign Zπ(i) as the target of interventions in Ii. Clearly, one of the permutation π∗
+
+will lead to the correct assignment of intervention targets, but is unknown to us. This implies that we know the intervention targets (e.g., the assignment we perform with Zπ ) up to variable permutation. 
+
+## C Proofs of Lemmas 1 and 2 
+
+C.1 Proof of Lemma 1 
+
+This lemma is implied by Rolland et al. (2022), and we provide the proof here for completeness. Causal Representation Learning from General Environments under Nonparametric Mixing 
+
+Lemma 1. Consider the data generating process in Eq. (4) and let Zi be a sink node in DAG GZ . Then, 
+
+∂ log p(u)(Z)
+
+∂Z 2 
+
+> i
+
+∂Z j
+
+= 0 for j ∈ [d].
+
+Proof. Since the distribution P (u) 
+
+> Z
+
+and the DAG GZ satisfy the Markov property, we have 
+
+p(u)(Z) = 
+
+> n
+
+Y
+
+> k=1
+
+p(u)(Zk | PA( Zk; GZ )) .
+
+By assumption, Zi is a sink node in DAG GZ , which implies 
+
+∂2 log p(u)(Z)
+
+∂Z 2
+
+> i
+
+= ∂2 log p(u)(Zi | PA( Zi; GZ )) 
+
+∂Z 2
+
+> i
+
+= ∂2
+
+∂Z 2
+
+> i
+
+− 12
+
+Zi − f (u) 
+
+> i
+
+(PA( Zi; GZ )) 
+
+σ(u)
+
+> i
+
+!2
+
+− 12 log(2 π(σ(u) 
+
+> i
+
+)2)
+
+
+
+= − 1
+
+σ(u)
+
+> i
+
+· ∂∂Z i
+
+Zi − f (u) 
+
+> i
+
+(PA( Zi; GZ )) 
+
+σ(u)
+
+> i
+
+!
+
+= − 1(σ(u) 
+
+> i
+
+)2 ,
+
+where ( σ(u) 
+
+> i
+
+)2 is the variance of ϵ(u) 
+
+> i
+
+. Therefore, for any Zj , we have 
+
+∂3 log p(u)(Z)
+
+∂Z 2 
+
+> i
+
+∂Z j
+
+= 0 .
+
+C.2 Proof of Lemma 2 Lemma 2. Consider the data generating process in Eq. (5) and let Zi be a sink node in DAG GZ . Then, 
+
+∂ log p(u)(Z)
+
+∂Z 2 
+
+> i
+
+∂Z j
+
+= 0 for Zj̸ ∈ PA (Zi; GZ ).
+
+Proof. Since the distribution P (u) 
+
+> Z
+
+and the DAG GZ satisfy the Markov property, we have 
+
+p(u)(Z) = 
+
+> n
+
+Y
+
+> k=1
+
+p(u)(Zk | PA( Zk; GZ )) .
+
+By assumption, Zi is a sink node in DAG GZ , which implies 
+
+∂2 log p(u)(Z)
+
+∂Z 2
+
+> i
+
+= ∂2 log p(u)(Zi | PA( Zi; GZ )) 
+
+∂Z 2
+
+> i
+
+= ∂2
+
+∂Z 2
+
+> i
+
+− 12
+
+Zi − f (u) 
+
+> i
+
+(PA( Zi; GZ )) 
+
+σ(u) 
+
+> i
+
+(PA( Zi; GZ )) 
+
+!2
+
+= − 1
+
+σ(u) 
+
+> i
+
+(PA( Zi; GZ )) · ∂∂Z i
+
+Zi − f (u) 
+
+> i
+
+(PA( Zi; GZ )) 
+
+σ(u) 
+
+> i
+
+(PA( Zi; GZ )) 
+
+!
+
+= − 1(σ(u) 
+
+> i
+
+(PA( Zi; GZ ))) 2 .Ignavier Ng, Shaoan Xie, Xinshuai Dong, Peter Spirtes, Kun Zhang 
+
+Therefore, for any Zj̸ ∈ PA( Zi; GZ ), we have 
+
+∂3 log p(u)(Z)
+
+∂Z 2 
+
+> i
+
+∂Z j
+
+= 0 .
+
+## D Proof of Theorem 1 
+
+Theorem 1 (Identifiability with latent ANMs) . Consider the data generating process in Eqs. (1) and (4) .Suppose that Assumptions 1 and 2, as well as the faithfulness assumption, hold. Let G ˆZ and ˆZ be the output of Algorithm 1. Then, there exists a permutation π of the estimated latent variables ˆZ, denoted as ˆZπ , such that: 1. (Identifiability of GZ ) G ˆZπ and GZ are identical. 2. (Identifiability of Z) ˆZπ(i) is solely a function of a subset of {Zi} ∪ sur( Zi; GZ ).Proof. Let (ˆ g, p ˆZ , G ˆZ ) be an output of Line 3 in Algorithm 1 during the ( n − 1)-th iteration, which corresponds to the output of Algorithm 1. Since both the true mixing function g and the estimated mixing function ˆ g are diffeomorphisms onto their images, the transformation from ˆZ to Z is also a diffeomorphism. Therefore, there exists a permutation such that the Jacobian matrix ∂Z α  
+
+> ∂ˆZ
+
+has nonzero diagonal entries (e.g., see Zhang et al. (2024, Lemma 2)). Denote Zα[k] := ( Zα(l))kl=1 . By the faithfulness assumption and Proposition 2 for the case of (n−1)-th iteration, we conclude that the DAGs G ˆZ and GZα are identical, and that each latent variable ˆZi, i ∈ [n]is solely a function of a subset of Zα(i) ∪ Tnk=i Ψ( Zα(i); MZα[k] ). By definition, ˆZ follows a causal order with respect to the latent DAG G ˆZ . Since G ˆZ and GZα are identical, α is also a causal order of Z with respect to GZ . Under the faithfulness assumption, Proposition 3 implies that ˆZi is solely a function of a subset of 
+
+Zα(i) ∪
+
+> n
+
+\
+
+> k=i
+
+Ψ( Zα(i); MZα[k] ) ⊆ Zα(i) ∪ sur( Zα(i); GZ ).
+
+By taking π := α−1, we obtain the desired statements. 
+
+D.1 Second-Order Partial Derivative of Latent Distribution 
+
+We provide the following lemma which will be used as the starting point to derive the third-order derivative in Eq. (7) in the proof of Proposition 2. This lemma is obtained from Zhang et al. (2024, Proposition 1). The proof involves change-of-variable formula (Ben-Israel, 1999; Gemici et al., 2016), chain rule, and property of Markov network (Lin, 1997), which is omitted here. 
+
+Lemma 3 (Second-order derivative) . Consider the data generating process in Eq. (1) . Suppose that we learn 
+
+(ˆ g, p ˆZ , G ˆZ ) to achieve Eq. (2) . Then, we have 
+
+∂2 log p(u)( ˆZ)
+
+∂ ˆZk∂ ˆZl
+
+=
+
+> n
+
+X
+
+> i=1
+
+∂2 log p(u)(Z)
+
+∂Z 2
+
+> i
+
+∂Z i
+
+∂ ˆZl
+
+∂Z i
+
+∂ ˆZk
+
++
+
+> n
+
+X
+
+> j=1
+
+X  
+
+> i:{Zj,Z i}∈E (MZ)
+
+∂2 log p(u)(Z)
+
+∂Z i∂Z j
+
+∂Z j
+
+∂ ˆZl
+
+∂Z i
+
+∂ ˆZk
+
++
+
+> n
+
+X
+
+> i=1
+
+∂ log p(u)(Z)
+
+∂Z i
+
+∂2Zi
+
+∂ ˆZk∂ ˆZl
+
++ ∂2 log | det Jv |
+
+∂ ˆZk∂ ˆZl
+
+,
+
+where v := g−1 ◦ ˆg is a diffeomorphism. 
+
+D.2 Relation between Markov Network and Moral Graph 
+
+We provide the following lemma to relate the Markov network and moral graph, which is useful for proving Propositions 2 and 3. 
+
+Lemma 4 (Zhang et al. (2024, Lemma 1)) . Consider a DAG GZ and distribution PZ with its Markov Network 
+
+MZ . Suppose that the Markov assumption holds. Then, the undirected graph defined by MZ is a subgraph of the moral graph of DAG GZ .Causal Representation Learning from General Environments under Nonparametric Mixing 
+
+D.3 Proof of Lemma 5 
+
+The following lemma shows how diffeomorphism exists between subset of variables, which is useful for proving Proposition 2. 
+
+Lemma 5. Suppose that the transformation from ˆZ ∈ Rn to Z ∈ Rn is a diffeomorphism, and that there exists 
+
+I ⊆ [n] such that each Zi, i ∈ I is not a function of ˆZj , j ̸ ∈ I . Then, the transformation from ˆZI to ZI is a diffeomorphism. Proof. Let J := ∂Z ∂ ˆZ be the Jacobian matrix of the transformation from ˆZ to Z. Since the transformation is a diffeomorphism, the Jacobian matrix J is invertible. By the Cayley-Hamilton theorem, for each value, its inverse   
+
+> ∂ˆZ∂Z
+
+= J−1 can be written as Pnk=0 ckJk for some coefficients c0, . . . , c n. For i ∈ I and j̸ ∈ I , since Zi is, by definition, not a function of ˆZj , we clearly have Ji,j = 0. Also, it is straightforward to show Ji, :J:,j = 0, which indicates ( J2)i,j = 0. By mathematical induction, we obtain ( Jk)i,j = 0. This then implies 
+
+∂ ˆZi
+
+∂Z j
+
+= ∂ ˆZ∂Z 
+
+!
+
+> i,j
+
+= ( J−1)i,j =
+
+> n
+
+X
+
+> k=0
+
+ckJk
+
+!
+
+> i,j
+
+= 0 .
+
+That is, each ˆZi, i ∈ I is not a function of Zj , j ̸ ∈ I . This implies that each Zi, i ∈ I is solely a function of ˆZI ,and vice versa, i.e., each ˆZi, i ∈ I is solely a function of ZI . Therefore, we conclude that the transformation from ˆZI to ZI is a diffeomorphism. 
+
+D.4 Proof of Proposition 2 
+
+We prove the following result via mathematical induction, which is crucial for the proof of Theorem 1. Specifically, it provides information on the identifiability of the latent DAG GZ and latent variables Z in each iteration of Algorithm 1. 
+
+Proposition 2 (Output of t-th iteration) . Consider the data generating process in Eqs. (1) and (4) . Suppose that Assumptions 1 and 2, as well as the faithfulness assumption, hold. Let (ˆ g, p ˆZ , G ˆZ ) be an output of Line 3 in Algorithm 1 during the t-th iteration. Let α be a permutation such that the Jacobian matrix ∂Z α  
+
+> ∂ˆZ
+
+has nonzero diagonal entries. Then, we have the following statements: (a) For i ∈ [n], j = n + 1 − t, . . . , n , we have ˆZi → ˆZj in G ˆZ if and only if Zα(i) → Zα(j) in GZ .(b) Each latent variable ˆZi, i ∈ [n] is solely a function of a subset of Zα(i) ∪ Tnk=max( n+1 −t,i ) Ψ( Zα(i); MZα[k] ).(c) The transformation from ˆZ[n−t] := ( ˆZi)n−ti=1 to Zα[n−t] := ( Zα(i))n−ti=1 is a diffeomorphism, and the Jacobian matrix ∂Z α[n−t] 
+
+> ∂ˆZ[n−t]
+
+has nonzero diagonal entries. Proof. We prove the proposition by mathematical induction from t = 1 to n − 1. We first provide the proof for the inductive step. Suppose that Proposition 2 holds for the case of t. In the following, we show that it also holds for the case of t + 1. By definition, (ˆ g, p ˆZ , G ˆZ ) denotes the output of Line 3 in Algorithm 1 during the ( t+1)-th iteration, and α denotes a permutation such that the Jacobian matrix ∂Z α  
+
+> ∂ˆZ
+
+has nonzero diagonal entries, where ˆZ is the estimated latent variables from Line 3 in Algorithm 1 during the ( t+1)-th iteration. Due to the constraints (i) and (ii) in Line 2 of Algorithm 1, (ˆ g, p ˆZ , G ˆZ ) is also a valid output of Line 3 in Algorithm 1 during the t-th iteration. (In this case, the same permutation α can also be used in the t-th iteration such that the corresponding Jacobian matrix ∂Z α  
+
+> ∂ˆZ
+
+has nonzero diagonal entries.) Therefore, by the induction hypothesis, Statements (a), (b), and (c) of Proposition 2 hold for (ˆ g, p ˆZ , G ˆZ ) for the case of t, and we aim to further show that these statements also hold for (ˆ g, p ˆZ , G ˆZ )for the case of t + 1. By Statement (c) of Proposition 2 for the case of t, the transformation from ˆZ[n−t] to Zα[n−t], denoted by v, is a diffeomorphism. By the change-of-variable formula, we have 
+
+p(u)( ˆZ[n−t])| det Jv−1 | = p(u)(Zα[n−t])log p(u)( ˆZ[n−t]) = log p(u)(Zα[n−t]) + log | det Jv |, (6) Ignavier Ng, Shaoan Xie, Xinshuai Dong, Peter Spirtes, Kun Zhang 
+
+where Jv denotes the Jacobian matrix of v. Suppose ˆZl is a sink node in DAG G ˆZ[n−t] . By Lemma 3, the second-order derivative w.r.t ˆZl is given by 
+
+∂2 log p(u)( ˆZ)
+
+∂ ˆZ2
+
+> l
+
+=
+
+> n
+
+X
+
+> i=t
+
+∂2 log p(u)(Zα[n−t])
+
+∂Z 2
+
+> α(i)
+
+ ∂Z α(i)
+
+∂ ˆZl
+
+2
+
++
+
+> n
+
+X
+
+> j=t
+
+X 
+
+> i:{Zα(i),Z α(j)}∈E (MZα[n−t])
+
+∂2 log p(u)(Zα[n−t])
+
+∂Z α(i)∂Z α(j)
+
+∂Z α(j)
+
+∂ ˆZl
+
+∂Z α(i)
+
+∂ ˆZl
+
+=
+
+> n
+
+X
+
+> i=t
+
+∂ log p(u)(Zα[n−t])
+
+∂Z α(i)
+
+∂2Zα(i)
+
+∂ ˆZ2
+
+> l
+
++ ∂2 log | det Jv |
+
+∂ ˆZ2
+
+> l
+
+.
+
+Further taking third-order derivative w.r.t the sink node ˆZl and applying Lemma 1, we have 0 = X 
+
+> i:Zα(i)∈Zα[n−t]\S (GZα[n−t])
+
+∂3 log p(u)(Zα[n−t])
+
+∂Z 3
+
+> α(i)
+
+ ∂Z α(i)
+
+∂ ˆZl
+
+3
+
++ X   
+
+> i,j :
+> {Zα(i),Z α(j)}∈E (MZα[n−t]),Zα(i)̸∈S (GZα[n−t])
+
+∂3 log p(u)(Zα[n−t])
+
+∂Z 2
+
+> α(i)
+
+∂Z α(j)
+
+2 ·
+
+ ∂Z α(i)
+
+∂ ˆZl
+
+2 ∂Z α(j)
+
+∂ ˆZl
+
+!
+
++ X 
+
+> i,j,k :
+> i<j<k,
+> {Zα(i),Z α(j)},{Zα(j),Z α(k)},{Zα(i),Z α(k)}∈E (MZα[n−t])
+
+∂3 log p(u)(Zα[n−t])
+
+∂Z α(i)∂Z α(j)∂Z α(k)
+
+
+
+6 · ∂Z α(i)
+
+∂ ˆZl
+
+∂Z α(j)
+
+∂ ˆZl
+
+∂Z α(k)
+
+∂ ˆZl
+
+
+
++
+
+> d
+
+X
+
+> i=1
+
+∂2 log p(u)(Zα[n−t])
+
+∂Z 2
+
+> α(i)
+
+3 · ∂2Zα(i)
+
+∂ ˆZ2
+
+> l
+
+∂Z α(i)
+
+∂ ˆZl
+
+!
+
++ X 
+
+> i,j :
+> i<j,
+> {Zα(i),Z α(j)}∈E (MZα[n−t])
+
+∂2 log p(u)(Zα[n−t])
+
+∂Z α(i)∂Z α(j)
+
+3 · ∂2Zα(j)
+
+∂ ˆZ2
+
+> l
+
+∂Z α(i)
+
+∂ ˆZl
+
++ 3 · ∂Z α(j)
+
+∂ ˆZl
+
+∂2Zα(i)
+
+∂ ˆZ2
+
+> l
+
+!
+
++
+
+> n
+
+X
+
+> i=1
+
+∂ log p(u)(Zα[n−t])
+
+∂Z α(i)
+
+∂3Zα(i)
+
+∂ ˆZ3
+
+> l
+
++ ∂3 log | det Jv |
+
+∂ ˆZ3
+
+> l
+
+.
+
+(7) By Assumption 2, there exist multiple values of uj such that the above equation holds. Subtracting each equation corresponding to uj , j ̸ = 0 with the equation corresponding to u0, and using the assumption that the vectors formed by collecting the resulting coefficients (involving differences of partial derivatives) are linearly independent, we obtain 
+
+ ∂Z α(i)
+
+∂ ˆZl
+
+3
+
+= 0 ⇐⇒ ∂Z α(i)
+
+∂ ˆZl
+
+= 0 for Zα(i) ∈ Zα[n−t] \ S (GZα[n−t] ). (8) Therefore, the non-sink nodes in GZα[n−t] cannot be a function of ˆZl which is a sink node in in DAG G ˆZ[n−t] .This implies that Zα(l) is a sink node in DAG GZα[n−t] , because otherwise Zα(l) is not a function of ˆZl, which contradicts the induction hypothesis that the Jacobian matrix ∂Z α[n−t] 
+
+> ∂ˆZ[n−t]
+
+has nonzero diagonal entries. Recall that in Line 2 of Algorithm 1, the estimated Markov network M ˆZ[n−t] over ˆZ[n−t] has minimal number of edges. Thus, by Eq. (6), Assumption 1, and the induction hypothesis that the Jacobian matrix ∂Z α[n−t] 
+
+> ∂ˆZ[n−t]
+
+has nonzero diagonal entries, Zhang et al. (2024, Theorem 2) implies that the Markov newtorks over ˆZ[n−t] and 
+
+Zα[n−t] are identical, i.e., 
+
+{ ˆZi, ˆZj } ∈ E (M ˆZ[n−t] ) ⇐⇒ {Zα(i), Z α(j)} ∈ E (MZα[n−t] ), i, j ∈ [n − t], i ̸ = j. (9) The faithfulness assumption implies that the undirected graph defined by Markov network MZα[n−t] is the moral graph of DAG GZα[n−t] (e.g., see Zhang et al. (2024, Proposition 2)). Since Zα(l) is a sink node in DAG GZα[n−t] ,Causal Representation Learning from General Environments under Nonparametric Mixing 
+
+each undirected edge {Zα(i), Z α(l)} ∈ E (MZα[n−t] ) in the moral graph implies a directed edge Zα(i) → Zα(l) in DAG GZ . Similar reasoning can be used to show that each undirected edge { ˆZi, ˆZl} ∈ E (M ˆZ[n−t] ) in the moral graph implies a directed edge ˆZi → ˆZl in DAG G ˆZ . Therefore, we have ˆZi → ˆZl in G ˆZ ⇐⇒ Zα(i) → Zα(l) in GZ , i ∈ [n].
+
+In Line 3 of Algorithm 1, after reordering ˆZ in (ˆ g, p ˆZ , G ˆZ ), we know that ˆZn−t is a sink node in DAG G ˆZ[n−t] .By the above relation, we then have ˆZi → ˆZn−t in G ˆZ ⇐⇒ Zα(i) → Zα(n−t) in GZ , i ∈ [n]. (10) Recall that the induction hypothesis (i.e., Statement (a) of Proposition 2 for the case of t) indicates ˆZi → ˆZj in G ˆZ ⇐⇒ Zα(i) → Zα(j) in GZ , i ∈ [n], j = n + 1 − t, . . . , n. (11) By Eqs. (10) and (11), we have shown that Statement (a) of Proposition 2 holds for the case of t + 1. Now we prove Statements (b) and (c) of Proposition 2 for the case of t+1. Recall that in Line 2 of Algorithm 1, the estimated Markov network M ˆZ[n−t] over ˆZ[n−t] has minimal number of edges. Thus, by Eq. (6), Assumption 1, and the induction hypothesis that the Jacobian matrix ∂Z α[n−t] 
+
+> ∂ˆZ[n−t]
+
+has nonzero diagonal entries, Zhang et al. (2024, Proposition 4) and its proof imply the following statements: 
+
+• Statement(i): Each latent variable Zα(i), i ∈ [n − t] is solely a function of a subset of ˆZi ∪ Ψ( ˆZi; M ˆZ[n−t] ). 
+
+• Statement(ii): Each latent variable ˆZi, i ∈ [n−t] is solely a function of a subset of Zα(i) ∪Ψ( Zα(i); MZα[n−t] ). By the induction hypothesis (i.e., Statement (b) of Proposition 2 for the case of t), each latent variable ˆZi, i ∈ [n] is solely a function of a subset of Zα(i) ∪ Tnk=max( n+1 −t,i ) Ψ( Zα(i); MZα[k] ). By Statement (ii), one can straightforwardly show that each latent variable ˆZi, i ∈ [n] is solely a function of a subset of 
+
+Zα(i) ∪ Tnk=max( n−t,i ) Ψ( Zα(i); MZα[k] ), indicating that Statement (b) of Proposition 2 hold for the case of t + 1. In Line 3 of Algorithm 1, after reordering ˆZ in (ˆ g, p ˆZ , G ˆZ ), we know that ˆZn−t is a sink node in DAG G ˆZ[n−t] . First, by Eq. (8), the non-sink nodes in GZα[n−t] cannot be a function of ˆZn−t. This also indicates that Zα(n−t) is a sink node in GZα[n−t] , due to the induction hypothesis that the Jacobian matrix ∂Z α[n−t] 
+
+> ∂ˆZ[n−t]
+
+has nonzero diagonal entries. Second, suppose that Zα(k) is a sink node in GZα[n−t] , and that it is distinct from Zα(n−t). Since both Zα(n−t)
+
+and Zα(k) are sink nodes in DAG GZα[n−t] , clearly they cannot be adjacent to each other or share a common child in DAG GZα[n−t] . By Lemma 4, Zα(n−t) and Zα(k) cannot be adjacent in Markov network MZα[n−t] . By Eq. (9), ˆZn−t and ˆZk cannot be adjacent in Markov network M ˆZ[n−t] . This implies ˆZn−t̸ ∈ Ψ( ˆZk; M ˆZ[n−t] ), which, by Statement (i) derived above, indicates that Zα(k) cannot be a function of ˆZn−t. Combining both cases (for sink nodes and non-sink nodes), we conclude that all variables in Zα[n−t], except Zα(n−t), cannot be a function of ˆZn−t. Therefore, by the induction hypothesis about diffeomorphism from ˆZ[n−t] to Zα[n−t], applying Lemma 5 implies that the transformation from ˆZ[n−1−t] to Zα[n−1−t] is a diffeomorphism. Also, clearly the Jacobian matrix  
+
+> ∂Z α[n−1−t]
+> ∂ˆZ[n−1−t]
+
+has nonzero diagonal entries. That is, we have shown that Statement (c) of Proposition 2 holds for the case of t + 1. Up until now, we have shown that the inductive step holds for the proof of Proposition 2. The same technique applies to the base case of t = 1, which is omitted here. Specifically, for the base case, we rely on the assumption that both the true mixing function g and the estimated mixing function ˆ g are diffeomorphisms onto their images, indicating that there the transformation from ˆZ to Z is a diffeomorphism. Ignavier Ng, Shaoan Xie, Xinshuai Dong, Peter Spirtes, Kun Zhang 
+
+D.5 Proof of Proposition 3 
+
+The following result is used in the proof of Theorem 1, specifically for the identifiability of latent variables Z. It relates the intimate neighbors in different Markov networks to the surrounding parents in the latent DAG. 
+
+Proposition 3. Consider the data generating process in Eq. (1) . Let α be a causal order of variables Z =(Z1, . . . , Z n) with respect to DAG GZ and denote Zα[k] := ( Zα(l))kl=1 . Under the faithfulness assumption, we have 
+
+> n
+
+\
+
+> k=i
+
+Ψ( Zα(i); MZα[k] ) ⊆ sur( Zα(i); GZ ) for i ∈ [n − 1] .
+
+Proof. It suffices to show that Zα(j) ∈ Tnk=i Ψ( Zα(i); MZα[k] ) implies Zα(j) ∈ sur( Zα(i); GZ ) for i ∈ [n − 1]. We provide a proof by contrapositive, i.e., we aim to show that Zα(j)̸ ∈ sur( Zα(i); GZ ) implies 
+
+Zα(j)̸ ∈
+
+> n
+
+\
+
+> k=i
+
+Ψ( Zα(i); MZα[k] ). (12) Now suppose Zα(j)̸ ∈ sur( Zα(i); GZ ). By the definition of surrounding parents, we have the following cases. 
+
+Case 1: Zα(j) is not a parent of Zα(i). We need to consider the following cases. 
+
+• Case 1(a): Zα(j) is a child of Zα(i). This means i < j . For i ≤ k < j , we have Zα(j)̸ ∈ Zα[k] and thus 
+
+Zα(j)̸ ∈ Ψ( Zα(i); MZα[k] ), which implies Eq. (12). 
+
+• Case 1(b): Zα(j) is a spouse of Zα(i). By definition of spouse, Zα(j) is not adjacent to Zα(i) in GZ . If 
+
+i < j , then for i ≤ k < j , we have Zα(j)̸ ∈ Zα[k] and thus Zα(j)̸ ∈ Ψ( Zα(i); MZα[k] ), which implies Eq. (12). Otherwise, we have i > j . In this case, consider the latent DAG GZα[i] , where Zα(i) is a sink node. Clearly, 
+
+Zα(j) is not a parent, child, or spouse of Zα(i) in DAG GZα[i] . Therefore, Zα(j) and Zα(i) are not adjacent in the moral graph of GZα[i] , which, by Lemma 4, indicates that they are not adjacent in the Markov network 
+
+MZα[i] . This implies Zα(j)̸ ∈ Ψ( Zα(i); MZα[i] ) and thus Eq. (12). 
+
+• Case 1(c): Zα(j) is not a child or spouse of Zα(i). In this case, Zα(j) is not a parent, child, or spouse of Zα(i).Therefore, Zα(j) and Zα(i) are not adjacent in the moral graph of GZ , which, by Lemma 4, indicates that they are not adjacent in the Markov network MZ . This implies Zα(j)̸ ∈ Ψ( Zα(i); MZ ) and thus Eq. (12). 
+
+Case 2: Zα(j) is not a parent of some child of Zα(i), denoted as Zα(l). This means l > i . In this case, consider the latent DAG GZα[l] , where Zα(l) is a sink node. Clearly, Zα(j) is not a parent, child, or spouse of Zα(l) in DAG 
+
+GZα[l] . Therefore, Zα(j) and Zα(l) are not adjacent in the moral graph of GZα[l] . By Lemma 4, this indicates that Zα(j) is not adjacent to Zα(l) in the Markov network MZα[l] , which, under the faithfulness assumption, is a neighbor of Zα(i) in the Markov network MZα[l] . This implies Zα(j)̸ ∈ Ψ( Zα(i); MZα[l] ) and thus Eq. (12). 
+
+## E Proof of Theorem 2 
+
+Theorem 2 (Identifiability with latent HNMs) . Consider the data generating process in Eqs. (1) and (5) .Suppose that Assumptions 1 and 3, as well as the faithfulness assumption, hold. Let G ˆZ and ˆZ be the output of Algorithm 1. Then, there exists a permutation π of the estimated latent variables ˆZ, denoted as ˆZπ , such that: 1. (Identifiability of GZ ) G ˆZπ and GZ are identical. 2. (Identifiability of Z) ˆZπ(i) is solely a function of a subset of {Zi} ∪ sur( Zi; GZ ).Proof. The proof here is identical to that of Theorem 1, which leverages Propositions 2 and 3. Therefore, we Causal Representation Learning from General Environments under Nonparametric Mixing 
+
+omit the proof here. The only (minor) difference is that the third-order derivative in Eq. (7) is instead given by: 0 = X 
+
+> i:Zα(i)∈Zα[n−t]\S (GZα[n−t])
+
+∂3 log p(u)(Zα[n−t])
+
+∂Z 3
+
+> α(i)
+
+ ∂Z α(i)
+
+∂ ˆZl
+
+3
+
++ X 
+
+> i,j :
+> {Zα(i),Z α(j)}∈E (MZα[n−t])
+
+∂3 log p(u)(Zα[n−t])
+
+∂Z 2
+
+> α(i)
+
+∂Z α(j)
+
+2 ·
+
+ ∂Z α(i)
+
+∂ ˆZl
+
+2 ∂Z α(j)
+
+∂ ˆZl
+
+!
+
++ X 
+
+> i,j,k :
+> i<j<k,
+> {Zα(i),Z α(j)},{Zα(j),Z α(k)},{Zα(i),Z α(k)}∈E (MZα[n−t])
+
+∂3 log p(u)(Zα[n−t])
+
+∂Z α(i)∂Z α(j)∂Z α(k)
+
+
+
+6 · ∂Z α(i)
+
+∂ ˆZl
+
+∂Z α(j)
+
+∂ ˆZl
+
+∂Z α(k)
+
+∂ ˆZl
+
+
+
++
+
+> d
+
+X
+
+> i=1
+
+∂2 log p(u)(Zα[n−t])
+
+∂Z 2
+
+> α(i)
+
+3 · ∂2Zα(i)
+
+∂ ˆZ2
+
+> l
+
+∂Z α(i)
+
+∂ ˆZl
+
+!
+
++ X 
+
+> i,j :
+> i<j,
+> {Zα(i),Z α(j)}∈E (MZα[n−t])
+
+∂2 log p(u)(Zα[n−t])
+
+∂Z α(i)∂Z α(j)
+
+3 · ∂2Zα(j)
+
+∂ ˆZ2
+
+> l
+
+∂Z α(i)
+
+∂ ˆZl
+
++ 3 · ∂Z α(j)
+
+∂ ˆZl
+
+∂2Zα(i)
+
+∂ ˆZ2
+
+> l
+
+!
+
++
+
+> n
+
+X
+
+> i=1
+
+∂ log p(u)(Zα[n−t])
+
+∂Z α(i)
+
+∂3Zα(i)
+
+∂ ˆZ3
+
+> l
+
++ ∂3 log | det Jv |
+
+∂ ˆZ3
+
+> l
+
+.
+
+## F Further Empirical Studies 
+
+F.1 Selecting Number of Latent Variables 
+
+We provide empirical studies to demonstrate how to determine the number of latent variables. Specifically, according to Fig. 3, one can in practice perform model selection to select the number of latent variables based on the evidence lower bound (ELBO) loss. 
+
+F.2 Selecting Hyperparameters 
+
+We discuss how to select the hyperparameters for sparsity. Here, we choose λ1 based on the ELBO loss and provide an example in Fig. 4. If the structure is overly sparse, it fails to reconstruct the input data and the reconstruction error will become high. If the structure is overly dense, it involves many unwanted edges and the KL divergence will become high. Ignavier Ng, Shaoan Xie, Xinshuai Dong, Peter Spirtes, Kun Zhang 
+
+Figure 3: The losses versus the training steps with different number of estimated latent variables. The ground truth number of latent variables is 3. When we set the estimated number of latent variables to be low, e.g., 1 or 2, the reconstruction is poor, showing that they are unable to match the distributions. This suggests that the number of estimated latent variables can be selected based on the ELBO loss. 
+
+Figure 4: The losses versus the training steps with different values of λ1. If we set λ1 = 0 .05, which may be too high for the data, the ELBO loss is worst. If we set λ1 = 0, the estimated graph is dense, i.e., estimated variables are unnecessarily dependent. When we set λ1 = 0 .01, we achieve an ELBO loss that is as good as the ELBO loss with λ1 = 0, but with fewer edges.

@@ -1,0 +1,46 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.23800v1/fig-001.webp",
+      "caption": "Table 2: Comparison of of several existing identifiability results of multi-environment CRL based on hard or soft interventions. We only outline the key assumptions and results, while omitting some additional assumptions required by several studies. ‘Env.’ stands for environments.",
+      "page": 15,
+      "index": 1,
+      "width": 1014,
+      "height": 532
+    },
+    {
+      "url": "assets/figures/arxiv/2604.23800v1/fig-002.webp",
+      "caption": "Table 1: Comparison of of several existing identifiability results of multi-environment CRL based on soft interventions. We only outline the key assumptions and results, while omitting some additional assumptions required by several studies. For a more comprehensive comparison, including works that rely on hard interventions, refer to Table 2 in the supplementary materials.",
+      "page": 3,
+      "index": 2,
+      "width": 1008,
+      "height": 328
+    },
+    {
+      "url": "assets/figures/arxiv/2604.23800v1/fig-003.webp",
+      "caption": "Figure 4: The losses versus the training steps with different values of λ1. If we set λ1 = 0.05, which may be too high for the data, the ELBO loss is worst. If we set λ1 = 0, the estimated graph is dense, i.e., estimated variables are unnecessarily dependent. When we set λ1 = 0.01, we achieve an ELBO loss that is as good as the ELBO loss with λ1 = 0, but with fewer edges.",
+      "page": 23,
+      "index": 3,
+      "width": 1027,
+      "height": 247
+    },
+    {
+      "url": "assets/figures/arxiv/2604.23800v1/fig-004.webp",
+      "caption": "Figure 3: The losses versus the training steps with different number of estimated latent variables. The ground truth number of latent variables is 3. When we set the estimated number of latent variables to be low, e.g., 1 or 2, the reconstruction is poor, showing that they are unable to match the distributions. This suggests that the number of estimated latent variables can be selected based on the ELBO loss.",
+      "page": 23,
+      "index": 4,
+      "width": 1027,
+      "height": 247
+    },
+    {
+      "url": "assets/figures/arxiv/2604.23800v1/fig-005.webp",
+      "caption": "Figure 2: The recovered latent variables Ẑ versus the true latent variables Z under two latent DAGs: (1) Z1 → Z2 → Z3 and (2) Z1, Z2 → Z3.",
+      "page": 9,
+      "index": 5,
+      "width": 1023,
+      "height": 502
+    }
+  ]
+}

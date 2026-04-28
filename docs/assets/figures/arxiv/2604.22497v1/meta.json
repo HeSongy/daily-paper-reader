@@ -1,0 +1,54 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.22497v1/fig-001.webp",
+      "caption": "Figure 5: A) Ground-truth marker configurations (pEXP ) overlaid on the undeformed vessel (light gray) at three representative time-points; each is annotated with the 95th percentile of the displacement magnitude (∥u∥95). B) Corresponding FEM configurations at the same time-points, shown with a displacement colormap and overlaid on the undeformed vessel. The ∥u∥95 computed over the marker-covered region is reported. C) Relative displacement error for the three repeated tests, expressed as ∆d(xi, tj). Median errors across the 13 time points are shown, with shaded bands indicating the 5th–95th percentile range. Representative FEM vessel–catheter configurations are shown at the three time-points.",
+      "page": 10,
+      "index": 1,
+      "width": 976,
+      "height": 538
+    },
+    {
+      "url": "assets/figures/arxiv/2604.22497v1/fig-002.webp",
+      "caption": "Figure 1: Schematic overview of the proposed framework. An Initialization step preprocesses vessel (A) and catheter (B) models and instantiates the interactive simulation. A Registration step aligns sensor ({EM}) and anatomical ({CT}) frames (C). During Runtime, the interactive simulation continuously updates the mixed reality visualization (D).",
+      "page": 3,
+      "index": 2,
+      "width": 976,
+      "height": 552
+    },
+    {
+      "url": "assets/figures/arxiv/2604.22497v1/fig-003.webp",
+      "caption": "Table 1: Cumulative physical time (TPHY S), simulated time (TCPU), and lag at sampled time-points.",
+      "page": 8,
+      "index": 3,
+      "width": 977,
+      "height": 1006
+    },
+    {
+      "url": "assets/figures/arxiv/2604.22497v1/fig-004.webp",
+      "caption": "Figure 2: Experimental setup for integrating and testing the framework. A robotic driver inserted the sensorized catheter into a silicone phantom replicating the vessel anatomy. Two high-speed cameras tracked surface-marker displacements on the phantom wall, while the corresponding FEM nodes were identified by applying the transformation CTTEM to the point cloud acquired at rest using the EM probe.",
+      "page": 4,
+      "index": 4,
+      "width": 979,
+      "height": 564
+    },
+    {
+      "url": "assets/figures/arxiv/2604.22497v1/fig-005.webp",
+      "caption": "Figure 4: Interactive FEM performance: simulated time (TCPU) vs. physical time (TPHY S) for three repeated tests. Three latency phases were identified: startup, low-latency (slope 1.12), and high-latency (slope 1.45). The deformed vein lumen, color-coded by displacement magnitude, is shown at specific time-points.",
+      "page": 9,
+      "index": 5,
+      "width": 979,
+      "height": 560
+    },
+    {
+      "url": "assets/figures/arxiv/2604.22497v1/fig-006.webp",
+      "caption": "Figure 3: A 7.4 mm catheter (A) housed a multi-core FBG fiber and two EM sensors within its central lumen (B). The sensor-based reconstructed catheter centerline, expressed in the {EM} reference frame as cEM(x, t), was uniformly discretized into 78 points. Each point served as the center of a rigid sphere, and consecutive points were connected by cylinders of 7.4 mm diameter, producing a piecewise-continuous geometric avatar of the catheter outer surface for collision and contact handling (C).",
+      "page": 5,
+      "index": 6,
+      "width": 502,
+      "height": 547
+    }
+  ]
+}
