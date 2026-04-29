@@ -1,0 +1,287 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-04-29T20:28:50.684028+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 4,
+    "deep_cap": 6,
+    "deep_selected": 4,
+    "quick_candidates": 3,
+    "quick_skim_target": 11,
+    "quick_selected": 3
+  },
+  "deep_dive": [
+    {
+      "id": "2604.25329v1",
+      "source": "arxiv",
+      "title": "ProDrive: Proactive Planning for Autonomous Driving via Ego-Environment Co-Evolution",
+      "abstract": "End-to-end autonomous driving planners typically generate trajectories from current observations alone. However, real-world driving is highly dynamic, and such reactive planning cannot anticipate future scene evolution, often leading to myopic decisions and safety-critical failures. We propose ProDrive, a world-model-based proactive planning framework that enables ego-environment co-evolution for autonomous driving. ProDrive jointly trains a query-centric trajectory planner and a bird's-eye-view (BEV) world model end-to-end: the planner generates diverse candidate trajectories and planning-aware ego tokens, while the world model predicts future scene evolution conditioned on them. By injecting planner features into the world model and evaluating all candidates in parallel, ProDrive preserves end-to-end gradient flow and allows future outcome assessment to directly shape planning. This bidirectional coupling enables proactive planning beyond current-observation-driven decision-making. Experiments on NAVSIM v1 show that ProDrive outperforms strong baselines in both safety and planning efficiency, while ablations validate the effectiveness of the proposed ego-environment coupling design.",
+      "authors": [
+        "Chuyao Fu",
+        "Shengzhe Gan",
+        "Zhuoli Ouyang",
+        "Yuhan Rui",
+        "Xiaowei Chi",
+        "Sirui Han",
+        "Jiankun Wang",
+        "Hong Zhang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-04-28T07:46:30+00:00",
+      "link": "https://arxiv.org/pdf/2604.25329v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "world-model-based proactive planning framework for autonomous driving",
+      "llm_evidence_cn": "基于世界模型的自动驾驶主动规划框架",
+      "llm_evidence": "基于世界模型的自动驾驶主动规划框架",
+      "canonical_evidence": "基于世界模型的自动驾驶主动规划框架",
+      "llm_tldr_en": "ProDrive uses a BEV world model to predict future scene evolution for proactive autonomous driving planning.",
+      "llm_tldr_cn": "ProDrive利用鸟瞰图世界模型预测未来场景演变，实现自动驾驶的主动规划。",
+      "llm_tldr": "ProDrive利用鸟瞰图世界模型预测未来场景演变，实现自动驾驶的主动规划。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.25416v1",
+      "source": "arxiv",
+      "title": "Biased Dreams: Limitations to Epistemic Uncertainty Quantification in Latent Space Models",
+      "abstract": "Model-Based Reinforcement Learning distinguishes between physical dynamics models operating on proprioceptive inputs and latent dynamics models operating on high-dimensional image observations. A prominent latent approach is the Recurrent State Space Model used in the Dreamer family. While epistemic uncertainty quantification to inform exploration and mitigate model exploitation is well established for physical dynamics models, its transfer to latent dynamics models has received limited scrutiny. We empirically demonstrate that latent transitions are biased toward well-represented regions of latent space, exhibiting an attractor behavior that can deviate from true environment dynamics. As a result, discrepancies in environment dynamics may not manifest in latent space, undermining the reliability of epistemic uncertainty estimates. Because these attractors often lie in high-reward regions, latent rollouts systematically overestimate predicted rewards. Our findings highlight key limitations of epistemic uncertainty estimation in latent dynamics models and motivate more critical evaluation of this method.",
+      "authors": [
+        "Julia Berger",
+        "Bernd Frauenknecht",
+        "Sebastian Trimpe",
+        "Bastian Leibe"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-04-28T09:27:01+00:00",
+      "link": "https://arxiv.org/pdf/2604.25416v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Analyzes latent dynamics models and Recurrent State Space Models in world-model based reinforcement learning.",
+      "llm_evidence_cn": "分析了基于世界模型的强化学习中的隐空间动力学模型和循环状态空间模型。",
+      "llm_evidence": "分析了基于世界模型的强化学习中的隐空间动力学模型和循环状态空间模型。",
+      "canonical_evidence": "分析了基于世界模型的强化学习中的隐空间动力学模型和循环状态空间模型。",
+      "llm_tldr_en": "Investigates limitations in uncertainty quantification for latent space world models like Dreamer.",
+      "llm_tldr_cn": "研究了Dreamer等隐空间世界模型在不确定性量化方面的局限性。",
+      "llm_tldr": "研究了Dreamer等隐空间世界模型在不确定性量化方面的局限性。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.25541v1",
+      "source": "arxiv",
+      "title": "Bridging the Indoor-Outdoor Gap: Cross-Technology Ranging for Seamless Robot Navigation",
+      "abstract": "Mobile robots that move between outdoor and indoor environments still struggle with consistent positioning. Satellite-based and terrestrial ranging each work well in their home domains, but combining them at the raw measurement level has received little attention, and the building boundary is precisely where both classes degrade. This paper reports preliminary observations from the HYMN dataset, which time-synchronizes raw measurements from GNSS, Ultra-Wideband (UWB), WiFi Fine Time Measurement (FTM), and Bluetooth Low Energy (BLE) against millimeter-level ground truth in an industrial setting. Per-zone measurement availability and ranging-residual behavior are characterised. The two technology classes turn out to be complementary, and the indoor-outdoor transition is where their weaknesses overlap. The dataset is publicly available.",
+      "authors": [
+        "Paul Schwarzbach"
+      ],
+      "primary_category": "eess.SP",
+      "categories": [
+        "eess.SP",
+        "cs.RO"
+      ],
+      "published": "2026-04-28T12:07:49+00:00",
+      "link": "https://arxiv.org/pdf/2604.25541v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "seamless robot navigation in complex environments",
+      "llm_evidence_cn": "复杂环境中的无缝机器人导航",
+      "llm_evidence": "复杂环境中的无缝机器人导航",
+      "canonical_evidence": "复杂环境中的无缝机器人导航",
+      "llm_tldr_en": "Explores cross-technology ranging for consistent robot positioning and navigation across indoor-outdoor boundaries.",
+      "llm_tldr_cn": "探索跨技术测距，以实现机器人在室内外边界的持续定位与导航。",
+      "llm_tldr": "探索跨技术测距，以实现机器人在室内外边界的持续定位与导航。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.24662v1",
+      "source": "arxiv",
+      "title": "Information bottleneck for learning the phase space of dynamics from high-dimensional experimental data",
+      "abstract": "Identifying the dynamical state variables of a system from high-dimensional observations is a central problem across physical sciences. The challenge is that the state variables are not directly observable and must be inferred from raw high-dimensional data without supervision. Here we introduce DySIB (Dynamical Symmetric Information Bottleneck) as a method to learn low-dimensional representations of time-series data by maximizing predictive mutual information between past and future observation windows while penalizing representation complexity. This objective operates entirely in latent space and avoids reconstruction of the observations. We apply DySIB to an experimental video dataset of a physical pendulum, where the underlying state space is known. The method, with hyperparameters of the learning architecture set self-consistently by the data, recovers a two-dimensional representation that matches the dimensionality, topology, and geometry of the pendulum phase space, with the learned coordinates aligning smoothly with the canonical angle and angular velocity. These results demonstrate, on a well-characterized experimental system, that predictive information in latent space can be used to recover interpretable dynamical coordinates directly from high-dimensional data.",
+      "authors": [
+        "K. Michael Martini",
+        "Eslam Abdelaleem",
+        "Paarth Gulati",
+        "Ilya Nemenman"
+      ],
+      "primary_category": "physics.data-an",
+      "categories": [
+        "physics.data-an",
+        "cs.AI",
+        "cs.IT"
+      ],
+      "published": "2026-04-27T16:24:45+00:00",
+      "link": "https://arxiv.org/pdf/2604.24662v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "learning phase space of dynamics in latent space",
+      "llm_evidence_cn": "在隐空间中学习动力学的相空间",
+      "llm_evidence": "在隐空间中学习动力学的相空间",
+      "canonical_evidence": "在隐空间中学习动力学的相空间",
+      "llm_tldr_en": "Learns low-dimensional latent representations of dynamical systems from high-dimensional data without reconstruction.",
+      "llm_tldr_cn": "从高维数据中学习动力系统的低维隐式表示，无需重构观测值。",
+      "llm_tldr": "从高维数据中学习动力系统的低维隐式表示，无需重构观测值。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2604.25567v1",
+      "source": "arxiv",
+      "title": "Should I Replan? Learning to Spot the Right Time in Robust MAPF Execution",
+      "abstract": "During the execution of Multi-Agent Path Finding (MAPF) plans in real-life applications, the MAPF assumption that the fleet's movement is perfectly synchronized does not apply. Since one or more of the agents may become delayed due to internal or external factors, it is often necessary to use a robust execution method to avoid collisions caused by desynchronization. Robust execution methods - such as the Action Dependency Graph (ADG) - synchronize the execution of risky actions, but often at the expense of increased plan execution cost, because it may require some agents to wait for the delayed agents. In such cases, the execution's cost can be reduced while still preserving safety by finding a new plan either by rescheduling (reordering the agents at crossroads) or the more general replanning capable of finding new paths. However, these operations may be costly, and the new plan may not even lead to lower execution cost than the original plan: for example, the two plans may be the exact same. Therefore, we estimate the benefit that can be achieved by single replanning in scenarios with delayed agents given an immediate state of the execution with a fully connected feed-forward neural network. The input to the neural network is a set of newly designed ADG-based features describing the robust execution's state and the impact of potential delays, and the output is an estimated benefit achievable by replanning. We train and test the network on a new labeled dataset containing 12,000 experiments, and we show that our proposed method is capable of reducing the impact of delays by up to 94.6% of the achievable reduction.",
+      "authors": [
+        "David Zahrádka",
+        "David Woller",
+        "Denisa Mužíková",
+        "Miroslav Kulich",
+        "Libor Přeučil"
+      ],
+      "primary_category": "cs.MA",
+      "categories": [
+        "cs.MA"
+      ],
+      "published": "2026-04-28T12:39:12+00:00",
+      "link": "https://arxiv.org/pdf/2604.25567v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "multi-agent path finding and navigation strategies in complex environments",
+      "llm_evidence_cn": "复杂环境中的多智能体路径规划与导航策略",
+      "llm_evidence": "复杂环境中的多智能体路径规划与导航策略",
+      "canonical_evidence": "复杂环境中的多智能体路径规划与导航策略",
+      "llm_tldr_en": "Investigates robust execution and replanning strategies for multi-agent path finding under real-world delays.",
+      "llm_tldr_cn": "研究在现实延迟情况下多智能体路径规划的鲁棒执行与重新规划策略。",
+      "llm_tldr": "研究在现实延迟情况下多智能体路径规划的鲁棒执行与重新规划策略。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.20308v1",
+      "source": "arxiv",
+      "title": "Sheaf Neural Networks on SPD Manifolds: Second-Order Geometric Representation Learning",
+      "abstract": "Graph neural networks face two fundamental challenges rooted in the linear structure of Euclidean vector spaces: (1) Current architectures represent geometry through vectors (directions, gradients), yet many tasks require matrix-valued representations that capture relationships between directions-such as how atomic orientations covary in a molecule. These second-order representations are naturally captured by points on the symmetric positive definite matrices (SPD) manifold; (2) Standard message passing applies shared transformations across edges. Sheaf neural networks address this via edge-specific transformations, but existing formulations remain confined to vector spaces and therefore cannot propagate matrix-valued features. We address both challenges by developing the first sheaf neural network operates natively on the SPD manifold. Our key insight is that the SPD manifold admits a Lie group structure, enabling well-posed analogs of sheaf operators without projecting to Euclidean space. Theoretically, we prove that SPD-valued sheaves are strictly more expressive than Euclidean sheaves: they admit consistent configurations (global sections) that vector-valued sheaves cannot represent, directly translating to richer learned representations. Empirically, our sheaf convolution transforms effectively rank-1 directional inputs into full-rank matrices encoding local geometric structure. Our dual-stream architecture achieves SOTA on 6/7 MoleculeNet benchmarks, with the sheaf framework providing consistent depth robustness.",
+      "authors": [
+        "Yuhan Peng",
+        "Junwen Dong",
+        "Yuzhi Zeng",
+        "Hao Li",
+        "Ce Ju",
+        "Huitao Feng",
+        "Diaaeldin Taha",
+        "Anna Wienhard",
+        "Kelin Xia"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-04-22T08:09:04+00:00",
+      "link": "https://arxiv.org/pdf/2604.20308v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Geometric representation learning on manifolds for capturing complex relationships",
+      "llm_evidence_cn": "流形上的几何表示学习，用于捕捉复杂关系",
+      "llm_evidence": "流形上的几何表示学习，用于捕捉复杂关系",
+      "canonical_evidence": "流形上的几何表示学习，用于捕捉复杂关系",
+      "llm_tldr_en": "Proposes Sheaf Neural Networks on SPD manifolds for second-order geometric representation learning.",
+      "llm_tldr_cn": "提出SPD流形上的束神经网络，用于二阶几何表示学习。",
+      "llm_tldr": "提出SPD流形上的束神经网络，用于二阶几何表示学习。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.24374v1",
+      "source": "arxiv",
+      "title": "MIPIC: Matryoshka Representation Learning via Self-Distilled Intra-Relational and Progressive Information Chaining",
+      "abstract": "Representation learning is fundamental to NLP, but building embeddings that work well at different computational budgets is challenging. Matryoshka Representation Learning (MRL) offers a flexible inference paradigm through nested embeddings; however, learning such structures requires explicit coordination of how information is arranged across embedding dimensionality and model depth. In this work, we propose MIPIC (Matryoshka Representation Learning via Self-Distilled Intra-Relational Alignment and Progressive Information Chaining), a unified training framework designed to produce structurally coherent and semantically compact Matryoshka representations. MIPIC promotes cross-dimensional structural consistency through Self-Distilled Intra-Relational Alignment (SIA), which aligns token-level geometric and attention-driven relations between full and truncated representations using top-k CKA self-distillation. Complementarily, it enables depth-wise semantic consolidation via Progressive Information Chaining (PIC), a scaffolded alignment strategy that incrementally transfers mature task semantics from deeper layers into earlier layers. Extensive experiments on STS, NLI, and classification benchmarks (spanning models from TinyBERT to BGEM3, Qwen3) demonstrate that MIPIC yields Matryoshka representations that are highly competitive across all capacities, with significant performance advantages observed under extreme low-dimensional.",
+      "authors": [
+        "Phung Gia Huy",
+        "Hai An Vu",
+        "Minh-Phuc Truong",
+        "Thang Duc Tran",
+        "Linh Ngo Van",
+        "Thanh Hong Nguyen",
+        "Trung Le"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-04-27T12:07:40+00:00",
+      "link": "https://arxiv.org/pdf/2604.24374v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "representation learning via self-distilled intra-relational alignment",
+      "llm_evidence_cn": "通过自蒸馏内部关系对齐进行表示学习",
+      "llm_evidence": "通过自蒸馏内部关系对齐进行表示学习",
+      "canonical_evidence": "通过自蒸馏内部关系对齐进行表示学习",
+      "llm_tldr_en": "Proposes MIPIC for structurally coherent and semantically compact Matryoshka representation learning.",
+      "llm_tldr_cn": "提出 MIPIC 用于构建结构一致且语义紧凑的俄罗斯套娃式表示学习。",
+      "llm_tldr": "提出 MIPIC 用于构建结构一致且语义紧凑的俄罗斯套娃式表示学习。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

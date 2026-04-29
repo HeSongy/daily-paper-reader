@@ -1,0 +1,46 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.24662v1/fig-001.webp",
+      "caption": "FIG. 4. Mutual information selects the temporal order of the dynamics. (A) MI (bits) as a function of number of frames nF with kz = 2 and N = 1000. MI peaks at nF = 2 with a decay for larger nF values, due to the MI estimation becoming harder as the dimensionality of X and Y grow as nF × D while we keep the same architecture and number of samples. Opaque markers show the run with highest test MI across ten independent seeds; faded markers show the remaining trials. (B) Angle prober RMSE vs. nF : error is already minimal at nF = 1, as a single frame can accurately recover the angle θ. (C) Angular velocity prober RMSE vs. nF : error is large at nF = 1 and drops sharply at nF = 2, since resolving velocity requires at least two frames.",
+      "page": 7,
+      "index": 1,
+      "width": 531,
+      "height": 360
+    },
+    {
+      "url": "assets/figures/arxiv/2604.24662v1/fig-002.webp",
+      "caption": "FIG. 5. Sample efficiency of DySIB (kz = 2, nF = 2). (A) MI (bits) vs. number of training videos N (log scale). MI grows approximately as log2 N (dashed line), indicating that independent information scales with the number of distinct initial conditions rather than the total number of frame pairs. Opaque markers show the run with highest test MI across ten independent seeds; faded markers show the remaining trials. (B) Angle prober RMSE (degrees) vs. N . Accurate recovery of θ requires only ∼ 16–32 videos. (C) Angular velocity prober RMSE (degrees/s) vs. N . Accurate recovery of ω requires only ∼ 256 videos.",
+      "page": 7,
+      "index": 2,
+      "width": 514,
+      "height": 367
+    },
+    {
+      "url": "assets/figures/arxiv/2604.24662v1/fig-003.webp",
+      "caption": "FIG. 6. The learned latent space encodes physical variables. All trajectories embedded in the learned twodimensional DySIB latent space (kz = 2, nF = 2, N = 1000), colored by (A) angle θ and (B) angular velocity ω, whose values were not used in training. The smooth, globally consistent colorings show that θ corresponds to the angular coordinate in latent space and ω to the radial coordinate, consistent with the polar phase space structure. Embeddings colored by kinetic energy, potential energy, and total energy are shown in Fig. S2, confirming that the full physical state is encoded in the two-dimensional representation.",
+      "page": 8,
+      "index": 3,
+      "width": 539,
+      "height": 227
+    },
+    {
+      "url": "assets/figures/arxiv/2604.24662v1/fig-004.webp",
+      "caption": "FIG. 7. Long-term latent dynamics and forecasting (kz = 2, nF = 2, N = 1000). (A) Learned vector field δ(zx) overlaid on the latent phase space. Three representative trajectories are shown: true (solid circles) and predicted mean via stochastic rollout (dashed squares), starting from the triangle marker; shaded regions show ±1 s.e. over stochastic samples. Yellow and red stars mark the stable, (θ, ω) ≈ (0, 0), and unstable, (θ, ω) ≈ (π, 0), fixed points. (B) Latent RMSE as a function of rollout step, averaged over 40 stochastic rollouts; shaded band shows ±1 s.e. (C) Corresponding θ RMSE in degrees. Errors accumulate approximately linearly, consistent with the accumulation of integration errors over long rollouts.",
+      "page": 9,
+      "index": 4,
+      "width": 898,
+      "height": 450
+    },
+    {
+      "url": "assets/figures/arxiv/2604.24662v1/fig-005.webp",
+      "caption": "FIG. 2. Ground truth and learned phase space of the pendulum. (A) Cartesian phase space: angular velocity ω vs. angle θ for all 1200 trajectories. (B) The same trajectories in the polar projection (θ as polar angle, ω+ c as radius for a fixed offset c), which accounts for the periodic nature of θ (see Fig. S1 for the geometric construction). (C) The two-dimensional latent space learned by DySIB (kz = 2, nF = 2, training N = 1000). The learned latent space closely matches the polar projection, up to a rotation and reflection, recovering the correct phase space structure without supervision.",
+      "page": 5,
+      "index": 5,
+      "width": 1062,
+      "height": 321
+    }
+  ]
+}
