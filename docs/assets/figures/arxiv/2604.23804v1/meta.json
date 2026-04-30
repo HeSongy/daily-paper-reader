@@ -1,0 +1,46 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.23804v1/fig-001.webp",
+      "caption": "Figure 4: Persistence diagrams of 500 images decoded by KleinVAE from images with uniformly random circle center positions.",
+      "page": 13,
+      "index": 1,
+      "width": 664,
+      "height": 363
+    },
+    {
+      "url": "assets/figures/arxiv/2604.23804v1/fig-002.webp",
+      "caption": "Figure 3: Klein-Circles dataset. Left: samples of original data – circles on the Klein bottle with centers at different positions. Right: reconstructions of corresponding images with KleinVAE. White = intensity equals 1, black = zero.",
+      "page": 13,
+      "index": 2,
+      "width": 498,
+      "height": 250
+    },
+    {
+      "url": "assets/figures/arxiv/2604.23804v1/fig-003.webp",
+      "caption": "Figure 2: Left: Gabor-Klein filters = discretizations of function F (6), with θ1,θ2 params, on a 3×3 grid. Upper half, θ1≤π, is the fund. region of F in the parameter space Θ, with Klein bottle topology. This is also an illustration of a 2-sheeted covering of K by a 2-torus: the whole square doubly covers the top half. Right: Persistence diagrams of 500 filters sampled from U [Θ]: left is PH over Z2; right is over Z3. Persistent features that exist over Z2 and disappear over Z3 are circled.",
+      "page": 4,
+      "index": 3,
+      "width": 831,
+      "height": 327
+    },
+    {
+      "url": "assets/figures/arxiv/2604.23804v1/fig-004.webp",
+      "caption": "Figure 5: Training dynamics and topological metrics for all models. (a) Evidence Lower Bound, (b) Latent code variance",
+      "page": 15,
+      "index": 4,
+      "width": 818,
+      "height": 354
+    },
+    {
+      "url": "assets/figures/arxiv/2604.23804v1/fig-005.webp",
+      "caption": "Figure 6: (a-b) Total bottleneck distance over Z2 and Z3.",
+      "page": 15,
+      "index": 5,
+      "width": 818,
+      "height": 360
+    }
+  ]
+}

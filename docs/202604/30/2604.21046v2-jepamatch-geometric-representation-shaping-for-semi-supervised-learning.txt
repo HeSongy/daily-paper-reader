@@ -1,0 +1,616 @@
+Title: JEPAMatch: Geometric Representation Shaping for Semi-Supervised Learning
+
+URL Source: https://arxiv.org/pdf/2604.21046v2
+
+Published Time: Wed, 29 Apr 2026 00:49:44 GMT
+
+Number of Pages: 21
+
+Markdown Content:
+# JEPAMatch: Geometric Representation Shaping for Semi-Supervised Learning 
+
+Ali Aghababaei-Harandi, Aude Sportisse and Massih-Reza Amini 
+
+Université Grenoble Alpes, CNRS, Computer Science Laboratory LIG, Grenoble, France 
+
+{Firstname.Lastname }@univ-grenoble-alpes.fr 
+
+Abstract. Semi-supervised learning has emerged as a powerful paradigm for leveraging large amounts of unlabeled data to improve the perfor-mance of machine learning models when labeled data are scarce. Among existing approaches, methods derived from FixMatch have achieved state-of-the-art results in image classification by combining weak and strong data augmentations with confidence-based pseudo-labeling. Despite their strong empirical performance, these methods typically struggle with two critical bottlenecks: majority classes tend to dominate the learning pro-cess, which is amplified by incorrect pseudo-labels, leading to biased models. Furthermore, noisy early pseudo-labels prevent the model from forming clear decision boundaries, requiring prolonged training to learn informative representation. In this paper, we introduce a paradigm shift from conventional logical output threshold base, toward an explicit shap-ing of geometric representations. Our approach is inspired by the re-cently proposed Latent-Euclidean Joint-Embedding Predictive Archi-tectures (LeJEPA), a theoretically grounded framework asserting that meaningful representations should exhibit an isotropic Gaussian struc-ture in latent space. Building on this principle, we propose a new training objective that combines the classical semi-supervised loss used in Flex-Match, an adaptive extension of FixMatch, with a latent-space regular-ization term derived from LeJEPA. Our proposed approach, encourages well-structured representations while preserving the advantages of pseudo-labeling strategies. Through exten-sive experiments on CIFAR-100, STL-10 and Tiny-ImageNet, we demon-strate that the proposed method consistently outperforms existing base-lines. In addition, our method significantly accelerates the convergence, drastically reducing the overall computational cost compared to standard FixMatch-based pipelines. 
+
+Keywords: Semi-supervised Learning · Joint-embedding predictive ar-chitecture · Self-Supervised Geometry. 
+
+## 1 Introduction 
+
+Semi-supervised learning (SSL) [7] has attracted increasing attention across a wide range of domains, including computer vision [29], domain adaptation [6,11]  
+
+> arXiv:2604.21046v2 [cs.LG] 28 Apr 2026 2Ali Aghababaei-Harandi, Aude Sportisse and Massih-Reza Amini
+
+and natural language processing [9], as well as in application areas such as medicine [12] or biology [23]. Its appeal lies in its ability to leverage both la-beled and unlabeled data during training, improving predictive performance or achieving comparable results with fewer labeled samples. This is particularly ad-vantageous in real-world scenarios where acquiring large-scale labeled datasets is expensive and even impossible in some cases. A variety of approaches have been explored in the literature, including pseudo-labeling methods [20,24], consistency regularization techniques [15,25,28], and graph-based methods [27]. Recent deep learning SSL methods combine pseudo-labeling with consistency regularization and data augmentation, achieving re-markable empirical performance gains [4,31,26]. A particularly influential paradigm is FixMatch [26], where predictions ob-tained from weakly augmented inputs supervise the model on strongly aug-mented versions of the same samples. Despite its empirical success, FixMatch suffers from two main limitations: pseudo-label selection relies on a fixed confi-dence threshold, which can bias training toward majority classes, and it requires a large number of iterations to converge. Adaptive or class-dependent thresholds have been proposed to mitigate the first issue [33,35], but the convergence speed problem remains unaddressed. Recently, joint-embedding predictive architectures (JEPAs) [1] have emerged as a promising alternative paradigm for representation learning in computer vision. JEPAs augment an encoder with a predictive model that directly predicts embeddings of augmented or local views, encouraging the encoder to capture semantically meaningful features without reconstructing raw inputs. Building on this idea, LeJEPA [3] proposes a theoretical framework sug-gesting that high-quality representations should follow an isotropic Gaussian distribution in the embedding space, characterized by equal variance along all directions and the absence of preferred axes. Overall, JEPA-based methods are primarily designed for stable representation learning; however, they may also promote more efficient feature learning and improved convergence dynamics. In this work, we leverage the theoretically grounded architecture introduced in LeJEPA and integrate it into FlexMatch [35], a variant of FixMatch with adaptive thresholding. Our proposed method, termed JEPAMatch , addresses the limitations of confidence-based semi-supervised learning by decoupling dis-crete classification training from the geometric organization of the representation space. To this end, the learning process is decomposed into two complementary lev-els: a Curriculum Level responsible for pseudo-label selection and a Representa-tion Level that structures the learned feature space. Notably, JEPAMatch is not limited to FlexMatch and can be adapted to other FixMatch variants, such as FreeMatch and SoftMatch, further extending its applicability. By jointly optimiz-ing these two levels, JEPAMatch improves classification performance, mitigates the class imbalance induced by confidence-based pseudo-labeling, and facilitates faster and more stable convergence. We empirically validate these advantages through extensive experiments on standard benchmark datasets, CIFAR-100 and JEPAMatch 3
+
+STL-10. Additional results for the Tiny-ImageNet benchmark are provided in the Appendix A.1. 
+
+## 2 Related works 
+
+Several variants of FixMatch [26] have been proposed to address limitations in pseudo-label selection. FlexMatch [35] introduces class-specific confidence thresholds to mitigate class imbalance. FreeMatch [30] dynamically estimates both global and per-class thresholds. In addition, SoftMatch [8] replaces hard thresholding by weighting each unlabeled example according to its predicted confidence. Another line of work combines self-supervised learning with semi-supervised classification to improve feature representations and robustness. CR-Match [13] adds a self-supervised rotation loss and an embedding distance loss. CoMatch [21] and SimMatch [36] integrate contrastive learning and embedding alignment between weakly and strongly augmented samples. Finally, Suave and Daino [14] leverage self-supervised clustering to generate more reliable pseudo-labels while improving representation quality. Semi-supervised methods often struggle with class imbalance and dimen-sional collapse, when the data are unbalanced and there are easier-to-learn classes. In this case, majority classes frequently exceed the confidence threshold 
+
+τ , leading to consistent gradient updates that further reinforce their dominance in the representation space, while minority classes suffer from sparse supervision. This effect results in poorly structured feature representations and ultimately degrades the model’s generalization performance. In addition, curriculum-based SSL frameworks suffer from significantly slow convergence rates. Standard consistency regularization methods, such as Fix-Match [26] and its variants, typically require over 220 (one million) training iterations to converge. This bottleneck arises from the pseudo-label selection mechanism. At the outset of training, the classifier’s confidence is exceptionally low, so most unlabeled samples fail to surpass the confidence threshold, leaving the network with extremely sparse supervisory signals. Consequently, the model relies primarily on labeled data for many iterations, while most unlabeled sam-ples —though processed— are repeatedly discarded, resulting in inefficient use of computational resources. 
+
+## 3 Preliminaries: Semi-Supervised Learning Formulation 
+
+In the standard semi-supervised learning (SSL) framework, we assume access to two datasets: a set of labeled training examples, denoted as Xl = {(xi, y i)}ni=1 ∈
+
+(X ×Y )n, and a set of unlabeled training examples, Xu = {xn+i}ui=1 ∈ X u. Here, 
+
+X ⊆ Rd represents the input space, while Y denotes the output space. In this work, we focus on multiclass classification problems, where the output space is discrete: Y = {1, . . . , C } with C > 2. Both labeled and unlabeled samples are processed by a neural network architecture consisting of a feature extractor fθ , followed by a linear classifier hϕ. We further suppose that the 4 Ali Aghababaei-Harandi, Aude Sportisse and Massih-Reza Amini 
+
+supervised objective is defined using the standard cross-entropy loss applied to the labeled data. 
+
+Lsup = 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+H(yi, p i), (1) where H denotes the cross-entropy loss defined as H(yi, p i) = − PCc=1 yi,c log( pi,c ),with yi,c denoting the c-th component of the one-hot encoded label yi ∈ { 0, 1}C .Furthermore, pi = softmax (hϕ(fθ (xi))) represents the predicted class probabili-ties for the i-th labeled example, with softmax denoting the softmax function. For unlabeled data, we adopt the consistency-based framework with data augmentations, as introduced in FixMatch [26]. Specifically, each unlabeled sam-ple xi is transformed into two distinct augmented views: a weakly augmented version xwi and a strongly augmented version xsi .The weakly augmented view xwi is first processed by the network to obtain the predicted class probabilities; pwi = softmax (hϕ(fθ (xwi ))) . A pseudo-label ˆywi
+
+is then generated from the model’s prediction as ˆywi = arg max( pwi ).To ensure reliable supervision, we retain only predictions with sufficiently high confidence. A fixed confidence threshold τ is applied: if the maximum pre-dicted probability satisfies max( pwi ) > τ , the pseudo-label is deemed confident, and a binary mask Mi = 1 is assigned; otherwise, Mi = 0 . The unlabeled ob-jective enforces prediction consistency between the weak and strong views by applying the cross-entropy loss to the strongly augmented sample xsi , supervised by the pseudo-label ˆywi and gated by the confidence mask Mi:
+
+Lunsup = 1
+
+u
+
+> n+u
+
+X
+
+> i=n+1
+
+MiH(ˆ ywi , p si ), (2) where psi = softmax (hϕ(fθ (xsi ))) denotes the predicted class probabilities for the strongly augmented view. The overall training objective integrates both the supervised loss (1) and the unsupervised loss (2) as follows: 
+
+Ltotal,ssl = Lsup + λunsup Lunsup , (3) where λunsup > 0 is a hyperparameter that controls the relative contribution of the unlabeled data to the total loss. 
+
+## 4 Proposed method: JEPAMatch 
+
+Our proposed method, JEPAMatch, mitigates the constraints of confidence-based semi-supervised learning by separating discrete classification training from the geometry of representation learning. It achieves this by breaking down the learning process into two synergistic parts: a Curriculum Level, which manages the selection of pseudo-labels, and a Representation Level, which defines the organization of the learned feature space. JEPAMatch 5
+
+The goal is to train a parameterized neural network comprising three key modules: a backbone encoder fθ , a classifier head hϕ, and an additional projec-tion head gψ . The encoder fθ extracts latent representations from input features, the classifier hϕ generates class predictions, and the projection head gψ learns geometry-aware representations to improve generalization to unseen data. To capture both semantic and geometric features, JEPAMatch employs a multi-view augmentation strategy. For a given unlabeled image xi, we generate three distinct types of views: 1. Weak View ( xwi ): A single globally-sized crop with standard, mild aug-mentations (e.g., random flips or translations). 2. Strong View ( xsi ): A single globally-sized crop subjected to heavy aug-mentations (e.g. color transformations or noise injection). 3. Local Views ( {xloc i,k }Kk=1 ): K smaller and local crops, mildly augmented to capture isolated parts of the image, each covering a small portion of the original image. These views are illustrated in Figure 1. The Curriculum Level strictly uti-lizes the global views ( xwi and xsi ) to ensure the classifier has sufficient context to make accurate pseudo-label selection. Conversely, the Representation Level utilizes all views to enforce a robust, geometrically consistent latent space via self-supervised prediction across both global structures and local parts.    
+
+> (a) Original (b) Weak (c) Strong (d) Local Views
+
+Fig. 1: Multi-view Augmentation Strategy for JEPAMatch. The Original image is pro-cessed into global context views (Weak and Strong) and structurally isolated patches (Local views) to enforce geometric consistency. 
+
+4.1 Curriculum Level: Dynamic Pseudo-Labeling 
+
+At the Curriculum Level, JEPAMatch is supervised using both ground-truth labels and high-confidence pseudo-labels generated by the classifier head hϕ. For labeled data Xl, we apply the standard supervised cross-entropy loss, as defined in Equation (1). For unlabeled data Xu, we adopt the FlexMatch framework [35], which em-ploys class-wise dynamic thresholds τc. These thresholds, computed based on the number of samples assigned to each class, prevent majority-class dominance in the pool of confident pseudo-labels. Following the approach of FixMatch [26], prediction probabilities pwi and their associated confident pseudo-labels ˆywi are 6 Ali Aghababaei-Harandi, Aude Sportisse and Massih-Reza Amini        
+
+> Curriculum Level
+> Representation Level
+> View Flows:
+> Weak View Strong View Local Views
+> Unlabeled Image
+> {xi}ui=n+1
+> Weak Aug
+> xwi
+> Labeled Image {xi}ni=1
+> Strong Aug
+> xsi
+> Local Augs
+> {xloc i,k }Kk=1
+> Backbone Encoder
+> fθ
+> Classifier Head
+> hϕ
+> pwi
+> psi
+> Dynamic Masking
+> for {xi}ui=n+1
+> Lsup for {xi}ni=1
+> Lunsup
+> Mi,ˆyi
+> Projection Head
+> gψ
+> zwi
+> zsi
+> {zloc i,k }
+> Lpred
+> Target
+> Adaptive SIGReg
+> LSIGReg ,Lrepulsion
+> Mi
+> Lrep
+> Ltotal
+
+Fig. 2: Overview of the JEPAMatch architecture. The backbone encoder ( fθ ) pro-cesses distinct views flowed via color. The Curriculum Level extracts global context to dynamically generate confident pseudo-labels ( ˆyi) and masks ( Mi). The Representation Level aligns global and local views via JEPA prediction while applying Adaptive Class-wise SIGReg to tights without dimensional col-lapse. Red circles denote loss terms, while the Dynamic Masking and Adaptive SIGReg modules compute the regularization, SIGReg and repulsion. Dashed lines indicate its data used as the target in the next module. Notations are con-sistent with method. generated for the weakly augmented view xwi . When a sample’s confidence ex-ceeds the dynamic threshold ( max( pwi ) ≥ τˆywi ), the mask Mi is set to 1, and we apply the unsupervised cross-entropy loss to the strongly augmented view xsi , as described in Equation (2). The combination of labeled and unlabeled losses, as introduced in Equa-tions (1) and (2), serves as the primary discriminative objective. This objective encourages the latent features to form discrete, class-specific clusters, which is essential for achieving high classification accuracy. However, such clustering in-herently risks geometric collapse of the latent space, an issue we mitigate through the isotropic constraints introduced at the Representation Level. Figure 2 depicts the JEPAMatch architecture, combining a backbone en-coder with curriculum-based pseudo-labeling and adaptive class-wise SIGReg to align global/local features, mitigate class imbalance, and prevent representation collapse. 
+
+4.2 Representation Level: Self-Supervised Geometry 
+
+To ensure that the network learns robust and invariant features, the backbone outputs are passed through a projection head gψ to obtain z = gψ (fθ (x)) . Ac-JEPAMatch 7
+
+cordingly, we denote the representations of the strong, weak, and local views as 
+
+zsi , zwi , and {zloc i,k }Kk=1 , respectively. At the Representation Level, three distinct losses are introduced, as detailed below. 
+
+Self-Supervised Prediction Loss The core of our representation learning framework is the Joint Embedding Predictive Architecture (JEPA) loss [1]. This loss is motivated by the principle that the representation of a local part of an image—or its heavily augmented version—should align closely with the repre-sentation of the weakly augmented global image. This encourages the model to learn a geometrically meaningful representation of images. To achieve this, we treat the weak view representations zwi as targets, which the model predicts using the strongly augmented views zsi and the local crops {zloc i,k }Kk=1 . The prediction loss is formalized as the distance between the predicted local/strong views and the target weak view: 
+
+Lpred = 1
+
+u
+
+> n+u
+
+X
+
+> i=n+1
+
+D(zsi , zwi ) + 
+
+> K
+
+X
+
+> k=1
+
+D(zloc i,k , zwi )
+
+!
+
+, (4) where D denotes a distance metric (e.g., Mean Square Error or Cosine distance). While Lpred effectively aligns local parts with the global context, it remains highly susceptible to dimensional collapse [2]. To address this, we introduce a structural regularizer, detailed in the following section. 
+
+Adaptive Class-wise SIGReg Inspired by the LeJEPA framework [3], which theoretically demonstrates that an isotropic Gaussian distribution is optimal for minimizing downstream prediction risk in latent embeddings, we extend the Sketched Isotropic Gaussian Regularization (SIGReg) mechanism. SIGReg prevents dimensional collapse by mapping high-dimensional features through 1D random projections (sketches) and matching their Empirical Characteris-tic Function (Appendix C) to that of a standard normal distribution N (0 , I ).However, while global SIGReg is well-suited for generic representation learning, it conflicts with the discriminative objectives of semi-supervised classification, where data must form non-overlapping class clusters. To reconcile these goals, we propose Adaptive Class-Wise SIGReg. Rather than enforcing a single global Gaussian distribution, we encourage each class to form its own isolated isotropic Gaussian, characterized by a class-specific mean 
+
+μc and a tightly controlled variance σ. Our approach consists of two training phases, detailed in the following paragraphs. 
+
+Warmup Phase: Global SIGReg. At the beginning of the training, the classifier’s predictions are highly unstable, which the pseudo-labels are largely unreliable. Attempting to build class-specific clusters at this stage would lead to severe con-firmation bias, forcing the geometry to organize around incorrect predictions. Therefore, during the initial warmup phase, we temporarily ignore class assign-ments and apply standard SIGReg loss as LEJEPA [3] on the projection vectors 8 Ali Aghababaei-Harandi, Aude Sportisse and Massih-Reza Amini 
+
+{zloc i,k }Kk=1 (Detailed calculations for this loss are provided in Appendix, Section 3. By forcing distribution of {zloc i,k }Kk=1 to be N (0 , I ), we ensure the network utilizes all available dimensions and builds a un-collapsed feature space while the prediction loss ( Lpred ) learns basic invariance structural. In this phase, the representation loss is defined as: 
+
+Lrep = (1 − β)Lpred + β 1
+
+K
+
+> K
+
+X
+
+> k=1
+
+SIGReg ({zloc i,k }n+ui=n+1 , N (0 , I )) (5) where β is a hyperparameter balancing the loss terms. We apply the SIGReg objective just to the local views, because the prediction loss ( Lpred ) forces these local features to align with the global context, the weak and strong views im-plicitly inherit the desired Gaussian normality. 
+
+Main Phase: Adaptive Class-Wise SIGReg. Once the warmup phase concludes, the model has developed sufficient confidence to begin shaping the latent space. During this phase, the regularizer gradually shifts from structuring a continuous global manifold to forming tight class clusters. 
+
+Class Mean: For each class c, the target mean μc is computed from both the labeled data and the confident pseudo-labeled data present in the batch: 
+
+μc = 1
+
+|Bc|
+
+X 
+
+> zwc∈Bc
+
+zwc (6) where Bc is the combined set of labeled and confident unlabeled samples for class 
+
+c. To evaluate the normality of these newly forming clusters, we conditionally centering the projection vectors zi based on the FlexMatch confidence mask Mi:
+
+ˆzi = zi − (Mi · μˆyi ) (7) If a sample is confident ( Mi = 1 ), it is perfectly centered by its class mean. This isolates the residual vector, allowing us to apply the normality constraint directly to the intra-class variance. If a sample is unconfident ( Mi = 0 ), it remains at the center ( μ = 0 ), effectively falling back to the Global SIGReg constraint until the model learns to classify it safely. 
+
+Variance Annealing: Because the confident data are now centered around specific class means, the geometric objective shifts from expanding the space to forming tight clusters. As training progresses, we smoothly anneal the target standard deviation σ from 1.0 down to 0.1 as a function of the training iterations. For the centered projection vectors {ˆzloc i,k }Kk=1 , we enforce a distribution N (0 , σ 2I)
+
+(Appendix 2). 
+
+Active Repulsion Loss: To prevent the network from trivially minimizing 
+
+LSIGReg by collapsing all class means into a single point, we introduce an Active Repulsion Loss. We extract mean μc of each valid class present in the batch. We normalize these means ( ¯μc) and create matrix ¯μ to compute their cosine JEPAMatch 9
+
+Algorithm 1 JEPAMatch 
+
+1: Input: Labeled ( Xl) and Unlabeled ( Xu) sets, Threshold base ( τ ), Number of total (T ) and warmup iterations ( Twarm ), Loss hyper-parameters ( λunsup , λrep , β). 2: Initialize: θ, ϕ, ψ (Backbone, Classifier, Projection). 3: for t = 1 to T do 
+
+4: Sample batch Bl from Xl and Bu from Xu.5: Generate xwi for each xi ∈ Bl and {xwi , xsi , {xloc i,k }Kk=1 } for each xi ∈ Bu
+
+6: Compute Lsup = 1
+
+> |Bl|
+
+P 
+
+> i∈Bl
+
+H(yi, softmax (hϕ(fθ (xi))) .7: Compute pwi for xwi ; derive pseudo-labels ˆywi and confidence conf i = max( pwi ).8: Update dynamic thresholds τˆyi and compute mask Mi = 1(conf i ≥ τˆyi ).9: Lunsup = 1
+
+> |Bu|
+
+P 
+
+> i∈Bu
+
+MiH(ˆ ywi , softmax (hϕ(fθ (xsi )))) .10: Compute zwi , zsi , {zloc i,k }Kk=1 via projection head gψ .11: Lpred = 1
+
+> |Bu|
+
+P
+
+> i∈Bu
+
+
+
+D(zsi , zwi ) + PKk=1 D(zloc i,k , zwi )
+
+
+
+12: if t < T warm then 
+
+13: Lrep = (1 − β)Lpred + β 1
+
+> K
+
+PKk=1 SIGReg ({zloc i,k }n+ui=n+1 , N (0 , I )) 
+
+14: else 
+
+15: Compute batch class means: μc = Mean (zwi ∈ Bc), where Bc is the set of labeled and confident unlabeled samples for class c.16: Center features: ˆzi = zi − (Mi · μˆyi ).17: Anneal σt and compute Lrepulsion given in (8) between distinct μc.18: Lrep = (1 − β)Lpred + β 1
+
+> K
+
+PKk=1 SIGReg ({ˆzloc i,k }n+ui=n+1 , N (0 , σ 2I)) + Lrepulsion 
+
+19: end if 
+
+20: Ltotal = Lsup + λunsup Lunsup + λrep Lrep .21: Update θ, ϕ, ψ via backpropagation. 22: end for 
+
+similarity matrix S = ¯μ¯μT . We penalize positive similarity between distinct classes: 
+
+Lrepulsion = 1
+
+Cμ(Cμ − 1) 
+
+> Cμ
+
+X
+
+> i̸=j
+
+max(0 , S i,j )2, (8) where Cμ represents the total number of unique class means active in the itera-tion. Representation loss Lrep for the main phase can be written as: 
+
+Lrep = (1 − β)Lpred + β 1
+
+K
+
+> K
+
+X
+
+> k=1
+
+SIGReg ({ˆzloc i,k }n+ui=n+1 , N (0 , σ 2I)) + Lrepulsion . (9) 
+
+4.3 Total Loss Formulation 
+
+JEPAMatch optimizes the network by jointly minimizing the curriculum predic-tion loss and the Representation loss. The total loss is formulated as: 
+
+Ltotal = Lsup + λunsup Lunsup + λrep Lrep (10) 10 Ali Aghababaei-Harandi, Aude Sportisse and Massih-Reza Amini 
+
+where the λ hyper-parameters balance the geometric constraints against the predictive tasks. The representation loss, Lrep , varies depending on the training phase. Our proposed approach is described in Algorithm 1: line 5 corresponds to data augmentation, lines 6-9 implement the Curriculum Level, lines 7-11 implement the Representation Level, line 13 computes the representation loss during the warmup phase, while lines 16-18 correspond to the main phase, and finally lines 20-21 compute the total loss and perform the standard parameter updates via backpropagation. In the next section, we validate our method through a series of experiments on different datasets. 
+
+## 5 Experimental Setup 
+
+Datasets. We conducted experiments on three challenging SSL benchmarks: CIFAR-100 [18] and STL-10 [10], and Tiny-ImageNet [19]. For CIFAR-100, which contains 50,000 images across 100 classes, we adopted the splitting scenarios proposed by FixMatch [26], using 400, 2,500, and 10,000 labeled images with WRN-28-8 [34] as the backbone network. For STL-10, we used splits of 10 and 10,000 labeled images with WRN-37-2 [34] as the backbone. In Appendix A.1, Section 1 we also present results for Tiny-ImageNet, which consists of 100,000 images, we considered scenarios with 1,000 and 10,000 labeled images, using ResNet-50 [17] as the backbone. In ablation experiments, we used WRN-28-2 as the backbone network. Weak and strong augmentations are consistent with those used in FlexMatch [35]. Across all experiments, we extracted K = 6 local crops per image, with crop areas sampled between 0.2 and 0.5 for CIFAR-100, and between 0.1 and 0.4 for STL-10 and Tiny-ImageNet (Appendix A.1). Further details about the projection head are provided in Appendix B, Section 2. 
+
+Baselines. We compared JEPAMatch against state-of-the-art SSL approaches. This includes standard consistency regularization methods such as FixMatch [26], AdaMatch [6], and FlexMatch [35], as well as recent advancements like SoftMatch [8], FreeMatch [30], and RegMixMatch [16]. Since JEPAMatch em-phasizes representation geometry, a self-supervised learning paradigm, we also compared it against methods that explicitly merge self-supervised learning with semi-supervised classification. These include CrMatch [13], SimMatch [36], and Suave & Daino [14]. 
+
+Training Hyperparameters. To ensure fairness, our codebase is built on the Unified Semi-Supervised Learning Benchmark (USB) [29]. We retained the default training hyperparameters (e.g., learning rate, optimizer settings, and batch sizes) from the USB repository for all baseline methods, with minor ad-justments for JEPAMatch. We trained our model for 217 iterations on CIFAR-100 and STL-10, and 218 iterations on Tiny-ImageNet. The number of warm-up iterations is set to one-third of the total iterations for high-label scenarios and half for low-label scenarios. For loss hyperparameters, we set λunsup = 1 and 
+
+λrep = 0 .5 across all datasets. The parameter β is set to 0.2 for CIFAR-100 and STL-10, and adjusted to 0.05 for Tiny-ImageNet. JEPAMatch 11 
+
+## 6 Experimental Results 
+
+Below, we present our main results on CIFAR-100 and STL-10, along with an ablation study examining how accuracy evolves with respect to the number of iterations and the percentage of true labels in the assigned pseudo-labels. Ad-ditional results on Tiny-ImageNet, as well as three further ablation studies, are provided in the Appendix A. 
+
+6.1 Main Results 
+
+Image Classification Table 1 presents the error rates (%) of JEPAMatch and state-of-the-art SSL methods on the CIFAR-100 and STL-10 benchmarks across various labeled data scenarios. The results highlight that JEPAMatch consis-tently outperforms or remains competitive with existing methods while requiring 8 times fewer iterations ( 217 vs. 220 ) for CIFAR-100 and STL-10, demonstrat-ing its computational efficiency. Notably, JEPAMatch achieves the lowest error rates for CIFAR-100 with 400 (34.25%) and 2,500 (22.59%) labeled samples, and it is comparable to the best-performing method for 10,000 labeled samples (18.55%). On STL-10, JEPAMatch dominates in the 1,000 labeled samples sce-nario (4.28%) and remains highly competitive with 40 labeled samples (13.44%). This efficiency and performance advantage stem from JEPAMatch’s ability to leverage all unlabeled data from the first iteration, enabling faster and more sta-ble convergence compared to methods that gradually incorporate unlabeled data. Overall, JEPAMatch sets a new standard in SSL by combining state-of-the-art accuracy with significantly reduced training time. Table 2 presents the performance of various approaches on the CIFAR-100 benchmark using 4 labeled examples per class. On the left hand side of Table 2, Table 1: Error rates (%) on CIFAR-100 and STL-10 (3 seeds). Best results in 
+
+bold . ∗ Standard deviation not reported.                                                                                                                                                                                                                  
+
+> Method Iter. CIFAR-100 STL-10 400 2.5K 10K 40 1K PseudoLabel [20] 220 87 .45 ±0.85 57 .74 ±0.28 36 .55 ±0.24 74 .68 ±0.99 32 .64 ±0.71
+> MeanTeacher [28] 220 81 .11 ±1.44 45 .17 ±1.06 31 .75 ±0.23 71 .72 ±1.45 33 .90 ±1.37
+> MixMatch [5] 220 67 .59 ±0.66 39 .76 ±0.48 27 .78 ±0.29 54 .93 ±0.96 21 .70 ±0.68
+> ReMixMatch [4] 220 42 .75 ±1.05 26 .03 ±0.35 20 .02 ±0.27 32 .12 ±6.24 6.74 ±0.14
+> UDA [32] 220 46 .39 ±1.59 27 .73 ±0.21 22 .49 ±0.23 37 .42 ±8.44 6.64 ±0.17
+> FixMatch [26] 220 46 .42 ±0.82 28 .03 ±0.16 22 .20 ±0.12 35 .97 ±4.14 6.25 ±0.33
+> FlexMatch [35] 220 39 .94 ±1.62 26 .49 ±0.20 21 .90 ±0.15 29 .15 ±4.16 5.77 ±0.18
+> FreeMatch [30] 220 37 .98 ±0.42 26 .47 ±0.20 21 .68 ±0.03 15 .56 ±0.55 5.63 ±0.15
+> CrMatch [13] 220 39 .45 ±1.69 25 .43 ±0.14 20 .40 ±0.08 –4.89 ±0.17
+> SoftMatch [8] 220 37 .10 ±0.77 26 .66 ±0.25 22 .03 ±0.03 21 .42 ±3.48 5.73 ±0.24
+> SimMatch [36] 220 37 .81 ±2.21 25 .07 ±0.32 20 .58 ±0.11 ––FlatMatch [22] 220 38 .76 ±1.62 25 .38 ±0.85 19 .01 ±0.43 16 .20 ±4.34 4.82 ±1.21
+> Suvio&Daino ∗[14] 220 35 .423 .00 18 .4––RegMixMatch ∗[16] 220 35 .27 23 .78 19 .41 11 .74 4.66
+> JEPAMatch (Ours) 217 34 .25 ±1.97 22 .59 ±1.17 18 .55 ±0.85 13 .44 ±3.24.28 ±1.43
+
+12 Ali Aghababaei-Harandi, Aude Sportisse and Massih-Reza Amini 
+
+Table 2: Error rates (%) on CIFAR-100 with 4 labeled examples per class of Fix-Match, FlexMatch and SoftMatch (Left) with JepaMatch and varying imbalance factors ( γ). (Right) JEPAMatch variants over different iterations. Baselines re-sults provided from [29].                                                                 
+
+> Method CIFAR-100 (Imbalance γ)20 50 100 FixMatch 50 .42 ±0.78 57 .89 ±0.33 62 .40 ±0.48
+> FlexMatch 49 .11 ±0.60 57 .20 ±0.39 62 .70 ±0.47
+> SoftMatch 48 .09 ±0.55 56 .24 ±0.51 61 .08 ±0.81
+> JEPAMatch 46 .27 ±0.94 55 .16 ±1.12 59 .93 ±0.68
+> Method Iteration CIFAR-100 400 FlexMatch 220 50 .15 ±1.51
+> FreeMatch 220 49 .64 ±1.46
+> SoftMatch 220 49 .24 ±2.16
+> JEPAMatch (Flex) 217 45 .77 ±2.77
+> JEPAMatch (Free) 217 45 .12 ±1.98
+> JEPAMatch (Soft) 217 44 .65 ±2.14
+
+JEPAMatch is compared with other baselines under different class imbalance ratios ( γ = 20 , 50 , 100 ). The results show that JEPAMatch consistently outper-forms baseline methods such as FixMatch, FlexMatch, and SoftMatch, achiev-ing the lowest error rates of 46.27% ( γ = 20 ), 55.16% ( γ = 50 ), and 59.93% (γ = 100 ). This performance improvement is attributed to the SIGReg loss, which miti-gates class dominance during the warm-up phase by preventing over-representation of majority classes. Subsequently, the adaptive class-wise SIGReg mechanism dy-namically allocates representation space to each class, effectively reducing bias toward head classes (those with more data). This allows JEPAMatch to achieve a 1.0–2.0% improvement over other approaches across all imbalance scenarios. On the right side of Table 2, results indicate that JEPAMatch variants achieve lower error rates than their corresponding baselines while requiring fewer itera-tions, demonstrating both higher accuracy and improved training efficiency. 
+
+6.2 Ablation Study 
+
+Convergence Speed: Figure 3 compares the convergence speed and accuracy of JEPAMatch (red line) and FlexMatch (blue dashed line) on the CIFAR-100 dataset with only 4 labeled samples per class. JEPAMatch demonstrates a clear advantage in both speed and performance: it reaches 46.4% accuracy roughly 50,000 iterations earlier than FlexMatch, converging about 3 times faster. This rapid convergence is particularly valuable in resource-limited settings, as it sig-nificantly reduces training time and computational costs. Beyond speed, JEPA-Match also achieves a higher final accuracy ( ∼ 54% ) compared to FlexMatch (∼ 48% ), indicating not just faster learning but also better overall model perfor-mance. The efficiency of JEPAMatch is further highlighted by its steep accuracy improvement in the early iterations, quickly surpassing FlexMatch and maintain-ing a consistent lead throughout training. This result suggests that the geometric organisation of the representation space is a more practical and robust choice for semi-supervised learning tasks, especially when labeled data is scarce. JEPAMatch 13 0 20 40 60 80 100 
+
+Iterations ( ×10 3)
+
+> 10
+> 20
+> 30
+> 40
+> 50
+> 60
+> Accuracy (%)  = 50 k steps
+
+FlexMatch 
+
+JEPAMatch (Ours) 
+
+CIFAR-100 with 400 Labeled Images 
+
+Fig. 3: Convergence speed and evolution of accuracy of JEPAMatch and Flex-Match over training iterations. 
+
+Accuracy of Pseudo Labeling: Figure 4 compares the percentage of true la-bels in the assigned pseudo-labels (called pseudo-labeling accuracy) of JEPA-Match (red) and FlexMatch (dashed blue) over training iterations for CIFAR-100 (400 labeled images) and STL-10 (40 labeled images). JEPAMatch consistently achieves higher pseudo-labeling accuracy throughout training, reaching around 50% for CIFAR-100 and 65% for STL-10, compared to FlexMatch’s ∼ 35% and 
+
+∼ 45% , respectively. This superior performance is evident from the early stages, where JEPAMatch converges faster and maintains a stable, upward trajectory, while FlexMatch exhibits more fluctuations and plateaus earlier. The smoother and more consistent accuracy curve of JEPAMatch suggests it is better at fil-0 5 k 10 k 15 k 20 k 25 k 30 k 
+
+> Iteration
+> 0
+> 10
+> 20
+> 30
+> 40
+> 50
+> Accuracy of Pseudo Labeling (%)  CIFAR-100 with 400 Labeled Images
+> FlexMatch
+> JEPAMatch (Ours)
+
+(a) CIFAR-100 0 5 k 10 k 15 k 20 k 25 k 30 k  
+
+> Iteration
+> 0
+> 10
+> 20
+> 30
+> 40
+> 50
+> 60
+> 70
+> Accuracy of Pseudo Labeling (%)  STL-10 with 40 Labeled Images
+> FlexMatch
+> JEPAMatch (Ours)
+
+(b) STL-10 
+
+Fig. 4: Comparison of pseudo-labeling accuracy between JEPAMatch and Flex-Match over training iterations for CIFAR-100 and STL-10 using 4 labeled ex-amples per class. 14 Ali Aghababaei-Harandi, Aude Sportisse and Massih-Reza Amini 
+
+tering noisy pseudo-labels and providing reliable supervision for unlabeled data. The advantage of JEPAMatch stems from its curriculum-based pseudo-labeling, which dynamically selects high-confidence labels, and its adaptive class-wise SI-GReg mechanism, which mitigates class imbalance and reduces bias toward ma-jority classes. Additionally, the use of Joint-Embedding Predictive Architecture aligns global and local representations, further improving pseudo-label quality. In Appendix A we compare FlexMatch and JEPAMatch in terms of data utilization, as well as the number of pseudo-labels assigned to the predominant class (the class receiving the highest number of pseudo-labels). 
+
+## 7 Conclusion 
+
+In this work, we introduced JEPAMatch, a novel semi-supervised learning frame-work that integrates the theoretically grounded architecture if LeJEPA with the adaptive thresholding capabilities of FlexMatch. By addressing the inherent lim-itations of confidence-based pseudo-labeling, JEPAMatch decouples the discrete classification task from geometric organization of the representation space. This decoupling is achivied through a two-level learning process: Curriculum Level for pseudo-label selection and a Representation Level for structuring the feature space. The joint optimization of these levels not only enhances classification per-formance but also mitigates the class imbalance issues commonly associated with confidence-based methods, leading to faster and more stable convergence. Our empirical results, including the convergence analysis on CIFAR-100 and STL-10 demonstrate that JEPAMatch outperforms existing methods like FlexMatch in both accuracy and training efficiency. It achieves higher final accuracy while converging significantly faster, making it a more robust and resource-efficient solution for semi-supervised learning tasks. This work paves the way for fu-ture research in leveraging structured representation learning for semi-supervised learning. 
+
+## References  
+
+> 1. Assran, M., Duval, Q., Misra, I., Bojanowski, P., Vincent, P., Rabbat, M., LeCun, Y., Ballas, N.: Self-supervised learning from images with a joint-embedding predic-tive architecture. In: Proceedings of the IEEE/CVF conference on computer vision and pattern recognition. pp. 15619–15629 (2023) 2. Balestriero, R., LeCun, Y.: Contrastive and non-contrastive self-supervised learn-ing recover global and local spectral embedding methods. Advances in Neural In-formation Processing Systems 35 , 26671–26685 (2022) 3. Balestriero, R., LeCun, Y.: Lejepa: Provable and scalable self-supervised learning without the heuristics. arXiv preprint arXiv:2511.08544 (2025) 4. Berthelot, D., Carlini, N., Cubuk, E.D., Kurakin, A., Sohn, K., Zhang, H., Raf-fel, C.: Remixmatch: Semi-supervised learning with distribution alignment and augmentation anchoring. International Conference on Learning Representations (2019a)
+
+JEPAMatch 15 5. Berthelot, D., Carlini, N., Goodfellow, I., Papernot, N., Oliver, A., Raffel, C.A.: Mixmatch: A holistic approach to semi-supervised learning. In: Advances in Neural Information Processing Systems (NeurIPS). vol. 32 (2019) 6. Berthelot, D., Roelofs, R., Sohn, K., Carlini, N., Kurakin, A.: Adamatch: A unified approach to semi-supervised learning and domain adaptation. In: International Conference on Learning Representations (2022), https://openreview.net/forum? id=Q5uh1Nvv5dm 
+
+7. Chapelle, O., Schölkopf, B., Zien, A. (eds.): Semi-Supervised Learning. The MIT Press (2006) 8. Chen, H., Tao, R., Fan, Y., Wang, Y., Wang, J., Schiele, B., Xie, X., Raj, B., Sav-vides, M.: Softmatch: Addressing the quantity-quality tradeoff in semi-supervised learning. In: The Eleventh International Conference on Learning Representations (2023), https://openreview.net/forum?id=ymt1zQXBDiF 
+
+9. Chen, J., Yang, Z., Yang, D.: Mixtext: Linguistically-informed interpolation of hidden space for semi-supervised text classification. In: Proceedings of the 58th annual meeting of the association for computational linguistics. pp. 2147–2157 (2020) 10. Coates, A., Ng, A., Lee, H.: An analysis of single-layer networks in unsupervised feature learning. In: Proceedings of the fourteenth international conference on ar-tificial intelligence and statistics. pp. 215–223. JMLR Workshop and Conference Proceedings (2011) 11. Da Costa, V.G.T., Zara, G., Rota, P., Oliveira-Santos, T., Sebe, N., Murino, V., Ricci, E.: Dual-head contrastive domain adaptation for video action recognition. In: Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision. pp. 1181–1190 (2022) 12. Eckardt, J.N., Bornhäuser, M., Wendt, K., Middeke, J.M.: Semi-supervised learn-ing in cancer diagnostics. Frontiers in oncology 12 , 960984 (2022) 13. Fan, Y., et al.: Crmatch: Feature-level consistency approach for semi-supervised learning. In: International Conference on Learning Representations (ICLR) / or Relevant Venue (2023) 14. Fini, E., Astolfi, P., Alahari, K., Alameda-Pineda, X., Mairal, J., Nabi, M., Ricci, E.: Semi-supervised learning made simple with self-supervised clustering. In: Pro-ceedings of the IEEE/CVF conference on computer vision and pattern recognition. pp. 3187–3197 (2023) 15. Grandvalet, Y., Bengio, Y.: Semi-supervised learning by entropy minimization. Advances in neural information processing systems 17 (2004) 16. Han, H., Yuan, J., Wei, C., Yu, Z.: Regmixmatch: Optimizing mixup utilization in semi-supervised learning. In: Proceedings of the AAAI Conference on Artificial Intelligence. vol. 39, pp. 17032–17040 (2025) 17. He, K., Zhang, X., Ren, S., Sun, J.: Deep residual learning for image recognition. In: Proceedings of the IEEE conference on computer vision and pattern recognition (CVPR). pp. 770–778 (2016) 18. Krizhevsky, A., Hinton, G., et al.: Learning multiple layers of features from tiny images. Master’s thesis, Department of Computer Science, University of Toronto (2009) 19. Le, Y., Yang, X.: Tiny imagenet visual recognition challenge. CS 231N 7(7), 3(2015) 20. Lee, D.H.: Pseudo-label: The simple and efficient semi-supervised learning method for deep neural networks. In: ICML workshop on Challenges in Representation Learning (WREPL) (2013) 16 Ali Aghababaei-Harandi, Aude Sportisse and Massih-Reza Amini 21. Li, J., Xiong, C., Hoi, S.C.: Comatch: Semi-supervised learning with contrastive graph regularization. In: Proceedings of the IEEE/CVF International Conference on Computer Vision. pp. 9475–9484 (2021) 22. Liu, A., et al.: Flatmatch: Bridging the gap between labeled and unlabeled data in semi-supervised learning. In: Advances in Neural Information Processing Systems (NeurIPS) / or Relevant Venue (2023) 23. Moffat, L., Jones, D.T.: Increasing the accuracy of single sequence prediction meth-ods using a deep semi-supervised learning framework. Bioinformatics 37 (21), 3744– 3751 (2021) 24. Rizve, M.N., Duarte, K., Rawat, Y.S., Shah, M.: In defense of pseudo-labeling: An uncertainty-aware pseudo-label selection framework for semi-supervised learning. International Conference on Learning Representations (2021) 25. Samuli, L., Timo, A.: Temporal ensembling for semi-supervised learning. In: Inter-national Conference on Learning Representations (ICLR). vol. 4, p. 6 (2017) 26. Sohn, K., Berthelot, D., Li, C.L., Zhang, Z., Carlini, N., Cubuk, E.D., Kurakin, A., Zhang, H., Raffel, C.: Fixmatch: Simplifying semi-supervised learning with consistency and confidence. Advances in Neural Information Processing Systems 
+
+33 , 596–608 (2020) 27. Song, Z., Yang, X., Xu, Z., King, I.: Graph-based semi-supervised learning: A com-prehensive review. IEEE Transactions on Neural Networks and Learning Systems 
+
+34 (11), 8174–8194 (2022) 28. Tarvainen, A., Valpola, H.: Mean teachers are better role models: Weight-averaged consistency targets improve semi-supervised deep learning results. Advances in Neural Information Processing Systems (2017) 29. Wang, Y., Chen, H., Fan, Y., SUN, W., Tao, R., Hou, W., Wang, R., Yang, L., Zhou, Z., Guo, L.Z., Qi, H., Wu, Z., Li, Y.F., Nakamura, S., Ye, W., Sav-vides, M., Raj, B., Shinozaki, T., Schiele, B., Wang, J., Xie, X., Zhang, Y.: Usb: A unified semi-supervised learning benchmark for classification 35 , 3938– 3961 (2022), https://proceedings.neurips.cc/paper_files/paper/2022/file/ 190dd6a5735822f05646dc27decff19b-Paper-Datasets_and_Benchmarks.pdf 
+
+30. Wang, Y., Chen, H., Heng, Q., Hou, W., Fan, Y., Wu, Z., Wang, J., Savvides, M., Shinozaki, T., Raj, B., et al.: Freematch: Self-adaptive thresholding for semi-supervised learning. In: International Conference on Learning Representations (ICLR) (2023) 31. Xie, Q., Dai, Z., Hovy, E., Luong, M.T., Le, Q.V.: Unsupervised data augmenta-tion for consistency training. Advances in Neural Information Processing Systems (2019) 32. Xie, Q., Dai, Z., Hovy, E., Luong, T., Le, Q.: Unsupervised data augmentation for consistency training. In: Advances in Neural Information Processing Systems (NeurIPS). vol. 33, pp. 6256–6268 (2020) 33. Xu, Y., Shang, L., Ye, J., Qian, Q., Li, Y.F., Sun, B., Li, H., Jin, R.: Dash: Semi-supervised learning with dynamic thresholding. In: International Conference on Machine Learning. pp. 11525–11536. PMLR (2021) 34. Zagoruyko, S., Komodakis, N.: Wide residual networks. arXiv preprint arXiv:1605.07146 (2016) 35. Zhang, B., Wang, Y., Hou, W., Wu, H., Wang, J., Okumura, M., Shinozaki, T.: FlexMatch: Boosting semi-supervised learning with curriculum pseudo labeling. Advances in Neural Information Processing Systems (2021) 36. Zheng, M., You, S., Huang, L., Wang, F., Qian, C., Xu, C.: Simmatch: Semi-supervised learning with similarity matching. In: Proceedings of the IEEE/CVF conference on computer vision and pattern recognition. pp. 14471–14481 (2022) JEPAMatch 17 
+
+## A Extra Experiments 
+
+A.1 Tiny-ImageNet: 
+
+We extended our evaluation to the Tiny-ImageNet dataset by testing JEPA-Match’s scalability on complex image distributions. As shown in Table 3, JEPA-Match achieves the highest performance, reaching an accuracy of 61.18% with 1k labeled images split and 75.5% with 10k labeled images split. These results improve upon baseline methods such as FlexMatch and SoftMatch, confirming that our adaptive geometric representation approach scales effectively to larger datasets with more classes. Table 3: Accuracy (%) on Tiny-ImageNet. All methods use the same seed. Best results in bold .           
+
+> Method Iteration Tiny-ImageNet 1k 10k FlexMatch 218 58.27 72.11 SoftMatch 218 59.91 74.08
+> JEPAMatch 218 61 .18 75 .5
+
+A.2 Hyper-parameters: 
+
+To understand the impact of our loss hyper-parameters, we evaluate the repre-sentation weight λrep (denoted here as λ) and the SIGReg balance parameter β.As shown in Figure 5, the accuracy heatmap reveals the following trends. The model achieves its best accuracy of 73.18% when configured with λ = 0 .5 and 
+
+β = 0 .1. Reducing the SIGReg regularization ( β = 0 .0) at this optimal λ leads to a sharp drop in performance to 70.19%. Conversely, lowering the representation weight restricts the model to a lower accuracy range. For instance, with λ = 0 .2, the accuracy varies between 69.23% and 69.98% , while λ = 0 .05 results in accuracies between 69.49% and 70.09%. Overall, these results confirm that a carefully balanced contribution of both the predictive representation loss ( λ) and the geometric regularization ( β) is crucial for achieving optimal performance. 
+
+A.3 Data Utilization: 
+
+Figure 6 compares FlexMatch and JEPAMatch on CIFAR-100 in terms of data utilization. For batch of unlabeled samples, we report (i) in blue, the number of samples that actually pass the confidence threshold and are used for training, and (ii) in green, the number of samples that should pass the threshold according to 18 Ali Aghababaei-Harandi, Aude Sportisse and Massih-Reza Amini 0.2 0.1 0.05 0.0                
+
+> 0.5
+> 0.2
+> 0.05
+> 72.99 73.18 73.09 70.19
+> 69.37 69.23 69.65 69.98
+> 69.89 70.09 69.49 70.00
+> Accuracy heatmap
+> 0.00 0.05 0.10 0.15 0.20
+> 70
+> 71
+> 72
+> 73
+> Accuracy vs (per )
+> =0.5
+> =0.2
+> =0.05
+> 69.5
+> 70.0
+> 70.5
+> 71.0
+> 71.5
+> 72.0
+> 72.5
+> 73.0
+> Accuracy (%)
+
+Fig. 5: Effect of different hyper-parameters λrep and β on CIFAR-100 with 10000 labeled images. The best performance is achieved with λrep = 0 .5 and β = 0 .1.their true labels. JEPAMatch consistently maintains more pseudo-labels passing the threshold while also achieving higher correctness, allowing the network to leverage a larger portion of unlabeled samples for longer during training. This results in a stronger supervisory signal from unlabeled samples, which in turn improves both unlabeled and overall performances. 
+
+Fig. 6: Data Utilization in Pseudo Labeling on CIFAR-100 with 400 labeled im-ages. For batch of unlabeled samples, Figure 7 shows the number of pseudo-labels assigned to the predominant class (i.e., the class receiving the highest num-ber of pseudo-labels) for both FlexMatch and JEPAMatch on CIFAR-100. In FlexMatch, the major class can receive up to one quarter of all pseudo-labels, indicating strong class dominance. In contrast, our method maintains a stable maximum of around 30 pseudo-labels for the major class during training. This demonstrates that JEPAMatch significantly reduces class dominance. 
+
+## B Projection Head Architecture 
+
+The projection head gψ is implemented as a 3-layer Multi-Layer Perceptron (MLP), whose configuration details are in Table 4. To account for the increased JEPAMatch 19 
+
+Fig. 7: Maximum class count evolution. complexity and number of classes across our benchmarks, the final output di-mension is set to 128 for CIFAR-100 and STL-10, and increased to 256 for Tiny-ImageNet. Table 4: Architecture details of the Projection Head ( gψ ). Biases are excluded in the first two linear layers, while added in the last layer. Input dimension Din 
+
+is the backbone feature dimension.                     
+
+> Layer Operations Output Dimension CIFAR-100/STL-10 Tiny-ImageNet
+> 1Linear (no bias) →BN1D →GELU 512 512 2Linear (no bias) →BN1D →GELU 512 512 3Linear (with bias) 128 256
+
+## C Details of Sketched Isotropic Gaussian Regularization (SIGReg) 
+
+The theoretical detail of this section is based on the work of [3] .The objective of SIGReg is to encourage the learned representations to match a target isotropic Gaussian distribution. In a general form, we define this target distribution as 
+
+N (μ, σ 2I), where μ ∈ Rd is the target mean vector and σ2 is the target variance. 
+
+C.1 General Formulation via the Empirical Characteristic Function (ECF): 
+
+In probability theory, a distribution is uniquely determined by its Characteristic Function (CF), defined as ϕX (t) = E[exp( it ⊤X)] . To avoid the curse of di-mensionality when matching distributions in high-dimensional spaces, SIGReg utilizes the Cramér-Wold theorem. We project the d-dimensional representations onto M random unit directions (slices), denoted as um ∈ Sd−1.20 Ali Aghababaei-Harandi, Aude Sportisse and Massih-Reza Amini 
+
+For a batch of N embedding Z = {zj }Nj=1 , the 1D projection onto the m-th slice is xj,m = u⊤
+
+> m
+
+zj . The Empirical Characteristic Function (ECF) for this projected batch is: 
+
+ˆϕm(t) = 1
+
+N
+
+> N
+
+X
+
+> j=1
+
+exp( itx j,m ) (11) Similarly, projecting the target multivariate Gaussian N (μ, σ 2I) onto the same unit vector um results in a 1D Gaussian N (μm, σ 2), where the projected mean is μm = u⊤
+
+> m
+
+μ. The exact analytical Characteristic Function (CF) for this 1D target distribution is: 
+
+ϕQ(t; μm, σ ) = exp 
+
+
+
+itμ m − 12 σ2t2
+
+
+
+(12) Notice that when the target mean μ = 0, the imaginary component vanishes, but for a general μ̸ = 0, we must match both the real (cosine) and imaginary (sine) components of the characteristic functions. 
+
+C.2 Discrete Numerical Approximation: 
+
+While the theoretical distance between characteristic functions involves an inte-gral over all frequencies t ∈ R, practical implementations approximate this by evaluating the functions at a discrete set of frequency knots. By this, we define a set of K frequency knots T = {tk}Kk=1 uniformly spaced within a bounding range 
+
+[−Tmax , T max ]. The continuous integral is replaced by a discrete mean squared error over these knots. The SIGReg loss is computed as: SIGReg = 1
+
+M
+
+> M
+
+X
+
+> m=1
+
+1
+
+K
+
+> K
+
+X
+
+> k=1
+
+ˆϕm(tk) − ϕQ(tk; μm, σ ) 2
+
+(13) In our experiments, we utilize M = 1024 random slices, K = 17 frequency knots, and a maximum frequency range of Tmax = 5 .0.
+
+C.3 SIGReg Pseudo-code: 
+
+The detail of computing SIGReg is given in Algorithm 2. JEPAMatch 21 
+
+Algorithm 2 General Sketched Isotropic Gaussian Regularization (SIGReg) 
+
+Require: Batch Z ∈ RN ×d, Target Mean μ ∈ Rd, Target Std σ
+
+Require: Hyper-parameters: M = 1024 (slices), K = 17 (knots), Tmax = 5 .0
+
+1: Initialize loss: L = 0 
+
+2: Generate K knots t uniformly linearly spaced in [−Tmax , T max ]
+
+3: Sample projection matrix U ∼ N (0 , Id×M ) and L2-normalize its columns 4: Project batch embedding: X = ZU ∈ RN ×M
+
+5: Project target mean: μproj = μ⊤U ∈ RM
+
+6: for m = 1 to M do 
+
+7: xm = X[: , m ]
+
+8: μm = μproj [m]
+
+9: for k = 1 to K do 
+
+10: tk = t[k]
+
+11: ECF real = 1
+
+> N
+
+PNj=1 cos( tk · xj,m )
+
+12: ECF imag = 1
+
+> N
+
+PNj=1 sin( tk · xj,m )
+
+13: decay = exp( − 12 σ2t2 
+
+> k
+
+)
+
+14: Target real = cos( tk · μm) · decay 
+
+15: Target imag = sin( tk · μm) · decay 
+
+16: Dm,k = ( ECF real − Target real )2 + ( ECF imag − Target imag )2
+
+17: L ← L + Dm,k 
+
+18: end for 
+
+19: end for 
+
+20: Return L/(M × K)

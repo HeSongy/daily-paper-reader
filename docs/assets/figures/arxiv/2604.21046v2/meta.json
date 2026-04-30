@@ -1,0 +1,54 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.21046v2/fig-001.webp",
+      "caption": "Fig. 2: Overview of the JEPAMatch architecture. The backbone encoder (fθ) processes distinct views flowed via color. The Curriculum Level extracts global context to dynamically generate confident pseudo-labels (ŷi) and masks (Mi). The Representation Level aligns global and local views via JEPA prediction while applying Adaptive Class-wise SIGReg to tights without dimensional collapse. Red circles denote loss terms, while the Dynamic Masking and Adaptive SIGReg modules compute the regularization, SIGReg and repulsion. Dashed lines indicate its data used as the target in the next module. Notations are consistent with method.",
+      "page": 6,
+      "index": 1,
+      "width": 723,
+      "height": 365
+    },
+    {
+      "url": "assets/figures/arxiv/2604.21046v2/fig-002.webp",
+      "caption": "Fig. 6: Data Utilization in Pseudo Labeling on CIFAR-100 with 400 labeled images.",
+      "page": 18,
+      "index": 2,
+      "width": 725,
+      "height": 256
+    },
+    {
+      "url": "assets/figures/arxiv/2604.21046v2/fig-003.webp",
+      "caption": "Fig. 4: Comparison of pseudo-labeling accuracy between JEPAMatch and FlexMatch over training iterations for CIFAR-100 and STL-10 using 4 labeled examples per class.",
+      "page": 13,
+      "index": 3,
+      "width": 714,
+      "height": 243
+    },
+    {
+      "url": "assets/figures/arxiv/2604.21046v2/fig-004.webp",
+      "caption": "Fig. 3: Convergence speed and evolution of accuracy of JEPAMatch and FlexMatch over training iterations.",
+      "page": 13,
+      "index": 4,
+      "width": 556,
+      "height": 306
+    },
+    {
+      "url": "assets/figures/arxiv/2604.21046v2/fig-005.webp",
+      "caption": "Table 3: Accuracy (%) on Tiny-ImageNet. All methods use the same seed. Best results in bold.",
+      "page": 17,
+      "index": 5,
+      "width": 532,
+      "height": 272
+    },
+    {
+      "url": "assets/figures/arxiv/2604.21046v2/fig-006.webp",
+      "caption": "Table 2: Error rates (%) on CIFAR-100 with 4 labeled examples per class of FixMatch, FlexMatch and SoftMatch (Left) with JepaMatch and varying imbalance factors (γ). (Right) JEPAMatch variants over different iterations. Baselines results provided from [29].",
+      "page": 12,
+      "index": 6,
+      "width": 708,
+      "height": 194
+    }
+  ]
+}

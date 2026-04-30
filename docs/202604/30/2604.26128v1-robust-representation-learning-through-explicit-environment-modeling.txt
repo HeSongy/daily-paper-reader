@@ -1,0 +1,1332 @@
+Title: Robust Representation Learning through Explicit Environment Modeling
+
+URL Source: https://arxiv.org/pdf/2604.26128v1
+
+Published Time: Thu, 30 Apr 2026 00:15:41 GMT
+
+Number of Pages: 32
+
+Markdown Content:
+# Robust Representation Learning through Explicit Environment Modeling 
+
+Yuli Slavutsky ys3938@columbia.edu 
+
+Department of Statistics Columbia University 
+
+David M. Blei david.blei@columbia.edu 
+
+Departments of Statistics and Computer Science Columbia University 
+
+Abstract 
+
+We consider learning from labeled data collected across multiple environments, where the data distribution may vary across these environments. This problem is commonly ap-proached from a causal perspective, seeking invariant representations that retain causal factors while discarding spurious ones. However, this framework assumes that the envi-ronment has no direct effect on the target. In contrast, we consider settings in which this assumption fails, but still aim to learn representations that support robust prediction on average across previously unseen environments. To this end, we study representations learned by explicitly modeling variation across environments and then marginalizing that variation out. We analyze the resulting representations and characterize when they are preferable to those learned by causal invariant-representation methods. We propose a con-crete method based on generalized random-intercept models, a class of predictors in which such marginalization is possible, and study their generalization properties. Empirically, we show that these models outperform invariant-learning methods across a range of challenging settings. 
+
+Keywords: Robust representation learning, Out-of-distribution generalization, Multi-environment generalization, Mixed-effect models, Neural random-intercept models. 
+
+1 Introduction 
+
+We study multi-environment generalization, also known as out-of-distribution (OOD) gen-eralization, where labeled data is collected across multiple environments and both the dis-tribution of observations and the conditional distribution of labels given observations may vary across environments. We aim to learn representations from training environments that remain predictive for observations drawn from new environments. Such settings arise in many applied domains in which data is collected under hetero-geneous conditions. In medical imaging, for example, environments may correspond to hospitals or scanners (Bernal-Rusiel et al., 2013; Visscher et al., 2003; Payne et al., 2015). In genomics and biology, environments often reflect laboratories, batches, or experimental conditions (Zhou and Stephens, 2012; Listgarten et al., 2010; Zhang et al., 2010; Baayen et al., 2008; Judd et al., 2012). In economics and social science, environments may corre-1  
+
+> arXiv:2604.26128v1 [stat.ML] 28 Apr 2026 e
+> sc
+> xy
+
+(a)   
+
+> e
+> sc
+> xy
+
+(b) 
+
+Figure 1: Probabilistic graphical model. Observed variables are colored in gray. The envi-ronment e influences spurious features s, and may also affect causal features c.In (a) the label y depends only on the causal features c, so y ⊥ e | c. In (b) an additional direct effect from the environment e to the label y is added. spond to countries, regions, or time periods (Gelman et al., 2007). Similar structure appears in education research, where data is collected across schools, districts, or countries (Rau-denbush et al., 1999; Nye et al., 2000; Lyu et al., 2023). In all of these examples, models trained on data from a fixed set of environments are often deployed in new ones. Specifically, we study learning from labeled data ( x, y ) collected across multiple envi-ronments e,
+
+D = {{ (xi, y i)}ne
+
+> i=1
+
+}e∈Etrain , Etrain := {e1, . . . , e m}. (1) We assume the data is sampled according to 
+
+> m
+
+Y
+
+> j=1
+
+p(ej )
+
+> ne
+
+Y
+
+> i=1
+
+p(xij | ej ) p(yij | xij , e j ). (2) The conditional relationship between x and y may vary across environments, but the envi-ronments are assumed to share an underlying structure. Our goal is to use data from the training environments to learn predictors that gen-eralize to unseen test environments e / ∈ Etrain , drawn from p(e). In particular, we seek a representation function f (x) that supports accurate prediction of y for a new observation 
+
+x arising in a new environment e, with ( e, x ) sampled according to p(e) p(x | e). Multi-environment generalization gained considerable interest since the work of Peters et al. (2016). A prominent line of methods targets invariant representations (Rojas-Carulla et al., 2018; Arjovsky et al., 2019; Pfister et al., 2019; Chang et al., 2020; Ahuja et al., 2020; Mahajan et al., 2021; Wald et al., 2021; Krueger et al., 2021; Lu et al., 2021; Lin et al., 2022). These methods assume that there are causal features c and spurious features s, both of which may depend on the environment e, such that x depends on both c and s, while the label y depends only on c; see Figure 1a. As an example, consider predicting pneumonia diagnoses from chest X-ray images col-lected at multiple hospitals. Here, each environment e corresponds to a hospital, the causal factors c represent the underlying pathology, and the spurious factors s capture hospital-specific imaging protocols. The observed input x is the chest X-ray image, and y is a binary indicator of pneumonia diagnosis. Under the model assumed by causal methods, the environment has no direct effect on the label, so any dependence of y on e arises only through c. Accordingly, invariance-based 2methods seek a representation f : X → Rd such that y is conditionally independent of e
+
+given f (x), that is, y ⊥ e | f (x). However, if diagnostic criteria in fact differ across hospitals, then the hospital example no longer follows the causal model assumed by invariance-seeking methods. Instead, it cor-responds to the model in Figure 1b. In that case, p(y | c, e )̸ = p(y | c), and no representation 
+
+f (x) can in general satisfy y ⊥ e | f (x). The question this paper asks is: When the environment e directly affects y, how can we learn representations that yield good average predictive performance on observations from unseen environments? 
+
+Formally, let 
+
+F := {fφ : X → Rd | φ ∈ Φ} (3) be a family of candidate representations, and let 
+
+Q := {qψ (y | fφ(x)) | ψ ∈ Ψ, φ ∈ Φ} (4) be a family of conditional distributions for y given x, obtained by composing corresponding predictors with these representations. We define an environment-average risk by ¯RQ(ψ, φ ) := Ep(e)p(x|e) [KL ( p(y | x, e ) ∥ qψ(y | fφ(x)))] . (5) This risk measures the average discrepancy between the environment-specific Bayes predic-tor p(y | x, e ) and a predictor of the form qψ(y | fφ(x)), which depends only on x and not on e. Our goal is to find a predictor qψ⋆ and a representation fφ⋆ that minimize this risk, (ψ⋆, φ ⋆) ∈ arg min 
+
+> ψ∈Ψ,φ ∈Φ
+
+¯RQ(ψ, φ ). (6) We call such representations robust .As we discuss in §3, minimizing this objective is equivalent to maximizing the population log-likelihood over predictors of the form qψ(y | fφ(x)). The optimal predictor within the class Q is therefore the one that approximates 
+
+p(y | x) = Ep(e|x)[p(y | x, e )] . (7) Notice that the expectation here is with respect to conditional distribution of all environ-ments, not only the ones from the training data. A natural first idea is to average the environment-specific predictive distributions across the observed training environments, qψ(y | fφ(x)) ≈ Pmj=1 πj (x) qψ(y | fφ(x), e j ), where 
+
+πj (x) ≈ p(ej | x). This can reduce dependence on any single environment ej ∈ Etrain ,but it cannot recover the marginal conditional p(y | x) of Equation (7). At best, such averaging can recover p(y | x, e ∈ Etrain ), contradicting our goal to generalize to new environments e / ∈ Etrain . Recovering the full marginal conditional p(y | x) requires more than combining predictions from the observed environments in Etrain : it requires a model of the data-generating distribution under which the environment can be marginalized out. In this paper, we study this idea. We first instantiate it through a generalized neural random-intercept model (Slavutsky et al., 2026), in which the response y depends on a fixed representation fφ⋆ (x) that captures structure shared across environments, and on a 3random intercept γe ∼ N (0 , σ ⋆2) that captures environment-specific variation. We estimate 
+
+σ⋆2 from the data and then marginalize over the random intercept to obtain an estimate of p(y | x). We show that this approach outperforms invariance-seeking methods across a range of challenging tasks involving generalization to unseen environments. More broadly, we then study predictors of the form qψ(y | fφ(x)). We show that the environment-average risk of such predictors admits a decomposition into three terms: one determined by the representation fρ, one capturing the additional risk induced by the predictor pψ, and an irreducible term that depends only on the true data-generating distribution. Building on this decomposition, we show that minimizing the environment-average risk over this class of predictors yields approximately robust representations. The rest of this paper is organized as follows. In §2 we review related work. In §3 we discuss generalized neural random-intercept models and how they can be used to achieve ro-bustness through marginalization of random intercepts. In §4, we study robustness through risk minimization beyond random-intercept models. In §5 we present empirical results. In 
+
+§6 we compare robustness through risk minimization with invariance-seeking methods. We conclude with a discussion of our results in §7. 
+
+2 Related work 
+
+Methods for learning representations that are robust to distribution shift differ in the as-sumptions they make about which shifts may occur at test time. Distributionally robust optimization (DRO) (Ben-Tal et al., 2013; Duchi et al., 2021; Duchi and Namkoong, 2021; Wei et al., 2023) assumes that the test distribution may deviate from the observed train-ing distribution within a predefined uncertainty set, and optimizes performance under the worst-case distribution in that set. One variant is group DRO (Sagawa et al., 2019; Piratla et al., 2021) which incorporates group structure that may correlate with features that may lead to biased predictions. When group labels are not observed, several strategies have been proposed, including reweighting high-loss examples (Liu et al., 2021) and balancing class-group combinations through data subsampling (Idrissi et al., 2022). By contrast, our approach targets low average risk on unseen environments rather than protection against worst-case perturbations, and models environment-level heterogeneity explicitly rather than treating it as an unspecified perturbation. Methods that explicitly consider multi-environment settings aim to learn predictors that generalize beyond the environments observed during training. One such line of work is ad-versarial methods, that seek representations that do not distinguish among environments. For example, Sinha et al. (2017) construct adversarial perturbations of the training distri-bution and optimize performance against these perturbations. Similarly, Ganin et al. (2016) propose domain-adversarial training, which learns features that are predictive of the label while being uninformative about the domain. Like DRO, these approaches aim to protect against a worst-case scenario and treat the environment as a signal to be removed. Our ap-proach differs from these methods in the same way: it targets average performance on new environments and explicitly models environment-level variation rather than suppressing it. Another substantial line of research approaches out-of-distribution generalization from a causal perspective. This line of work assumes that there exists a representation for which the predictive relationship with the target is invariant across environments, and aims to 4retain features whose association with the target is stable, while discarding features whose predictive value is environment-specific. This view is formalized in invariant prediction (Peters et al., 2016, 2017), and has motivated a large literature on invariant representation learning, including invariant risk minimization and its variants (Arjovsky et al., 2019; Ahuja et al., 2020; Lu et al., 2021; Rothenh¨ ausler et al., 2021; Lin et al., 2022), invariant models for transfer learning (Rojas-Carulla et al., 2018), sequential extensions (Pfister et al., 2019), and related methods based on causal matching or invariant rationales (Mahajan et al., 2021; Chang et al., 2020). Closely related approaches such as risk extrapolation and calibration-based objectives also aim to improve robustness by favoring predictors whose behavior is stable across environments (Krueger et al., 2021; Wald et al., 2021). Our work, however, allows invariance to fail: rather than requiring the environment to become irrelevant after conditioning on a representation, we allow it to affect the target directly and study representations that explicitly model this effect and then marginalize it out. Our analysis in §6 characterizes when such representations are preferable to invariant ones, and our empirical results show that this distinction matters in practice. 
+
+3 Marginalization of environment effects 
+
+Our goal is to learn robust representations by minimizing the environment-average risk ¯R(φ, ψ ) in Equation (5). This risk evaluates prediction over environments drawn from the same population of environments as the training environments. To characterize its minimizers, we define the marginal risk 
+
+R(φ, ψ ) := Ep(x) [KL ( p(y | x)∥qψ(y | fφ(x)))] . (8) The values of ¯R(φ, ψ ) and R(φ, ψ ) are generally different: the environment-average risk includes variation induced by unobserved environments, whereas the marginal risk does not. However, by the conditional KL decomposition 1, this difference is independent of ( φ, ψ ). Therefore, although ¯R is the target risk, its minimizers can be identified by minimizing R:arg min 
+
+> φ∈Φ,ψ ∈Ψ
+
+¯R(φ, ψ ) = arg min 
+
+> φ∈Φ,ψ ∈Ψ
+
+R(φ, ψ ). (9) This indicates that the best predictor that we can recover is the true marginal conditional distribution p(y | x). A principled way to estimate it is to model the data-generating process through the identity 
+
+p(y | x) = 
+
+Z
+
+p(e | x) p(y | x, e ) de. (10) Rather than averaging only over the observed training environments, this approach learns a model for p(e | x) and uses it to construct a marginalized estimator of p(y | x). A flexible model class of this form is a generalized neural random-intercept model . Below, we present this model and show how it can be used to learn robust representations. 
+
+> 1. This also follows immediately from Lemma 2 in the next section.
+
+53.1 Neural generalized random-intercept models 
+
+Neural generalized random-intercept models are a special case of neural generalized mixed-effects models (NGMMs) (Slavutsky et al., 2026). Classical generalized linear mixed-effects models (GLMMs) assume that each response follows an exponential-family distribution whose natural parameter is a linear function of observed covariates and latent group-specific random effects. For this reason, GLMMs have long been used to analyze grouped and hi-erarchical data (see Bryk and Raudenbush (1992) and references therein for a historical overview), but their linear predictor makes them unsuitable for learning flexible represen-tations. NGMMs extend this model class by replacing the linear predictor with neural networks, allowing the model to capture complex relationships in the data. Specifically, let 
+
+γe ∼ N (0 , σ 2) (11) be environment-specific random effects, sampled independently across environments. Aneural generalized random-intercept model assumes that the effect of the environment on the response is entirely captured by the latent variable γe, and that covariates are independent of γe. Conditionally on ( x, γ e), the response y follows a regular one-parameter exponential family distribution qβ,φ (y | x, γ e) satisfying 
+
+Eqβ,φ [y | x, γ e] = η−1 
+
+β⊤fφ(x) + γe
+
+
+
+, (12) where fφ is a neural network with arbitrary structure. This yields marginalized predictors of the form 
+
+qβ,φ,σ (y | x) = 
+
+Z
+
+qβ,φ (y | x, γ ) ϕσ(γ) dγ, (13) where ϕσ denotes the density of N (0 , σ 2). For now, suppose that the true data-generating process is itself a random-intercept model. This leads to the following strategy for learning robust representations: 1. Fit the parameters of the neural random-intercept model, ( ˆβ, ˆφ, ˆσ), from the data D
+
+by minimizing the empirical analogue of the marginal risk in Equation (8). 2. For a new observation x arising from an unseen environment e, form the prediction 
+
+q ˆβ, ˆφ, ˆσ(y | x) with the learned parameters, as in Equation (13). We discuss misspecification and approximate robustness in the next section. Before that, we turn to the practical implementation of this strategy: fitting generalized neural random-intercept models to data and using them to make predictions in previously unseen environments. 
+
+3.2 Estimation of neural generalized random-intercept models 
+
+In neural generalized random-intercept models, conditionally on ( x, γ e), the response follows 
+
+qβ,φ (y | x, γ ) = h(y) exp  y ϑ (x, γ ; β, φ ) − A ϑ(x, γ ; β, φ ) . (14) 6Here h(y) is the base measure, ϑ is the natural parameter of the regular one-parameter exponential family, and A is the log-partition function, satisfying 
+
+ϑ(x, γ ; β, φ ) = ( A′)−1 
+
+η−1 β⊤fφ(x) + γ
+
+. (15) Given training data D = {{ (xi, y i)}ne
+
+> i=1
+
+}e∈Etrain , denote by 
+
+xe := ( x1, . . . , x ne ), ye := ( y1, . . . , y ne ), (16) the covariates and responses in environment e, respectively. Since minimization of the marginal risk in Equation (8) is equivalent to maximization of the marginal log likelihood, the empirical estimates are given by ( ˆβ, ˆφ, ˆσ) ∈ arg max 
+
+> β,φ,σ
+
+LQ(θ), LQ(θ) := X
+
+> e∈Etrain
+
+log qβ,φ,σ (ye | xe), (17) where, by conditional independence within each environment, 
+
+qβ,φ,σ (ye | xe) = 
+
+Z
+
+> R
+> ne
+
+Y
+
+> i=1
+
+qβ,φ (yi | xi, γ )
+
+!
+
+ϕσ(γ) dγ. (18) For general exponential-family responses, the integral in Equation (18) does not ad-mit a closed form. However, in the random-intercept case it is reduced to solving a one-dimensional ordinary differential equation. This yields a differentiable expression of marginal log likelihood, which can be optimized by stochastic gradient ascent. See §2.2 in (Slavutsky et al., 2026) for the general derivation, Appendix A for a random-intercept logistic illustration, and §2.3 for the corresponding stochastic optimization procedure. 
+
+3.3 Prediction 
+
+Once the model is fit, it can be used to predict responses for datapoints from previously unseen environments e′ /∈ Etrain . Since no labeled data from e′ is available at prediction time, the estimated posterior of its random intercept coincides with the estimated prior, 
+
+γe′ ∼ N (0 , ˆσ2). (19) The predictive distribution is then generally obtained by replacing the parameters ( β, φ, σ )in Equation (13) by their estimates ( ˆβ, ˆφ, ˆσ). However, in two special cases, Gaussian responses and binary responses with a symmetric inverse link, the Bayes-optimal prediction for a new environment depends only on the fixed component β⊤fφ(x). In these cases, prediction in a new environment can be performed without computing the marginalization. The Gaussian case is immediate: under identity link we have 
+
+Eqβ,φ [y | x, γ ] = β⊤fφ(x) + γ, (20) so for a new environment, since E[γ] = 0, we have 
+
+Eqβ,φ,σ [y | x] = 
+
+Z 
+
+β⊤fφ(x) + γ
+
+
+
+ϕσ(γ) dγ = β⊤fφ(x). (21) Binary responses are addressed by the following proposition. 7Proposition 1 (Prediction in new environments, Proposition 2 in Slavutsky et al.) . Let 
+
+y ∈ { 0, 1}, and suppose the inverse link η−1 is strictly increasing and satisfies 1 − η−1(u) = 
+
+η−1(−u) for all u ∈ R. Then 
+
+ˆy(x) := arg max  
+
+> c∈{ 0,1}
+
+qβ,φ,σ (y = c | x) (22) 
+
+depends only on the fixed component β⊤fφ(x). In particular, ˆy(x) = 1 ⇐⇒ β⊤fφ(x) ≥ 0.
+
+The proposition above shows that in a binary model, deployment in a new environment does not require marginalization. While these properties make the generalized neural random-intercept model a convenient choice, the benefits of learning predictors by marginalizing over environment effects extend beyond this model. We discuss these benefits in the next section. 
+
+4 Robustness through risk minimization 
+
+We now extend our discussion more broadly to models of the form qψ(y | fφ(x)). Recall the family of candidate representations Q in Equation (4) and the environment-average risk in Equation (5). For convenience, here we collect the representation parameters φ ∈ Φand the predictor parameters ψ ∈ Ψ into a single parameter θ ∈ Θ where θ = ( ψ, φ ) and Θ := Ψ × Φ. We begin our analysis by showing that the environment-average risk admits the following decomposition. 
+
+Lemma 2. For every θ ∈ Θ,
+
+¯RQ(θ) = RQ(θ) + ∆( ¯R, R), ∆( ¯R, R) := Ep(e)p(x|e) [KL ( p(y | x, e ) ∥ p(y | x))] . (23) See Appendix A.1 for proof. Here, the first term is precisely the marginal risk of Equa-tion (8), which measures the discrepancy between the model qθ(y | x) and the true marginal conditional distribution p(y | x). The second term ∆( ¯R, R) is irreducible: it does not de-pend on the predictor qθ(y | x) and therefore does not depend on the learned representation. It measures the average residual variation in the conditional distribution of y given x across environments, which persists because prediction in a new environment is based only on x,while p(y | x, e ) varies with e.Whenever qθ(y | x) is correctly specified, that is, there exists θ ∈ Θ such that qθ⋆ (y |
+
+x) = p(y | x), we have RQ(θ⋆) = 0 and ¯RQ(θ⋆) = ∆( ¯R, R). Hence, under correct specifica-tion, the minimum achievable environment-average risk is exactly the irreducible term. In particular, for θ⋆ = ( ψ⋆, φ ⋆) that satisfies θ⋆ ∈ arg min θ∈Θ RQ(θ⋆), the representation fφ⋆
+
+is robust .Moreover, as the following corollary shows, for any predictor in Q, the excess environment-average risk relative to the true data-generating process is exactly its marginal risk. 
+
+Corollary 3 (Excess environment-average risk) . Let ¯R⋆ 
+
+> P
+
+and R⋆ 
+
+> P
+
+denote the environment-average and marginal risks of the true data-generating process p. Then, for any predictor 
+
+qθ ∈ Q , ¯RQ(θ) − ¯R⋆ 
+
+> P
+
+= RQ(θ). (24) 8Proof By Lemma 2, the environment-average risk and the marginal risk differ by the same additive term for every predictor. In particular, for any θ ∈ Θ we have ¯RQ(θ) − R Q(θ) = ¯R⋆ 
+
+> P
+
+− R ⋆ 
+
+> P
+
+. Since, by definition, R⋆ 
+
+> P
+
+= 0, it follows that ¯RQ(θ) − R Q(θ) = ¯R⋆ 
+
+> P
+
+.However, since the true data-generating mechanism is unknown, a model qθ(y | x) will be in general misspecified. In such case exact robustness may not be attainable; see Figure 2 for an illustration in the generalized neural random-intercept setting. 
+
+Figure 2: Schematic comparison between the true data-generating process and approxima-tion within the random-intercept family. Left: the true joint distribution p(e, x, y )induces environment-specific conditionals p(y | x, e ), shown here as labeled data across environments. Top: the conditionals differ only by intercept shift. Bottom: the environment effect is not of random-intercept form. Right: in both cases we approximate using predictors in Q, obtained by mapping x to f (x), introducing a latent intercept γe, and marginalizing it out. When the model is correctly spec-ified, the induced marginal predictor recovers p(y | x); under misspecification, it generally does not. To address this, we relax our goal and aim to find a representation fφ ∈ F for which there exists a predictor qψ whose environment-average risk is within ε of the infimum over Θ = Ψ × Φ. The following definition makes this precise. 
+
+Definition 4 (ϵ-robust representation) . Let Q be a family of conditional distributions as in Equation (4) , indexed by the representation parameters φ and the remaining model pa-rameters ψ. For ε ≥ 0, a representation fφ⋆ is called ε-robust if there exists ψ⋆ ∈ Ψ such 
+
+9that (ψ⋆, φ ⋆) satisfies 
+
+¯RQ
+
+ ψ⋆, φ ⋆ ≤ ¯RQ
+
+ ψ, φ  + ε ∀φ ∈ Φ, ψ ∈ Ψ. (25) 
+
+We denote the subset of ε-robust representations in F by Fε.
+
+This definition extends the previous one. In particular, if the minimum of ¯RQ is attained, then a robust representation is recovered at ε = 0. Under misspecification, typically RQ(θ⋆) > 0. The next proposition provides a decom-position of the marginal risk RQ itself. 
+
+Proposition 5 (Decomposition of the marginal risk) . Let Q be a family of predictors as in Equation (4) parameterized by θ ∈ Θ := Ψ × Φ, and let fφ : X → Rd denote the corresponding representation for φ ∈ Φ. Then, for any θ ∈ Θ,
+
+RQ(θ) = I (y; x | fφ(x)) + ∆ Q| f , (26) 
+
+where 
+
+I (y; x | fφ(x)) = Ep(x) [KL ( p(y | x) ∥ p(y | fφ(x)))] (27) 
+
+is the risk induced by the representation fφ, and 
+
+∆Q| f := Ep(x) [KL ( p(y | fφ(x)) ∥ qθ(y | x))] (28) 
+
+is the additional risk induced by predictor, given the representation. 
+
+The proof is provided in Appendix A.2. Proposition 5 shows that the marginal risk separates into two components: a representation term, determined by how much predictive information is lost when x is compressed to fφ(x), and an approximation term, determined by the restriction of the predictor class conditional on that representation. The first term, I (y; x | fφ(x)), measures the predictive information in x about y that is not retained by the representation fφ(x). Since both terms on the right-hand side of Equation (26) are nonnegative, Proposition 5 immediately implies that 
+
+I (y; x | fφ(x)) ≤ R Q(θ). (29) Therefore, if θ = ( ψ, φ ) induces small marginal risk, then the corresponding representation 
+
+fφ cannot discard much of the information in x that is relevant for predicting y.The second term, ∆ Q| f , measures the additional risk induced by restricting the predictor, conditional on the representation fφ(x), to the model class Q. In other words, it quantifies the discrepancy between the best predictor based only on the representation, namely p(y |
+
+fφ(x)), and the best predictor within the model class Q.In particular, in generalized neural random-intercept models, ∆ Q| f admits a direct inter-pretation in terms of environment-level heterogeneity: if a predictor in this family achieves small risk with a small σ, this suggests that little residual environment-level variation re-mains after accounting for the fixed component β⊤fφ(x). In contrast, if small risk is attained only with a larger fitted σ, then, within the random-intercept approximation, more of the remaining variation is attributed to an environment-level shift. Combined with Corollary 3, this shows that, under mild misspecification, a predictor 
+
+pθ⋆ ∈ Q with small marginal risk yields a representation that remains informative beyond the family itself. Specifically, for ε = RQ(θ⋆) the corresponding representation fφ⋆ is ε-robust. 10 Empirical environment-average risk So far, we analyzed the achievable risks and the value of ε for which a representation is ε-robust, at the population level. In practice, however, the distributions p(e), p(x | e), and p(y | x, e ) are not observed directly. Instead, we observe a finite dataset D of the form given in Equation (1). This introduces an additional source of error. Given access only to a finite dataset D, we minimize an empirical objective in place of the population marginal risk. Let ˆθ denote the resulting estimator, and suppose that 
+
+θ⋆ satisfies ¯RQ(θ⋆) ≤ ¯RQ(θ) + ε0 for all θ ∈ Θ. Then Lemma 2 allows us to rewrite the environment-average risk as ¯RQ(ˆθ) = ∆( ¯R, R)
+
+| {z }
+
+> irreducible error
+
++ (RQ(ˆθ) − R Q(θ⋆)) 
+
+| {z }
+
+> finite-sample estimation error
+
++ RQ(θ⋆).
+
+| {z } 
+
+> Qspecification error
+
+(30) As a result, in practice, the best robustness achievable in Q is with ε = RQ(ˆθ), which is composed of the finite-sample estimation error ( RQ(ˆθ) − R Q(θ⋆)), and the specification error RQ(θ⋆) of the chosen family Q. It immediately follows that ε ≥ R Q(θ⋆)−ε0, providing a lower bound on the achievable range of ε, allowing to assess the fit. We next study the risk ¯RQ(ˆθ) empirically. In §5.1, we examine both well-specified and misspecified settings, comparing ¯RQ(ˆθ) with RQ(θ⋆) in each case. This comparison allows us to assess both the predictive performance of the learned representations and the specification error of the proposed model. 
+
+5 Empirical studies 
+
+In all experiments, we consider a multi-environment out-of-distribution setting: training data consists of labeled examples collected from several observed environments, and evalu-ation is performed on held-out environments not used during training. The goal is to learn robust predictors that generalize well to new environments. We consider both synthetic and real-data settings, and include binary as well as Gaussian responses. Across experiments, we compare the NGMM random-intercept model to empirical risk minimization (ERM), which ignores environment structure, and to invariance-seeking meth-ods: invariant risk minimization (IRM) (Arjovsky et al., 2019), variance risk extrapolation (VaREx) (Krueger et al., 2021), and, in binary experiments, calibration loss over environ-ments (CLoVE) (Wald et al., 2021), which is designed for classification. In every experiment, all methods use the same underlying predictor architecture. Hy-perparameters for IRM, VaREx, and CLoVE are selected separately for each experiment by grid search. Additional experimental details are provided in Appendix C. 
+
+5.1 Tradeoff simulation 
+
+We begin by evaluating the environment-average risk in a controlled Gaussian simulation. In this experiment, the response depends on both a causal latent variable and the environment directly. We simulate environments 
+
+ej ∼ N (0 , σ 2 
+
+> e
+
+), (31) 11 and, for each observation i in environment j, define the causal latent variable by 
+
+cij | ej ∼ N (ej , σ 2 
+
+> c
+
+). (32) We then generate latent noise variables 
+
+uij ∼ N (0 , σ 2
+
+> u
+
+), ϵij ∼ N (0 , σ 2 
+
+> ϵ
+
+) (33) and set 
+
+sij = αe j + uij , (34) 
+
+xij = ( cij , s ij ). (35) Finally, we consider a well-specified setting, and a misspecified one: 
+
+yij = cij + αe j + ϵij , α ≥ 0 (36) 
+
+yij = cij + αe j + (1 − α)ej cij + ϵij , α ∈ [0 , 1] . (37) 
+
+Well specified setting In the model in Equation (36), the spurious variable sij is a noisy version of αe j and therefore for α̸ = 0 it carries additional information regarding yij when 
+
+cij is known. This yields a model where 
+
+yij | cij , e j ∼ N (cij + αe j , σ 2 
+
+> ϵ
+
+) (38) so y ⊥ e | c only if α = 0. Similarly, 
+
+yij | sij , e j ∼ N ((1 + α)ej , σ 2 
+
+> c
+
++ σ2 
+
+> ϵ
+
+) (39) which depends on ej for any α ≥ 0. The optimal risk admits the following closed form ¯R⋆ = 12 log 
+
+
+
+1 + α2Vα
+
+σ2
+
+> ϵ
+
+
+
+, Vα =
+
+ 1
+
+σ2
+
+> e
+
++ 1
+
+σ2
+
+> c
+
++ α2
+
+σ2
+
+> u
+
+−1
+
+. (40) For a complete derivation see Appendix B.1. 
+
+Misspecified setting In the model in Equation (37), we have 
+
+yij = cij + αe j + (1 − α)ej cij + ϵij = cij +  α + (1 − α)cij 
+
+ej + ϵij . (41) The posterior distribution of ej is 
+
+ej | cij , s ij ∼ N  m(cij , s ij ), V α
+
+, (42) where 
+
+m(c, s ) = Vα
+
+ cσ2
+
+> c
+
++ αs σ2
+
+> u
+
+
+
+, Vα =
+
+ 1
+
+σ2
+
+> e
+
++ 1
+
+σ2
+
+> c
+
++ α2
+
+σ2
+
+> u
+
+−1
+
+. (43) Consequently, 
+
+yij | cij , s ij ∼ N 
+
+
+
+cij +  α + (1 − α)cij 
+
+m(cij , s ij ), σ 2 
+
+> ϵ
+
++  α + (1 − α)cij 
+
+2Vα
+
+
+
+, (44) and the Bayes-optimal environment-average risk is ¯R⋆ = 12 Ep(c)
+
+"
+
+log 1 + 
+
+ α + (1 − α)c2Vα
+
+σ2
+
+> ϵ
+
+!# 
+
+. (45) For a complete derivation see Appendix B.2. Additional details for both simulations are provided in Appendix C.1. 12 Results The results in Figure 3 show that NGMM consistently performs best among the learned methods in both regimes. In the well-specified setting, where the environment effect is exactly of random-intercept form, NGMM nearly coincides with the Bayes-optimal risk across the full range of α, while ERM, VaREx, and especially IRM incur substantially larger environment-average risk as α increases. In the misspecified setting, the random-intercept model is no longer exact, since the environment effect depends on both e and c. Even so, NGMM yields lower environment-average risk than the invariance-based and ERM baselines for all values of α. The NGMM risk decreases as α grows, approaching the optimal curve for α > 0.5. At α = 1 the misspecified model reduces back to the additive random-intercept case. For all values of α,ERM, VaREx, and IRM remain far from optimal risk. 0.0 0.5 1.0 1.5 2.0 2.5 3.0 3.5 4.0          
+
+> 0.0
+> 2.5
+> 5.0
+> 7.5
+> 10.0
+> Well-specified
+> 0.0 0.2 0.4 0.6 0.8 1.0
+> 0.3
+> 0.6
+> 0.9
+> 1.2
+> 1.5
+> Misspecified
+> ERM IRM VaREx NGMM Optimal
+
+Figure 3: Environment-average risk in the tradeoff simulation for the well-specified and misspecified settings. In the well-specified case, NGMM nearly overlaps with the Bayes-optimal predictor across all values of α. In the misspecified case envi-ronment effect is no longer of random-intercept form. NGMM still achieves the lowest risk among the learned methods and moves closer to the optimum as α
+
+increases and the model approaches an additive-intercept setting. 
+
+5.2 Colored MNIST 
+
+Following the experiment in (Arjovsky et al., 2019), we evaluate all methods on a controlled variant of Colored MNIST. Each observation consists of a digit image, a binary color at-tribute, and a binary label. The construction proceeds in three steps. We draw digits uniformly from the MNIST dataset and define a binary parity variable d ∈ { 0, 1}, where 
+
+d = 0 denotes even digits, and d = 1 odd digits. Each digit is assigned a binary color variable c ∈ { 0, 1} according to a fixed parity-dependent distribution, 
+
+p(c = 1 | d = 0) = 58 , p(c = 1 | d = 1) = 38 . (46) Therefore, color is correlated with digit parity but is never deterministically determined by it. This mechanism is shared across all environments. 13 Given parity d and color c, the binary label y ∈ { 0, 1} is generated according to environment-specific probabilities: 
+
+p(y = 1 | d = 0 , c = 1) = α, (y = 1 | d = 0 , c = 0) = β (47) 
+
+p(y = 1 | d = 1 , c = 1) = γ, (y = 1 | d = 1 , c = 0) = δ. 
+
+We consider two regimes: a spurious regime , where the label depends only on digit parity and not on color conditional on parity. This is enforced by setting α = β and γ = δ. Under this regime, y ⊥ c | d, so color has no causal effect on the label. Nevertheless, because color is correlated with parity, color and label may still be marginally correlated. This regime satisfies the standard assumption that a subset of features (the digit content) is invariant across environments, while other features (color) are spurious. Additionally, we consider a causal regime , where the conditional independence above is violated, and the label depends on color within each parity class. We parameterize environments as (α, β, γ, δ ) = ( a + r, a − r, b + r, b − r). (48) Here, a and b control the baseline effect of parity, and r controls the strength and direction of the color effect. For any r̸ = 0, 
+
+p(y = 1 | d, c = 1) ̸ = p(y = 1 | d, c = 0) , (49) so color has a direct influence on the label. Training environments use positive values of r with varying magnitude r ∈ { 0.10 , 0.15 , 0.20 },inducing environment-dependent color–label association. We consider the following test environments: (i) an environment identical to train environment with r = 0 .15, (ii) en-vironments where the sign of r is reversed, corresponding to a reversal of the color–label relationship with r ∈ {− 0.10 , −0.15 , −0.20 }, and (iii) an environment with r = 0, where color has no effect. This construction includes environments in which color is predictive within training data but does not correspond to a stable mechanism across environments. 
+
+Results The results in Figure 4 show that NGMM achieves the smallest discrepancy from the Bayes-optimal predictor in every test environment. This holds both in the invariant setting, where color is correlated with the label but has no effect on it conditional on digit parity, and in the causal setting, where color directly affects the label and this effect varies across environments. In the invariant setting, robust prediction requires avoiding reliance on color because its association with the label is not stable across environments. In the causal setting, by contrast, color cannot be discarded as it remains predictive of the label, even though its effect changes with the environment. NGMM performs better in both regimes because it models residual environment-level variation rather than forcing the representation to remove all environment-dependent information. As a result, it can avoid overusing unstable color information in the invariant case, while still retaining useful color information in the causal case. 14 No color Train medium Flip weak Flip medium Flip strong     
+
+> 0.000
+> 0.005
+> 0.010
+> 0.015
+> 0.020
+> 0.025
+> 0.030
+> 0.035
+> 0.040
+> 0.045
+> 0.050
+> Bayes Accuracy - Method Accuracy
+> IRM VaREx CLoVE ERM NGMM
+
+Figure 4: Results for the Colored MNIST experiment, reported as the gap between each method’s accuracy and the Bayes-optimal accuracy in per test environment. Across all settings, including the in-distribution no-color environment, and en-vironments where the sign of the color effect is reversed, NGMM achieves the smallest discrepancy from the Bayes predictor. 
+
+5.3 OGB-MolPCBA 
+
+The OGB-MolPCBA dataset provides data for real-world molecular prediction tasks. Each datapoint is a molecular graph, with atoms as nodes and bonds as edges, and the original benchmark provides 128 assays per molecule. Each assay defines a binary task: predicting from molecular structure whether the molecule is active in the corresponding laboratory screening test. In our experiment, the environments are molecular scaffold groups, which group molecules according to their core structural framework. We select one assay at a time and focus on assays with at least 1000 observations in the training split, and tasks in which the proportion of positive examples is at least 5%. This results in 4 candidate assays: PCBA-588342, PCBA-686979, PCBA-504332, and PCBA-686978. For all methods we use a small graph neural network with atom and bond encoders, followed by two GINE message-passing layers. 
+
+Results The results in Table 1 show that NGMM achieves the best performance across all four OGB-MolPCBA assays. NGMM attains the highest accuracy and the lowest NLL, Brier score, and ECE in every case, indicating improvements both in classification and in the quality of the predicted probabilities. Since the environments are molecular scaffold groups, these results suggest that explicitly modeling environment-level variation yields more robust prediction across structural shifts compared to invariance-based methods. 15 Dataset Method Accuracy NLL Brier ECE PCBA-588342 ERM 0.810 ± 0.188 0.947 ± 1.151 0.167 ± 0.169 0.169 ± 0.182 IRM 0.862 ± 0.070 0.604 ± 0.289 0.118 ± 0.057 0.111 ± 0.067 CLoVE 0.884 ± 0.031 0.555 ± 0.158 0.103 ± 0.023 0.094 ± 0.028 VaREx 0.806 ± 0.163 0.708 ± 0.475 0.160 ± 0.124 0.162 ± 0.147 NGMM 0.908 ± 0.007 0.319 ± 0.029 0.082 ± 0.004 0.035 ± 0.016                                                                                                                                                                                     
+
+> PCBA-686979 ERM 0.790 ±0.036 1.187 ±0.247 0.192 ±0.023 0.183 ±0.024 IRM 0.721 ±0.151 1.636 ±0.961 0.247 ±0.126 0.240 ±0.135 CLoVE 0.732 ±0.092 1.289 ±0.281 0.234 ±0.068 0.231 ±0.076 VaREx 0.721 ±0.158 1.629 ±0.849 0.247 ±0.125 0.248 ±0.137 NGMM 0.828 ±0.000 0.508 ±0.022 0.149 ±0.003 0.093 ±0.010
+> PCBA-504332 ERM 0.649 ±0.252 2.453 ±2.514 0.318 ±0.238 0.317 ±0.246 IRM 0.653 ±0.186 1.633 ±1.437 0.290 ±0.162 0.296 ±0.172 CLoVE 0.728 ±0.219 1.793 ±1.931 0.245 ±0.197 0.245 ±0.206 VaREx 0.663 ±0.231 2.051 ±2.637 0.298 ±0.223 0.298 ±0.229 NGMM 0.866 ±0.000 0.425 ±0.022 0.120 ±0.002 0.061 ±0.011
+> PCBA-686978 ERM 0.654 ±0.204 2.436 ±1.450 0.319 ±0.188 0.314 ±0.198 IRM 0.727 ±0.030 1.874 ±0.417 0.250 ±0.022 0.243 ±0.027 CLoVE 0.725 ±0.045 1.490 ±0.381 0.244 ±0.025 0.229 ±0.030 VaREx 0.693 ±0.079 1.710 ±0.178 0.273 ±0.051 0.267 ±0.054 NGMM 0.771 ±0.002 0.619 ±0.051 0.193 ±0.004 0.129 ±0.022
+
+Table 1: Results for the OGB-MolPCBA scaffold generalization tasks. Across all four as-says, NGMM achieves the highest accuracy and the lowest negative-log likelihood, Brier score, and expected calibration error. In all settings, NGMM also shows lowest variability across repetitions. 
+
+5.4 Camelyon-17 
+
+The Camelyon17 dataset is a binary histopathology classification task. Each example is a pathology image patch, and the goal is to predict whether metastatic tumor tissue is present. Here the environments are hospitals. The goal is to learn predictors that generalize across hospital-specific variation in staining, scanning, and acquisition conditions. For all methods we used the same small convolutional network. 
+
+Results Here environments correspond to hospitals and no prior knowledge is available regarding whether the variation across hospitals affects the labeling mechanism. Neverthe-less, the results in Figure 5 show that NGMM achieves the best overall performance on the held-out hospitals. It attains the highest accuracy and the lowest negative log-likelihood among all methods, indicating both stronger discrimination and better calibrated proba-bilistic predictions in unseen environments. 16 ERM IRM CLoVE VaREx NGMM     
+
+> 0.50
+> 0.55
+> 0.60
+> 0.65
+> 0.70
+> 0.75
+> 0.80
+> 0.85
+> 0.90
+> Accuracy
+> ERM IRM CLoVE VaREx NGMM
+> 0.25
+> 0.50
+> 0.75
+> 1.00
+> 1.25
+> 1.50
+> 1.75
+> 2.00
+> 2.25
+> NLL
+
+Figure 5: Results for the Camelyon-17 experiment on held-out hospitals. NGMM achieves the highest accuracy and the lowest negative log-likelihood among all methods, indicating the best predictive performance in unseen environments. 
+
+6 Comparison of robust and invariant representations 
+
+Having discussed robustness through marginalization of environment effects, we now turn to a comparison between this approach and invariance-based methods. In particular, we characterize when a robust representation, and especially one learned through a random-intercept model, is equivalent to an invariant one, and when it is expected to incur lower risk. Invariant representation learning considers the probabilistic graphical model in Fig-ure 1a, which corresponds to generative models of the form 
+
+p(e, s, c, x, y ) = p(e) p(s | e) p(c | e) p(x | s, c ) p(y | c). (50) We assume that the model is non-trivial: both the causal features c and the spurious features s are non-degenerate latent variables (possibly aggregating several such variables correspondingly), and every solid arrow in Figure 1a represents a genuine dependence. That is, x depends non-trivially on both s and c, y depends non-trivially on c, and s depends non-trivially on e. We allow, though do not require, the causal factors c to depend on e as well. 
+
+Definition 6 (Invariant representations) . Consider the generative model in Equation (50) ,and a family F of representation functions f : X → Z ⊆ Rd. We say that a representation 
+
+f ∈ F is invariant if y ⊥ e | f (x), and denote the subset of invariant representations as 
+
+Finv := {f ∈ F : y ⊥ e | f (x)} . (51) Invariant representations are defined through the conditional independence y ⊥ e |
+
+f (x). This captures the idea that, once the representation is given, the environment carries no further information about the target. However, if an invariant representation exists, there may also be other representations that achieve the same predictive performance while retaining additional information that is unrelated to prediction, including information about the environment. 17 In contrast, if a robust representation is augmented with additional information that does not affect prediction, the resulting representation is still robust. Hence, to compare invariance and robustness, we first introduce the following definition of minimality .
+
+Definition 7 (Minimal representation) . A representation fφ⋆ is called minimal in F0, if for every fφ ∈ F 0, there exists a deterministic function hφ such that 
+
+fφ⋆ (x) = hφ(fφ(x)) . (52) Intuitively, the definition of minimality aligns with post-processing. A minimal repre-sentation is one that can be recovered deterministically from any other representation in 
+
+F0, and therefore does not retain unnecessary extra information. The next proposition shows that, under the invariant data-generating model, once rep-resentations that carry such extra information are ruled out, a robust representation in F0
+
+that is minimal, is also invariant. 
+
+Proposition 8. Assume the model in Equation (50) , and let Q be a family of conditional distributions indexed by θ = ( ψ, φ ). Suppose that inf θ∈Θ RQ(θ) = 0 , and that this infimum is attained. Assume that there exists a representation fφ† ∈ F 0 that is invariant. Then, any robust representation fφ⋆ ∈ F 0 that is minimal in F0 is also invariant. 
+
+The proof is provided in Appendix A.3. The key idea of Proposition 8 is that when a rep-resentation already captures everything about x that matters for prediction, any remaining dependence on the environment e is redundant. Therefore, a minimal robust representation has no need to retain any additional environment-specific information. However, the conditions in Proposition 8 in practice require full recovery of c from x.While this may hold in some settings, it is not the case when x is only a noisy or indirect proxy for c. In such cases, a robust (or ε-robust) representation may achieve lower risk by retaining information that is not invariant, but remains predictive. In general, invariance and robustness do not coincide. The distinction between robustness and invariance is especially clear for random-intercept models. Invariant methods posit that, after conditioning on a suitable representation, the effect of the environment disappears. Random-intercept models instead are designed for set-tings where residual environment variation remains and is modeled explicitly. Accordingly, they cannot recover an invariant representation exactly: if c = f (x) and the conditional distribution includes an environment-specific random intercept γe, then p(y | c, e )̸ = p(y | c). On the other hand, when the environment e has a direct effect on y, the true data-generating process corresponds to the graphical model in Figure 1b: 
+
+p(e, s, c, x, y ) = p(e) p(s | e) p(c | e) p(x | s, c ) p(y | c, e ). (53) In this case the assumptions of invariant learning are violated, while the random-intercept model is recovered as the special case in which the effect of e on y enters through an additive intercept shift. In practice, the data-generating process may be closer to an invariant model or to a random-intercept model, and which approach performs better depends on which approxi-mation is more appropriate. 18 Let 
+
+find ∈ arg min 
+
+> f
+
+I(y; e | f (x)) (54) be a representation targeting approximate invariance, and let fRI be a population maximum-likelihood representation within the random-intercept family. Applying the the chain rule for conditional mutual information twice, in particular for 
+
+f ∈ { find , f RI }, we have that 
+
+I(y; x | f (x)) = I(y; e | f (x)) + I(y; x | e, f (x)) − I(y; e | x), (55) and 
+
+I(y; x, e | f (x)) = I(y; x | f (x)) + I(y; e | x, f (x)) . (56) Since f (x) is a deterministic function of x, conditioning on f (x) adds no information once 
+
+x is given, and therefore 
+
+I(y; e | x, f (x)) = I(y; e | x). (57) Combining the two expansions yields 
+
+I(y; x | f (x)) = I(y; e | f (x)) + I(y; x | e, f (x)) − I(y; e | x). (58) This shows that fRI has smaller irreducible risk exactly when 
+
+δ := 
+
+h
+
+I(y; x | e, f ind (x)) − I(y; x | e, f RI (x)) 
+
+i
+
+−
+
+h
+
+I(y; e | fRI (x)) − I(y; e | find (x)) 
+
+i
+
+> 0. (59) This inequality can be viewed as a tradeoff: forcing the representation to be as independent of e as possible, may discard relevant predictive information in x that remains useful once 
+
+e is known. When the effect of e on y is weak and most of the y-relevant information in c can be recovered from x alone, an invariance-seeking representation can be nearly optimal. By contrast, when c cannot be well recovered from x, but x contains additional environment-linked information that helps predict y, a random-intercept representation may be preferable. The empirical results in §5.1 evaluate exactly this tradeoff: When the direct effect of the environment is well captured by an additive intercept shift, the random-intercept model is correctly specified and therefore recovers the optimal marginal predictor. More impor-tantly, when environment-linked information in x helps predict y, modeling the residual environment effect can be preferable to trying to remove it. This analysis is summarized in Figure 6. 
+
+7 Discussion 
+
+We studied environment-robust representation learning in settings where the environment may directly affect the target. Such settings lie outside the standard invariance framework, which requires that, after conditioning on an appropriate representation, the predictive relationship no longer depends on the environment. Invariance does not posit a structural model for how the environment affects the data-generating process. Accordingly, invariance-targeting methods seek a general solution: a 19 e  
+
+> sc
+> xy
+
+?                     
+
+> Can Frecover from xthe predictive information in c?
+> •Assumptions of invariant learning are violated
+> •Random-intercept model is recovered when the effect of eis additive
+> y⊥e|cy̸⊥e|c
+> A minimal robust repre-sentation is also invariant
+> •A robust representation may retain non-invariant information
+> •An invariant representation may not be robust
+> Yes No
+
+Figure 6: Summary of the comparison between robustness and invariance. representation under which these effects disappear. This is valuable when the goal is to identify stable underlying mechanisms. However, when the goal is prediction, our results show that explicitly modeling environment effects, rather than attempting to remove them, can lead to better performance. Neural random-intercept models provide a simple yet flexible way to do so. We further showed that risk of such predictors decomposes into three terms: an irre-ducible term, a representation term I(y; x | f (x)), which measures the predictive infor-mation lost by compressing x to f (x), and an additional approximation term induced by restricting the predictor, conditional on that representation, to the marginalized family. This implies that when the random-intercept risk is small, the learned representation must retain substantial information in x that is relevant for predicting y.Our comparison with invariant representation learning analyzes when invariance is an appropriate target. Under the standard causal model, invariance and robustness coincide only when the representation preserves all posterior predictive information about c that is relevant for y, and conditioning further on e does not change that quantity. When this condition fails, enforcing invariance may remove predictive information that remains useful for robust prediction. This introduces a tradeoff between retaining a richer representation and increased environment dependence. When the environment affects the target directly, invariance is unattainable altogether. In that case, robustness aiming methods such as the random-intercept model offer a natural alternative. The empirical results are consistent with our analysis. In the simulation, the gap between NGMM and invariance-targeting methods varies with the identified tradeoff. In all our experiments, the random-intercept model outperforms invariance-targeting methods. Nevertheless, the random-intercept family models environment effects through a single additive latent variable. This is appropriate when environments differ mainly through shifts of the shared predictor, but it does not capture other forms of heterogeneity. Extensions 20 to richer random-effect structures and to multimodal environment effects are a promising direction for future work. More broadly, our results suggest that in many settings robust representation learning should be formulated in terms of the prediction target and the class of shifts one aims to achieve robustness to, rather than through invariance alone. 21 References 
+
+Kartik Ahuja, Karthikeyan Shanmugam, Kush Varshney, and Amit Dhurandhar. Invariant risk minimization games. In International Conference on Machine Learning , pages 145– 155. PMLR, 2020. Martin Arjovsky, L´ eon Bottou, Ishaan Gulrajani, and David Lopez-Paz. Invariant risk minimization. arXiv preprint arXiv:1907.02893 , 2019. R Harald Baayen, Douglas J Davidson, and Douglas M Bates. Mixed-effects modeling with crossed random effects for subjects and items. Journal of Memory and Language , 59(4): 390–412, 2008. Aharon Ben-Tal, Dick Den Hertog, Anja De Waegenaere, Bertrand Melenberg, and Gijs Rennen. Robust solutions of optimization problems affected by uncertain probabilities. 
+
+Management Science , 59(2):341–357, 2013. Jorge L Bernal-Rusiel, Douglas N Greve, Martin Reuter, Bruce Fischl, Mert R Sabuncu, Alzheimer’s Disease Neuroimaging Initiative, et al. Statistical analysis of longitudinal neuroimage data with linear mixed effects models. NeuroImage , 66:249–260, 2013. Anthony S Bryk and Stephen W Raudenbush. Hierarchical Linear Models: Applications and Data Analysis Methods . Sage Publications, Inc, 1992. Shiyu Chang, Yang Zhang, Mo Yu, and Tommi Jaakkola. Invariant rationalization. In 
+
+International Conference on Machine Learning , pages 1448–1458. PMLR, 2020. John C Duchi and Hongseok Namkoong. Learning models with uniform performance via distributionally robust optimization. The Annals of Statistics , 49(3):1378–1406, 2021. John C Duchi, Peter W Glynn, and Hongseok Namkoong. Statistics of robust optimization: A generalized empirical likelihood approach. Mathematics of Operations Research , 46(3): 946–969, 2021. Yaroslav Ganin, Evgeniya Ustinova, Hana Ajakan, Pascal Germain, Hugo Larochelle, Fran¸ cois Laviolette, Mario March, and Victor Lempitsky. Domain-adversarial training of neural networks. Journal of Machine Learning Research , 17(59):1–35, 2016. Andrew Gelman, Jeffrey Fagan, and Alex Kiss. An analysis of the new york city police department’s “stop-and-frisk” policy in the context of claims of racial bias. Journal of the American Statistical Association , 102(479):813–823, 2007. Badr Youbi Idrissi, Martin Arjovsky, Mohammad Pezeshki, and David Lopez-Paz. Sim-ple data balancing achieves competitive worst-group-accuracy. In Conference on Causal Learning and Reasoning , pages 336–351. PMLR, 2022. Charles M Judd, Jacob Westfall, and David A Kenny. Treating stimuli as a random factor in social psychology: A new and comprehensive solution to a pervasive but largely ignored problem. Journal of Personality and Social Psychology , 103(1):54, 2012. 22 David Krueger, Ethan Caballero, Joern-Henrik Jacobsen, Amy Zhang, Jonathan Binas, Dinghuai Zhang, Remi Le Priol, and Aaron Courville. Out-of-distribution generalization via risk extrapolation (REx). In International Conference on Machine Learning , pages 5815–5826. PMLR, 2021. Yong Lin, Hanze Dong, Hao Wang, and Tong Zhang. Bayesian invariant risk minimiza-tion. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 16021–16030, 2022. Jennifer Listgarten, Carl Kadie, Eric E Schadt, and David Heckerman. Correction for hidden confounders in the genetic analysis of gene expression. Proceedings of the National Academy of Sciences , 107(38):16465–16470, 2010. Evan Z Liu, Behzad Haghgoo, Annie S Chen, Aditi Raghunathan, Pang Wei Koh, Shiori Sagawa, Percy Liang, and Chelsea Finn. Just train twice: Improving group robustness without training group information. In International Conference on Machine Learning ,pages 6781–6792. PMLR, 2021. Chaochao Lu, Yuhuai Wu, Jos´ e Miguel Hern´ andez-Lobato, and Bernhard Sch¨ olkopf. Invari-ant causal representation learning for out-of-distribution generalization. In International Conference on Learning Representations , 2021. Weicong Lyu, Jee-Seon Kim, and Youmi Suk. Estimating heterogeneous treatment effects within latent class multilevel models: A bayesian approach. Journal of Educational and Behavioral Statistics , 48(1):3–36, 2023. Divyat Mahajan, Shruti Tople, and Amit Sharma. Domain generalization using causal matching. In International Conference on Machine Learning , pages 7313–7324. PMLR, 2021. Barbara Nye, Larry V Hedges, and Spyros Konstantopoulos. The effects of small classes on academic achievement: The results of the tennessee class size experiment. American Educational Research Journal , 37(1):123–151, 2000. Brennan R Payne, Chia-Lin Lee, and Kara D Federmeier. Revisiting the incremental effects of context on word processing: Evidence from single-word event-related brain potentials. 
+
+Psychophysiology , 52(11):1456–1469, 2015. Jonas Peters, Peter B¨ uhlmann, and Nicolai Meinshausen. Causal inference by using invari-ant prediction: Identification and confidence intervals. Journal of the Royal Statistical Society Series B: Statistical Methodology , 78(5):947–1012, 2016. Jonas Peters, Dominik Janzing, and Bernhard Sch¨ olkopf. Elements of Causal Inference: Foundations and Learning Algorithms . The MIT Press, 2017. Niklas Pfister, Peter B¨ uhlmann, and Jonas Peters. Invariant causal prediction for sequential data. Journal of the American Statistical Association , 114(527):1264–1276, 2019. 23 Vihari Piratla, Praneeth Netrapalli, and Sunita Sarawagi. Focus on the common good: Group distributional robustness follows. In International Conference on Learning Repre-sentations , 2021. Stephen W Raudenbush, Randall P Fotiu, and Yuk Fai Cheong. Synthesizing results from the trial state assessment. Journal of Educational and Behavioral Statistics , 24(4):413– 438, 1999. Mateo Rojas-Carulla, Bernhard Sch¨ olkopf, Richard Turner, and Jonas Peters. Invariant models for causal transfer learning. Journal of Machine Learning Research , 19(36):1–34, 2018. Dominik Rothenh¨ ausler, Nicolai Meinshausen, Peter B¨ uhlmann, and Jonas Peters. Anchor regression: Heterogeneous data meet causality. Journal of the Royal Statistical Society Series B: Statistical Methodology , 83(2):215–246, 2021. Shiori Sagawa, Pang Wei Koh, Tatsunori B Hashimoto, and Percy Liang. Distributionally robust neural networks. In International Conference on Learning Representations , 2019. Aman Sinha, Hongseok Namkoong, Riccardo Volpi, and John Duchi. Certifying some distributional robustness with principled adversarial training. arXiv preprint arXiv:1710.10571 , 2017. Yuli Slavutsky, Sebastian Salazar, and David Blei. Neural generalized mixed-effects models. 
+
+arXiv preprint arXiv:2604.10976 , 2026. Kristina M Visscher, Francis M Miezin, James E Kelly, Randy L Buckner, David I Donald-son, Mark P McAvoy, Vidya M Bhalodia, and Steven E Petersen. Mixed blocked/event-related designs separate transient and sustained activity in fMRI. NeuroImage , 19(4): 1694–1708, 2003. Yoav Wald, Amir Feder, Daniel Greenfeld, and Uri Shalit. On calibration and out-of-domain generalization. Advances in Neural Information Processing Systems , 34:2215–2227, 2021. Jiaheng Wei, Harikrishna Narasimhan, Ehsan Amid, Wen-Sheng Chu, Yang Liu, and Ab-hishek Kumar. Distributionally robust post-hoc classifiers under prior shifts. In Interna-tional Conference on Learning Representations , 2023. Zhiwu Zhang, Elhan Ersoz, Chao-Qiang Lai, Rory J Todhunter, Hemant K Tiwari, Michael A Gore, Peter J Bradbury, Jianming Yu, Donna K Arnett, Jose M Ordovas, et al. Mixed linear model approach adapted for genome-wide association studies. Nature Genetics , 42(4):355–360, 2010. Xiang Zhou and Matthew Stephens. Genome-wide efficient mixed-model analysis for asso-ciation studies. Nature Genetics , 44(7):821–824, 2012. 24 Appendix A. Proofs 
+
+A.1 Proof of Lemma 2 Proof 
+
+For a fixed θ ∈ Θ, the environment-average risk is ¯RQ(θ) := Ep(e,x ) [KL ( p(y | x, e ) ∥ qθ(y | x))] (60) = Ep(e,x )
+
+
+
+Ep(y|e,x )
+
+
+
+log p(y | x, e )
+
+qθ(y | x)
+
+ 
+
+(61) = Ep(e,x,y )
+
+
+
+log p(y | x, e )
+
+qθ(y | x)
+
+
+
+. (62) By adding and subtracting log p(y | x), we get ¯RQ(θ) = Ep(e,x,y )
+
+
+
+log p(y | x, e )
+
+p(y | x)
+
+
+
++ Ep(e,x,y )
+
+
+
+log p(y | x)
+
+qθ(y | x)
+
+
+
+. (63) Note that the first term can be expressed as 
+
+Ep(e,x,y )
+
+
+
+log p(y | x, e )
+
+p(y | x)
+
+
+
+= Ep(e,x ) [KL ( p(y | x, e )∥p(y | x))] , (64) and it does not depend on θ.For the second term, we have that 
+
+Ep(e,x,y )
+
+
+
+log p(y | x)
+
+qθ(y | x)
+
+
+
+= Ep(x,y )
+
+
+
+log p(y | x)
+
+qθ(y | x)
+
+
+
+= RQ(θ). (65) Therefore, ¯RQ(θ) = RQ(θ) + Ep(e,x ) [KL ( p(y | x, e ) ∥ p(y | x))] . (66) 
+
+A.2 Proof of Proposition 5 Proof By definition, 
+
+RQ(θ) = Ep(x) [KL ( p(y | x)∥qθ (y | x))] (67) = Ep(x)p(y|x)
+
+
+
+log p(y | x)
+
+qθ (y | x)
+
+
+
+. (68) By adding and subtracting log p (y | fφ(x)), we get 
+
+RQ(θ) = Ep(x)p(y|x)
+
+
+
+log p(y | x)
+
+p (y | fφ(x)) 
+
+
+
++ Ep(x)p(y|x)
+
+
+
+log p (y | fφ(x)) 
+
+qθ (y | x)
+
+
+
+, (69) where the first term can be rewritten as 
+
+Ep(x)p(y|x)
+
+
+
+log p(y | x)
+
+p (y | fφ(x)) 
+
+
+
+= Ep(x) [KL ( p(y | x) ∥ p (y | fφ(x)))] . (70) 25 Below for brevity we drop the index φ and write f instead of fφ.We will first show that 
+
+Ep(x) [KL ( p(y | x) ∥ p (y | f (x)))] = I (y; x | f (x)) . (71) Note that 
+
+p(x, y | f (x)) = p(x | f (x)) p(y | x, f (x)) (72) = p(x | f (x)) p(y | x), (73) where the second equality follows from f being a deterministic function. Then, 
+
+I (y; x | f (x)) := Ep(f (x)) [KL ( p(x, y | f (x)) ∥ p(x | f (x)) p(y | f (x)))] (74) = Ep(f (x)) [KL ( p(x | f (x)) p(y | x) ∥ p(x | f (x)) p(y | f (x)))] , (75) where KL ( p(x | f (x)) p(y | x)∥p(x | f (x)) p(y | f (x))) (76) = Ep(x|f (x)) 
+
+
+
+Ep(y|x)
+
+
+
+log p(x | f (x)) p(y | x)
+
+p(x | f (x)) p(y | f (x)) 
+
+ 
+
+(77) = Ep(x|f (x)) [KL ( p(y | x) ∥ p(y | f (x)))] . (78) Therefore, 
+
+I (y; x | f (x)) = Ep(f (x)) 
+
+Ep(x|f (x)) [KL ( p(y | x) ∥ p(y | f (x)))]  , (79) and since p(x, f (x)) = p(x) for any deterministic f ,
+
+I (y; x | f (x)) = Ep(x) [KL ( p(y | x) ∥ p(y | f (x)))] . (80) We now move to the second term in Equation (69). Recall that qθ(y | x) = qψ(y | fφ(x)), and denote 
+
+Z := fφ(X), g(y, z ) := log p(y | z)
+
+qψ(y | z) . (81) Then, 
+
+Ep(x)p(y|x)
+
+
+
+log p (y | fφ(x)) 
+
+qψ (y | x)
+
+
+
+= Ep(z)
+
+Ep(x,y |z) [g(y, z )]  (82) = Ep(z)
+
+Ep(y|z) [g(y, z )]  (83) = Ep(z) [KL ( p(y | z) ∥ qψ(y | z))] . (84) Substituting back z = fφ(x) yields 
+
+Ep(x)p(y|x)
+
+
+
+log p(y | fφ(x)) 
+
+qθ(y | x)
+
+
+
+= Ep(fφ(x)) [KL ( p(y | fφ(x)) ∥ qψ(y | fφ(x)))] (85) = Ep(x) [KL ( p(y | fφ(x)) ∥ qθ(y | x))] = ∆ Q| f . (86) 26 A.3 Proof of Proposition 8 Proof Let Q be a family of conditional distributions indexed by θ = ( ψ, φ ), where φ
+
+parameterizes representations in F and ψ denotes the remaining model parameters. Assume that the model is well-specified so that inf  
+
+> θ∈Θ
+
+RQ(θ) = 0 , (87) and that this infimum is attained. Let fφ⋆ be a robust representation and assume that fφ⋆
+
+is minimal in F0. Then, by robustness, there exists ψ⋆ such that for θ⋆ = ( ψ⋆, φ ⋆), 
+
+θ⋆ ∈ arg min 
+
+> θ∈Θ
+
+¯RQ(θ). (88) By Lemma 2, the minimizers of ¯RQ and RQ coincide. Therefore, 
+
+RQ(θ⋆) = Ep(x) [KL ( p(y | x)∥qψ⋆ (y | fφ⋆ (x)))] = 0 . (89) Adding and subtracting log p(y | fφ⋆ (x)) gives 
+
+RQ(θ⋆) = Ep(x)Ep(y|x)
+
+
+
+log p(y | x)
+
+p(y | fφ⋆ (x)) + log p(y | fφ⋆ (x)) 
+
+qψ⋆ (y | fφ⋆ (x)) 
+
+
+
+(90) = I(y; x | fφ⋆ (x)) + Ep(x) [KL ( p(y | fφ⋆ (x)) ∥ qψ⋆ (y | fφ⋆ (x)))] = 0 . (91) Since both terms are nonnegative it follows that 
+
+I(y; x | fφ⋆ (x)) = 0 . (92) Now, under the model in Equation (50), for any deterministic representation f ,
+
+p(y | x) = Ep(c|x)[p(y | c)] , (93) 
+
+p(y | f (x)) = Ep(c|f (x)) [p(y | c)] . (94) Hence 
+
+I(y; x | f (x)) = Ep(x)
+
+KL  Ep(c|x)[p(y | c)] ∥ Ep(c|f (x)) [p(y | c)]  . (95) Applying this with f = fφ⋆ yields 
+
+Ep(c|fφ⋆ (x)) [p(y | c)] = Ep(c|x)[p(y | c)] almost surely in p(x). (96) By assumption, there exists a robust invariant representation fφ† . Since fφ⋆ is minimal in F0 and fφ† ∈ F 0, there exists a function h such that 
+
+fφ⋆ (x) = h(fφ† (x)) almost surely in p(x). (97) By invariance of fφ† ,
+
+p(y | fφ† (x), e ) = p(y | fφ† (x)) . (98) Since fφ⋆ (x) is a function of fφ† (x), we have 
+
+p(y | fφ⋆ (x), e ) = E p(y | fφ† (x), e ) | fφ⋆ (x), e  (99) = E p(y | fφ† (x)) | fφ⋆ (x), e  . (100) 27 By robustness of fφ† and Equation (96), 
+
+p(y | fφ† (x)) = p(y | x) = p(y | fφ⋆ (x)) almost surely in p(x), (101) and therefore, 
+
+p(y | fφ⋆ (x), e ) = E [p(y | fφ⋆ (x)) | fφ⋆ (x), e ] (102) = p(y | fφ⋆ (x)) . (103) 
+
+Appendix B. Risk derivations for the tradeoff simulation 
+
+Let 
+
+ej ∼ N (0 , σ 2 
+
+> e
+
+), (104) 
+
+cij | ej ∼ N (ej , σ 2 
+
+> c
+
+), (105) 
+
+sij = αe j + uij , (106) 
+
+uij ∼ N (0 , σ 2
+
+> u
+
+), (107) 
+
+εij ∼ N (0 , σ 2 
+
+> y
+
+). (108) 
+
+B.1 Well-specified model 
+
+We first consider the model 
+
+yij = cij + αe j + εij , (109) with xij = ( cij , s ij ). Below we derive ¯R⋆ = Ep(e)p(x|e) [KL ( p(y | x, e ) ∥ p(y | x))] . (110) Suppressing index notation, since 
+
+y = c + αe + ε, (111) conditional on ( c, s, e ) we have 
+
+p(y | c, s, e ) = N (c + αe, σ 2 
+
+> ϵ
+
+). (112) Next, we have 
+
+E[y | c, s ] = c + αE[e | c, s ], (113) and Var( y | c, s ) = α2Var( e | c, s ) + σ2 
+
+> ϵ
+
+, (114) so 
+
+p(y | c, s ) = N  c + αE[e | c, s ], σ 2 
+
+> ϵ
+
++ α2Var( e | c, s ) . (115) 28 Since ( e, c, s ) is jointly Gaussian, 
+
+Vα := Var( e | c, s ) = 
+
+ 1
+
+σ2
+
+> e
+
++ 1
+
+σ2
+
+> c
+
++ α2
+
+σ2
+
+> u
+
+−1
+
+. (116) Therefore, we have KL ( p(y | c, s, e ) ∥ p(y | c, s )) = KL  N (c + αe, σ 2 
+
+> ϵ
+
+) ∥ N  c + αE[e | c, s ], σ 2 
+
+> ϵ
+
++ α2Vα
+
+ . (117) Using closed form KL for Gaussian distributions, KL ( N (μ1, v 1) ∥ N (μ2, v 2)) = 12
+
+
+
+log v2
+
+v1
+
++ v1 + ( μ1 − μ2)2
+
+v2
+
+− 1
+
+
+
+, (118) we obtain KL ( p(y | c, s, e ) ∥ p(y | c, s )) = 12
+
+
+
+log σ2 
+
+> ϵ
+
++ α2Vα
+
+σ2
+
+> ϵ
+
++ σ2 
+
+> ϵ
+
++ α2(e − E[e | c, s ]) 2
+
+σ2 
+
+> ϵ
+
++ α2Vα
+
+− 1
+
+
+
+. (119) Taking expectation with respect to ( e, c, s ) yields ¯R⋆ = 12
+
+"
+
+log σ2 
+
+> ϵ
+
++ α2Vα
+
+σ2
+
+> ϵ
+
++ σ2 
+
+> ϵ
+
++ α2E (e − E[e | c, s ]) 2
+
+σ2 
+
+> ϵ
+
++ α2Vα
+
+− 1
+
+#
+
+. (120) Finally, 
+
+E (e − E[e | c, s ]) 2 = E [Var( e | c, s )] = Vα, (121) so the second term simplifies, and we get that ¯R⋆ = 12 log 
+
+
+
+1 + α2Vα
+
+σ2
+
+> ϵ
+
+
+
+. (122) 
+
+B.2 Misspecified model 
+
+We now consider the model 
+
+yij = cij + αe j + (1 − α)ej cij + εij , (123) with xij = ( cij , s ij ). Suppressing index notation again, since 
+
+y = c +  α + (1 − α)ce + ε, (124) conditional on ( c, s, e ) we have 
+
+p(y | c, s, e ) = N  c +  α + (1 − α)ce, σ 2
+
+> ϵ
+
+. (125) Next, ( e, c, s ) is jointly Gaussian and therefore 
+
+e | c, s ∼ N (m(c, s ), V α), (126) 29 where 
+
+m(c, s ) = Vα
+
+ cσ2
+
+> c
+
++ αs σ2
+
+> u
+
+
+
+, Vα =
+
+ 1
+
+σ2
+
+> e
+
++ 1
+
+σ2
+
+> c
+
++ α2
+
+σ2
+
+> u
+
+−1
+
+. (127) This yields 
+
+E[y | c, s ] = c +  α + (1 − α)cE[e | c, s ] = c +  α + (1 − α)cm(c, s ), (128) and Var( y | c, s ) =  α + (1 − α)c2Var( e | c, s ) + σ2 
+
+> ϵ
+
+=  α + (1 − α)c2Vα + σ2 
+
+> ϵ
+
+, (129) so 
+
+p(y | c, s ) = N
+
+
+
+c +  α + (1 − α)cm(c, s ), σ 2 
+
+> ϵ
+
++  α + (1 − α)c2Vα
+
+
+
+. (130) Using the closed-form expression for the KL divergence between Gaussian distributions again, we get KL ( p(y | c, s, e ) ∥ p(y | c, s )) = 12
+
+"
+
+log σ2 
+
+> ϵ
+
++  α + (1 − α)c2Vα
+
+σ2
+
+> ϵ
+
++ σ2 
+
+> ϵ
+
++  α + (1 − α)c2(e − E[e | c, s ]) 2
+
+σ2 
+
+> ϵ
+
++  α + (1 − α)c2Vα
+
+− 1
+
+#
+
+. (131) Taking expectation with respect to ( e, c, s ) yields ¯R⋆ = 12 Ec,s 
+
+"
+
+log σ2 
+
+> ϵ
+
++  α + (1 − α)c2Vα
+
+σ2
+
+> ϵ
+
+#
+
++ 12 Ee,c,s 
+
+" σ2 
+
+> ϵ
+
++  α + (1 − α)c2(e − E[e | c, s ]) 2
+
+σ2 
+
+> ϵ
+
++  α + (1 − α)c2Vα
+
+− 1
+
+#
+
+. (132) Now, conditional on ( c, s ), 
+
+E (e − E[e | c, s ]) 2 | c, s  = Var( e | c, s ) = Vα. (133) Therefore, 
+
+E
+
+" σ2 
+
+> ϵ
+
++  α + (1 − α)c2(e − E[e | c, s ]) 2
+
+σ2 
+
+> ϵ
+
++  α + (1 − α)c2Vα
+
+c, s 
+
+#
+
+= σ2 
+
+> ϵ
+
++  α + (1 − α)c2Vα
+
+σ2 
+
+> ϵ
+
++  α + (1 − α)c2Vα
+
+= 1 , (134) so the second expectation vanishes and we have ¯R⋆ = 12 Ep(c,s )
+
+"
+
+log 1 + 
+
+ α + (1 − α)c2Vα
+
+σ2
+
+> ϵ
+
+!# 
+
+. (135) Since the integrand depends only on c, we get that ¯R⋆ = 12 Ep(c)
+
+"
+
+log 1 + 
+
+ α + (1 − α)c2Vα
+
+σ2
+
+> ϵ
+
+!# 
+
+. (136) 30 Appendix C. Experimental details 
+
+All experiments were implemented in Python using publicly available datasets. Code will be released upon acceptance. 
+
+C.1 Tradeoff simulation 
+
+For each configuration, we generate 50 training environments and 50 test environments, with 1000 observations per environment, so each training set contains 50 ,000 observations and each test set contains 50 ,000 observations. All results reported in Figure 3 are based on evaluation on the held-out environments and 10 repetitions of the experiment. For IRM, and VaREx, the predictor is a multilayer perceptron with two hidden layers of width 32 and ReLU activations, trained with Adam at learning rate 10 −3. Grid search over [0 .001 , 0.01 , 0.1, 1.0, 5.0, 10 .0, . . . , 90 , 100] yielded the following penalty coefficients: 
+
+λIRM = λCLoVE = λVaREx = 0 .01 . (137) For NGMM, we use the same fixed-effects network architecture, together with a scalar random intercept. The model is fit with the ODE-based marginal-likelihood approximation described in Section 3.2. All methods were trained for 20 epochs with batch size 100 using Adam with learning rate 10 −2.
+
+C.2 Colored MNIST 
+
+In the causal regime, we set the baseline values 
+
+a = 0 .75 , b = 0 .25 . (138) The resulting values of ( α, β, γ, δ ) for training environments with 
+
+ε ∈ { 0.20 , 0.15 , 0.10 }, (139) that is, (0 .95 , 0.55 , 0.45 , 0.05) , (0 .90 , 0.60 , 0.40 , 0.10) , (0 .85 , 0.65 , 0.35 , 0.15) , (140) and for test environments (0 .90 , 0.60 , 0.40 , 0.10) , (0 .55 , 0.95 , 0.05 , 0.45) , (0 .60 , 0.90 , 0.10 , 0.40) ,
+
+(0 .65 , 0.85 , 0.15 , 0.35) , (0 .75 , 0.75 , 0.25 , 0.25) .
+
+All methods share the same architecture: a multilayer perceptron operating on the flattened 3 × 28 × 28 image, with two hidden layers of width 32 and ReLU activations. For NGMM, we used the same architecture for the fixed component combined with a learned random-intercept term. The NGMM model is trained with the Bernoulli ODE-based objective with truncation interval [ −10 , 10] and 32 ODE steps. All methods were trained with Adam at learning rate 10 −3 for 1 epoch and batch size 64. Grid search over [0 .001 , 0.01 , 0.1, 1, 5, 10 , . . . , 90 , 100] yielded the following penalty coefficients: 
+
+λIRM = 20 , λCLoVE = 30 , λVaREx = 100 . (141) 31 C.3 OGB-MolPCBA 
+
+For all methods we use a small graph neural network with atom and bond encoders, followed by two GINE message-passing layers with hidden width 32, batch normalization, ReLU activations, and global add pooling, and a final linear layer. We fit NGMM according to the Bernoulli random-intercept model using the ODE-based objective. All methods are trained with Adam, learning rate 0.001, batch size 64, and 10 epochs. Grid search for penalty coefficients yielded 
+
+λIRM = λCLoVE = λVaREx = 0 .1. (142) For NGMM we set the truncation interval to [ −3, 3] and use 64 ODE steps. 
+
+C.4 Camelyon17 
+
+We resized all images to 96 × 96 pixels, centered and normalized. For all methods we use the same convolutional network: two convolutional layers with 32 and 64 channels, stride 2, ReLU activations, and adaptive average pooling, followed by a linear classifier. All methods were trained with Adam with learning rate 0.001 for 10 epochs. Grid search for penalty coefficients yielded 
+
+λIRM = 0 .85 , λCLoVE = 5 , λVaREx = 125 . (143) We fit NGMM with truncation interval of [-3,3] and 64 ODE steps. 32
