@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.26946v1/fig-001.webp",
+      "caption": "Figure 1: (a) Prior LLM-core planners rely only on the current RGB-D view and textual action history, often misjudging progress and getting distracted by irrelevant objects. In contrast, (b) our Hierarchical Global–Local Planner mitigates this by first decomposing instructions into sub-instructions for a global plan, then locally grounding each sub-instruction, and finally verifying completed sub-instructions against the global trajectory—yielding more robust zero-shot navigation.",
+      "page": 1,
+      "index": 1,
+      "width": 491,
+      "height": 506
+    },
+    {
+      "url": "assets/figures/arxiv/2604.26946v1/fig-002.webp",
+      "caption": "Table 1: Comparison with supervised and zero-shot methods on validation unseen split of R2R-CE. Bold denotes the best performance across all zero-shot methods, while Underlined indicates the second-best results across zero-shot methods.",
+      "page": 6,
+      "index": 2,
+      "width": 798,
+      "height": 464
+    },
+    {
+      "url": "assets/figures/arxiv/2604.26946v1/fig-003.webp",
+      "caption": "Figure 2: Illustration of the overall pipeline of the proposed methodology. We have three modules: look forward, look now, and look backward. The agent first looks forward to decomposing the natural-language instruction into an ordered list of sub-instructions and to extracting salient global landmarks that sketch a coarse route. Next, it looks now by matching the current observation against the active sub-instruction, and selecting the next waypoint for fine-grained local progress. Finally, it looks backward to audit the trajectory completed so far—revisiting stored viewpoints, verifying that finished sub-instructions were indeed satisfied, and triggering corrective backtracking if drift is detected.",
+      "page": 3,
+      "index": 3,
+      "width": 1016,
+      "height": 457
+    },
+    {
+      "url": "assets/figures/arxiv/2604.26946v1/fig-004.webp",
+      "caption": "Figure 3: One successful example in the R2R-CE dataset. (a) Look now. Display the current candidate viewpoints and their short descriptions; the MLLM selects the option most aligned with the active sub-goal sk as the next direction v⋆t . (b) Look backward. Visualize all previously chosen viewpoints to form the executed trajectory τ ; the MLLM audits τ against the finished sub-instructions to decide whether the completed sub-goals is satisfied.",
+      "page": 4,
+      "index": 4,
+      "width": 1016,
+      "height": 540
+    }
+  ]
+}

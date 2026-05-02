@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.27656v1/fig-001.webp",
+      "caption": "Figure 1: Overview of the continual-learning setup, architectures, and representational regimes. (a) Sequential training protocol. Networks are trained on task A in phase A1, then on task B in phase B, and finally retested on task A in phase A2. Task B is instantiated in three similarity conditions relative to task A: same, near, and far. The schematic highlights two competing pressures: the opportunity for transfer when tasks are similar and the risk of interference when learning task B alters representations used for task A. (b) Single-network baseline. All inputs are processed through one recurrent population, and predictions are produced from a shared readout. (c) Weight scaling. After initialization, all trainable weights (Single: WS , Modular: WM ) are rescaled by a factor γ, spanning the lazy, high-dimensional regime (γ large) to the rich, low-dimensional regime (γ small). (d) Task-partitioned modular network. Inputs are routed to task-specific recurrent modules and module outputs are combined by a shared readout. This architecture imposes structural separation and allows us to test when such separation alters learning dynamics and representational geometry.",
+      "page": 3,
+      "index": 1,
+      "width": 1054,
+      "height": 275
+    },
+    {
+      "url": "assets/figures/arxiv/2604.27656v1/fig-002.webp",
+      "caption": "Figure 2: Modular structure attenuates transfer-interference costs in sequential learning in constrained regimes. (a, b) Accuracy across the sequential A1 → B → A2 training protocol for the modular network (a) and the single network (b) under the three task-similarity conditions (same, near, far) and across initialization weight scales. In both architectures, learning on A1 and B rapidly reaches high accuracy, but the single network shows a stronger drop in A2 performance in the far condition at the smallest initialization scales. (c, d) Transfer metric as a function of task similarity and initialization scale for the modular (c) and single (d) architectures. The modular network shows relatively stable low transfer across similarity conditions and weight scales, whereas the single network becomes more sensitive to task dissimilarity, with the far condition showing the strongest degradation for small γ. (e, f) Interference metric for the modular (e) and single (f) architectures. Interference remains low in the modular network across conditions, while the single network shows substantially larger interference, especially in the near condition and at the lowest initialization scales. The full figure shows that architectural separation reduces susceptibility to sequential interference, but its benefit is most visible when representational constraints are strong.",
+      "page": 6,
+      "index": 2,
+      "width": 1052,
+      "height": 273
+    },
+    {
+      "url": "assets/figures/arxiv/2604.27656v1/fig-003.webp",
+      "caption": "Figure 3: Initialization weight scaling controlled representational dimensionality reveals architecturedependent representational geometry. (a, b) Effective dimensionality of hidden representations, measured as the number of principal components required to explain 99% of the variance, for modular (a) and the single networks (b). Columns correspond to decreasing initialization weight scale, from the lazy regime to the richer, lower-scale regime. Within each column, bars show the task-similarity conditions. Dimensionality remains high at large initialization scales and decreases strongly at smaller scales. (c) Principal angles between task-specific representational subspaces for the same, near, and far conditions across the same initialization scales. In the high-dimensional regime, both architectures show similar geometry. In the lower-dimensional regime, the modular network exhibits a clearer similaritydependent structure, with stronger separation for far tasks and intermediate alignment for near tasks. Taken together architectural separation becomes meaningful only once representational dimensionality is sufficiently reduced, at which point task similarity begins to shape subspace organization.",
+      "page": 7,
+      "index": 3,
+      "width": 512,
+      "height": 412
+    },
+    {
+      "url": "assets/figures/arxiv/2604.27656v1/fig-004.webp",
+      "caption": "Figure 4: 3D PCA projections reveal similarity-dependent organization of task representations under reduced dimensionality. Each panel shows hidden-state trajectories projected onto the first three principal components of a PCA fitted jointly to Post A1, Post B, and Post A2 activations for a given network and initialization regime. For each phase, trajectories are computed over a fixed sweep of 12 inputs, with the first six corresponding to Task A and the last six to Task B. For each phase and task, closed loops connect stimuli in sweep order. The left block shows the modular network, and the right block shows the single network. Columns correspond to task similarity conditions (same, near, far). The top row shows the lazy (highdimensional) regime, and the bottom row shows the rich (low-dimensional) regime. Colors encode phase and task identity (Task A: warm colors, Task B: cool colors). In the high-dimensional regime (top row), trajectories occupy a broad state space and exhibit relatively weak structure, with limited differences between architectures. In the low-dimensional regime (bottom row), trajectories become more compact and their relative arrangement reflects task similarity more clearly. In the modular network, same-task trajectories remain relatively closely aligned across phases, near tasks exhibit intermediate reorganization, and far tasks show stronger separation. This similarity-dependent structure is less pronounced in the single network, which in turn exhibits closer alignment in the same regime. Overall, the figure illustrates that reduced representational dimensionality reveals a constrained geometric organization of task representations, within which architectural separation leads to more structured, similarity-dependent alignment.",
+      "page": 8,
+      "index": 4,
+      "width": 1054,
+      "height": 291
+    }
+  ]
+}
