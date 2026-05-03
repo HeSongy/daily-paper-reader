@@ -1,0 +1,641 @@
+Title: Cheeger--Hodge Contrastive Learning for Structurally Robust Graph Representation Learning
+
+URL Source: https://arxiv.org/pdf/2604.26301v1
+
+Published Time: Thu, 30 Apr 2026 00:29:08 GMT
+
+Number of Pages: 11
+
+Markdown Content:
+> JOURNAL OF L ATEX CLASS FILES, VOL. 18, NO. 9, SEPTEMBER 2020 1
+
+# Cheeger–Hodge Contrastive Learning for Structurally Robust Graph Representation Learning 
+
+Mengyang Zhao †, Longlong Li †, and Cunquan Qu ∗
+
+Abstract —Graph Contrastive Learning (GCL) has emerged as a prominent framework for unsupervised graph representation learning. However, relying on augmentation design alone to define the invariances learned by GCL can be brittle under structural perturbations. To address this issue, we propose Cheeger–Hodge Contrastive Learning (CHCL), a framework that aligns a perturbation-stable Cheeger–Hodge joint signature across augmented views for robust graph representation learning. The proposed signature combines a Cheeger-inspired connectivity signature derived from the algebraic connectivity λ2 with the low-frequency spectrum of the 1-Hodge Laplacian, thereby capturing both global connectivity and higher-order structural informa-tion. By aligning encoder representations with the proposed Cheeger–Hodge joint signature across augmented views, CHCL learns graph embeddings that are robust to local structural perturbations. Extensive experiments on standard benchmarks, transfer settings demonstrate that CHCL consistently improves performance, robustness, and generalization. 
+
+Index Terms —Graph contrastive learning, Cheeger-inspired signature, 1-Hodge Laplacian. 
+
+I. I NTRODUCTION 
+
+# IN recent years, Graph Neural Networks (GNNs) have shown promising results in applications such as social network analysis [1], [2], molecular property prediction [3], [4], and protein structure-function analysis [5], [6]. However, these successes often rely on large amounts of high-quality labeled data [7], [8], [9]. In real-world scenarios, such la-bels are costly to obtain, time-consuming to annotate, and often subject to privacy restrictions [10], [11]. To reduce this reliance, unsupervised graph representation learning has emerged as a promising direction, aiming to learn generaliz-able representations from graph structures and node attributes without supervision [12], [13], [14], [15], [16]. Among these approaches, GCL has become a representative paradigm: it constructs augmented views of the same graph and learns view-consistent representations in the latent space, often pro-ducing discriminative and transferable graph embeddings [17], [18], [19], [20]. Despite its empirical success, GCL typically learns explicit invariance induced by data augmentation [21], [22], [23], [24]. In practice, however, common augmentation strategies 
+
+> †
+
+Mengyang Zhao and Longlong Li contributed equally to this work. Mengyang Zhao is with the School of Mathematics and the Data Science Institute, Shandong University, Jinan 250100, China (email: mengyangzhao@mail.sdu.edu.cn). Longlong Li is with the School of Physical and Mathematical Sciences, Nanyang Technological University, Singapore 637371, Singapore (e-mail: longlong.li@ntu.edu.sg). 
+
+> ∗
+
+Cunquan Qu is the corresponding author and is with the Data Science In-stitute, Shandong University, Jinan 250100, China (e-mail: cqqu@sdu.edu.cn). 
+
+such as edge dropping and feature masking can inadvertently distort global structural properties even under small local perturbations [25], [26], [27], [28], [29]. This suggests a more principled perspective: rather than relying solely on augmentation design to define what should be preserved, we argue for introducing a graph-intrinsic structural target that remains stable under perturbation and directly guides the contrastive objective, with augmentation serving primarily as a view generation mechanism. Recent efforts have sought to alleviate related limitations by incorporating semantic-aware objectives [30], [31], [32], [33], spectral perturbation model-ing [34], and higher-order topological priors [35]. However, these approaches typically incorporate only partial structural priors in isolation—such as semantic cues, spectral pertur-bation information, or higher-order topology—and therefore do not provide a unified, graph-intrinsic, and theoretically grounded structural consistency target for contrastive learning. Meanwhile, most GNN backbones remain dominated by local message passing and neighborhood aggregation, which are effective for modeling local geometry and proximity relations, but are often less effective at capturing long-range dependen-cies and global structural signals [36], [37], [38]. This further limits the ability of GCL to explicitly preserve the structural information most relevant to robust representation learning. To address these limitations, we propose Cheeger–Hodge Contrastive Learning (CHCL), a graph contrastive learning framework built around a graph-intrinsic structural signature as a perturbation-stable consistency target. We argue that robust graph representations should reflect two complementary dimensions of graph structure beyond local neighborhoods: (1) 
+
+global connectivity , which captures bottleneck and community structure at the graph level; and (2) higher-order topology ,which captures cycle-related and flow-related patterns in the edge space. Concretely, we derive a Cheeger-inspired con-nectivity signature from the algebraic connectivity λ2 of the normalized graph Laplacian, which serves as a computable spectral proxy for global bottleneck structure through the classical Cheeger inequality [39], [40]. We further combine this with the low-frequency spectrum of the 1-Hodge Lapla-cian, which characterizes higher-order topological structure beyond pairwise edges [41]. Together, these components form a unified Cheeger–Hodge joint signature that captures comple-mentary structural information at different scales. Building on this joint signature, CHCL incorporates it as an explicit structural consistency target within the contrastive objective, so that the learned embeddings remain aligned with graph-intrinsic structural properties across augmented views. In this way, CHCL reduces dependence on augmentation  
+
+> arXiv:2604.26301v1 [cs.LG] 29 Apr 2026 JOURNAL OF L ATEX CLASS FILES, VOL. 18, NO. 9, SEPTEMBER 2020 2
+
+heuristics, mitigates local structural bias in GNN backbones, and encourages the learned representation space to preserve both global connectivity and higher-order topological seman-tics. Figure 1 illustrates the overall framework, highlighting how the proposed Cheeger–Hodge joint signature serves as a graph-intrinsic, perturbation-stable consistency target for contrastive alignment across augmented views. The main contributions of this work are summarized as follows:  
+
+> •
+
+We define a Cheeger–Hodge joint signature that unifies a Cheeger-inspired connectivity signature derived from 
+
+λ2 with the low-frequency spectrum of the 1-Hodge Laplacian.  
+
+> •
+
+We propose CHCL, a graph contrastive learning frame-work that incorporates this signature as a perturbation-stable structural consistency target, enabling joint mod-eling of local geometric information, global connectivity, and higher-order topological structure within a unified contrastive framework.  
+
+> •
+
+We conduct extensive experiments across multiple graph domains and learning settings demonstrating that CHCL consistently outperforms strong baselines. II. R ELATED WORK 
+
+A. Graph Contrastive Learning 
+
+GCL has emerged as a powerful approach for unsuper-vised graph representation learning. Early methods, such as DGI [42] and InfoGraph [43], leveraged mutual information maximization between local node representations and global graph summaries to learn effective graph embeddings. Build-ing on this, GraphCL [19] introduced a framework where two augmented views of the same graph are contrasted, improving representation quality through diverse augmentation strategies. Subsequent studies have advanced GCL mainly from adaptive augmentation and structure-aware perspectives. From the perspective of adaptive augmentation, GCA im-proves view generation by adaptively preserving structurally important components during augmentation [44], while Auto-GCL and related methods learn augmentation policies directly from data rather than relying on fixed heuristics [45]. From the perspective of structure-aware contrastive learning, CI-GCL and CTAug incorporate semantic or global structural priors, such as community organization and cohesive sub-graph patterns, into the contrastive process [23], [46]. More recently, structure-aware GCL has moved toward intrinsic global descriptors derived from graph spectra, where spectral signals are incorporated into augmentation or optimization to improve structural discriminability[47], [48], [49]. This line of research is further extended by TopoGCL, which introduces persistent homology into graph contrastive learning and shows that enforcing topological consistency across augmented views can improve robustness and graph-level representation quality [35]. Building on the aforementioned research, we propose using the Cheeger–Hodge joint signature as semantic invari-ance anchors for the graph, applying invariance learning to the graph’s overall connectivity and higher-order topological structures. By incorporating these signatures into the optimiza-tion objective, the model enables the model to preserve key global structural signals under random augmentation perturba-tions, thereby reducing sensitivity to augmentation types and perturbation intensities, and improving robust generalization performance across datasets and noisy scenarios. 
+
+B. Spectral Characterization of Graph 
+
+Spectral graph theory provides a principled lens for under-standing the intrinsic structural properties of graphs through the spectra of Laplacian operators. Classical results such as the Cheeger inequality establish a fundamental connec-tion between the Cheeger constant, which measures graph bottlenecks and global separability, and the second smallest eigenvalue of the graph Laplacian (also known as the Fiedler value or algebraic connectivity)[39], [50]. In graph learning, such bottlenecks are important carriers of global structural information, as they determine how effectively signals can propagate across weakly connected regions and whether per-turbations around bridge-like structures may alter the graph-level semantics[51]. A larger Fiedler value generally indicates that the graph is more compact or less likely to be separated by a small number of edge cuts[50]. The Cheeger constant has been extensively studied in graph theory and has become an important metric for measuring graph structural stability and connectivity. However, to the best of our knowledge, there has been no research in GCL that utilizes the cheeger-inspired signature to define the graph’s inherent invariance. Beyond the standard graph Laplacian, the Hodge Laplacian extends spectral analysis to higher-order topological structures. While the graph Laplacian mainly describes node-level inter-actions and global connectivity, the Hodge Laplacian extends spectral analysis to edge-level and higher-order topological relations, making it particularly relevant to graph represen-tation learning tasks involving nontrivial topological patterns. Early studies established the discrete geometric foundations of Hodge theory on graphs and complexes [52], [53], and subsequent works showed that Hodge Laplacians provide in-formative higher-order structural characterizations of networks [54], [55]. Subsequent studies linked normalized Hodge Lapla-cians to higher-order random walks and diffusion processes, supporting their use in graph learning as effective descriptors of higher-order structure [56], [57], [58], [59]. Compared with persistent-homology-based GCL methods such as To-poGCL and TensorMV-GCL[60], the Hodge Laplacian spec-trum preserves operator-level spectral information over higher-order interactions and can therefore capture richer structural variation beyond persistence summaries alone. Meanwhile, both theoretical and empirical results indicate that the low-frequency Hodge spectrum contains informative signals about higher-order topological organization, including homological structure, higher-order connectivity, and community-level pat-terns [61], [62], [63], [64]. Motivated by these observations, we use low-frequency Hodge eigenvalues as intrinsic structural anchors for preserving higher-order topological invariance in graph contrastive learning. JOURNAL OF L ATEX CLASS FILES, VOL. 18, NO. 9, SEPTEMBER 2020 3
+
+III. METHOD 
+
+In this section, we present the Cheeger–Hodge Contrastive Learning framework. We first briefly recap graph contrastive learning, and then describe how the Cheeger–Hodge joint signature is incorporated into contrastive learning. The overall framework is illustrated in Figure 1 B. 
+
+A. Preliminaries 
+
+Let G = ( V, E, X) be an undirected graph, where V is the node set, E is the edge set, and X ∈ R|V|× F denotes the node feature matrix with feature dimension F . Let A ∈ R|V|×|V| 
+
+be the adjacency matrix, where Aij = 1 if there is an edge between nodes i and j, and Aij = 0 otherwise. Let D be the corresponding degree matrix. To construct augmented views for contrastive learning, we use two augmentation strategies: edge dropping and feature masking. For edge dropping, each edge is independently removed with probability pe, yielding an augmented adjacency matrix 
+
+A′ = A ⊙ Re,
+
+where ⊙ denotes the element-wise product and Re is a random binary mask matrix indicating whether an edge is retained. For feature masking, node features are independently masked with probability px, yielding an augmented feature matrix 
+
+X′ = X ⊙ Rx,
+
+where Rx is a random binary mask matrix indicating whether a feature entry is retained. Consider the Laplacian matrix of the graph G, the symmetric normalized Laplacian is defined as 
+
+Lnorm  
+
+> 0
+
+= I − D−1/2AD −1/2, (1) where I denotes the identity matrix. The spectrum of Lnorm 
+
+> 0
+
+characterizes key global structural properties of the graph, such as connectivity and expansion, and serves as a fundamental operator in spectral graph analysis. To characterize higher-order structural information beyond node-level interactions, we consider the 1-Hodge Laplacian defined on edge space. Let G be a graph with n = |V| 
+
+nodes and m = |E| edges. The nodes are numbered arbitrarily but fixed as {1, . . . , n }, and we denote the oriented edge set by {(ue, v e)}me=1 . Based on this orientation, the node–edge incidence matrix B1 ∈ Rn×m is defined as 
+
+(B1)i,e =
+
+
+
+−1, if i = ue,
+
++1 , if i = ve,
+
+0, otherwise .
+
+(2) Next, we enumerate all triangles (a, b, c ) in the edge set and denote the resulting triangle set by {△ t}T
+
+> t=1
+
+, where 
+
+T is the total number of triangles. For each triangle, as shown in the 1-Hodge Laplacian Branch in Figure 1 B2, we independently choose a cycle direction and construct the edge-triangle incidence matrix B2 ∈ Rm×T as: 
+
+(B2)e,t =
+
+
+
++1 , e ∈ ∂△t and ori( e) = ori t(e),
+
+−1, e ∈ ∂△t and ori( e)̸ = ori t(e),
+
+0, e / ∈ ∂△t.
+
+(3) where ∂△t denotes the set of boundary edges of triangle △t,and ori t(e) denotes the orientation induced by △t on edge e.The 1-Hodge Laplacian is then defined as: 
+
+L1 = B⊤ 
+
+> 1
+
+B1 + B2B⊤ 
+
+> 2
+
+∈ Rm×m, (4) which operates on the edge space and has an orthogonal decomposition into gradient, curl, and harmonic subspaces. Accordingly, the spectrum of L1, especially its low-frequency part, characterizes higher-order structural information of the graph through edge-flow patterns associated with these sub-spaces. 
+
+B. Cheeger–Hodge Contrastive Learning 
+
+Given a dataset D = {G 1, G2, . . . , GN }, where each graph is denoted by Gi = (Vi, Ei, X i), we generate two aug-mented views for each graph using edge dropping and feature masking, denoted by G(1)  
+
+> i
+
+= ( Vi, E(1)  
+
+> i
+
+, X(1)  
+
+> i
+
+) and G(2)  
+
+> i
+
+=(Vi, E(2)  
+
+> i
+
+, X(2)  
+
+> i
+
+).
+
+1) Geometry branch: As illustrated in Fig. 1 B3, each augmented view is encoded by a Graph Convolutional Net-work (GCN) to obtain graph-level embeddings. For the two augmented views G(1)  
+
+> i
+
+and G(2)  
+
+> i
+
+, the node representations are updated through L layers of message passing: 
+
+H(ℓ+1 ,1)  
+
+> i
+
+= MP (ℓ)
+
+H(ℓ, 1)  
+
+> i
+
+, G(1) 
+
+> i
+
+
+
+,
+
+H(ℓ+1 ,2)  
+
+> i
+
+= MP (ℓ)
+
+H(ℓ, 2)  
+
+> i
+
+, G(2) 
+
+> i
+
+
+
+,
+
+(5) for ℓ = 0 , . . . , L − 1, where 
+
+H(0 ,1)  
+
+> i
+
+= X(1)  
+
+> i
+
+, H(0 ,2)  
+
+> i
+
+= X(2)  
+
+> i
+
+.
+
+The final graph-level embeddings are then obtained through a readout function: 
+
+z(1) geo ,i = READOUT 
+
+
+
+H(L, 1) 
+
+> i
+
+
+
+,z(2) geo ,i = READOUT 
+
+
+
+H(L, 2) 
+
+> i
+
+
+
+.
+
+(6) 
+
+2) Cheeger branch: The Cheeger branch is built on the spectrum of the normalized graph Laplacian Lnorm  
+
+> 0
+
+(G) in Eq. (1). Denote its eigenvalues by 
+
+0 = λ1 ≤ λ2 ≤ · · · ≤ λn. (7) By the classical Cheeger inequality, λ2 provides upper and lower bounds for the Cheeger constant h(G), thereby relating the graph’s expansion properties and bottleneck structure to the Fiedler value. When λ2 is large, the graph is harder to partition into disconnected subgraphs, while when λ2 is close to zero, the graph exhibits bottleneck or sparse cuts. Therefore, λ2
+
+serves as a stable and computable geometric proxy for graph expansion without explicitly searching for all cuts. Compared to relying solely on statistics like node degrees, λ2 integrates global connectivity patterns through spectral decomposition, making it a more informative geometric indicator for capturing graph expansion and clustering structure. According to the Cheeger inequality, the Cheeger constant 
+
+h(G) satisfies λ2
+
+2 ≤ h(G) ≤ p2 λ2. (8) JOURNAL OF L ATEX CLASS FILES, VOL. 18, NO. 9, SEPTEMBER 2020 4A. Intrinsic Graph Properties 
+
+Inspiration 
+
+C1. Multi-source Datasets and Downstream Tasks     
+
+> Molecular graphs Biological graphs Social Networks
+> Train
+> Test
+> Classification Regression OOD Generalization
+
+C2. Transferability 
+
+> Source Domain
+> Pretraining
+> Representation
+> Transfer
+> New Task
+> Target Domain
+
+C3. Structural Interpretability                      
+
+> Capabilities
+> Local Neighborhood Cheeger and Connectivity Higher-order Topological
+> 𝐀 𝐀𱀀
+> 𝐀 = ( 𝐀 ,𝐀 )𝐀 𝐀𱀀
+> 𝐀
+> 𝐀 𝐀𲀀𝐀
+> 𝐀
+> 𝐀 𝐀𲀀𝐀
+> B1. Model Architecture
+> Drop Edge (𝐀 𲀀 )
+> Feature Masking (𝐀 𝐀 )
+> CH Encoder
+> Geo Encoder
+> Random
+> Augmentation
+> Cheeger Hodge module
+> B2. CH Encoder
+> Cheeger Branch
+> 𝐀 𝐀
+> norm=𝐀 −𝐀 −𝐀 /𝐀 𝐀 𝐀 −𝐀 /𝐀
+> 𱀀 𝐀 (𝐀 ) ∈ ( 𝐀 𝐀 /𝐀 ,𝐀 𝐀 𝐀 )
+> 𝐀 𝐀 =𝐀 𝐀
+> 𝐀 𝐀 𝐀 +𝐀 𝐀 𝐀 𝐀
+> 𝐀
+> 1-Hodge Laplacian Branch
+> 𝐀 𝐀 ,𝐀 𝐀 , ⋯, 𝐀 𝐀
+> B3. Geo Encoder
+> ⋯
+> GCNConv
+> ⋯
+> GCNConv
+> Relu Readout
+
+B. Cheeger–Hodge Contrastive Learning Framework 
+
+> 𝐀 𝐀𲀀𝐀
+> 𝐀
+> 𝐀 𝐀𱀀
+> 𝐀
+
+Fig. 1: Schematic of CHCL and its capabilities on graph representation learning tasks. CHCL theory embeds Cheeger and Hodge structural priors into contrastive learning to reduce local bias, improve robustness to augmentation perturbations, and enhance structural awareness in learned representations. The framework combines a Cheeger–Hodge encoder with a geometric encoder, and jointly learns local geometric patterns and global structural properties through contrastive objectives. In this paper, CHCL is comprehensively evaluated across multiple datasets and downstream tasks, with additional analyses demonstrating its transferability and structural interpretability. Motivated by this interval characterization, we define a deterministic Cheeger signature vector induced by λ2 as 
+
+hc(G) = hc, 1(G), . . . , h c,d c (G)⊤, (9) where each component is given by 
+
+hc,j (G) = λ2
+
+2 + j − 1
+
+dc − 1
+
+p2 λ2 − λ2
+
+2
+
+
+
+, (10) where j = 1 , . . . , d c.Rather than using the scalar λ2 directly, we map it to a dc-dimensional signature vector for two reasons. First, a higher-dimensional encoding is more suitable for joint fusion with the Hodge signature. Second, the interval [λ2/2, √2λ2]
+
+is naturally induced by the Cheeger inequality and therefore provides a deterministic structural range associated with the graph’s connectivity profile. Uniformly sampling this interval yields a simple and stable signature representation that pre-serves Cheeger-related information without requiring explicit computation of the Cheeger constant. 
+
+3) 1-Hodge Laplacian branch: The 1-Hodge Laplacian Branch leverages the low-frequency spectrum of the 1-Hodge Laplacian defined in Eq. (4) to characterize higher-order topological properties of the graph. To this end, we perform sparse eigendecomposition on L1 and retain the smallest dh
+
+non-negative eigenvalues: 
+
+0 ≤ μ1 ≤ μ2 ≤ · · · ≤ μdh . (11) To avoid numerical instability with small eigenvalues, we apply a log(1 + ·) transformation to these eigenvalues and obtain the Hodge signature: 
+
+hh(G) =  log(1 + μ1), log(1 + μ2), . . . , log(1 + μdh ). (12) This transformation preserves the relative differences among small eigenvalues while compressing the scale of larger ones. 
+
+4) Cheeger–Hodge joint signature: We then concatenate the Cheeger signature hc(G) and the Hodge signature hh(G)
+
+to form the Cheeger–Hodge joint signature: 
+
+hCH (G) = hc(G) ∥ hh(G). (13) For the two augmented views G(1)  
+
+> i
+
+and G(2)  
+
+> i
+
+, the corre-sponding Cheeger–Hodge joint signatures h(1) CH ,i and h(2) CH ,i 
+
+are passed through an MLP projection head to obtain latent embeddings 
+
+z(1) CH ,i = MLP 
+
+
+
+h(1) CH ,i 
+
+
+
+, z(2) CH ,i = MLP 
+
+
+
+h(2) CH ,i 
+
+
+
+. (14) In this way, the Cheeger–Hodge branch provides aperturbation-stable structural representation that complements the encoder-learned geometric representation. JOURNAL OF L ATEX CLASS FILES, VOL. 18, NO. 9, SEPTEMBER 2020 5
+
+5) Training objective: We employ the NT-Xent loss func-tion, a widely used contrastive learning objective for measur-ing the similarity between graph embeddings. For each anchor embedding z(1) geo ,i , the embedding z(2) geo ,i from the other view of the same graph is treated as the positive sample, while 
+
+{z(2) geo ,j }j̸ =i are treated as negative samples. The resulting geometry-level contrastive loss is 
+
+Lgeo ,i = − log exp  sim( z(1) geo ,i , z (2) geo ,i )/τ PNj=1 , j ̸ =i exp  sim( z(1) geo ,i , z (2) geo ,j )/τ  , (15) where sim( ·, ·) denotes cosine similarity and τ is a temperature hyperparameter. Similarly, we apply the same contrastive objective to the Cheeger–Hodge embeddings: 
+
+LCH ,i = − log exp  sim( z(1) CH ,i , z (2) CH ,i )/τ PNj=1 , j ̸ =i exp  sim( z(1) CH ,i , z (2) CH ,j )/τ  . (16) The total objective is then given by 
+
+L = λgeo 
+
+1
+
+N
+
+> N
+
+X
+
+> i=1
+
+Lgeo ,i + λCH 
+
+1
+
+N
+
+> N
+
+X
+
+> i=1
+
+LCH ,i , (17) where λgeo and λCH are trade-off hyperparameters. By min-imizing Eq. (17), CHCL jointly aligns the local geometric representations learned by the GCN with the perturbation-stable structural representations produced by the Cheeger– Hodge branch, yielding graph-level representations that pre-serve both geometric and topological properties. IV. T HEORETICAL ANALYSIS 
+
+In this section, we provide the theoretical analysis of CHCL by formalizing the Cheeger–Hodge joint signature and study-ing its structural properties. 
+
+Definition 1 Let G = ( V, E) be a simple graph, and K be a 2-dimensional simplicial complex on the vertex set V. Let 
+
+Lnorm  
+
+> 0
+
+denote the normalized graph Laplacian of G, and L1
+
+denote the 1-Hodge Laplacian of K. The eigenvalues of Lnorm 
+
+> 0
+
+and L1 are ordered in non-decreasing order as: 
+
+0 = λ1(Lnorm  
+
+> 0
+
+) ≤ λ2(Lnorm  
+
+> 0
+
+) ≤ · · · ≤ λn(Lnorm  
+
+> 0
+
+),
+
+0 ≤ μ1(L1) ≤ μ2(L1) ≤ · · · ≤ μm(L1).
+
+Let ϕ : [δ, ∞) → Rdc denote the deterministic Cheeger signature map induced by λ2. Let dh denote the number of retained low-frequency Hodge eigenvalues, with 1 ≤ dh ≤ m.Define 
+
+hc(G) := ϕ λ2
+
+ Lnorm 
+
+> 0
+
+ ∈ Rdc ,
+
+and 
+
+hμ(G) := log  1 + μ1(L1), . . . , log  1 + μdh (L1) ⊤ ∈ Rdh .
+
+We then define the Cheeger–Hodge joint signature as 
+
+hCH (G) := 
+
+"hc(G)
+
+hμ(G)
+
+#
+
+∈ Rdc+dh .
+
+V. EXPERIMENTS In this section, we conduct a comprehensive evaluation of CHCL across diverse graph-level learning settings. These experiments examine the quality of the learned representa-tions from multiple perspectives, including their effectiveness in graph-level prediction, and their transferability. We also conduct in-depth analyses of stability, robustness and inter-pretability to gain a better understanding of CHCL’s behaviour and reliability. 
+
+A. Dataset and Baselines 1) Datasets: We evaluate CHCL under multiple learn-ing settings using a diverse collection of benchmark graph datasets. For both unsupervised and semi-supervised learn-ing, we use the following 10 real-world graph datasets from the TUdataset [65]. For unsupervised graph regression, we adopt three molecular property prediction datasets[66]. For transfer learning, we pretrain the model on the large-scale ChEMBL[67] dataset and fine-tune it on eight down-stream MoleculeNet benchmarks[68]. Evaluation follows 10-fold cross-validation on the TUdataset benchmarks and the official data splits on all other datasets. 
+
+2) Baselines: To evaluate the performance of the proposed CHCL model, we compare it with a diverse set of 21 base-line methods, covering various categories of graph represen-tation learning techniques. These include vanilla, adaptive, and structure-aware graph contrastive learning methods for graph-level prediction; graph pretraining methods for transfer learning. The reported results are directly obtained from the baseline methods’ published papers. For results not available in the original publications, we conducted experiments based on their open-source code. 
+
+B. Unsupervised Learning 
+
+To comprehensively evaluate the effectiveness of our model, we follow the experimental setup of [23]. For all graph datasets, we use an SVM as the evaluation model and report the resulting performance. All experiments are repeated five times, and we report the mean and standard deviation. We use the TU datasets [65] and OGB datasets [66] to evaluate graph classification and regression tasks, respectively. Table I presents the performance on graph classification, while Table II shows the performance on graph regression. These results highlight the effectiveness of the proposed model across multiple domains. As shown in Table I, CHCL achieves the best performance on 9 out of 10 graph classification datasets and ranks second on the remaining MUTAG dataset. Its consistently competitive re-sults across chemical compounds, molecular compounds, and social networks demonstrate that CHCL learns a generalizable and discriminative representation. As shown in Table II, CHCL also attains the lowest RMSE on three unsupervised molec-ular graph regression datasets, demonstrating strong cross-task generalization. On semantically sensitive and structurally decisive datasets such as PTC MR and PROTEINS, CHCL yields substantial improvements, outperforming the strongest JOURNAL OF L ATEX CLASS FILES, VOL. 18, NO. 9, SEPTEMBER 2020 6
+
+TABLE I: Performance comparison on benchmark graph classification datasets. Results are reported as mean ± standard deviation. Bold denotes the best performance, and underline represents the second best performance. * indicates results that we reproduced.                                                                                                                         
+
+> Model PROTEINS DD MUTAG BZR COX2 PTC MR PTC FM IMDB-B IMDB-M REDDIT-B
+> InfoGraph 74.44 ±0.31 72.85 ±1.78 89.01 ±1.13 84.84 ±0.86 80.55 ±0.51 61.70 ±1.40 61.55 ±0.92 73.03 ±0.87 49.70 ±0.50 82.50 ±1.42 GraphCL 74.39 ±0.45 78.62 ±0.40 86.80 ±1.34 84.20 ±0.86 81.10 ±0.82 61.30 ±2.10 65.26 ±0.59 71.14 ±0.44 49.20 ±0.60 89.53 ±0.84 AD-GCL 73.28 ±0.46 75.79 ±0.87 88.74 ±1.85 85.97 ±0.63 78.68 ±0.56 63.20 ±1.76 64.99 ±0.77 70.21 ±0.68 50.60 ±0.70 90.07 ±0.85 AutoGCL 75.80 ±0.36 77.57 ±0.60 88.64 ±1.08 86.27 ±0.71 79.31 ±0.70 63.10 ±2.30 63.62 ±0.55 72.32 ±0.93 50.60 ±0.80 88.58 ±1.49 RGCL 73.03 ±0.43 78.86 ±0.48 87.66 ±1.01 84.54 ±1.67 79.31 ±0.68 61.43 ±0.52 64.29 ±0.32 71.85 ±0.84 49.31 ±0.42 90.34 ±0.58 JOAO 74.55 ±0.41 75.69 ±0.67 87.35 ±1.02 83.02 ±1.28* 78.42 ±1.65* 57.17 ±2.12* 59.98 ±2.17* 70.21 ±3.08 47.03 ±2.29* 85.29 ±1.35 GCL-SPAN 75.78 ±0.41 75.78 ±0.52 89.12 ±0.76 87.80 ±1.54* 82.08 ±1.67* 62.86 ±4.04* 66.67 ±3.04* 73.65 ±0.69 52.16 ±0.72 83.62 ±0.64 TopoGCL 77.30 ±0.89 79.15 ±0.35 90.09 ±0.93 87.17 ±0.83 81.45 ±0.55 63.43 ±1.13 67.11 ±1.08 74.67 ±0.32 52.81 ±0.31 90.40 ±0.53 CI-GCL 76.50 ±0.10 79.63 ±0.30 89.67 ±0.90 86.70 ±1.01* 84.11 ±1.45* 61.60 ±1.60* 64.53 ±1.27* 73.85 ±0.80 50.21 ±0.69* 90.80 ±0.5 GMCL 77.16 ±0.73 78.68 ±0.28 93.58 ±2.13 84.44 ±5.17* 79.02 ±1.47* 61.65 ±4.69* 68.47 ±8.02* 75.48 ±0.52 49.93 ±2.71* 92.39 ±0.65 CH-CL 79.06 ±0.58 80.92 ±0.85 93.02 ±0.61 89.19 ±0.71 84.20 ±0.76 68.18 ±0.56 68.90 ±1.07 75.62 ±0.61 53.20 ±0.53 92.49 ±0.43
+
+TABLE II: RMSE for unsupervised graph regression. Results are reported as mean ± standard deviation. Bold denotes the best performance, and underline represents the second best performance.                         
+
+> Method molesol mollipo molfreesolv
+> InfoGraph 1.34 ±0.18 1.01 ±0.02 10.0 ±4.82 GraphCL 1.27 ±0.09 0.91 ±0.02 7.68 ±2.75 JOAO 1.29 ±0.12 0.87 ±0.03 5.13 ±0.72 GCL-SPAN 1.22 ±0.05 0.80 ±0.02 4.53 ±0.46 AD-GCL 1.22 ±0.09 0.84 ±0.03 5.15 ±0.62 CI-GCL 1.13 ±0.13 0.82 ±0.03 2.87 ±0.32 CHCL 0.93 ±0.02 0.78 ±0.01 2.59 ±0.12
+
+baseline by 7.5% and 2.3%, respectively. Meanwhile, on datasets where existing methods already perform strongly, CHCL still delivers superior performance. These results sug-gest that incorporating structural alignment helps improve representation quality. Moreover, CHCL consistently ranks first on all three unsupervised graph regression datasets, with particularly large RMSE reductions on molesol and molfree-solv, demonstrating that the learned representations capture continuous structure–property relationships rather than being merely effective for classification. Notably, the four strongest baselines are GCL-SPAN, To-poGCL, CI-GCL, and GMCL, among which GCL-SPAN, TopoGCL, and CI-GCL are structure- or topology-aware GCL methods. Overall, methods that explicitly incorporate struc-tural and topological information obtain the best performance on more datasets, highlighting the importance of modeling structure and topology for improving graph representation learning. 
+
+C. Transfer Learning 
+
+To evaluate transferability, we conduct unsupervised pre-training on the large-scale molecular graph dataset ChEMBL. We then use the pretrained parameters to initialize the model and perform supervised fine-tuning on eight MoleculeNet molecular property prediction benchmarks. During fine-tuning, a task-specific prediction head is attached to the pretrained model and the entire network is optimized end-to-end. Table III reports the mean ± standard deviation of ROC-AUC over five repeated runs. As shown in Table III, pretraining consistently improves downstream performance, indicating that the structural knowl-edge acquired during pretraining can be effectively carried over to supervised fine-tuning. Compared with existing pre-training methods, CHCL achieves the strongest overall per-formance on most datasets and remains competitive on the rest. These results show that incorporating global structure and higher-order topology during pretraining leads to more transferable representations, which provide a better foundation for downstream adaptation across diverse molecular property prediction tasks. Moreover, the stable performance of CHCL across different benchmarks further highlights its strong trans-ferability across diverse downstream data distributions. 
+
+D. Ablation 1) Analysis of Module Contributions: To verify the impact of each component on the model performance, we conduct ablation studies to investigate the contributions of different modules in our framework. Specifically, we consider three ablation settings: (1) w/o Cheeger: removing the Cheeger module, (2) w/o Hodge: removing the Hodge module, and (3) w/o CH: removing both the Cheeger and Hodge modules simultaneously. These ablations allow us to quantify how each component affects the final performance and thus provide deeper insights into their roles. As shown in Fig. 2, removing either the Cheeger module or the Hodge module consistently weakens performance, while removing both leads to the most pronounced degradation. These results indicate that both modules play essential roles in CHCL and that neither can be fully replaced by the other. More importantly, the larger performance drop observed when both are removed suggests that the two modules are complementary: rather than contributing independently, they jointly enhance the model’s ability to capture informative structural characteristics of graphs. A more detailed comparison across datasets further reveals that the two modules contribute in different yet cooperative ways. The Cheeger module mainly strengthens the model’s sensitivity to global connectivity and structural separability, while the Hodge module provides higher-order topological cues that are difficult to capture from local patterns alone. Their relative importance varies across datasets, reflecting differences in the dominant structural semantics required for JOURNAL OF L ATEX CLASS FILES, VOL. 18, NO. 9, SEPTEMBER 2020 7
+
+TABLE III: Comparison with the existing methods for transfer learning. Results are reported as mean ± standard deviation. Bold 
+
+denotes the best performance, and underline represents the second best performance. * indicates results that we reproduced.                                                                                                    
+
+> Model BBBP Tox21 ToxCast SIDER ClinTox MUV HIV BACE
+> No Pretrain 65.8 ±4.5 74.0 ±0.8 63.4 ±0.6 57.3 ±1.6 58.0 ±4.4 71.8 ±2.5 75.3 ±1.9 70.1 ±5.4 Infomax 68.8 ±0.8 75.3 ±0.5 62.7 ±0.4 58.4 ±0.8 69.9 ±3.0 75.3 ±2.5 76.0 ±0.7 75.9 ±1.6 EdgePred 67.3 ±2.4 76.0 ±0.6 64.1 ±0.6 60.4 ±0.7 64.1 ±3.7 74.1 ±2.1 76.3 ±1.0 79.9 ±0.9 AttrMasking 64.3 ±2.8 76.7 ±0.4 64.2 ±0.5 61.0 ±0.7 71.8 ±4.4 74.7 ±1.4 77.2 ±1.1 79.3 ±1.6 ContextPred 68.0 ±2.0 75.7 ±0.7 63.9 ±0.6 60.9 ±0.6 65.9 ±3.8 75.8 ±1.7 77.3 ±1.0 79.6 ±1.2 GraphCL 69.68 ±0.67 73.87 ±0.66 62.40 ±0.57 60.53 ±0.88 75.99 ±2.65 69.80 ±2.66 78.47 ±1.22 75.38 ±1.44 JOAO 70.22 ±0.98 74.98 ±0.29 62.94 ±0.48 59.97 ±0.79 81.32 ±2.49 71.66 ±1.43 76.73 ±1.23 77.34 ±0.48 AD-GCL 70.01 ±1.07 76.54 ±0.82 63.07 ±0.72 63.28 ±0.79 79.78 ±3.52 72.30 ±1.61 78.28 ±0.97 78.51 ±0.80 AutoGCL 73.36 ±0.77 75.69 ±0.29 63.47 ±0.38 62.51 ±0.63 80.99 ±3.38 75.83 ±1.30 78.35 ±0.64 83.26 ±1.13 GMCL 73.80 ±1.21 74.94 ±0.85* 64.21 ±0.33 61.75 ±1.02* 83.37 ±3.83 78.03 ±1.56 79.88 ±0.76 82.37 ±1.16 CHCL 74.33 ±0.62 76.06 ±0.22 64.54 ±0.16 64.28 ±0.35 83.58 ±1.53 75.43 ±0.85 78.50 ±0.46 85.43 ±0.62 PROTEINS MUTAG BZR PTC_MR
+> 55
+> 60
+> 65
+> 70
+> 75
+> 80
+> 85
+> 90
+> 95
+> Accuracy(%)
+> w/o CH
+> w/o Cheeger
+> w/o Hodge
+> CH
+
+Fig. 2: Ablation study comparing CHCL with three ablated variants that remove different components of the proposed framework. discrimination. On some datasets, performance depends more heavily on the global partition and connectivity information emphasized by the Cheeger module; on others, higher-order topological relationships encoded by the Hodge module play a more critical role. Nevertheless, the full model consistently achieves the strongest performance, showing that combining these two forms of structural information leads to more expressive graph representations and is key to the effectiveness of CHCL. 
+
+2) Cheeger Dimension and Hodge Dimension: To under-stand how the signature dimensions of the Cheeger and Hodge components affect performance, we examine the sensitivity of CHCL to the dimensions of these two components. Specif-ically, we conduct experiments on the signature dimensions of the Cheeger and Hodge components: (i) we fix the Hodge signature dimension at 16 and vary the Cheeger dimension from 4 to 12 with a step size of 1; and (ii) we fix the Cheeger signature dimension at 8 and vary the Hodge dimension from 
+
+8 to 24 with a step size of 2.Experimental results in Fig. 3a show that neither com-ponent requires a large signature dimension to be effective. Performance typically peaks at moderate dimensionalities and quickly enters a plateau. Across most datasets, increasing the dimension from a small value to a moderate range yields noticeable gains, whereas further enlarging the dimension brings rapidly diminishing returns and may even lead to slight degradation. Importantly, the curves exhibit a relatively broad near-optimal region around the peak, where performance varies only marginally across different dimensional choices. As can be seen from Fig. 3a, the overall optimum for the Cheeger component is usually attained with dCheeger ∈
+
+[6 , 10] , while the Hodge component tends to perform best around dHodge ≈ 14 , suggesting that the structural signals captured by these components have relatively low effective complexity and can be represented compactly. Taken together, these findings indicate that CHCL is robust to the choice of signature dimensions, and adopting moderate dimensions is sufficient to achieve near-optimal performance in practice. 
+
+3) Loss Coefficients λgeo and λCH : To elucidate the respec-tive roles of Lgeo and LCH during training, we investigate the sensitivity of CHCL to the loss weights λgeo and λCH .Specifically, we fix one coefficient at 1.0 and vary the other in (0 , 1) with a step size of 0.1. This study aims to assess (i) whether both objectives are necessary and (ii) how robust the model is to the choice of coefficients. As shown in Fig. 3b, we observe that setting λCH = 0 
+
+consistently leads to clear performance degradation across all four datasets, indicating that relying solely on the geometric contrastive constraint induced by random augmentations is insufficient to preserve the structural semantics required for graph discrimination. Meanwhile, incorporating Lgeo further improves performance, suggesting that both Lgeo and LCH 
+
+are necessary. Notably, when both λgeo and λCH are nonzero, performance becomes largely insensitive to the exact choice of coefficients: over a wide range of λgeo and λCH , the curves exhibit a pronounced plateau with only minor fluctuations. Overall, our sensitivity analysis of the loss coefficients shows that Cheeger–Hodge signatures serve as essential semantic an-chors for graphs, and coupling them with geometric alignment further improves model performance. 
+
+E. Robustness to Augmentation Perturbations 
+
+To validate the effectiveness of the Cheeger–Hodge joint signature as a semantic invariance anchor for graphs, we conduct controlled robustness experiments by perturbing the input graphs with edge dropping and feature masking. The JOURNAL OF L ATEX CLASS FILES, VOL. 18, NO. 9, SEPTEMBER 2020 84 5 6 7 8 9 10 11 12            
+
+> Cheeger Dimension
+> 65
+> 70
+> 75
+> 80
+> 85
+> 90
+> Accuracy(%)
+> 810 12 14 16 18 20 22 24
+> Hodge Dimension
+> BZR MUTAG PROTEINS PTC_MR
+
+(a) Sensitivity analysis of signature dimensions in the Cheeger and Hodge components. 0.0 0.2 0.4 0.6 0.8 1.0         
+
+> geo
+> 65
+> 70
+> 75
+> 80
+> 85
+> 90
+> Accuracy(%)
+> 0.0 0.2 0.4 0.6 0.8 1.0
+> CH
+> BZR MUTAG PROTEINS PTC_MR
+
+(b) Sensitivity analysis of loss coefficients λgeo and λCH for the geometry branch and the Cheeger–Hodge joint signature. 
+
+Fig. 3: Sensitivity analysis of key hyperparameters in CHCL. 10% 20% 30% 40% 50%    
+
+> Drop-Edges Perturbation Strength
+> 77.5
+> 80.0
+> 82.5
+> 85.0
+> 87.5
+> 90.0
+> 92.5
+> Accuracy(%)
+> CHCL CI-GCL GCL-SPAN GraphCL
+
+(a) Robustness analysis under edge dropping. 10% 20% 30% 40% 50%     
+
+> Mask-Feats Perturbation Strength
+> 70
+> 75
+> 80
+> 85
+> 90
+> Accuracy(%)
+> CHCL CI-GCL GCL-SPAN GraphCL
+
+(b) Robustness analysis under feature masking. 
+
+Fig. 4: Performance comparison of CHCL and baseline methods under varying levels of edge dropping and feature masking perturbations. perturbation strength is varied from 0.05 to 0.50; at each level, we randomly drop edges or mask node features according to the specified strength. To comprehensively compare the model’s performance under these perturbations, we selected three representative contrastive learning baseline methods: CI-GCL, GCL-SPAN, and GraphCL. As shown in Fig. 4a, CHCL remains consistently com-petitive under edge dropping across a wide range of per-turbation strengths and exhibits stronger stability than the baseline methods. These results suggest that the Cheeger– Hodge joint signature provides a stable semantic invariance anchor throughout the augmentation process. By grounding representation learning in global structural organization and higher-order topological information, CHCL is less affected by random perturbations that alter local structural patterns. As a result, it can preserve intrinsic graph semantics more effectively and avoid the instability commonly induced by aggressive augmentations in conventional contrastive learning. A similar trend is observed under feature masking, as shown in Fig. 4b. CHCL remains consistently competitive across different masking ratios, demonstrating strong robustness to attribute-level corruption. Since feature masking perturbs node attributes but does not change the graph structure, the Cheeger–Hodge signatures remain stable and continue to serve as reliable semantic guidance during learning. This shows that incorporating structure-derived invariance not only improves resilience to structural perturbations, but also strengthens robustness when node features are incomplete or heavily corrupted. 
+
+F. Interpretability 
+
+To further examine whether CHCL learns interpretable structural semantics, we visualize the learned representations from four perspectives: (i) whether the learned representation captures the overall molecular organization and structural scale of molecules; (ii) whether the Cheeger–Hodge signatures cap-ture meaningful structural semantics relevant to graph labels. Figure 5a presents a t-SNE visualization of the pretrained representations on the ChEMBL dataset, where samples are colored by molecular weight. While molecular weight is not a complete descriptor of molecular structure, it serves as a coarse indicator of overall molecular scale, with higher values typically corresponding to larger atomic compositions and more extended scaffolds. The smooth color transition and coherent regional clustering in the embedding space suggest that CHCL captures variation in molecular scale together with coarse-grained structural organization. This observation JOURNAL OF L ATEX CLASS FILES, VOL. 18, NO. 9, SEPTEMBER 2020 9
+
+(a) Global organization of pretrained molecular representations on ChEMBL, visualized by t-SNE and colored by molecular weight. Mol_1 Mol_2  
+
+> Mol_3
+> Mol_4
+> Mol_5 Mol_6
+> Mol_8
+> Mol_7
+
+(b) Label-relevant structural separation in the Cheeger–Hodge joint-signature space on MUTAG. 
+
+Fig. 5: Interpretability of the structural semantics learned by CHCL. indicates that, even in the absence of label supervision, the pretrained model learns a representation space with meaning-ful global discriminability, grouping molecules with similar overall structural characteristics into nearby regions. Figure 5b further examines the Cheeger–Hodge signatures learned from unsupervised training on MUTAG, where colors and marker shapes indicate different classes. The visualization shows that molecules from different classes exhibit a clear tendency to separate in the Cheeger–Hodge signature space, in-dicating that the learned signatures encode structural semantics that are highly predictive of graph labels. Meanwhile, a small number of molecules remain not well separated. We further highlight three groups of such molecules and one pair of closely located molecules, and conduct a comparative analysis of their chemical structures. We find that these molecules often share highly similar cyclic substructures, which naturally re-sults in close proximity within the Cheeger–Hodge embedding space. This observation also explains the gains from geometric alignment in our ablation studies: Cheeger–Hodge signatures tend to cluster molecules with similar higher-order topology, while geometric-view alignment injects complementary cues about local structure, helping to distinguish molecules that share cyclic substructures but differ in subtle details. Overall, this visualization provides evidence that the learned Cheeger– Hodge signatures capture label-relevant higher-order structural semantics, thereby offering an interpretable structural basis for the discriminative power of CHCL. Taken together, these perspectives consistently support the same conclusion: CHCL learns a representation space with meaningful semantic structure. At the global level, it organizes molecules according to interpretable property-related signals; at the discriminative level, Cheeger–Hodge signatures capture label-relevant structural semantics. These results indicate that the representation space learned by CHCL is not an arbitrary latent geometry, but a structurally and chemically grounded semantic space, providing a plausible explanation for the strong robustness and transferability of the model. VI. C ONCLUSION 
+
+In this work, we introduced the Cheeger–Hodge joint sig-nature as an intrinsic structural descriptor of graphs, which al-lows the learned representations to better preserve the graph’s global structural properties and higher-order topological in-formation. More importantly, our method admits a Lipschitz stability guarantee under graph perturbations, ensuring that the essential structural information of a graph can be stably retained during augmentation. As a result, CHCL provides a more rigorous notion of structural robustness grounded in mathematical stability, rather than relying solely on the em-pirical resilience often observed in existing methods. Our ex-perimental results demonstrate that leveraging Cheeger–Hodge signatures not only improves model performance but also provides greater robustness, establishing a powerful framework for graph contrastive learning. REFERENCES [1] Thomas N. Kipf and Max Welling. Semi-supervised classification with graph convolutional networks. In International Conference on Learning Representations (ICLR) , 2017. [2] Longlong Li, Mengyang Zhao, Guanghui Wang, and Cunquan Qu. Multi-scale harmonic encoding for feature-wise graph message passing.             
+
+> arXiv preprint arXiv:2505.15015 , 2025. [3] Justin Gilmer, Samuel S Schoenholz, Patrick F Riley, Oriol Vinyals, and George E Dahl. Neural message passing for quantum chemistry. In
+> International conference on machine learning , pages 1263–1272. Pmlr, 2017. [4] Longlong Li, Xiang LIU, Guanghui Wang, Yu Guang Wang, and KELIN XIA. Path complex neural network for molecular property prediction. In
+> ICML 2024 Workshop on Geometry-grounded Representation Learning and Generative Modeling , 2024. [5] John Jumper, Richard Evans, Alexander Pritzel, Tim Green, Michael Figurnov, Olaf Ronneberger, Kathryn Tunyasuvunakool, Russ Bates, Augustin ˇ Z´ ıdek, Anna Potapenko, et al. Highly accurate protein structure prediction with alphafold. nature , 596(7873):583–589, 2021. [6] Mengjie Chen, Ming Zhang, Guiying Yan, Guanghui Wang, and Cun-quan Qu. Mrhgnn: enhanced multimodal relational hypergraph neural network for synergistic drug combination forecasting. IEEE transactions on neural networks and learning systems , 2025. [7] Keyulu Xu, Weihua Hu, Jure Leskovec, and Stefanie Jegelka. How powerful are graph neural networks? In International Conference on Learning Representations , 2019. JOURNAL OF L ATEX CLASS FILES, VOL. 18, NO. 9, SEPTEMBER 2020 10
+
+[8] Petar Veliˇ ckovi´ c, Guillem Cucurull, Arantxa Casanova, Adriana Romero, Pietro Li` o, and Yoshua Bengio. Graph Attention Networks. International Conference on Learning Representations , 2018. accepted as poster. [9] Z. Ying, J. You, C. Morris, et al. Hierarchical graph representation learning with differentiable pooling. In Advances in Neural Information Processing Systems , volume 31, 2018. [10] Weihua Hu, Bowen Liu, Joseph Gomes, Marinka Zitnik, Percy Liang, Vijay Pande, and Jure Leskovec. Strategies for pre-training graph neural networks. In International Conference on Learning Representations ,2020. [11] M. Zitnik, R. Sosiˇ c, and J. Leskovec. Prioritizing network communities. 
+
+Nature Communications , 9(1):2544, 2018. [12] L. Wu, P. Cui, J. Pei, et al. Graph neural networks: foundation, frontiers and applications. In Proceedings of the 28th ACM SIGKDD Conference on Knowledge Discovery and Data Mining , pages 4840–4841. ACM, 2022. [13] H. Hu, X. Wang, Y. Zhang, et al. A comprehensive survey on contrastive learning. Neurocomputing , 610:128645, 2024. [14] Z. Wu, S. Pan, F. Chen, et al. A comprehensive survey on graph neural networks. IEEE Transactions on Neural Networks and Learning Systems , 32(1):4–24, 2020. [15] T. Chen, S. Kornblith, M. Norouzi, et al. A simple framework for con-trastive learning of visual representations. In International Conference on Machine Learning , pages 1597–1607. PMLR, 2020. [16] H. Yang, Y. Wang, X. Zhao, et al. Multi-level graph knowledge contrastive learning. IEEE Transactions on Knowledge and Data Engineering , 2024. [17] B. Li, B. Jing, and H. Tong. Graph communal contrastive learning. In Proceedings of the ACM Web Conference 2022 , pages 1203–1213. ACM, 2022. [18] S. Li, X. Wang, A. Zhang, et al. Let invariant rationale discovery inspire graph contrastive learning. In International Conference on Machine Learning , pages 13052–13065. PMLR, 2022. [19] Yuning You, Tianlong Chen, Yongduo Sui, Ting Chen, Zhangyang Wang, and Yang Shen. Graph contrastive learning with augmentations. 
+
+Advances in neural information processing systems , 33:5812–5823, 2020. [20] R. Yuan, Y. Tang, Y. Wu, et al. Clustering enhanced multiplex graph contrastive representation learning. IEEE Transactions on Neural Networks and Learning Systems , 2023. [21] Y. Zhang, H. Zhu, Z. Song, et al. Spectral feature augmentation for graph contrastive learning and beyond. In Proceedings of the AAAI Conference on Artificial Intelligence , volume 37, pages 11289–11297. AAAI Press, 2023. [22] Y. Wang, X. Pan, S. Song, et al. Implicit semantic data augmentation for deep networks. In Advances in Neural Information Processing Systems ,volume 32, 2019. [23] Shiyin Tan, Dongyuan Li, Renhe Jiang, Ying Zhang, and Manabu Oku-mura. Community-invariant graph contrastive learning. In International Conference on Machine Learning , pages 47579–47606. PMLR, 2024. [24] S. Zhang, Z. Hu, A. Subramonian, et al. Motif-driven contrastive learning of graph representations. IEEE Transactions on Knowledge and Data Engineering , 36(8):4063–4075, 2024. [25] H. Zhao, X. Yang, C. Deng, et al. Unsupervised structure-adaptive graph contrastive learning. IEEE Transactions on Neural Networks and Learning Systems , 35(10):13728–13740, 2023. [26] M. Peng, X. Juan, and Z. Li. Label-guided graph contrastive learning for semi-supervised node classification. Expert Systems with Applications ,239:122385, 2024. [27] H. Zhang, Y. Ren, L. Fu, et al. Multi-scale self-supervised graph con-trastive learning with injective node augmentation. IEEE Transactions on Knowledge and Data Engineering , 36(1):261–274, 2023. [28] J. Zhu, W. Zeng, J. Zhang, et al. Cross-view graph contrastive learning with hypergraph. Information Fusion , 99:101867, 2023. [29] W. Bu, X. Cao, Y. Zheng, et al. Improving augmentation consistency for graph contrastive learning. Pattern Recognition , 148:110182, 2024. [30] R. Liu, R. Yin, Y. Liu, et al. Unbiased and augmentation-free self-supervised graph representation learning. Pattern Recognition ,149:110274, 2024. [31] H. Yan, S. Wang, C. Li, et al. Have our cake and eat it: Augmentation diversity and semantic consistency balanced graph contrastive learning. 
+
+ACM Transactions on Knowledge Discovery from Data , 19(4):1–25, 2025. [32] Chengcheng Xu, Tong Han, Tianfeng Wang, Xiao Han, and Zhisong Pan. Semantic-aware contrastive learning for graph classification. Expert Systems with Applications , page 129976, 2025. [33] Y. Liu, L. Shu, C. Chen, et al. Fine-grained semantics enhanced contrastive learning for graphs. IEEE Transactions on Knowledge and Data Engineering , 2024. [34] P. Bao, R. Yan, and S. Pan. Co-augmentation of structure and feature for boosting graph contrastive learning. Information Sciences , 676:120792, 2024. [35] Yuzhou Chen, Jose Frias, and Yulia R Gel. Topogcl: Topological graph contrastive learning. In Proceedings of the AAAI conference on artificial intelligence , volume 38, pages 11453–11461, 2024. [36] Yipeng Zhang, Longlong Li, and Kelin Xia. Rhomboid tiling for geo-metric graph deep learning. In Forty-second International Conference on Machine Learning , 2025. [37] Uri Alon and Eran Yahav. On the bottleneck of graph neural networks and its practical implications. In International Conference on Learning Representations , 2021. [38] Khang Nguyen, Hieu Nong, Vinh Nguyen, Nhat Ho, Stanley Osher, and Tan Nguyen. Revisiting over-smoothing and over-squashing using ollivier-ricci curvature. In Proceedings of the 40th International Con-ference on Machine Learning , ICML’23. JMLR.org, 2023. [39] Fan RK Chung. Spectral graph theory , volume 92. American Mathe-matical Soc., 1997. [40] J¨ urgen Jost and Dong Zhang. Cheeger inequalities on simplicial complexes. ANNALI SCUOLA NORMALE SUPERIORE-CLASSE DI SCIENZE , pages 30–30, 2022. [41] Vincent P Grande and Michael T Schaub. Disentangling the spectral properties of the hodge laplacian: not all small eigenvalues are equal. In 
+
+ICASSP 2024-2024 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) , pages 9896–9900. IEEE, 2024. [42] Petar Veliˇ ckovi´ c, William Fedus, William L. Hamilton, Pietro Li` o, Yoshua Bengio, and R Devon Hjelm. Deep Graph Infomax. In 
+
+International Conference on Learning Representations , 2019. [43] Fan-Yun Sun, Jordan Hoffman, Vikas Verma, and Jian Tang. Infograph: Unsupervised and semi-supervised graph-level representation learning via mutual information maximization. In International Conference on Learning Representations , 2019. [44] Yanqiao Zhu, Yichen Xu, Feng Yu, Qiang Liu, Shu Wu, and Liang Wang. Graph contrastive learning with adaptive augmentation. In Proceedings of the web conference 2021 , pages 2069–2080, 2021. [45] Yihang Yin, Qingzhong Wang, Siyu Huang, Haoyi Xiong, and Xiang Zhang. Autogcl: Automated graph contrastive learning via learnable view generators. In Proceedings of the AAAI conference on artificial intelligence , volume 36, pages 8892–8900, 2022. [46] Yucheng Wu, Leye Wang, Xiao Han, and Han-Jia Ye. Graph contrastive learning with cohesive subgraph awareness. In Proceedings of the ACM Web Conference 2024 , pages 629–640, 2024. [47] Lu Lin and Jinghui Chen. Spectral augmentation for self-supervised learning on graphs. In The Eleventh International Conference on Learning Representations , 2023. [48] Amur Ghose, Yingxue Zhang, Jianye Hao, and Mark Coates. Spectral augmentations for graph contrastive learning. In International Con-ference on Artificial Intelligence and Statistics , pages 11213–11266. PMLR, 2023. [49] Nian Liu, Xiao Wang, Deyu Bo, Chuan Shi, and Jian Pei. Revisiting graph contrastive learning from the perspective of graph spectrum. 
+
+Advances in Neural Information Processing Systems , 35:2972–2983, 2022. [50] Miroslav Fiedler. Algebraic connectivity of graphs. Czechoslovak mathematical journal , 23(2):298–305, 1973. [51] Jake Topping, Francesco Di Giovanni, Benjamin Paul Chamberlain, Xiaowen Dong, and Michael M Bronstein. Understanding over-squashing and bottlenecks on graphs via curvature. arXiv preprint arXiv:2111.14522 , 2021. [52] Aristophanes Dimakis and Folkert M¨ uller-Hoissen. Discrete differential calculus: Graphs, topologies, and gauge theory. Journal of Mathematical Physics , 35(12):6703–6735, 1994. [53] Ralf Hiptmair. Discrete hodge operators: An algebraic perspective. 
+
+Progress In Electromagnetics Research , 32(247269):27, 2001. [54] James L Johnson and Tom Goldring. Discrete hodge theory on graphs: a tutorial. Computing in Science & Engineering , 15(5):42–55, 2012. [55] Lek-Heng Lim. Hodge laplacians on graphs. Siam Review , 62(3):685– 715, 2020. [56] Michael T Schaub, Austin R Benson, Paul Horn, Gabor Lippner, and Ali Jadbabaie. Random walks on simplicial complexes and the normalized hodge 1-laplacian. SIAM Review , 62(2):353–391, 2020. [57] Ronald Koh Joon Wei, Junjie Wee, Valerie Evangelin Laurent, and Kelin Xia. Hodge theory-based biomolecular data analysis. Scientific Reports ,12(1):9699, 2022. JOURNAL OF L ATEX CLASS FILES, VOL. 18, NO. 9, SEPTEMBER 2020 11 
+
+[58] Junfu Wang, Yuanfang Guo, Liang Yang, and Yunhong Wang. Heterophily-aware graph attention network. Pattern Recognition ,156:110738, 2024. [59] Jinghan Huang, Qiufeng Chen, Pengli Zhu, Yijun Bian, Nanguang Chen, Moo K Chung, and Anqi Qiu. Hl-hgat: Heterogeneous graph attention network via hodge-laplacian operator. IEEE Transactions on Pattern Analysis and Machine Intelligence , 2025. [60] Yujia Wu, Junyi Mo, Elynn Chen, and Yuzhou Chen. Tensor-fused multi-view graph contrastive learning. In Pacific-Asia Conference on Knowledge Discovery and Data Mining , pages 16–28. Springer, 2025. [61] Ron Aharoni, Eli Berger, and Roy Meshulam. Eigenvalues and homol-ogy of flag complexes and vector representations of graphs. Geometric & Functional Analysis GAFA , 15(3):555–566, 2005. [62] Mikhail Muravyev. Hodge laplacian eigenvalues on surfaces with boundary. Annales math´ ematiques du Qu´ ebec , pages 1–20, 2025. [63] Emily Ribando-Gros, Rui Wang, Jiahui Chen, Yiying Tong, and Guo-Wei Wei. Combinatorial and hodge laplacians: similarities and differ-ences. SIAM Review , 66(3):575–601, 2024. [64] Sanjukta Krishnagopal and Ginestra Bianconi. Spectral detection of simplicial communities via hodge laplacians. Physical Review E,104(6):064303, 2021. [65] Christopher Morris, Nils M. Kriege, Franka Bause, Kristian Kersting, Petra Mutzel, and Marion Neumann. Tudataset: A collection of bench-mark datasets for learning with graphs. In ICML 2020 Workshop on Graph Representation Learning and Beyond (GRL+ 2020) , 2020. [66] Weihua Hu, Matthias Fey, Marinka Zitnik, Yuxiao Dong, Hongyu Ren, Bowen Liu, Michele Catasta, and Jure Leskovec. Open graph benchmark: Datasets for machine learning on graphs. Advances in neural information processing systems , 33:22118–22133, 2020. [67] Anna Gaulton, Louisa J Bellis, A Patricia Bento, Jon Chambers, Mark Davies, Anne Hersey, Yvonne Light, Shaun McGlinchey, David Michalovich, Bissan Al-Lazikani, et al. Chembl: a large-scale bioactivity database for drug discovery. Nucleic acids research , 40(D1):D1100– D1107, 2012. [68] Zhenqin Wu, Bharath Ramsundar, Evan N Feinberg, Joseph Gomes, Caleb Geniesse, Aneesh S Pappu, Karl Leswing, and Vijay Pande. Moleculenet: a benchmark for molecular machine learning. Chemical science , 9(2):513–530, 2018. [69] Shurui Gui, Xiner Li, Limei Wang, and Shuiwang Ji. Good: A graph out-of-distribution benchmark. Advances in Neural Information Processing Systems , 35:2059–2073, 2022. [70] Susheel Suresh, Pan Li, Cong Hao, and Jennifer Neville. Adversarial graph augmentation to improve graph contrastive learning. Advances in Neural Information Processing Systems , 34:15920–15933, 2021. [71] Yuning You, Tianlong Chen, Yang Shen, and Zhangyang Wang. Graph contrastive learning automated. In International conference on machine learning , pages 12121–12132. PMLR, 2021. [72] Ziyan Zhang, Bo Jiang, Jin Tang, and Bin Luo. Unifying graph contrastive learning via graph message augmentation. IEEE Transactions on Pattern Analysis and Machine Intelligence , 2025. [73] Martin Arjovsky, L´ eon Bottou, Ishaan Gulrajani, and David Lopez-Paz. Invariant risk minimization. arXiv preprint arXiv:1907.02893 , 2019. [74] David Krueger, Ethan Caballero, Joern-Henrik Jacobsen, Amy Zhang, Jonathan Binas, Dinghuai Zhang, Remi Le Priol, and Aaron Courville. Out-of-distribution generalization via risk extrapolation (rex). In In-ternational conference on machine learning , pages 5815–5826. PMLR, 2021. [75] Shiori Sagawa, Pang Wei Koh, Tatsunori B Hashimoto, and Percy Liang. Distributionally robust neural networks for group shifts: On the importance of regularization for worst-case generalization. arXiv preprint arXiv:1911.08731 , 2019. [76] Yaroslav Ganin, Evgeniya Ustinova, Hana Ajakan, Pascal Germain, Hugo Larochelle, Franc ¸ois Laviolette, Mario March, and Victor Lempit-sky. Domain-adversarial training of neural networks. Journal of machine learning research , 17(59):1–35, 2016. [77] Baochen Sun and Kate Saenko. Deep coral: Correlation alignment for deep domain adaptation. In European conference on computer vision ,pages 443–450. Springer, 2016. [78] Hongyi Zhang, Moustapha Cisse, Yann N Dauphin, and David Lopez-Paz. mixup: Beyond empirical risk minimization. arXiv preprint arXiv:1710.09412 , 2017. [79] Ying-Xin Wu, Xiang Wang, An Zhang, Xiangnan He, and Tat-Seng Chua. Discovering invariant rationales for graph neural networks. arXiv preprint arXiv:2201.12872 , 2022. [80] Danijela Horak and J¨ urgen Jost. Spectra of combinatorial laplace operators on simplicial complexes. Advances in Mathematics , 244:303– 336, 2013. [81] Roger A Horn and Charles R Johnson. Matrix analysis . Cambridge university press, 2012.

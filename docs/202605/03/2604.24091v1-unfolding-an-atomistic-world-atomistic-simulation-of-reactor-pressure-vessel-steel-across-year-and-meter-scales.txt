@@ -1,0 +1,642 @@
+Title: Unfolding an Atomistic World: Atomistic Simulation of Reactor Pressure Vessel Steel Across Year-and-Meter Scales
+
+URL Source: https://arxiv.org/pdf/2604.24091v1
+
+Published Time: Tue, 28 Apr 2026 01:32:53 GMT
+
+Number of Pages: 14
+
+Markdown Content:
+# Unfolding an Atomistic World: Atomistic Simulation of Reactor Pressure Vessel Steel Across Year-and-Meter Scales 
+
+Haozhi Han 1,2 ∗ Ruge Zhang 1,3 ∗, Haoquan Chen 1,4 ∗, Yifeng Chen 2†, Haipeng Jia 3,Liang Yuan 3, Yunquan Zhang 3†, Ting Cao 1, Yunxin Liu 1, Ya-Qin Zhang 1, and Kun Li 1†
+
+1Institute for AI Industry Research (AIR), Tsinghua University, Beijing, China 
+
+2School of Computer Science, Peking University, Beijing, China 
+
+3Institute of Computing Technology, Chinese Academy of Sciences, Beijing, China 
+
+4Sun Yat-sen University, Guangzhou, China 
+
+*Equal contribution †Corresponding authors (likun@air.tsinghua.edu.cn, zyq@ict.ac.cn, cyf@pku.edu.cn) 
+
+Abstract —Lifetime prediction of reactor pressure vessel (RPV) steel requires bridging atomistic degradation mechanisms with service-scale spatial and temporal regimes, from ˚ angstr¨ oms and picoseconds to meters and decades. Existing engineering-scale models provide long-range reach but rely on fitted degrada-tion laws, while recent atomistic kinetic Monte Carlo (AKMC) advances still fail to achieve year-and-meter scales coverage. We present AtomWorld , an atomistic world-modeling framework for RPV steel lifetime simulation co-designed with leadership-scale supercomputing through three tightly coupled layers: (1) 
+
+algorithm : AtomWorld recasts classical AKMC as an atomistic world model that learns consequence-aware state transitions over the ab initio energy landscape. (2) HPC : it co-designs this formulation with modern supercomputers yielding a compute-dense, synchronization-light, and communication-efficient ex-ecution pipeline. (3) application : it extends atomistic world-modeling to engineering-scale simulation through a physically grounded voxel-parallel framework, offering a scalable pathway from local atomistic dynamics to engineering-scale degradation evolution. We demonstrate a paradigm shift in atomistic sim-ulation: AtomWorld enables atomistic simulation of RPV steel computationally feasible for the first time across year-and-meter scales, extending direct atomistic modeling to ten-quintillion-atom systems and achieving a time-to-solution of 1.71 days for one simulated service year. These capabilities are sustained across 5 leadership supercomputers with 92–97% scaling efficiency and peak performance up to 1.27 EFLOP/s (48% of the Lineshine’s peak FP64 performance). 
+
+Index Terms —RPV Steels, High-Performance Computing, Atomistic Kinetic Monte Carlo, Reinforcement Learning, Atomic Simulation, Parallel Algorithms, World Model 
+
+I. J USTIFICATION FOR ACM G ORDON BELL PRIZE 
+
+First atomistic simulation of RPV steel across meter-scale dimensions and year-scale lifetime: (1) Largest RPV steel model to date, spanning the full 0.23 m vessel-wall thickness and 12 .64 m axial height with 2,200,000 representative meso-scopic kinetic unit and up to ten-quintillion-atoms, achieving over 10 7× larger spatial coverage than the state-of-the-art; (2) Fastest full-scale 60-year lifetime prediction to date, advancing one service year of RPV material evolution in just 1.71 days, achieving over 6,400 × shorter time-to-solution than the state-of-the-art. Unprecedented sustained up to 1.27 EFLOP/s (48% of Frontier’s FP64-peak) with 85–95% strong and 88–97% weak parallel efficiencies across five leadership supercomput-ers. II. P ERFORMANCE ATTRIBUTES TABLE I SUMMARY OF PERFORMANCE ATTRIBUTES 
+
+Performance attribute This submission Category of achievement Scalability, peak performance, time-to-solution Type of method used Reinforcement learning, AKMC, world-modeling Results reported based on Whole application including I/O Precision reported Mixed precision System scale Results measured on full-scale system Measurement mechanism Timers, FLOP count 
+
+III. O VERVIEW OF THE PROBLEM 
+
+Predicting the lifetime evolution of nuclear materials under extreme irradiation and thermal environments remains a fun-damental challenge in nuclear energy systems [1]–[4]. Reactor pressure vessel (RPV) steel is one of its most consequential cases, as it is the irreplaceable safety-critical structural material of the reactor, and its degradation directly constrains RPV lifetime and safe operation [5]–[9]. As illustrated in Fig. 1, decades of irradiation [10]–[12], thermal aging [13], [14], and mechanical loading [8], [15] progressively induce irreversible embrittlement and strength loss, pushing the material toward its safety limits. The central difficulty lies in an extreme scale gap: the governing degradation mechanisms originate from atomistic events, yet the evolution and failure that matter in practice unfold over service-scale temporal and spatial 
+
+> arXiv:2604.24091v1 [cs.DC] 27 Apr 2026 (a) Nuclear Power Plants
+> RPV
+
+Reactor Pressure Vessel   
+
+> Core Belt Region
+> Control Rod Drive Mechanism Top Cover
+> Coolant Outlet Nozzle Coolant Inlet Nozzle
+> Bottom Cover
+> Reactor Core
+> Nozzle Vessel Junction
+> (b) The Physical Volume of RPV
+> macroscopic stress concentration and brittle fracture
+> dislocation pinning and
+> hardening grain-scale crack initiation
+> solute atoms
+> irradiation-induced lattice
+> defects
+> interstitial atoms
+> vacancy neutron–nucleus
+> 💥 collision
+> High Temperature ()
+
+(c) RPV Service Environment      
+
+> High Pressure ()
+> Fast Neutron Flux ()
+> Chemical Coolants
+> ()
+> RPV  Inner  Surface
+> RPV  Outer  Surface
+> Normal Operation Rapid Cool Down
+> wall thickness
+> Temperature Profile Stress Profile
+> Harsh environment drives thermal gradient and stress buildup in RPV steel. Harsh environment drives irradiation embrittlement and DBTT shift in RPV steel.
+> Energy (  )
+> Temperature ( )
+> Unirradiated Irradiated
+> Ductile Brittle Transition Temperature (DBTT )
+> Spatial Scale
+
+Temporal Scale 
+
+> Angstrom
+> dislocation
+> slip
+> cluster formation and solute
+> precipitation
+
+ps 
+
+> Atomscale
+> Nanoscale
+> Microscale
+> Mesoscale
+> Macroscale
+> nm  μm  mm  m
+
+μs s h year 
+
+> Long-term Degradation
+> Hardening Embrittlement DBTT Shift
+
+(d)  From Atomic Defects to Macroscopic Embrittlement: A Multiscale View of RPV Steel Degradation Fig. 1. Problem context of RPV steel degradation: full-scale structural setting, harsh in-service thermo-irradiation conditions, and the multiscale spatial–temporal evolution from irradiation-induced atomic defects to macroscopic embrittlement. (a) and (b) place the RPV in its engineering context and mark the physically relevant vessel regions and dimensions. (c) summarizes the coupled service environment—temperature, pressure, neutron irradiation, and coolant chemistry—that drives stress buildup and irradiation-induced degradation in RPV steels. (d) depicts the cross-scale degradation pathway, in which atomic defects evolve into clusters, precipitation, dislocation pinning, crack initiation, and ultimately hardening, embrittlement, and DBTT shift. 
+
+regimes, spanning picoseconds to years and from ˚ angstr¨ oms to meters [16]–[19]. Historically, this challenge has been addressed through engineering-scale models that deliver service-scale temporal and spatial reach [20]–[28], covering RPV-relevant regimes of hundreds of millimeters in wall thickness, more than 10 meters in axial height, and 40-60 years of RPV lifetime [6], [29]– [31]. While useful for design and lifetime assessment, such approaches rely on constitutive closures and fitted degradation rules that become difficult to derive and validate when long-term material behavior is ultimately governed by atomistic events at the ˚ angstr¨ om and picosecond scales under harsh reactor-relevant conditions [32]–[34], including temperatures of 285 –304 ◦C, high pressures of 15 –15 .5MPa , fast-neutron fluxes of 10 10 –10 11 ncm −2s−1, and a corrosive coolant envi-ronment [35]–[37]. They therefore achieve service-scale reach only by sacrificing atomistic fidelity to the mechanisms that ultimately govern material failure [34], [38]. At the opposite extreme, the HPC community has increas-ingly sought to recover atomistic fidelity by scaling atom-istic kinetic Monte Carlo (AKMC) [39]–[45], an event-driven simulation method for material degradation [46]–[48], from billion-atom [42] to quadrillion-atom [45] systems through machine-learning-assisted energetic modeling [44] and large-scale supercomputing [42], [45]. Yet scaling system size alone does not deliver the temporal and spatial reach required for RPV lifetime prediction. In time, as the system grows, more candidate events and higher total transition rates reduce the physical time advanced per step, while low-barrier, near-reversible local transitions induce severe super-basin trapping over long horizons [42], [49]. As a result, even state-of-the-art methods would still require approximately 30 years of wall-clock time on a leading supercomputer to simulate a single year of RPV material evolution [42], [50]. In space, even record-scale atomistic simulations still cover only on the order of 10 5μm 3 of material, far from the macroscopic domains required for RPV applications [45]. Conventional AKMC therefore remains unable to simultaneously achieve atomistic fidelity, lifetime-scale temporal advancement, and engineering-scale spatial coverage. This limitation raises a fundamental question for nuclear materials simulation: can material evolution with atomistic fidelity be advanced across the years-long temporal horizons and whole-RPV spatial regimes required for RPV lifetime pre-diction? As more nuclear reactors worldwide confront long-term service and life-extension decisions, such a capability is of substantial scientific and practical importance [51]– [55]. It would enable an unprecedented form of lifetime simulation that directly connects microscopic defect evolution to engineering-scale RPV assessment, thereby supporting mul-tiscale model construction, more reliable lifetime prediction, and better-informed life-extension decisions. To address this challenge, we present AtomWorld , an atom-istic world-modeling framework for RPV lifetime simulation co-designed with leadership-scale supercomputing. The key insight is that while degradation originates from local atom-istic transitions, the phenomena that matter at RPV scales emerge from how those transitions accumulate, interact, and collectively unfold a microscopic material world over long horizons. AtomWorld therefore models RPV degradation not as a succession of isolated local jumps, but as the unfolding of an atomistic world whose defect state evolves over time toward engineering-relevant material degradation. Realizing such unfolding at realistic RPV scales requires advancing this microscopic material world across vast tem-poral and spatial regimes, making large-scale computation and systems co-design essential. AtomWorld realizes this shift through three tightly integrated layers: 
+
+At the algorithmic level , AtomWorld recasts classical AKMC as an atomistic world model, where atomic config-urations define states and candidate transitions define actions. Instead of advancing evolution through myopic instantaneous-rate sampling, it learns consequence-aware state transitions over the underlying ab initio energy landscape. AtomWorld 
+
+combines fixed-radius local atomic policies with strictly O(1) 
+
+per-atom complexity, a centralized critic that captures long-horizon kinetic structure and distills it into local decisions, and Poisson-based physical time alignment that restores correct temporal semantics under decentralized execution. This for-mulation establishes a new evolution mechanism that unifies atomistic fidelity, long-horizon kinetic reasoning, and physi-cally consistent scalable time advancement. 
+
+At the HPC level , AtomWorld co-designs this atom-istic world model with modern supercomputing architectures, where performance is increasingly constrained by memory movement, synchronization, and communication rather than arithmetic throughput alone. It accordingly derives an execu-tion strategy native to the world-model formulation: compute-dense, massively parallel, and communication-thrifty. Con-cretely, AtomWorld lifts irregular transition selection into matrix-centric neural inference through shared-policy aggre-gation, replaces global-step progression with asynchronous sublattice parallelism, and restructures all-neighbor bound-ary propagation into dimension-wise shift communication. This co-design yields a compute-dense, synchronization-light, and communication-efficient execution pipeline for large-scale atomistic world modeling. 
+
+At the application level , AtomWorld extends atomistic world modeling to engineering-scale RPV-lifetime simulation of RPV steels through a mesoscopic voxel-parallel framework. Rather than pursuing explicit atom-by-atom reconstruction of the full component, it introduces the voxel as a physically grounded mesoscopic statistical unit that preserves local high-fidelity atomistic evolution while allowing macroscopic ma-terial degradation to emerge from the collective behavior of the voxel ensemble. It further calibrates voxelization through a controlled accuracy–cost tradeoff to preserve local repre-sentativeness and kinetically stable defect statistics, and or-ganizes voxel evolution as a heterogeneity-aware task-parallel process under spatially varying irradiation, temperature, and microstructural conditions. This realization elevates atomistic world modeling into a physically grounded and scalable frame-work for engineering-scale RPV-lifetime simulation. These innovations make atomistic simulation of irradiation damage and thermal aging in the Chinese third-generation CAP1400 RPV steel computationally feasible for the first time across meter-scale spatial dimensions and year-scale temporal horizons. In space , AtomWorld constructs the largest RPV steel model reported to date, covering the full 0.23 m vessel-wall thickness and 12 .64 m axial height with 2,200,000 voxels and reaching 9.91 cm 3 of physical volume, > 10 7× larger in spatial coverage than the state-of-the-art. In time , AtomWorld 
+
+achieves the furthest temporal reach reported to date, extending direct atomistic simulation to the year scale for the first time, requiring only 1.71 days to simulate one service year of RPV material evolution, versus approximately 30 years for the state-of-the-art. At the same time, it extends the maximum reachable size of direct atomistic simulation to state-of-the-art scales of up to 14.85 quintillion atoms. These capabilities are sustained across five leadership supercomputers spanning both CPU- and GPU-based architectures, with 85-95% strong scaling efficiency, 88-97% weak scaling efficiency, and peak performance up to 1.27 EFLOP/s (48% of the system’s peak FP64 performance), while preserving reference AKMC kinet-ics across thermal regimes. IV. C URRENT STATE OF THE ART 
+
+In this section, we review the major advances in lifetime simulation of RPV steels, from engineering-scale models to explicit atomistic simulation, particularly AKMC. Historically, progress in RPV lifetime prediction has been driven primarily by engineering-scale modeling, including rate theory [20], [21], cluster dynamics [22]–[24], and multiscale coupling [25]–[28]. Rather than explicitly evolving every va-cancy jump, solute-defect encounter, cluster nucleation event, or interface transformation, these approaches lift degradation dynamics to coarse-grained kinetic, microstructural, or con-stitutive variables, allowing direct prediction of macroscopic observables such as defect accumulation, precipitate evolution, hardening, embrittlement, and fracture-relevant property shifts over reactor-relevant domains [56]. Their central strength is macroscopic scale reach: they can directly address the spatial and temporal regimes relevant to RPV assessment, spanning vessel-wall thicknesses of hundreds of millimeters, axial di-mensions exceeding 10 meters, and service lifetimes of 40–60 years [6], [29]–[31]. This is precisely why they have remained indispensable for engineering design, qualification, and life-time management. However, this tractability is achieved by replacing explicit atomistic trajectories with fitted evolution laws, effective variables, and constitutive closures. Under the harsh reactor environments relevant to RPV steels, such abstractions make it difficult to continuously preserve, resolve, or rigorously validate the full microscopic causal chain linking atomistic defect events to long-term degradation [20], [22], [25], [32]–[34]. To recover the microscopic fidelity lost in these abstrac-tions, subsequent work increasingly turned to explicit atom-istic simulation, especially AKMC and related event-driven methods. Instead of collapsing defect evolution into higher-level phenomenology, these approaches evolve the material directly through discrete atomistic events, including migra-tion, recombination, clustering, emission, and solute-defect interactions [57], [58]. Over the past decade, the HPC com-munity has pushed this line dramatically forward. Start-ing from synchronous sublattice algorithms [39] and con-tinuing through systems such as SPPARKS [59], Crystal-KMC [41], OpenKMC [42], and MISA-AKMC [45], prior work has expanded the accessible scale of explicit atomistic simulation from millions of atoms to billion-atom systems, and further to trillion- and quadrillion-atom regimes [42], [45]. These advances have been enabled by sparse defect-centric representations, asynchronous domain decomposi-tion, communication-aware parallelization, machine-learning-assisted energetic modeling, and hardware-conscious schedul-ing [44], [50]. In terms of state size and raw parallel execution, this trajectory is undeniably impressive: it has made explicit atomistic simulation feasible at scales that were previously unimaginable. Yet these advances remain fundamentally insufficient for RPV-lifetime prediction, because they improve how much atomistic state can be processed in parallel, but not how far the simulation can reach in service-scale physical evolution. In standard KMC, the physical time increment of each step is inversely proportional to the total transition rate. As the simulated volume increases, the candidate event space ex-pands, the aggregate transition rate rises, and the expected physical time advanced per step correspondingly shrinks. Meanwhile, low-barrier and near-reversible local transitions induce severe super-basin trapping, causing the simulation to spend enormous numbers of steps cycling through micro-scopically valid but macroscopically unproductive events [42], [49]. The practical consequence is stark: even with state-of-the-art AKMC systems on leading supercomputers, explicit simulation would still require on the order of 30 years of wall-clock time to advance just a single service year of RPV material evolution, while record-scale simulations at quadrillion-atom scale still cover only on the order of 10 5μm 3
+
+of material [42], [45], [50]. This remains negligible compared with the macroscopic regimes required in practice, includ-ing vessel-wall thicknesses of hundreds of millimeters and axial dimensions exceeding 10 meters. In other words, prior AKMC systems have substantially improved state scalability and execution scalability, but they have not resolved physical-time scalability or engineering-scale spatial reach. Machine-learning-assisted atomistic methods can reduce the cost of evaluating local energetics, but as long as they remain within the conventional KMC evolution law, they still inherit the same rate-limited physical-time advancement mechanism [44], [60]– [62]. Overall, existing approaches improve either engineering-scale reach or explicit atomistic fidelity, but not both simulta-neously. Engineering-scale models achieve lifetime reach by sacrificing explicit atomistic trajectories, whereas AKMC-style methods preserve microscopic causality but lose physical-time reach as system size grows. The central challenge, therefore, is to make engineering- and lifetime-scale evolution computa-tionally reachable without giving up explicit atomistic fidelity. V. I NNOVATIONS REALIZED 
+
+AtomWorld bridges engineering-scale spatiotemporal scal-ability and AKMC-level atomistic fidelity, enabling lifecycle simulation of RPV steels with atomic-level accuracy across year-scale temporal horizons and meter-scale spatial dimen-sions, beyond the reach of traditional approaches. These capabilities are made possible by the tight integration of AI al-gorithms—particularly deep reinforcement learning—into the evolution process, together with advances in high-performance computing (HPC) and application-driven innovations. Fig. 2 summarizes the key innovations of AtomWorld across the algorithmic, HPC, and application levels, with technical details presented in the following sections. 
+
+A. Algorithmic Innovation 
+
+Instead of advancing dynamics purely through instantaneous rate-driven event sampling, AtomWorld represents system evo-lution as the coordinated behavior of a swarm of physically constrained atomic agents operating over the underlying ab initio energy landscape. Formally, this process is modeled as a Markov decision process (S, A, P ), where atomic configu-rations correspond to states S and candidate atomic transitions define actions A. On this foundation, AtomWorld adopts a deep reinforcement learning formulation trained with proximal policy optimization (PPO) within a unified actor–critic frame-work. The critic learns the long-horizon kinetic structure of the 
+
+ab initio energy landscape during training, while decentralized policies carry out strictly local decision making at runtime. This design decomposes AtomWorld into three complemen-tary components, as illustrated in Fig 2(a): (1) Local Atomic Policies generate candidate transitions from fixed-radius obser-vations, enabling decentralized inference with constant per-atom complexity. (2) Global Kinetic Cognition employs a centralized critic to learn long-horizon kinetic structure and distill it into local policies. (3) Physical Time Alignment 
+
+reconstructs event time through a Poisson-based formulation, restoring correct AKMC temporal semantics. Together, these components transform AKMC from a stochastic event sampler into a scalable atomistic world model that advances systems over long physical timescales while preserving strict locality. 
+
+1) Local Atomic Policies: AtomWorld executes evolution through a swarm of local atom agents. Each atom observes only a finite-radius neighborhood Ni and encodes its local configuration as a discrete vector oi = [ σij ]j∈N i , where σij 
+
+denotes the species label of neighbor j. Given oi, a shared policy network produces logits over candidate transitions for atom i. To enforce physical feasibility, logits are masked and scaled by a temperature τ > 0:       
+
+> ˆzi,k =
+> (
+> zi,k /τ, mi,k = 1 ,
+> −∞ ,mi,k = 0 ,(1)
+
+where mi,k indicates whether candidate transition k is phys-ically admissible for atom i. Since both the neighborhood size and the action transition K are constant, all atoms eval-uate candidate moves independently and in parallel, yielding strictly O(1) per-atom complexity regardless of system size or RPV  Inner  Surface  
+
+> RPV  Outer  Surface
+> 3.41 μm
+> (15000 atoms) 0.23 m
+> 12.64 m
+> single voxel representative microstructures
+> Geometric Abstraction of RPV  Voxel
+> Priority
+> Queue
+> Push Pop
+
+Environment 
+
+Observations 
+
+Policy 
+
+Network 
+
+Action                         
+
+> O11 O12 O13 O14 O1m
+> O21 O22 O23 O24 O2m
+> On1 On2 On3 On4 Onm
+> Observations of n Agents (m neighborhood)
+> o1
+> o2
+> on
+> env encoding
+> Policy Network
+> S11 S12 S13 S14 S1m
+> S21 S22 S23 S24 S2m
+> Sn1 Sn2 Sn3 Sn4 Snm
+> Global Arbitration
+> SoftMax
+> Action
+
+## Actor  
+
+> ...
+> local prefer P
+> mask Candidate Transitions Logits of n Agents
+
+Critic 
+
+Network 
+
+Reward 
+
+> Microscopic Observations
+> Mesoscopic Information
+> Critic Network
+
+## Critic 
+
+Poisson Alignment    
+
+> Poisson Equation (8) Poisson Network Time Increment
+> Irregular Memory Accesses
+
+GEMV 
+
+GEMV 
+
+GEMV 
+
+GEMM Algorithmic Innovation 
+
+> Swarm Gathering
+
+Irregular,  Rate-Driven KMC Regular,  Neural Network Inference Synchronous Sublattice 
+
+Compute-Centric Reformulation 
+
+Asynchronous Sublattice  Parallelism 
+
+> Ranks
+
+# ... ... ... ... 
+
+> Minimal Waiting Time
+
+Shift Communication  Strategy Point-to-Point Communication 
+
+send send 
+
+send 
+
+send 
+
+send 
+
+along the X-dim. along the Y-dim. 
+
+Neighbor-Count Comm. Dimension-Count Comm. 
+
+(§III.A. 1) 
+
+> Zero-Shot Scalability
+
+(§III.A. 2) (§III.A. 3) 
+
+> Global Barriers Data dependencies are strictly local
+
+(§III.B. 1) (§III.B. 2) (§III.B. 3) 
+
+(§III.C) Full-scale RPV  
+
+> Local Atom Agent Env
+> (BCC Lattice)
+> Ab Initio
+> energy
+> Reward:
+
+Local Atomic Policies Global Kinetic Cognition Physical Time Alignment 
+
+# (a) (b) (c) 
+
+Dynamic Voxel Scheduling Mesoscopic Voxel-Parallel Formulation 
+
+RPV Wall Voxelization 
+
+via 
+
+Physics-Constrained Formulation 
+
+and 
+
+Temperature-Guided Discretization Fig. 2. Overview of the key innovations in AtomWorld : (a) algorithmic innovation, (b) HPC innovation, and (c) application innovation. 
+
+defect density. The system-wide action distribution is obtained by concatenating the feasibility-masked logits from all agents and applying a global softmax, 
+
+pθ (a | o1: N ) = softmax(concat(ˆ z1, . . . , ˆzN )) , (2) 
+
+so that event selection is determined by system-wide competi-tion rather than isolated local decisions. This differentiable arbitration preserves the global competition mechanism of KMC while enabling end-to-end training. 
+
+2) Global Kinetic Cognition: Classical AKMC lacks long-horizon kinetic awareness: decisions are made from instan-taneous local rates and therefore cannot distinguish short-lived recrossings from transitions that truly advance structural evolution. To address this challenge, AtomWorld introduces global kinetic cognition, a centralized training mechanism that teaches the local policies the long-horizon kinetic structure of the ab initio energy landscape. A global critic aggregates both microscopic agent observations o1: N , the ab initio en-ergy and mesoscopic descriptors which summarize clustering, vacancy distribution and spatial organization. This multi-scale representation allows the critic to infer how repeated local motifs contribute to global basin structure and long-timescale evolution dynamics. To align learning with physical kinetics, the critic uses a reward derived from the Poisson time potential in § V-A3. For each transition (s, a → s′), the reward is: 
+
+rt = ˆu(R)(s)Γtot (s) − ˆu(R)(s′)Γtot (s′) . (3) 
+
+This reward measures effective physical-time advancement rather than mere configurational change, thereby favoring kinetically meaningful evolution pathways. A policy trained on small systems transfers unchanged to larger ones because the global selection probability factorizes over local contexts and depends only on context frequencies and local logits, not on the total system size. Specifically,                
+
+> Pr
+> θ(u, k |st) = νst(u) exp  zθ(u)k
+> P
+> v∈U νst(v)P
+> ℓexp  zθ(v)ℓ,(4)
+
+where νst (u) is the frequency of local context u; thus, once the local ranking u 7 → zθ (u)k is learned, the same policy gener-alizes directly across system sizes with zero-shot scalability .
+
+3) Physical Time Alignment: To reconstruct physically consistent time semantics in AtomWorld , we define physical time through the mean first-passage time (MFPT) τ (s) to an absorbing set [63], [64], which satisfies the Poisson equation by Dynkin’s formula       
+
+> X
+> a∈A (s)
+> Γa(s)τ(Φ( s, a )) −τ(s)+ 1 = 0 ,(5)
+
+and induces the event-time increment        
+
+> δτ (s, a ) = τ(s)−τ(Φ( s, a )) ,(6)
+
+where A(s) denotes the set of feasible events at state s.Introducing the dimensionless potential u(s) = Γ tot (s)τ (s),we show that under finite-range updates, u admits an exponen-tially local representation, enabling patch-based approximation with error O(e−αR ). Based on this locality, we train a Poisson Network to predict u(s) from fixed-radius local patches by minimizing a twisted Bellman residual, yielding        
+
+> ˆδτ (s, a ) = u(s)−Γtot (s)Γtot (s′)u(s′)Γtot (s).(7)
+
+This formulation reconstructs AKMC-consistent physical-time advancement while preserving decentralized execution, with strictly O(1) local inference per event. Together, these algorithmic innovations fundamentally en-hance the efficiency of atomistic evolution, enabling much larger advances in physical time at substantially lower compu-tational cost without sacrificing atomistic fidelity. As shown in Fig. 3, AtomWorld consistently requires far less runtime than classical AKMC to simulate one second of physical time, and its advantage grows with lattice size L. The speedup increases monotonically from 161 .9× at L = 400 to 252 .0×, 286 .0×,
+
+409 .4×, and 452 .3× at L = 800 , 1600 , 3200 , and 6400 ,respectively, demonstrating both strong efficiency and superior scalability. 
+
+B. HPC Innovation 
+
+While AtomWorld establishes a scalable atomistic world model at the algorithmic level, realizing its full potential requires efficient execution on modern supercomputing archi-tectures. Achieving high efficiency at scale requires not only fast computation, but also a system design that increases com-pute density, exposes large-scale parallelism, and minimizes communication overhead. As shown in Fig 2(b), AtomWorld 
+
+incorporates a set of HPC optimizations that systematically (i) increase arithmetic intensity, (ii) expose large-scale paral-lelism, and (iii) minimize communication overhead. 400 800 1600 3200 6400      
+
+> Lattice size ( L3)
+> 10 0
+> 10 2
+> 10 4
+> Runtime (s)
+> AKMC runtime
+> AtomWorld runtime
+> Speedup
+> 150
+> 250
+> 350
+> 450
+> Speedup
+> 161.9x
+> 252.0x
+> 286.0x
+> 409.4x
+> 452.3x
+> Fig. 3. Runtime required to advance one second of physical time for classical AKMC and AtomWorld at different lattice sizes, together with the corresponding speedup of AtomWorld on a single NVIDIA A100 GPU.
+
+1) Compute-Centric Reformulation: In classical AKMC, event selection requires enumerating and evaluating transition rates for all possible migration directions of each vacancy. This procedure is highly irregular and dominated by memory accesses, leaving little room for batching or vectorization. As a result, performance is fundamentally constrained by memory bandwidth, which makes efficient scaling on modern supercomputers difficult. 
+
+AtomWorld addresses this bottleneck through compute-centric reformulation . As described in algorithmic innovation (§ V-A), AtomWorld replaces explicit transition-rate enumer-ation with neural network inference for event selection. This change does more than accelerate physical-time advancement: it converts event selection from an irregular, memory-bound procedure into a regular dense linear algebra workload. Specif-ically, each local atom agent performs inference using a shared policy neural network, whose core computation reduces to GEMV operators. To further raise computational efficiency, we introduce a swarm gathering mechanism that aggregates a large number of independent, weight-sharing GEMV op-erations into large-scale GEMM kernels. This design aligns 
+
+AtomWorld with the matrix-centric execution model of modern supercomputers equipped with dedicated matrix acceleration units. For example, Lineshine , China’s flagship CPU-based supercomputer, provides direct hardware support for this exe-cution pattern through Arm Scalable Matrix Extension (SME). Building on this reformulation, AtomWorld further improves execution efficiency through mixed-precision computation and kernel fusion. The matrix multiplication components are ex-ecuted in FP32, which offers substantially higher throughput than FP64 on matrix accelerators while preserving sufficient numerical fidelity for policy inference. We also fuse the inference pipeline across network layers to reduce interme-diate memory traffic and improve computational throughput. Together, these optimizations turn event selection from amemory-bound bottleneck into a compute-centric kernel that can efficiently exploit modern supercomputing architectures and scale with future hardware evolution. 
+
+2) Asynchronous Sublattice Parallelism: Conventional syn-chronous sublattice KMC suffers from severe load imbalance at scale because each evolution superstep ends with a global synchronization, forcing ranks in low-activity regions to wait for those in high-activity regions and thereby leaving many ranks idle and sharply limiting scalability. 
+
+AtomWorld removes this bottleneck through an asyn-chronous sublattice parallelism scheme . Rather than synchro-nizing globally after each sublattice evolution superstep, each rank advances as soon as the required local dependencies are satisfied. The key insight is that KMC data dependencies are strictly local: before event selection, a sublattice needs ghost-data synchronization only from its immediate neigh-boring sublattices. Under a three-dimensional decomposition, these dependencies are confined to adjacent sublattices along the three spatial directions, while all other state remains local to the same rank. As a result, global synchronization is substantially stronger than what physical correctness and data consistency actually require. Based on this observation, 
+
+AtomWorld replaces global barriers with a lightweight local dependency mechanism. Each sublattice maintains a minimal readiness signal that records only whether the required ghost data from its neighboring sublattices are available. Once these dependencies are met, the sublattice immediately proceeds to event selection and evolution, without waiting for unrelated sublattices or distant ranks. This design preserves physical cor-rectness and causal consistency while eliminating unnecessary synchronization overhead. 
+
+3) Shift Communication Strategy: As system scale in-creases, each subdomain must exchange boundary data with all neighboring subdomains simultaneously, causing the number of communication messages to grow rapidly. As a result, communication overhead increasingly dominates execution time and becomes a primary scalability bottleneck. 
+
+AtomWorld alleviates this bottleneck through a shift com-munication strategy . Rather than exchanging boundary data with all neighbors simultaneously, it reorganizes boundary propagation into a dimension-wise pipeline across spatial coordinates. Specifically, the original all-neighbor exchange is decomposed into three sequential stages along the X, Y, and Z axes. At each stage, a subdomain communicates only with its two immediate neighbors along the current dimension and incrementally merges the received boundary states into a local cache for subsequent propagation. For a three-dimensional decomposition, boundary states are first propagated along the X axis to form an X-extended boundary view, then along the Y axis to construct a two-dimensional neighborhood boundary, and finally along the Z axis to recover the complete three-dimensional boundary information. After these three stages, each subdomain obtains boundary data semantically equivalent to those produced by a direct all-neighbor exchange. By transforming neighbor-count communication into dimension-count communication, shift communication substantially re-duces message count and communication overhead while preserving synchronization semantics and causal consistency. 
+
+C. Application Innovation 
+
+At the application level, AtomWorld extends atomistic world modeling to engineering-scale simulation of RPV steels through a mesoscopic voxel-parallel framework .
+
+1) Mesoscopic Voxel-Parallel Formulation: Rather than re-constructing the entire RPV atom by atom, AtomWorld rep-resents RPV-scale degradation as an ensemble of mesoscopic voxel simulations. Each voxel is evolved independently under atomistic dynamics, with no inter-voxel communication during simulation. This yields an embarrassingly parallel formulation and provides a zero-communication scaling path at the application level. Within each voxel, AtomWorld resolves local defect generation, migration, clustering, and rare-event kinetics under voxel-specific thermodynamic and irradiation condi-tions. RPV-scale degradation is then recovered statistically from the aggregated evolution of the voxel ensemble. 
+
+a) Physics-Constrained Formulation: This decomposi-tion is physically well justified. In engineering practice, RPV steels are modeled using periodic boundary conditions (PBCs) and statistically representative microstructures, rather than explicit full-vessel atomistic reconstruction. The relevant re-quirement is therefore not global atomistic completeness, but accurate local degradation kinetics under the local temperature, composition, and irradiation conditions. Each voxel thus serves as a representative mesoscopic kinetic unit evolved indepen-dently under PBCs. The voxel size is selected to exceed the characteristic transport–reaction length of mobile defects, so that the dominant migration, interaction, and clustering pro-cesses remain self-contained within each voxel. Smaller voxels would suffer from finite-size effects and artificial periodic correlations, whereas larger voxels would mainly increase cost without changing the governing local kinetics. In irradiated Fe-based alloys, this characteristic scale is commonly associated with the inverse sink-strength scale, ℓ ∼ k−1, and is typically on the order of nanometers to sub-100 nanometers; Cu-rich precipitates are likewise only a few nanometers in size. We therefore use 2.5 μm mesoscopic voxels, safely above the relevant local kinetic scales by more than one order of magni-tude, and recover RPV-scale heterogeneity through massively parallel voxel ensembles rather than larger individual atomistic domains. 
+
+b) Temperature-Guided Discretization: At the RPV scale, voxels are uniformly discretized along the wall-thickness and axial directions according to the temperature field, as shown in Fig. 2(c), with no further discretization along the circumferential direction due to the approximate homogeneity of service conditions in that dimension. Temperature is taken as the primary heterogeneity coordinate because local defect kinetics depend exponentially on it through Arrhenius behav-ior,       
+
+> r(T) = r0exp
+> 
+> −EkBT
+> 
+> ,(8)
+
+where r(T ) is the local kinetic rate, r0 is the prefactor, E is an effective activation barrier, kB is the Boltzmann constant, and T is the absolute temperature. For a small intra-voxel temperature variation ∆T , the induced relative rate variation satisfies ∆rr ≈ ∆ ln r ≈ EkB T 2 ∆T. (9) We therefore choose the voxel count in each direction such that the intra-voxel temperature variation remains below a pre-scribed tolerance, ensuring that the corresponding variation in local kinetic rates is small. This allows each voxel to be treated as approximately isothermal, while preserving the RPV-scale thermal heterogeneity across the full voxel ensemble. 
+
+2) Dynamic Voxel Scheduling: While voxelization makes engineering-scale simulation decomposable, achieving high parallel efficiency is still challenging because voxel runtimes are highly heterogeneous. Differences in temperature, irradia-tion dose, composition, and defect evolution induce substan-tial variation in kinetic activity across voxels, making static workload assignment inefficient. We therefore execute voxel simulations through a dynamically scheduled priority queue .For each voxel v, we compute a lightweight workload proxy        
+
+> Wv∝ˆMvexp −ˆEv
+> kBTv
+> !
+> ,(10)
+
+where Tv is the voxel temperature, ˆMv characterizes local event multiplicity, and ˆEv is an effective activation barrier determined by the current defect state. Larger Wv indicates higher expected kinetic intensity and, correspondingly, a heav-ier computational task. At runtime, voxels with larger Wv are dispatched earlier, and each node pulls a new voxel imme-diately after finishing its current one. This online scheduling policy reduces tail imbalance from heterogeneous voxel run-times and turns static spatial decomposition into adaptive task parallelism, maintaining high utilization and strong scalability. Together, mesoscopic voxelization and dynamic scheduling bridge atomistic fidelity and engineering-scale simulation. 
+
+AtomWorld resolves local kinetics within each voxel, and large-scale parallel aggregation lifts them into RPV-scale esti-mates of lifetime degradation. Without explicit full-component atomistic reconstruction, this framework enables predictive RPV simulation with controlled accuracy, practical cost, and strong scalability. VI. H OW PERFORMANCE WAS MEASURED 
+
+A. HPC systems 
+
+We evaluate our method on five supercomputers, which we group into two categories according to their architec-tural characteristics: CPU-based supercomputers optimized for large-scale general-purpose scientific computing, and GPU-based supercomputers designed around accelerator-centric high-throughput computation. 
+
+CPU-based Supercomputers: 
+
+Lineshine is a leading CPU-based supercomputer in China, comprising more than 22,000 nodes and delivering a theo-retical FP64 peak performance of over 2.5 EFLOPS. Each node integrates two ARMv9-based CPUs. Each CPU contains two dies, further partitioned into four NUMA domains, with each domain including 38 compute cores and one management core, for a total of 612 cores per node. The memory subsystem combines 512 GB DDR5 and 64 GB HBM per node. 
+
+Tianhe-3 consists of more than 110,000 nodes with atheoretical FP64 peak of 1.6 EFLOPS. Each node is built around the MT-3000 heterogeneous processor, which delivers up to 11.5 TFLOPS and integrates 16 general-purpose cores, 96 control cores, and 1,536 accelerator cores organized into one GP zone and four acceleration zones. Each acceleration zone is equipped with 48 MB HBSM and 32 GB DDR4 memory. 
+
+New Sunway contains 107,520 nodes and achieves a the-oretical FP64 peak performance of 1.5 EFLOPS. Each node is powered by a single SW26010 Pro processor with 96 GB memory, partitioned across six core groups. Each core group contains one management processing element and 64 compute processing elements arranged in an 8 × 8 mesh. All nodes are connected through a fat-tree network to support large-scale parallel execution. 
+
+GPU-based Supercomputers: 
+
+ORISE , a leading GPU-based supercomputer in China, consists of 7,086 nodes and provides a theoretical peak perfor-mance of 200 PFLOPS. Each node is equipped with one 32-core Hygon C86 7185 CPU, organized into four 8-core NUMA domains, and four Hygon DCU accelerators. The DCUs are HIP-based GPGPUs comparable to AMD MI60-class devices, each with 16 GB of dedicated VRAM. Each node also provides 128 GB of host memory. Within a node, CPU cores communicate through the HSL high-speed interconnect bus protocol, while CPU–accelerator communication is performed via PCIe-based DMA. Inter-node communication is provided by a 200 Gb/s network. 
+
+Tecorigin consists of 512 liquid-cooled T1118L nodes and delivers a theoretical peak performance of 1.31 EFLOPS in FP16. Each node includes two 32-core Loongson 3C6000/D processors and eight proprietary T111 OAM accelerator mod-ules based on a heterogeneous many-core design. Nodes are interconnected through a two-level fat-tree InfiniBand network for high-throughput distributed execution. 
+
+B. Physical system used to measure performance 
+
+Under the simplified engineering approximation adopted in this work, the local service conditions of voxel v are determined by both its through-wall position xv and its axial position zv in the Chinese third-generation CAP1400 RPV [65]. The RPV base material is ASME SA508 Grade 3 Class 1, and we adopt a representative composition reported for China domestic A508-3 steel: Fe (bal.), C 0.167 wt.%, Si 0.193 wt.%, Mn 1.35 wt.%, S 0.002 wt.%, P 0.005 wt.%, Cr 0.086 wt.%, Ni 0.738 wt.%, Cu 0.027 wt.%, Mo 0.481 wt.%, and V 0.007 wt.% [66]. The local irradiation condition is prescribed as:        
+
+> ϕv=ϕinner exp( −μx v)fϕ(zv),(11)
+
+where ϕinner is the reference neutron flux at the inner wall, μ is the through-wall attenuation coefficient, and fϕ(zv ) describes the axial flux distribution, which peaks in the core belt region, as illustrated in Fig. 1(b). Accordingly, the initial vacancy concentration in voxel v is treated as a function of its local service conditions:          
+
+> c(0)
+> V,v =c(0)
+> V(Tv, ϕ v, c solute ,v , ρ sinks ,v ),(12)
+
+where csolute ,v denotes the local solute composition and 
+
+ρsinks ,v the effective density of defect sinks such as dislo-cations, grain boundaries, and precipitates. In this way, the initial defect state of each voxel reflects the engineering-scale spatial heterogeneity, while the subsequent evolution of vacancy concentration and related defect statistics is governed self-consistently by AtomWorld .With this formulation, engineering-scale degradation in CAP1400 RPV steel is recast as a massively parallel dynamical evolution problem over a large ensemble of local atomistic boxes, thereby achieving both local physical fidelity and system-level scalability. 
+
+C. Training details 
+
+All training of the algorithm part was conducted on single NVIDIA A100 GPUs using PyTorch 2.5.1 with CUDA 12.4. The model was trained directly in an AKMC simulation environment on systems of size 200 × 200 × 200 . It exhibits 
+
+zero-shot system-size scalability : once trained on small lattices, it can be directly deployed to much larger systems without retraining. The training data were constructed from atomistic transition trajectories sampled across a broad range of material and environmental conditions, enabling the learned model to generalize beyond any single fixed system. Specifically, the sampled trajectories cover temperatures from 230 to 400 ◦C,alloy compositions spanning Cu = 0.02–0.26 at.%, Ni = 0.38– 1.54 at.%, Mn = 0.59–1.57 at.%, Si = 0.10–0.99 at.%, and P = 0.004–0.041 at.%, point-defect concentrations from 1 to 1000 appm, neutron fluxes from 10 9 to 10 11 n cm −2 s−1,and accumulated irradiation doses from 10 −4 to 1 dpa. Each sample consists of a global state st, the local contexts of all active atoms, the corresponding candidate transition sets, and the supervision targets for the policy, value, and time branches. For each active atom, we extract a fixed-radius local neighborhood with cutoff radius 6.0 ˚A, and cap the maximum number of neighbors at 64; excess neighbors are truncated and smaller neighborhoods are zero-padded with masking. The input features include atom type, relative coordinates, local defect type, neighborhood connectivity, and candidate-transition masks. 
+
+AtomWorld consists of a local atomic policy network, a global kinetic critic, and a Poisson time network. The local policy network takes the local context of a single active atom as input and outputs logits over all valid candidate transitions, while the critic and time branches provide global kinetic supervision and physical-time prediction during training. The model is trained with a joint objective combining a policy loss, a critic regression loss, and a time-alignment loss, optimized using AdamW with batch size 256 and initial learning rate 
+
+10 −4. The final model is selected based on the best validation performance. At simulation time, only the local policy network and the Poisson time network are retained, while the global critic is used only during centralized training. Since inference depends only on fixed-radius local neighborhoods, the per-atom infer-ence cost remains constant with respect to system size, and 0.0                 
+
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> 1.0 (a) 663K AtomWorld
+> OpenKMC SW (Pair)
+> E. Vincent 2006
+> T.N. Lê
+> (b) 693K
+> 020,000 40,000 60,000 80,000 100,000
+> Time (s)
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> (c) 733K
+> 020,000 40,000 60,000 80,000 100,000
+> Time (s)
+> (d) 773K
+> Advancement Factor
+> Fig. 4. Time evolution of the advancement factor ζat different temperatures.
+> AtomWorld closely reproduces the reference KMC trajectories across thermal regimes, capturing both slow low-temperature evolution and faster high-temperature kinetics.
+
+models trained on small systems can be directly applied to larger systems without changing the parameters or network architecture. 
+
+D. Measurement methodology 
+
+The proposed method will be evaluated along four dimen-sions. First , correctness will be validated by comparing our results against the experimental measurements reported by Lˆ eet al. and the simulation results presented by Vincent et al. This ensures that the method remains faithful to both phys-ical observations and established computational references. 
+
+Second , scalability will be assessed on supercomputers with diverse architectural designs. This evaluation is intended to verify that the method can sustain efficient execution across heterogeneous large-scale platforms. Third , computational per-formance will be quantified using a conservative FLOP-based methodology. The total FLOP count is derived from the exact arithmetic complexity of each kernel, accumulated locally on each MPI rank, and reduced globally at the end of execu-tion, so the reported performance reflects effective scientific computation rather than inflated hardware activity. Fourth , for full-size RPV lifetime prediction, we use time-to-solution as the primary metric, defined as the execution time required to advance one year of physical service time. This metric more directly captures the practical cost of full-scale lifecycle simulation. VII. P ERFORMANCE RESULTS 
+
+A. Accuracy Validation 
+
+A central question is whether AtomWorld can accurately capture the physical evolution of the underlying atomistic system. To assess this, we examine the advancement factor 
+
+ζ(t), which tracks microstructural progression over physical time across different thermal conditions. As shown in Fig. 4, AtomWorld closely matches the ref-erence AKMC trajectories across all tested temperatures. It captures both the slow evolution at low temperature and the faster progression at high temperature, without distorting the 32 64 128 256 512 1024 2048 4096 8192 16384 32768 
+
+Nodes           
+
+> 1
+> 10
+> 100
+> Strong scaling speedup
+> 100%
+> 101%
+> 97%
+> 100%
+> 98%
+> 97%
+> 95%
+> 100%
+> 95%
+> 94%
+> 92%
+> 100%
+> 98%
+> 96%
+> 100%
+> 96%
+> ORISE
+> Full System
+> Lineshine
+> Full System
+> 32 64 128 256 512 1024 2048 4096 8192 16384 32768
+
+Nodes    
+
+> 1
+> 2
+> 5
+> 10
+> 20
+> 50
+> 100
+> 200
+> 500
+> 1000
+> 2000
+> Performance (PFLOPS/s)
+> 103%
+> 102%
+> 97%
+> 100%
+> 99%
+> 96%
+> 100%
+> 98%
+> 93%
+> 100%
+> 99%
+> 99%
+> 97%
+> 100%
+> 97%
+> 61P
+> 121P
+> 241P
+> 483P
+> 1270P
+> 1.5T
+> ORISE
+> Max: 80.0 PFLOPS
+> Util: 40%
+> Lineshine
+> Max: 1.27 EFLOPS
+> Util: 48%
+> ORISE
+> Full System
+> Lineshine
+> Full System
+> Lineshine Peak FP64 Perf.
+> ORISE Peak FP64 Perf.
+> Ideal Scaling
+> CPU-based
+> Lineshine
+> Tianhe-3
+> New Sunway
+> GPU-based
+> ORISE
+> Tecorigin Fig. 5. Strong scalability (left) and weak scalability (right) results. Numbers along the graph lines indicate parallel efficiency. ⋆denotes the most advanced supercomputer in each category in China.
+
+time profile. Similar agreement is observed in the correspond-ing energy-relaxation trajectories, indicating that AtomWorld 
+
+preserves both configurational and thermodynamic evolution. Together, these results show that AtomWorld accelerates atom-istic simulation without sacrificing the essential physics of the original kinetics. 
+
+B. Scalability Evaluation 
+
+We evaluate the scalability of AtomWorld on five super-computers. In all experiments, AtomWorld adopts a two-level parallelization strategy: inter-node parallelism is provided by the voxel-parallel scheme (§ V-C), while intra-node paral-lelism is realized through the asynchronous sublattice-parallel 
+
+design (§ V-B2). To accommodate architectural differences, we adopt machine-specific voxel configurations for node-local execution, as summarized in Table II. We then tailor each system’s scaling setup accordingly, as listed in Table III, to evaluate distributed execution at hardware-efficient operating points and fully expose the strong- and weak-scaling capability of AtomWorld .As shown in Fig. 5, AtomWorld delivers consistently strong strong- and weak-scaling performance across all five leader-ship systems. On Lineshine , the most advanced CPU-based supercomputer in China, it achieves a 20.6 × strong-scaling speedup with 96% efficiency under a 21.5 × increase in node count, from 1,024 to approximately 22,000 nodes (full machine), while sustaining 97% weak-scaling efficiency at full-machine scale. On Tianhe-3 and New Sunway , AtomWorld                             
+
+> TABLE II MACHINE -SPECIFIC VOXEL CONFIGURATIONS ACROSS DIFFERENT SUPERCOMPUTERS .
+> Supercomputer Voxel size #Atoms Volume
+> Lineshine 15 ,000 36.75 T79 .45 μm 3
+> Tianhe-3 7,500 3844 B9.93 μm 3
+> New Sunway 10 ,000 32T23 .54 μm 3
+> ORISE 10 ,000 32T23 .54 μm 3
+> Tecorigin 20 ,000 316 T188 .33 μm 3
+
+likewise maintains high scaling efficiency, achieving 29.4 ×
+
+and 7.7 × strong-scaling speedups over 32 × and 8 × increases in node count, from 256 to 8,192 nodes and from 2,048 to 16,384 nodes, respectively, with corresponding strong-scaling efficiencies of 92% and 96%, and weak-scaling efficiencies of 93% and 97%. Similar trends hold on GPU-based systems: on ORISE , the most advanced GPU-based supercomputer in China, AtomWorld achieves a 52.2 × strong-scaling speedup with 95% efficiency as the system scales by 55 ×, from 128 to approximately 7,086 nodes (full machine), while sustaining 96% weak-scaling efficiency; on Tecorigin , it delivers 15.5 ×
+
+speedup in both strong and weak scaling with 97% efficiency over a 16 × increase in machine scale, from 32 to 512 nodes. 
+
+C. Peak Performance 
+
+Figure 5 (right) reports the peak performance of AtomWorld ,measured as the floating-point throughput of the core neural-network inference that dominates the simulation runtime. Across both the most advanced CPU-based and GPU-based supercomputers in China, AtomWorld attains state-of-the-art peak performance. On Lineshine, the largest configuration in this work comprises 2.2 million voxels with 6.75 trillion atoms per voxel, reaching 14.85 quintillion atoms in total. This is nearly 1,000 × larger in system size than any pre-viously reported atomistic simulation. At the unprecedented scale of 14.85 quintillion atoms, AtomWorld still attains 1.27 EFLOPS at full-system deployment, sustaining 48% of Lineshine’s peak FP64 performance. On ORISE, AtomWorld 
+
+reaches 80.0 PFLOPS at full-machine scale on 7,086 nodes for the system with 708,600 voxels and 2 trillion atoms per voxel, corresponding to 40% of the system’s peak FP64 performance. Overall, these results show that AtomWorld not only scales to full-system deployment, but also sustains substantial through-put on the dominant inference workload at extreme scale. 
+
+D. Time-to-solution 
+
+We evaluate this capability on the Chinese third-generation CAP1400 RPV steel material ASME SA508 Grade 3 Class 1. On the full Lineshine system, AtomWorld constructs TABLE III SCALING CONFIGURATIONS ACROSS DIFFERENT SUPERCOMPUTERS .                                                   
+
+> Supercomputer Nodes Strong Scaling Weak Scaling #Voxels Voxels/Node #Voxels Voxels/Node
+> Lineshine 1,024 819,200 800 102,400 100 22,000 819,200 37.2 2,200,000 100
+> Tianhe-3 256 409,600 1,600 128,000 50 8,192 409,600 50 409,600 50
+> New Sunway 2048 819200 400 400 50 16384 819200 50 819200 50
+> ORISE 128 256,000 2,000 12,800 100 7,086 256,000 36.1 708,600 100
+> Tecorigin 32 25,600 800 1,600 50 512 25,600 50 25,600 50 RPV  Inner  Surface
+> RPV  Outer  Surface
+> 0.23 m
+> 12.64 m
+
+a
+
+b
+
+c (b)  (c)   
+
+> Single Cu Atom Max Cu Cluster
+> 3.41 μm
+> (a)
+> Fig. 6. Voxelized Microstructural Evolution Across the RPV: Spatial Variation in Cu Precipitation Across the RPV Wall
+
+the largest full-scale RPV steel model reported to date, reaching 9.91 , cm 3 of physical volume—over 10 7× beyond the state of the art in spatial coverage. At this engineering scale, it achieves the furthest temporal reach reported to date, requiring only 1.71 wall-clock days to simulate one service year of RPV evolution—about 6,400 × beyond the practical temporal reach of the state of the art. 
+
+Fig. 6 shows three representative voxels sampled from the upper-left to the lower-right of the RPV wall, revealing a clear spatial variation in Cu precipitation. As temperature 
+
+T decreases from ∼ 304 ◦C to ∼ 285 ◦C and neutron flux 
+
+ϕ from ∼ 1 × 10 11 n cm −2 s−1 to ∼ 1 × 10 10 n cm −2 s−1,Cu evolves from more dispersed states to stronger clustering, with the upper-left voxel exhibiting the most pronounced precipitation. This directly shows that AtomWorld captures location-dependent microstructural evolution across the vessel wall. 
+
+1) In space: engineering-scale RPV representation: Atom-World constructs the largest RPV steel model reported to date over the full 0.23 m wall thickness and 12 .64 m vessel height of the Chinese third-generation CAP1400 RPV, using a total of 2,200,000 voxels and reaching 9.91 cm 3 of physical volume, more than 10 7× larger in spatial coverage than the state of the art. Following the temperature-guided voxelization described above (§ V-C1b), these voxels are assigned by equal-interval discretization of temperature in the wall-thickness and axial directions. Under representative CAP1400 thermal gradients, this corresponds to approximately 747 voxels across the wall thickness and 2,947 voxels along the axial direction. The resulting maximum intra-voxel temperature variation is only about 0.027 ◦C, which induces at most about 0.095% 
+
+perturbation in a representative Arrhenius-type local kinetic rate at operating temperature. This discretization therefore pro-vides a sufficiently fine engineering-scale representation of the CAP1400 RPV for subsequent independent voxel evolution. 
+
+2) In time: RPV-lifetime physical advancement: AtomWorld 
+
+achieves the furthest temporal reach reported to date, extending direct atomistic simulation of RPV material evolution to the year scale for the first time. At full-RPV scale, it advances one month of atomistic evolution in only 3.42 hours of wall-clock time, sustaining a rate of 0.58 simulated years per day. This reduces the cost of simulating one service year to only 1.71 
+
+wall-clock days, so that a full 60-year RPV lifetime becomes reachable in roughly 103 days. In contrast, prior state-of-the-art methods require about 30 years of wall-clock time for just one service year, meaning that AtomWorld improves practical temporal reach by about 6,400 ×. As a result, RPV-lifetime atomistic prediction is transformed from a prohibitive long-horizon computation into a practically achievable simulation capability. VIII. I MPLICATIONS 
+
+AtomWorld redefines what is computationally reachable for RPV lifetime simulation. For the first time, direct atomistic simulation is no longer confined to probing microscopic mechanisms within limited spatial and temporal windows; instead, it can be advanced across service-year horizons and engineering-scale RPV dimensions. This lifts atomistic sim-ulation from a tool primarily used to interpret local phe-nomena into a predictive instrument that can directly inform RPV-scale degradation assessment. As a result, AtomWorld 
+
+establishes a new computational foundation for physically grounded lifetime prediction, cross-scale model development, and more reliable life-extension decisions in safety-critical nuclear energy systems. It also opens the possibility of using atomistic simulation not only to explain degradation after the fact, but to anticipate it before irreversible risks emerge. More broadly, this work points to a new route for scientific computing at extreme scale. Its significance lies not merely in running larger simulations faster, but in showing that previously inaccessible scientific regimes can be unlocked by reformulating the evolution process itself and co-designing it with modern supercomputing. By recasting atomistic simula-tion as world modeling, AtomWorld demonstrates that long-horizon physical evolution can be made simultaneously atom-istically faithful, temporally reachable, spatially extensive, and machine-efficient. This shifts the central question from how to accelerate isolated kernels to how to restructure an entire phys-ical evolution problem so that scientific fidelity and extreme-scale execution become mutually reinforcing rather than fun-damentally conflicting. In this sense, AtomWorld suggests a broader paradigm shift for computational science: future breakthroughs may come not only from larger machines, but from new formulations that transform how complex physical worlds are represented, advanced, and scaled. REFERENCES [1] M. Kolluri, O. Martin, F. Naziris, E. D’Agata, F. Gillemot, M. Brumovsky, A. Ulbricht, J.-M. Autio, O. Shugailo, and A. Horvath, “Structural materias research on parameters influencing the material properties of rpv steels for safe long-term operation of pwr npps,” 
+
+Nuclear Engineering and Design , vol. 406, p. 112236, 2023. [Online]. Available: https://doi.org/10.1016/j.nucengdes.2023.112236 [2] S. Zinkle and G. Was, “Materials challenges in nuclear energy,” 
+
+Acta Materialia , vol. 61, no. 3, pp. 735–758, 2013, the Diamond Jubilee Issue. [Online]. Available: https://www.sciencedirect.com/ science/article/pii/S1359645412007987 [3] E. A. Little, “Development of radiation resistant materials for advanced nuclear power plant,” Materials Science and Technology ,vol. 22, no. 5, pp. 491–518, 2006. [Online]. Available: https: //doi.org/10.1179/174328406X90998 [4] S. Ortner, “A review of structural material requirements and choices for nuclear power plant,” Frontiers in Nuclear Engineering , vol. Volume 2 - 2023, 2023. [Online]. Available: https://www.frontiersin.org/journals/ nuclear-engineering/articles/10.3389/fnuen.2023.1253974 [5] L. Zhou, J. Dai, Y. Li, X. Dai, C. Xie, L. Li, and L. Chen, “Research progress of steels for nuclear reactor pressure vessels,” Materials ,vol. 15, no. 24, 2022. [Online]. Available: https://www.mdpi.com/ 1996-1944/15/24/8761 [6] A. Mukhtar, M. A. Khattak, A. F. Rafique, and N. Zareen, “Reactor pressure vessel (rpv) design and fabrication: A literature review,” Journal of Advanced Research in Applied Mechanics ,vol. 22, no. 1, p. 1–12, Oct. 2020. [Online]. Available: https: //www.akademiabaru.com/submit/index.php/aram/article/view/1755 [7] Y. Tachibana, S. Nakagawa, and T. Iyoku, “Reactor pressure vessel design of the high temperature engineering test reactor,” Nuclear Engineering and Design , vol. 233, no. 1, pp. 103–112, 2004, japan’s HTTR. [Online]. Available: https://www.sciencedirect.com/ science/article/pii/S0029549304002420 [8] B. Timofeev, “Assessment of the first generation rpv state after designed lifetime,” International Journal of Pressure Vessels and Piping , vol. 81, no. 8, pp. 703–712, 2004, special Issue in Memory of Academician Myrddin Davies. [Online]. Available: https://www.sciencedirect.com/science/article/pii/S0308016104000419 [9] A. Al Mazouzi, A. Alamo, D. Lidbury, D. Moinereau, and S. Van Dyck, “Perform 60: Prediction of the effects of radiation for reactor pressure vessel and in-core materials using multi-scale modelling – 60 years foreseen plant lifetime,” Nuclear Engineering and Design , vol. 241, no. 9, pp. 3403–3415, 2011, seventh European Commission conference on Euratom research and training in reactor systems (Fission Safety 2009). [Online]. Available: https://www.sciencedirect.com/science/article/pii/S0029549311001804 [10] M. Song, M. Wang, X. Lou, R. B. Rebak, and G. S. Was, “Radiation damage and irradiation-assisted stress corrosion cracking of additively manufactured 316l stainless steels,” Journal of Nuclear Materials , vol. 513, pp. 33–44, 2019. [Online]. Available: https: //www.sciencedirect.com/science/article/pii/S0022311518309061 [11] E. Kuleshova, B. Gurovich, Z. Bukina, A. Frolov, D. Maltsev, E. Krikun, D. Zhurko, and G. Zhuchkov, “Mechanisms of radiation embrittlement of vver-1000 rpv steel at irradiation temperatures of (50–400)°c,” Journal of Nuclear Materials , vol. 490, pp. 247–259, 2017. [Online]. Available: https://www.sciencedirect.com/science/article/pii/S0022311517302544 [12] C. Becquart, “Rpv steel microstructure evolution under irradiation: a multiscale approach,” Nuclear Instruments and Methods in Physics Research Section B: Beam Interactions with Materials and Atoms ,vol. 228, no. 1, pp. 111–121, 2005, proceedings of the Seventh International Conference on Computer Simulation of Radiation Effects in Solids. [Online]. Available: https://www.sciencedirect.com/science/ article/pii/S0168583X04010912 [13] P. Styman, J. Hyde, K. Wilford, A. Morley, and G. Smith, “Precipitation in long term thermally aged high copper, high nickel model rpv steel welds,” Progress in Nuclear Energy ,vol. 57, pp. 86–92, 2012, nuclear Materials: Selected articles from the E-MRS 2011 Spring Meeting. [Online]. Available: https: //www.sciencedirect.com/science/article/pii/S0149197011002034 [14] J. Fukakura, M. Asano, M. Kikuchi, and M. Ishikawa, “Effect of thermal aging on fracture toughness of rpv steel,” Nuclear Engineering and Design , vol. 144, no. 3, pp. 423–429, 1993. [Online]. Available: https://www.sciencedirect.com/science/article/pii/002954939390037A [15] M. Kolluri, A. Kryukov, A. Magielsen, P. H¨ ahner, V. Petrosyan, G. Sevikyan, and Z. Szaraz, “Mechanical properties and microstructure of long term thermal aged wwer 440 rpv steel,” Journal of Nuclear Materials , vol. 486, pp. 138–147, 2017. [Online]. Available: https://www.sciencedirect.com/science/article/pii/S0022311516308492 [16] M. Miller and K. Russell, “Embrittlement of rpv steels: An atom probe tomography perspective,” Journal of Nuclear Materials , vol. 371, no. 1, pp. 145–160, 2007, nuclear Fuels and Structural Materials 1. [Online]. Available: https://www.sciencedirect.com/science/article/ pii/S0022311507007490 [17] J. Zelenty, “Understanding thermally induced embrittlement in low copper rpv steels utilising atom probe tomography,” Materials Science and Technology , vol. 31, no. 8, pp. 981–988, 2015. [18] A. Zeman, L. Debarberis, L. Kupˇ ca, B. Acosta, M. Kytka, and J. Degmov´ a, “Study of radiation-induced degradation of rpv steels and model alloys by positron annihilation and m¨ ossbauer spectroscopy,” 
+
+Journal of Nuclear Materials , vol. 360, no. 3, pp. 272–281, 2007. [Online]. Available: https://www.sciencedirect.com/science/article/pii/ S0022311506005393 [19] E. Kuleshova, S. Fedotova, G. Zhuchkov, A. Erak, M. Saltykov, M. Dementyeva, and E. Alekseeva, “Degradation of rpv steel structure after 45 years of operation in the vver-440 reactor,” Journal of Nuclear Materials , vol. 540, p. 152362, 2020. [Online]. Available: https://www.sciencedirect.com/science/article/pii/S0022311520303810 [20] G. R. Odette and G. E. Lucas, “Recent progress in understanding reactor pressure vessel steel embrittlement,” Radiation Effects and Defects in Solids , vol. 144, no. 1-4, pp. 189–231, 1998. [Online]. Available: https://doi.org/10.1080/10420159808229676 [21] J. Kwon, S. C. Kwon, and J.-H. Hong, “Prediction of radiation hardening in reactor pressure vessel steel based on a theoretical model,” 
+
+Annals of Nuclear Energy , vol. 30, no. 15, pp. 1549–1559, 2003. [Online]. Available: https://www.sciencedirect.com/science/article/pii/ S0306454903001026 [22] A. R. Gokhman, F. Bergner, A. Ulbricht, and U. Birkenheuer, “Cluster dynamics simulation of reactor pressure vessel steels under irradiation,” in Diffusion and Diffusional Phase Transformations in Alloys , ser. Defect and Diffusion Forum, vol. 277. Trans Tech Publications Ltd, 5 2008, pp. 75–80. [23] J.-H. Ke and B. W. Spencer, “Cluster dynamics modeling of mn-ni-si precipitates coupled with radiation-induced segregation in low-cu reactor pressure vessel steels,” Journal of Nuclear Materials , vol. 569, p. 153910, 2022. [Online]. Available: https: //www.sciencedirect.com/science/article/pii/S0022311522003968 [24] K. Lindgren, K. Stiller, P. Efsing, and M. Thuvander, “On the analysis of clustering in an irradiated low alloy reactor pressure vessel steel weld,” Microscopy and Microanalysis , vol. 23, no. 2, pp. 376–384, 03 2017. [Online]. Available: https://doi.org/10.1017/S1431927617000162 [25] G. Odette, B. Wirth, D. Bacon, and N. Ghoniem, “Multiscale-multiphysics modeling of radiation-damaged materials: Embrittlement of pressure-vessel steels,” MRS Bulletin , vol. 26, no. 3, p. 176–181, 2001. [26] P. dong Lin, J. feng Nie, W. dong Cui, L. He, Y. peng Lu, and S. gang Cui, “A multiscale study on the microstructure and hardening models of the irradiation defects on reactor pressure vessel steels: Modelling and experiment,” Journal of Materials Research and Technology , vol. 30, pp. 520–531, 2024. [Online]. Available: https://www.sciencedirect.com/science/article/pii/S2238785424005568 [27] N. Cheimarios, G. Kokkoris, and A. G. Boudouvis, “Multiscale modeling in chemical vapor deposition processes: Coupling reactor scale with feature scale computations,” Chemical Engineering Science ,vol. 65, no. 17, pp. 5018–5028, 2010. [Online]. Available: https: //www.sciencedirect.com/science/article/pii/S0009250910003581 [28] Z. Dong, K. Liu, H. Qiu, M. Wang, W. Tian, and G. Su, “Preliminary implementation of high-resolution multi-scale coupling calculations for the entire pressure vessel based on openfoam,” Applied Thermal Engineering , vol. 259, p. 124911, 2025. [Online]. Available: https://www.sciencedirect.com/science/article/pii/S1359431124025791 [29] S. Jumel and J. C. Van-Duysen, “Rpv-1: A virtual test reactor to simulate irradiation effects in light water reactor pressure vessel steels,” 
+
+Journal of Nuclear Materials , vol. 340, no. 2, pp. 125–148, 2005. [Online]. Available: https://www.sciencedirect.com/science/article/pii/ S0022311504008736 [30] Y. Tanaka, “2 - reactor pressure vessel (rpv) components: processing and properties,” in Irradiation Embrittlement of Reactor Pressure Vessels (RPVs) in Nuclear Power Plants , ser. Woodhead Publishing Series in Energy, N. Soneda, Ed. Woodhead Publishing, 2015, pp. 26–43. [Online]. Available: https://www.sciencedirect.com/science/ article/pii/B9781845699673500027 [31] J. F. Knott, “Structural integrity of nuclear reactor pressure vessels,” 
+
+Philosophical Magazine , vol. 93, no. 28-30, pp. 3835–3862, 2013. [32] L.-J. Xie, X. Ren, M.-X. Shen, and L.-Q. Tu, “Parameter correlation of high-temperature creep constitutive equation for rpv metallic materials,” Journal of Nuclear Materials , vol. 465, pp. 196–203, 2015. [Online]. Available: https://www.sciencedirect.com/science/article/pii/ S0022311515003074 [33] Y. Zhang, P. Chakraborty, and S. B. Biner, “Modeling of late blooming phases and precipitation kinetics in aging reactor pressure vessel (rpv) steels,” Idaho National Laboratory (INL), Idaho Falls, ID (United States), Tech. Rep., 09 2013. [Online]. Available: https://www.osti.gov/biblio/1111015 [34] B. W. Spencer, W. M. Hoffman, and W. Jiang, “Enhancements to engineering-scale reactor pressure vessel fracture capabilities in grizzly,” Idaho National Laboratory (INL), Idaho Falls, ID (United States), Tech. Rep., 09 2017. [Online]. Available: https://www.osti.gov/biblio/1473611 [35] L. Zhou, J. Dai, Y. Li, X. Dai, C. Xie, L. Li, and L. Chen, “Research progress of steels for nuclear reactor pressure vessels,” 
+
+Materials , vol. 15, p. 8761, 12 2022. [Online]. Available: https: //doi.org/10.3390/ma15248761 [36] X. Xu, Y. Ye, Y. Wu, and Y. Zheng, “Study on the influence of ambient temperature and rpv temperature on operation performance of htr-pm reactor cavity cooling system,” Journal of Nuclear Engineering , vol. 6, no. 4, 2025. [Online]. Available: https: //www.mdpi.com/2673-4362/6/4/48 [37] K. Ilieva, “Environmental factors influence on rpv,” International Journal of Nuclear Knowledge Management , vol. 4, no. 4, pp. 286–300, 2010. [Online]. Available: https://www.inderscienceonline.com/doi/abs/ 10.1504/IJNKM.2010.037072 [38] Y. Zhang, D. Schwen, P. Chakraborty, and X. Bai, “Lower length scale model development for embrittlement of reactor presure vessel steel,” Idaho National Laboratory (INL), Idaho Falls, ID (United States), Tech. Rep., 09 2016. [Online]. Available: https://www.osti.gov/biblio/1369375 [39] G. Arampatzis, M. A. Katsoulakis, and P. Plech´ aˇ c, “Parallelization, processor communication and error analysis in lattice kinetic monte carlo,” SIAM Journal on Numerical Analysis , vol. 52, no. 3, pp. 1156– 1182, 2014. [Online]. Available: https://doi.org/10.1137/120889459 [40] A. Esteves and A. Moura, “Distributed memory implementation strategies for the kinetic monte carlo algorithm,” in Proceedings of the 23rd European MPI Users’ Group Meeting , ser. EuroMPI ’16. New York, NY, USA: Association for Computing Machinery, 2016, p. 130–139. [Online]. Available: https://doi.org/10.1145/2966884.2966908 [41] J. Li, P. Wei, S. Yang, J. Wu, P. Liu, and X. He, “Crystal-kmc: parallel software for lattice dynamics monte carlo simulation of metal materials,” 
+
+Tsinghua Science and Technology , vol. 23, no. 4, pp. 501–510, 2018. [42] K. Li, H. Shang, Y. Zhang, S. Li, B. Wu, D. Wang, L. Zhang, F. Li, D. Chen, and Z. Wei, “Openkmc: a kmc design for hundred-billion-atom simulation using millions of cores on sunway taihulight,” in Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis , ser. SC ’19. New York, NY, USA: Association for Computing Machinery, 2019. [Online]. Available: https://doi.org/10.1145/3295500.3356165 [43] H. Shang, X. Chen, X. Gao, R. Lin, L. Wang, F. Li, Q. Xiao, L. Xu, Q. Sun, L. Zhu, F. Wang, Y. Zhang, and H. Song, “Tensorkmc: kinetic monte carlo simulation of 50 trillion atoms driven by deep learning on a new generation of sunway supercomputer,” in Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis , ser. SC ’21. New York, NY, USA: Association for Computing Machinery, 2021. [Online]. Available: https://doi.org/10.1145/3458817.3476174 [44] M. Kaniselvan, A. Maeder, M. Mladenovi´ c, M. Luisier, and A. N. Ziogas, “Accelerated atomistic kinetic monte carlo simulations of resistive memory arrays,” in Proceedings of the International Conference for High Performance Computing, Networking, Storage, and Analysis , ser. SC ’24. IEEE Press, 2024. [Online]. Available: https://doi.org/10.1109/SC41406.2024.00097 [45] S. Li, Z. Pan, N. Nie, J. Wang, H. Bai, G. Chu, Y. Zeng, X. He, Y. Wang, C. Hu, and X. Chi, “Misa-akmc:achieve kinetic monte carlo simulation of 20 quadrillion atoms on gpu clusters,” in Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis , ser. SC ’25. New York, NY, USA: Association for Computing Machinery, 2025, p. 1661–1675. [Online]. Available: https://doi.org/10.1145/3712285.3759781 [46] H. Xu, Y. N. Osetsky, and R. E. Stoller, “Self-evolving atomistic kinetic monte carlo: fundamentals and applications,” Journal of Physics: Condensed Matter , vol. 24, no. 37, p. 375402, aug 2012. [Online]. Available: https://doi.org/10.1088/0953-8984/24/37/375402 [47] S. Kim, H. An, S. Oh, J. Jung, B. Kim, S. K. Nam, and S. Han, “Atomistic kinetic monte carlo simulation on atomic layer deposition of tin thin film,” Computational Materials Science , vol. 213, p. 111620, 2022. [Online]. Available: https://www.sciencedirect.com/ science/article/pii/S0927025622003615 [48] F. Soisson, C. Becquart, N. Castin, C. Domain, L. Malerba, and E. Vincent, “Atomistic kinetic monte carlo studies of microchemical evolutions driven by diffusion processes under irradiation,” Journal of Nuclear Materials , vol. 406, no. 1, pp. 55–67, 2010, fP6 IP PERFECT Project: Prediction of Irradiation Damage Effects in Reactor Components. [Online]. Available: https://www.sciencedirect. com/science/article/pii/S0022311510002308 [49] M. B. Jassar, T. De Bruin, C. Nieto-Draghi, and S. N. Steinmann, “Challenges and opportunities in using kinetic monte carlo for battery research and innovation,” EES Batteries , vol. 1, no. 4, pp. 788–802, 2025. [50] L. Xu, H. Shang, X. Chen, Y. Zhang, L. Wang, X. Gao, and H. Song, “Redesigning openkmc for multi-component trillion-atom simulations on the new sunway supercomputer,” IEEE Transactions on Parallel and Distributed Systems , vol. 34, no. 7, pp. 1997–2010, 2023. [51] E. Teller, M. Ishikawa, L. Wood et al. , “Completely automated nuclear reactors for long-term operation,” Lawrence Livermore National Lab., CA (United States), Tech. Rep., 1996. [52] A. Poullikkas, “An overview of future sustainable nuclear power reac-tors.” International Journal of Energy & Environment , vol. 4, no. 5, 2013. [53] R. Krivanek, “Long term operation of nuclear power plants –iaea salto peer review service and its results,” Nuclear Engineering and Design , vol. 280, pp. 99–104, 2014. [Online]. Available: https://www.sciencedirect.com/science/article/pii/S0029549314005329 [54] B. Merk, D. Litskevich, K. R. Whittle, M. Bankhead, R. J. Taylor, and D. Mathers, “On a long term strategy for the success of nuclear power,” Energies , vol. 10, no. 7, 2017. [Online]. Available: https://www.mdpi.com/1996-1073/10/7/867 [55] A. Lokhov, A. Huerta, L. Dufresne, A. Giraud, N. Osouf et al. , “The economics of long-term operation of nuclear power plants,” Organisation for Economic Co-Operation and Development, Nuclear Energy . . . , Tech. Rep., 2012. [56] D. I. Kopelevich, A. Z. Panagiotopoulos, and I. G. Kevrekidis, “Coarse-grained kinetic computations for rare events: Application to micelle formation,” The Journal of Chemical Physics , vol. 122, no. 4, p. 044908, 01 2005. [Online]. Available: https://doi.org/10.1063/1.1839174 [57] C. S. Becquart and C. Domain, “Introducing chemistry in atomistic kinetic monte carlo simulations of fe alloys under irradiation,” physica status solidi (b) , vol. 247, no. 1, pp. 9–22, 2010. [Online]. Available: https://onlinelibrary.wiley.com/doi/abs/10.1002/pssb.200945251 [58] E. Dontsova, J. Rottler, and C. W. Sinclair, “Solute-defect interactions in al-mg alloys from diffusive variational gaussian calculations,” 
+
+Phys. Rev. B, vol. 90, p. 174102, Nov 2014. [Online]. Available: https://link.aps.org/doi/10.1103/PhysRevB.90.174102 [59] S. Plimpton, C. Battaile, M. Chandross, L. Holm, A. Thompson, V. Tikare, G. Wagner, E. Webb, X. Zhou, C. G. Cardona et al. , “Crossing the mesoscale no-man’s land via parallel kinetic monte carlo,” Sandia Report SAND2009-6226 , vol. 1, 2009. [60] W. Jia, H. Wang, M. Chen, D. Lu, L. Lin, R. Car, E. Weinan, and L. Zhang, “Pushing the limit of molecular dynamics with ab initio accu-racy to 100 million atoms with machine learning,” in SC20: International Conference for High Performance Computing, Networking, Storage and Analysis , 2020, pp. 1–14. [61] B. Kozinsky, A. Musaelian, A. Johansson, and S. Batzner, “Scaling the leading accuracy of deep equivariant models to biomolecular simulations of realistic size,” in Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis , ser. SC ’23. New York, NY, USA: Association for Computing Machinery, 2023. [Online]. Available: https://doi.org/10.1145/3581784.3627041 [62] T. M. Razakh, T. Linker, Y. Luo, N. Piroozan, J. Pennycook, N. Kumar, A. Musaelian, A. Johansson, B. Kozinsky, R. K. Kalia, P. Vashishta, F. Shimojo, S. Hattori, K.-i. Nomura, and A. Nakano, “Multiscale light-matter dynamics in quantum materials: From electrons to topological superlattices,” in Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis , ser. SC ’25. New York, NY, USA: Association for Computing Machinery, 2025, p. 36–47. [Online]. Available: https://doi.org/10.1145/3712285.3771785 [63] G. Cai and Y. Lin, “On statistics of first-passage failure,” 1994. [64] T. Oppelstrup, V. V. Bulatov, A. Donev, M. H. Kalos, G. H. Gilmer, and B. Sadigh, “First-passage kinetic monte carlo method,” Physical Review E—Statistical, Nonlinear, and Soft Matter Physics , vol. 80, no. 6, p. 066701, 2009. [65] J. Yan, M. Zheng, K. Cao, N. Guo, K. Zhang, J. Wang, and W. Lu, “Experimental study of ivr-ervc chf limits for cap1400,” Progress in Nuclear Energy , vol. 172, p. 105193, 2024. [66] X. Ma, M. She, W. Zhang, L. Song, S. Qiu, X. Liu, and R. Zhang, “Microstructure characterization of reactor pressure vessel steel a508-3 irradiated by heavy ion,” Journal of Physics: Conference Series , vol. 2133, no. 1, p. 012015, nov 2021. [Online]. Available: https://doi.org/10.1088/1742-6596/2133/1/012015

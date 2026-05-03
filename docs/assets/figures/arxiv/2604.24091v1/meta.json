@@ -1,0 +1,54 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.24091v1/fig-001.webp",
+      "caption": "Fig. 3. Runtime required to advance one second of physical time for classical AKMC and AtomWorld at different lattice sizes, together with the corresponding speedup of AtomWorld on a single NVIDIA A100 GPU.",
+      "page": 6,
+      "index": 1,
+      "width": 521,
+      "height": 255
+    },
+    {
+      "url": "assets/figures/arxiv/2604.24091v1/fig-002.webp",
+      "caption": "TABLE III SCALING CONFIGURATIONS ACROSS DIFFERENT SUPERCOMPUTERS.",
+      "page": 11,
+      "index": 2,
+      "width": 529,
+      "height": 269
+    },
+    {
+      "url": "assets/figures/arxiv/2604.24091v1/fig-003.webp",
+      "caption": "Fig. 1. Problem context of RPV steel degradation: full-scale structural setting, harsh in-service thermo-irradiation conditions, and the multiscale spatial–temporal evolution from irradiation-induced atomic defects to macroscopic embrittlement. (a) and (b) place the RPV in its engineering context and mark the physically relevant vessel regions and dimensions. (c) summarizes the coupled service environment—temperature, pressure, neutron irradiation, and coolant chemistry—that drives stress buildup and irradiation-induced degradation in RPV steels. (d) depicts the cross-scale degradation pathway, in which atomic defects evolve into clusters, precipitation, dislocation pinning, crack initiation, and ultimately hardening, embrittlement, and DBTT shift.",
+      "page": 2,
+      "index": 3,
+      "width": 1068,
+      "height": 464
+    },
+    {
+      "url": "assets/figures/arxiv/2604.24091v1/fig-004.webp",
+      "caption": "Fig. 5. Strong scalability (left) and weak scalability (right) results. Numbers along the graph lines indicate parallel efficiency. ⋆ denotes the most advanced supercomputer in each category in China.",
+      "page": 10,
+      "index": 4,
+      "width": 1064,
+      "height": 323
+    },
+    {
+      "url": "assets/figures/arxiv/2604.24091v1/fig-005.webp",
+      "caption": "Fig. 4. Time evolution of the advancement factor ζ at different temperatures. AtomWorld closely reproduces the reference KMC trajectories across thermal regimes, capturing both slow low-temperature evolution and faster hightemperature kinetics.",
+      "page": 9,
+      "index": 5,
+      "width": 523,
+      "height": 270
+    },
+    {
+      "url": "assets/figures/arxiv/2604.24091v1/fig-006.webp",
+      "caption": "Fig. 2. Overview of the key innovations in AtomWorld: (a) algorithmic innovation, (b) HPC innovation, and (c) application innovation.",
+      "page": 5,
+      "index": 6,
+      "width": 1070,
+      "height": 923
+    }
+  ]
+}
