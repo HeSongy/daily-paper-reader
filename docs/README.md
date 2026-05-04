@@ -6,40 +6,49 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-05-03
-- 运行时间：2026-05-03 20:34:00 UTC
+- 最新运行日期：2026-05-04
+- 运行时间：2026-05-04 20:32:09 UTC
 - 运行状态：成功
-- 本次总论文数：6
-- 精读区：4
-- 速读区：2
+- 本次总论文数：9
+- 精读区：5
+- 速读区：4
 
 ### 今日简报（AI）
-聚焦多模态世界模型与结构稳健图学习，今日完成 6 篇论文阅读。  
-重点关注《HERMES++》与《World2VLM》，展示了驾驭三维场景理解与空间推理的统一建模趋势。  
-建议关注世界模型在视频理解和机器人感知中的应用前景。
-- 详情：[/202605/03/README](/202605/03/README)
+今日聚焦机器人世界模型与空间理解，精读与速读共计9篇论文。  
+重点关注机器人学习中的世界模型综述与动作中心时空建模两大方向。  
+建议读者持续关注世界模型在多模态感知和实际操作任务中的融合进展。
+- 详情：[/202605/04/README](/202605/04/README)
 
 ### 精读区论文标签
-1. [HERMES++: Toward a Unified Driving World Model for 3D Scene Understanding and Generation](/202605/03/2604.28196v1-hermes-toward-a-unified-driving-world-model-for-3d-scene-understanding-and-generation)  
+1. [World Model for Robot Learning: A Comprehensive Survey](/202605/04/2605.00080v1-world-model-for-robot-learning-a-comprehensive-survey)  
    标签：评分：10.0/10、query:navwm
-   evidence：用于3D场景理解与生成的统一驾驶世界模型
-2. [World2VLM: Distilling World Model Imagination into VLMs for Dynamic Spatial Reasoning](/202605/03/2604.26934v1-world2vlm-distilling-world-model-imagination-into-vlms-for-dynamic-spatial-reasoning)  
+   evidence：机器人学习与规划中世界模型的全面综述
+2. [STARRY: Spatial-Temporal Action-Centric World Modeling for Robotic Manipulation](/202605/04/2604.26848v2-starry-spatial-temporal-action-centric-world-modeling-for-robotic-manipulation)  
    标签：评分：9.0/10、query:navwm
-   evidence：将世界模型的想象力蒸馏用于动态空间推理
-3. [Emotion-Conditioned Short-Horizon Human Pose Forecasting with a Lightweight Predictive World Model](/202605/03/2604.23532v1-emotion-conditioned-short-horizon-human-pose-forecasting-with-a-lightweight-predictive-world-model)  
+   evidence：用于机器人操作的世界模型增强型动作生成策略
+3. [MotuBrain: An Advanced World Action Model for Robot Control](/202605/04/2604.27792v2-motubrain-an-advanced-world-action-model-for-robot-control)  
+   标签：评分：9.0/10、query:navwm
+   evidence：用于机器人控制和世界动力学的统一世界动作模型
+4. [Physically Native World Models: A Hamiltonian Perspective on Generative World Modeling](/202605/04/2605.00412v1-physically-native-world-models-a-hamiltonian-perspective-on-generative-world-modeling)  
+   标签：评分：9.0/10、query:navwm
+   evidence：讨论了世界模型作为具身智能的核心范式以及隐式预测表示。
+5. [REALM: An RGB and Event Aligned Latent Manifold for Cross-Modal Perception](/202605/04/2605.00271v1-realm-an-rgb-and-event-aligned-latent-manifold-for-cross-modal-perception)  
    标签：评分：8.0/10、query:navwm
-   evidence：轻量级自回归预测世界模型
-4. [COMPASS: COmpact Multi-channel Prior-map And Scene Signature for Floor-Plan-Based Visual Localization](/202605/03/2604.25388v1-compass-compact-multi-channel-prior-map-and-scene-signature-for-floor-plan-based-visual-localization)  
-   标签：评分：8.0/10、query:navwm
-   evidence：基于平面图的视觉定位与场景特征
+   evidence：用于跨模态感知的对齐隐流形
 
 ### 速读区论文标签
-1. [Unfolding an Atomistic World: Atomistic Simulation of Reactor Pressure Vessel Steel Across Year-and-Meter Scales](/202605/03/2604.24091v1-unfolding-an-atomistic-world-atomistic-simulation-of-reactor-pressure-vessel-steel-across-year-and-meter-scales)  
+1. [State Stream Transformer (SST) V2: Parallel Training of Nonlinear Recurrence for Latent Space Reasoning](/202605/04/2605.00206v1-state-stream-transformer-sst-v2-parallel-training-of-nonlinear-recurrence-for-latent-space-reasoning)  
+   标签：评分：7.0/10、query:navwm
+   evidence：专注于连续隐空间中的推理以及智能系统的隐状态处理。
+2. [GeoSearch: Augmenting Worldwide Geolocalization with Web-Scale Reverse Image Search and Image Matching](/202605/04/2604.25390v1-geosearch-augmenting-worldwide-geolocalization-with-web-scale-reverse-image-search-and-image-matching)  
    标签：评分：6.0/10、query:navwm
-   evidence：用于状态转移的原子级世界模型框架
-2. [Cheeger--Hodge Contrastive Learning for Structurally Robust Graph Representation Learning](/202605/03/2604.26301v1-cheeger--hodge-contrastive-learning-for-structurally-robust-graph-representation-learning)  
+   evidence：全球地理定位与空间推理
+3. [Semantic Foam: Unifying Spatial and Semantic Scene Decomposition](/202605/04/2604.26262v2-semantic-foam-unifying-spatial-and-semantic-scene-decomposition)  
    标签：评分：6.0/10、query:navwm
-   evidence：捕获结构信息的鲁棒图表示学习
+   evidence：统一3D资产的空间与语义场景分解
+4. [Agentic AI for Trip Planning Optimization Application](/202605/04/2605.00276v1-agentic-ai-for-trip-planning-optimization-application)  
+   标签：评分：6.0/10、query:navwm
+   evidence：用于车辆行程规划和路径优化的智能体AI
 
 
 <div class="dpr-home-promo-card">
