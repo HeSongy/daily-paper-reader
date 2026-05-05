@@ -1,0 +1,437 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-05-05T20:50:35.277917+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 7,
+    "deep_cap": 6,
+    "deep_selected": 6,
+    "quick_candidates": 5,
+    "quick_skim_target": 11,
+    "quick_selected": 5
+  },
+  "deep_dive": [
+    {
+      "id": "2605.01694v1",
+      "source": "arxiv",
+      "title": "Latent State Design for World Models under Sufficiency Constraints",
+      "abstract": "A world model matters to an agent only through the state it constructs. That state must preserve some information, discard other information, and support some future function: prediction, control, planning, memory, grounding, or counterfactual reasoning. This paper treats world-model research as latent state design under sufficiency constraints.   We propose a functional taxonomy that groups methods by what their latent state is for, rather than by architecture or application domain: predictive embedding, recurrent belief state, object/causal structure, latent action interface, grounded planning interface, and memory substrate. These roles expose distinctions that architecture-based groupings hide, including the gap between predictive sufficiency and control sufficiency, and the gap between passive video prediction and counterfactual action modeling.   The taxonomy supports an evaluation framework that judges a model by the sufficiency constraint its latent state was built to satisfy. We compare methods along seven axes: representation, prediction, planning, controllability, causal/counterfactual support, memory, and uncertainty. We use the resulting matrix as a diagnostic for what a latent state preserves, discards, and enables.   The conclusion that follows is that an actionable world model is the one whose state construction matches the task, not the one that preserves the most information.",
+      "authors": [
+        "Keon Woo Kim"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-05-03T03:19:42+00:00",
+      "link": "https://arxiv.org/pdf/2605.01694v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Treats world-model research as latent state design for planning and control",
+      "llm_evidence_cn": "将世界模型研究视为用于规划和控制的隐状态设计",
+      "llm_evidence": "将世界模型研究视为用于规划和控制的隐状态设计",
+      "canonical_evidence": "将世界模型研究视为用于规划和控制的隐状态设计",
+      "llm_tldr_en": "Proposes a functional taxonomy for world models based on latent state design for agent functions like planning.",
+      "llm_tldr_cn": "提出了一种基于隐状态设计的世界模型功能分类法，支持智能体的规划与控制功能。",
+      "llm_tldr": "提出了一种基于隐状态设计的世界模型功能分类法，支持智能体的规划与控制功能。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.01799v1",
+      "source": "arxiv",
+      "title": "Embody4D: A Generalist 4D World Model for Embodied AI",
+      "abstract": "World models have made significant progress in modeling dynamic environments; however, most embodied world models are still restricted to 2D representations, lacking the comprehensive multi-view information essential for embodied spatial reasoning. Bridging this gap is non-trivial, primarily due to challenges from severe scarcity of paired multi-view data, the difficulty of maintaining spatiotemporal consistency in generated 3D geometries, and the tendency to hallucinate manipulation details. To address these challenges, we propose Embody4D, a dedicated video-to-video world model for embodied scenarios, capable of synthesizing arbitrary novel views from a monocular video. First, to tackle data scarcity, we introduce a 3D-aware compositional synthesis pipeline to curate a heterogeneous dataset compositing cross-embodiment robotic arms with diverse backgrounds, guaranteeing broad generalization. Second, to enforce geometric stability, we devise an adaptive noise injection strategy; by leveraging confidence disparities across image regions, this method selectively regularizes the diffusion process to ensure strict spatiotemporal consistency. Finally, to guarantee manipulation fidelity, we incorporate an interaction-aware attention mechanism that explicitly attends to the robotic interaction regions. Extensive experiments demonstrate that Embody4D achieves state-of-the-art performance, serving as a robust world model that synthesizes high-fidelity, view-consistent videos to empower downstream robotic planning and learning.",
+      "authors": [
+        "Peiyan Tu",
+        "Hanxin Zhu",
+        "Jingwen Sun",
+        "Shaojie Ren",
+        "Cong Wang",
+        "Jiayi Luo",
+        "Xiaoqian Cheng",
+        "Zhibo Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-03T09:39:44+00:00",
+      "link": "https://arxiv.org/pdf/2605.01799v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "4D world model for embodied spatial reasoning and dynamic environment modeling",
+      "llm_evidence_cn": "用于具身空间推理和动态环境建模的4D世界模型",
+      "llm_evidence": "用于具身空间推理和动态环境建模的4D世界模型",
+      "canonical_evidence": "用于具身空间推理和动态环境建模的4D世界模型",
+      "llm_tldr_en": "Embody4D is a video-to-video world model that synthesizes 3D-aware novel views to enhance embodied spatial reasoning.",
+      "llm_tldr_cn": "Embody4D是一个视频到视频的世界模型，通过合成3D感知的新视角来增强具身智能的空间推理能力。",
+      "llm_tldr": "Embody4D是一个视频到视频的世界模型，通过合成3D感知的新视角来增强具身智能的空间推理能力。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.02528v1",
+      "source": "arxiv",
+      "title": "Beyond Specialization: Robust Reinforcement Learning Navigation via Procedural Map Generators",
+      "abstract": "Deep reinforcement learning (DRL) navigation policies often overfit to the structure of their training environments, as environmental diversity is typically constrained by the manual effort required to design diverse scenarios. While procedural map generation offers scalable diversity, no prior work systematically compares how different generator types affect policy generalization. We integrate four generators (sparse, maze, graph, and Wave Function Collapse) with guaranteed navigability into MuRoSim, a 2D simulator focusing on training efficiency for LiDAR-based navigation. We cross-evaluate five navigation policies on 1000 seeded maps per generator across three training seeds. Results show a strongly asymmetric cross-generator transfer: a specialist trained on sparse layouts falls to 3.3% success on mazes, whereas a policy trained on the combined generator set achieves 91.5 +/- 1.1% mean success. We further demonstrate that A* path-planner subgoal inputs are the dominant factor for robustness, raising success from the 90.2 +/- 1.4% feedforward baseline to 98.9 +/- 0.4% and outperforming GRU recurrence, which only improves the reactive baseline. The DRL policies outperform a classical Carrot+A* controller, which matches their success only at low speeds (1.0 m/s) but collapses to 24.9% at 2.0 m/s. This highlights learned speed adaptation as the decisive advantage of the learned approach. Real-world experiments on a RoboMaster confirm sim-to-real transfer in a cluttered arena, while a maze-like layout exposes remaining failure modes that recurrence helps mitigate.",
+      "authors": [
+        "Christian Jestel",
+        "Nicolas Bach",
+        "Marvin Wiedemann",
+        "Jan Finke",
+        "Peter Detzner"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.LG"
+      ],
+      "published": "2026-05-04T12:28:16+00:00",
+      "link": "https://arxiv.org/pdf/2605.02528v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Reinforcement learning navigation strategies in complex environments using procedural generation",
+      "llm_evidence_cn": "在复杂环境中使用程序化生成的强化学习导航策略",
+      "llm_evidence": "在复杂环境中使用程序化生成的强化学习导航策略",
+      "canonical_evidence": "在复杂环境中使用程序化生成的强化学习导航策略",
+      "llm_tldr_en": "Evaluates how different procedural map generators affect the generalization of reinforcement learning navigation policies.",
+      "llm_tldr_cn": "评估了不同程序化地图生成器对强化学习导航策略泛化能力的影响。",
+      "llm_tldr": "评估了不同程序化地图生成器对强化学习导航策略泛化能力的影响。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.26899v2",
+      "source": "arxiv",
+      "title": "Safe Navigation using Neural Radiance Fields via Reachable Sets",
+      "abstract": "Safe navigation in cluttered environments is an important challenge for autonomous systems. Robots navigating through obstacle ridden scenarios need to be able to navigate safely in the presence of obstacles, goals, and ego objects of varying geometries. In this work, reachable set representations of the robot's real-time capabilities in the state space can be utilized to capture safe navigation requirements. While neural radiance fields (NeRFs) are utilized to compute, store, and manipulate the volumetric representations of the obstacles, or ego vehicle, as needed. Constrained optimal control is employed to represent the resulting path planning problem, involving linear matrix inequality constraints. We present simulation results for path planning in the presence of numerous obstacles in two different scenarios. Safe navigation is demonstrated through using reachable sets in the corresponding constrained optimal control problems.",
+      "authors": [
+        "Omanshu Thapliyal",
+        "Malarvizhi Sankaranarayanasamy",
+        "Ravigopal Vennelakanti"
+      ],
+      "primary_category": "eess.SY",
+      "categories": [
+        "eess.SY",
+        "cs.RO"
+      ],
+      "published": "2026-04-29T17:09:19+00:00",
+      "link": "https://arxiv.org/pdf/2604.26899v2",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Safe navigation in cluttered environments using volumetric representations and path planning",
+      "llm_evidence_cn": "在复杂环境中使用体积表示和路径规划进行安全导航",
+      "llm_evidence": "在复杂环境中使用体积表示和路径规划进行安全导航",
+      "canonical_evidence": "在复杂环境中使用体积表示和路径规划进行安全导航",
+      "llm_tldr_en": "Integrates Neural Radiance Fields with reachable sets for safe autonomous navigation and path planning.",
+      "llm_tldr_cn": "结合神经辐射场与可达集，实现复杂环境下的自主安全导航与路径规划。",
+      "llm_tldr": "结合神经辐射场与可达集，实现复杂环境下的自主安全导航与路径规划。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.01477v1",
+      "source": "arxiv",
+      "title": "Action Agent: Agentic Video Generation Meets Flow-Constrained Diffusion",
+      "abstract": "We present Action Agent, a two-stage framework that unifies agentic navigation video generation with flow-constrained diffusion control for multi-embodiment robot navigation. In Stage I, a large language model (LLM) acts as an orchestration module that selects video diffusion models, refines prompts through iterative validation, and accumulates cross-task memory to synthesize physically plausible first-person navigation videos from language and image inputs. This increases video generation success from 35% (single-shot) to 86% across 50 navigation tasks. In Stage II, we introduce FlowDiT, a Flow-Constrained Diffusion Transformer that converts optimized goal videos and language instructions into continuous velocity commands using action-space denoising diffusion. FlowDiT integrates DINOv2 visual features, learned optical flow for ego-motion representation, and CLIP language embeddings for semantic stopping. We pretrain on the RECON outdoor navigation dataset and fine-tune on 203 Unitree G1 humanoid episodes collected in Isaac Sim to calibrate velocity dynamics. A single 43M-parameter checkpoint achieves 73.2% navigation success in simulation and 64.7% task completion on a real Unitree G1 in unseen indoor environments under open-loop execution, while operating at 40--47 Hz. We evaluate Action Agent across three embodiments: a Unitree G1 humanoid (real hardware), a drone, and a wheeled mobile robot (Isaac Sim), demonstrating that decoupling trajectory imagination from execution yields a scalable and embodiment-aware paradigm for language-guided navigation.",
+      "authors": [
+        "Jeffrin Sam",
+        "Nguyen Khang",
+        "Yara Mahmoud",
+        "Miguel Altamirano Cabrera",
+        "Dzmitry Tsetserukou"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-02T14:52:03+00:00",
+      "link": "https://arxiv.org/pdf/2605.01477v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "agentic navigation video generation and continuous velocity commands for robot navigation",
+      "llm_evidence_cn": "智能体导航视频生成以及用于机器人导航的连续速度指令控制",
+      "llm_evidence": "智能体导航视频生成以及用于机器人导航的连续速度指令控制",
+      "canonical_evidence": "智能体导航视频生成以及用于机器人导航的连续速度指令控制",
+      "llm_tldr_en": "Action Agent uses LLMs and diffusion models to generate navigation videos and map them to robot control actions.",
+      "llm_tldr_cn": "Action Agent 利用大模型和扩散模型生成导航视频，并将其转化为机器人的连续控制指令。",
+      "llm_tldr": "Action Agent 利用大模型和扩散模型生成导航视频，并将其转化为机器人的连续控制指令。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.01950v1",
+      "source": "arxiv",
+      "title": "TRAP: Tail-aware Ranking Attack for World-Model Planning",
+      "abstract": "World models enable long-horizon planning by internally generating and evaluating imagined trajectories, making them a promising foundation for generalist agents. However, this imagination-driven decision process also introduces new security risks. Existing backdoor attacks typically aim to manipulate local features, one-step predictions, or instantaneous policy outputs. While such objectives may suffice for weaker reactive models, they are often ineffective against world models, where the learned dynamics prior and planning process can absorb or wash out the effects of shallow perturbations. More importantly, we find that world models exhibit a distinct backdoor vulnerability rooted in the long-tailed ranking structure of imagined trajectories, where disrupting the ordering of a few decision-critical trajectories can systematically hijack planning.   To exploit this vulnerability, we propose TRAP, a backdoor attack framework for world models that targets imagined trajectory ranking. TRAP combines a tail-aware ranking loss to focus optimization on decision-critical trajectories with dual gating mechanisms that stabilize optimization and regulate when and where the attack penalty is applied. Under trigger conditions, TRAP alters the relative ranking of imagined trajectories to redirect planning outcomes, while largely maintaining the normal ranking structure on clean inputs. Experiments on DreamerV3 and TD-MPC2 across diverse tasks show that TRAP consistently induces sustained behavioral deviations and significant performance degradation, highlighting the need for dedicated security evaluation of world-model-based agents.",
+      "authors": [
+        "Siyuan Duan",
+        "Ke Zhang",
+        "Xizhao Luo"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-05-03T16:19:45+00:00",
+      "link": "https://arxiv.org/pdf/2605.01950v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Analyzes planning and decision-making vulnerabilities in world models for generalist agents.",
+      "llm_evidence_cn": "分析了通用智能体世界模型中规划与决策的安全性漏洞。",
+      "llm_evidence": "分析了通用智能体世界模型中规划与决策的安全性漏洞。",
+      "canonical_evidence": "分析了通用智能体世界模型中规划与决策的安全性漏洞。",
+      "llm_tldr_en": "This paper explores security risks in world-model planning by introducing a tail-aware ranking attack on trajectories.",
+      "llm_tldr_cn": "该研究通过引入针对轨迹的长尾排名攻击，探讨了世界模型规划中的安全风险。",
+      "llm_tldr": "该研究通过引入针对轨迹的长尾排名攻击，探讨了世界模型规划中的安全风险。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "寻找利用世界模型进行强化学习或规划的最新研究",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2605.02227v1",
+      "source": "arxiv",
+      "title": "Change-Robust Online Spatial-Semantic Topological Mapping",
+      "abstract": "Autonomous robots require change-robust spatial-semantic reasoning: using spatial and semantic knowledge to decide where to go, how to get there, and where the robot is despite environmental change. Existing approaches typically attach semantics to SLAM-built metric maps, but these pipelines are brittle under appearance shifts and scene dynamics, where data association and relocalization degrade. We propose a Change-Robust Online Spatial-Semantic (CROSS) representation that replaces a globally consistent metric substrate with an online, pose-aware topological graph of RGB-D keyframes. The system explicitly reasons over perceptual ambiguity using sequential hypothesis testing in continuous SE(3). Our estimator maintains a bounded Gaussian-mixture belief over poses, enabling principled handling of loop closures and kidnapped-robot events. Experiments under severe appearance change, including real-robot object-goal navigation with lighting shifts and furniture rearrangement, demonstrate improved robustness over SLAM-based and topological baselines while remaining safe under perceptual aliasing.",
+      "authors": [
+        "Jiaming Wang",
+        "Jizhuo Chen",
+        "Diwen Liu",
+        "Atharva Ghotavadekar",
+        "Jiaxuan Da",
+        "Linh Kästner",
+        "Harold Soh"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-04T05:00:12+00:00",
+      "link": "https://arxiv.org/pdf/2605.02227v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "spatial-semantic topological mapping for robot navigation",
+      "llm_evidence_cn": "用于机器人导航的空间语义拓扑映射",
+      "llm_evidence": "用于机器人导航的空间语义拓扑映射",
+      "canonical_evidence": "用于机器人导航的空间语义拓扑映射",
+      "llm_tldr_en": "Proposes a robust topological mapping system using RGB-D keyframes to handle environmental changes in robot navigation.",
+      "llm_tldr_cn": "提出一种鲁棒的拓扑映射系统，利用RGB-D关键帧处理机器人导航中的环境变化。",
+      "llm_tldr": "提出一种鲁棒的拓扑映射系统，利用RGB-D关键帧处理机器人导航中的环境变化。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2605.01860v1",
+      "source": "arxiv",
+      "title": "Optimizing Trajectory-Trees in Belief Space: An Application from Model Predictive Control to Task and Motion Planning",
+      "abstract": "This paper explores the benefits of computing arborescent trajectories (trajectory-trees) instead of commonly used sequential trajectories for partially observable robotic planning problems. In such environments, a robot infers knowledge from observations, and the optimal course of action depends on these observations. \\revise{Trajectory-trees, optimized in belief space, naturally capture this dependency by branching where the belief state is expected to evolve into multiple distinct scenarios, such as upon receiving an observation. Unlike sequential trajectories, which model a single forward evolution of the system, trajectory-trees capture multiple possible contingencies.}   First, we focus on Model Predictive Control (MPC) and demonstrate the benefits of planning tree-like trajectories. We formulate the control problem as the optimization of a tree with a single branching (PO-MPC). This improves performance by reducing control costs through more informed planning. To satisfy the real-time constraints of MPC, we develop an optimization algorithm called Distributed Augmented Lagrangian (D-AuLa), which leverages the decomposability of the PO-MPC formulation to parallelize and accelerate the optimization. We apply the method to both linear and non-linear MPC problems using autonomous driving examples.   Second, we address Task And Motion Planning (TAMP), and introduce a planner (PO-LGP) reasoning on decision trees at task level, and trajectory-trees at motion-planning level. This approach builds upon the Logic-Geometric-Programming Framework (LGP) and extends it to partially observable problems. The experiments show the method's applicability to problems with a small belief state size, and scales to larger problems by optimizing explorative policies, which are used as macro-actions in an overarching task plan.",
+      "authors": [
+        "Camille Phiquepal",
+        "Marc Toussaint"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-03T13:06:20+00:00",
+      "link": "https://arxiv.org/pdf/2605.01860v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Planning in belief space for partially observable environments",
+      "llm_evidence_cn": "在部分可观测环境下的信念空间规划",
+      "llm_evidence": "在部分可观测环境下的信念空间规划",
+      "canonical_evidence": "在部分可观测环境下的信念空间规划",
+      "llm_tldr_en": "This paper proposes trajectory-tree optimization in belief space to handle contingencies in robotic motion planning.",
+      "llm_tldr_cn": "该研究提出了在信念空间中优化轨迹树的方法，用于处理机器人运动规划中的不确定性与多种可能性。",
+      "llm_tldr": "该研究提出了在信念空间中优化轨迹树的方法，用于处理机器人运动规划中的不确定性与多种可能性。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.02116v1",
+      "source": "arxiv",
+      "title": "Statistical Consistency and Generalization of Contrastive Representation Learning",
+      "abstract": "Contrastive representation learning (CRL) underpins many modern foundation models. Despite recent theoretical progress, existing analyses suffer from several key limitations: (i) the statistical consistency of CRL remains poorly understood; (ii) available generalization bounds deteriorate as the number of negative samples increases, contradicting the empirical benefits of large negative sets; and (iii) the retrieval performance of CRL has received limited theoretical attention.   In this paper, we develop a unified statistical learning theory for CRL. For downstream tasks, we evaluate retrieval quality using an AUC-type population criterion and show that the contrastive loss is \\emph{statistically consistent} with optimal ranking. We further establish a \\emph{calibration-style inequality} that quantitatively relates excess contrastive risk to excess retrieval suboptimality. For upstream training, we study both supervised and self-supervised contrastive objectives and derive generalization bounds of order $O(1/m + 1/\\sqrt{n})$ and $O(1/\\sqrt{m} + 1/\\sqrt{n})$, respectively, where $m$ denotes the number of negative samples and $n$ the number of anchor points. These bounds not only explain the empirical advantages of large negative sets but also reveal an explicit trade-off between $m$ and $n$. Extensive experiments on large-scale vision--language models corroborate our theoretical predictions.",
+      "authors": [
+        "Yuanfan Li",
+        "Xiyuan Wei",
+        "Tianbao Yang",
+        "Yiming Ying"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-05-04T00:38:29+00:00",
+      "link": "https://arxiv.org/pdf/2605.02116v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Theoretical analysis of contrastive representation learning for downstream retrieval and consistency",
+      "llm_evidence_cn": "对比表示学习在下游检索和一致性方面的理论分析",
+      "llm_evidence": "对比表示学习在下游检索和一致性方面的理论分析",
+      "canonical_evidence": "对比表示学习在下游检索和一致性方面的理论分析",
+      "llm_tldr_en": "This paper provides a unified statistical learning theory for contrastive representation learning and its consistency.",
+      "llm_tldr_cn": "该论文为对比表示学习及其统计一致性提供了一个统一的学习理论框架。",
+      "llm_tldr": "该论文为对比表示学习及其统计一致性提供了一个统一的学习理论框架。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索表示学习在构建世界模型与导航中的运用",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.02130v1",
+      "source": "arxiv",
+      "title": "From Where Things Are to What They Are For: Benchmarking Spatial-Functional Intelligence in Multimodal LLMs",
+      "abstract": "Human-level agentic intelligence extends beyond low-level geometric perception, evolving from recognizing where things are to understanding what they are for. While existing benchmarks effectively evaluate the geometric perception capabilities of multimodal large language models (MLLMs), they fall short of probing the higher-order cognitive abilities required for grounded intelligence. To address this gap, we introduce the Spatial-Functional Intelligence Benchmark (SFI-Bench), a video-based benchmark with over 1,500 expert-annotated questions derived from diverse egocentric indoor video scans. SFI-Bench systematically evaluates two complementary dimensions of advanced reasoning: (1) Structured Spatial Reasoning, which requires understanding complex layouts and forming coherent spatial representations, and (2) Functional Reasoning, which involves inferring object affordances and their context-dependent utility. The benchmark includes tasks such as conditional counting, multi-hop relational reasoning, functional pairing, and knowledge-grounded troubleshooting, directly challenging models to integrate perception, memory, and inference. Our experiments reveal that current MLLMs consistently struggle to combine spatial memory with functional reasoning and external knowledge, highlighting a critical bottleneck in achieving grounded intelligence. SFI-Bench therefore provides a diagnostic tool for measuring progress toward more cognitively capable and truly grounded multimodal agents.",
+      "authors": [
+        "Le Zhang",
+        "Jihan Yang",
+        "Soundarya Krishnan",
+        "Jimit Majmudar",
+        "Xiou Ge",
+        "Prasoon Puri",
+        "Prathamesh Nandkishor Saraf",
+        "Shruti Bhargava",
+        "Dhivya Piraviperumal",
+        "Yinan Ling",
+        "Cindy Pan",
+        "Hong Yu",
+        "Aishwarya Agrawal",
+        "Bo-Hsiang Tseng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-04T01:19:36+00:00",
+      "link": "https://arxiv.org/pdf/2605.02130v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Evaluates structured spatial reasoning and cognitive mapping for grounded intelligence",
+      "llm_evidence_cn": "评估具身智能中的结构化空间推理与认知映射能力",
+      "llm_evidence": "评估具身智能中的结构化空间推理与认知映射能力",
+      "canonical_evidence": "评估具身智能中的结构化空间推理与认知映射能力",
+      "llm_tldr_en": "Introduces SFI-Bench to evaluate spatial-functional reasoning and cognitive mapping in multimodal models.",
+      "llm_tldr_cn": "引入SFI-Bench基准，用于评估多模态模型在空间功能推理和认知映射方面的能力。",
+      "llm_tldr": "引入SFI-Bench基准，用于评估多模态模型在空间功能推理和认知映射方面的能力。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.02134v1",
+      "source": "arxiv",
+      "title": "Video Generation with Predictive Latents",
+      "abstract": "Video Variational Autoencoder (VAE) enables latent video generative modeling by mapping the visual world into compact spatiotemporal latent spaces, improving training efficiency and stability. While existing video VAEs achieve commendable reconstruction quality, continued optimization of reconstruction does not necessarily translate into improved generative performance. How to enhance the diffusability of video latents remains a critical and unresolved challenge. In this work, inspired by principles of predictive world modeling, we investigate the potential of predictive learning to improve the video generative modeling. To this end, we introduce a simple and effective predictive reconstruction objective that unifies predictive learning with video reconstruction. Specifically, we randomly discard future frames and encode only partial past observations, while training the decoder to reconstruct the observed frames and predict future ones simultaneously. This design encourages the latent space to encode temporally predictive structures and build a more coherent understanding of video dynamics, thereby improving generation quality. Our model, termed Predictive Video VAE (PV-VAE), achieves superior performance on video generation, with 52% faster convergence and a 34.42 FVD improvement over the Wan2.2 VAE on UCF101. Furthermore, comprehensive analyses demonstrate that PV-VAE not only exhibits favorable scalability, with generative performance improving alongside VAE training, but also yields consistent gains in downstream video understanding, underscoring a latent space that effectively captures temporal coherence and motion priors.",
+      "authors": [
+        "Yian Zhao",
+        "Feng Wang",
+        "Qiushan Guo",
+        "Chang Liu",
+        "Xiangyang Ji",
+        "Jian Zhang",
+        "Jie Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-04T01:30:04+00:00",
+      "link": "https://arxiv.org/pdf/2605.02134v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Uses predictive world modeling principles to optimize spatiotemporal latent spaces",
+      "llm_evidence_cn": "利用预测世界模型原理优化时空隐空间表示",
+      "llm_evidence": "利用预测世界模型原理优化时空隐空间表示",
+      "canonical_evidence": "利用预测世界模型原理优化时空隐空间表示",
+      "llm_tldr_en": "This paper improves video generation by integrating predictive world modeling into latent space reconstruction.",
+      "llm_tldr_cn": "该研究通过将预测世界模型原理引入隐空间重构，提升了视频生成模型的性能。",
+      "llm_tldr": "该研究通过将预测世界模型原理引入隐空间重构，提升了视频生成模型的性能。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

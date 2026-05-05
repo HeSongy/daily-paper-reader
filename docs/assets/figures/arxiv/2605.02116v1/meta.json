@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.02116v1/fig-001.webp",
+      "caption": "Figure 1. (a): Zero-shot classification (left) and retrieval (right) results of CLIP training on different sizes of negative samples. n denotes the size of the anchor dataset, while m denotes the size of negative samples. (b): Critical size of m at different n, compared with m = √ n and m = n.",
+      "page": 8,
+      "index": 1,
+      "width": 702,
+      "height": 238
+    }
+  ]
+}

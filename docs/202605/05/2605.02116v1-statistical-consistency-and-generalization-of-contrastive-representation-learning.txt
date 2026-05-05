@@ -1,0 +1,11961 @@
+Title: Statistical Consistency and Generalization of Contrastive Representation Learning
+
+URL Source: https://arxiv.org/pdf/2605.02116v1
+
+Published Time: Tue, 05 May 2026 01:28:55 GMT
+
+Number of Pages: 52
+
+Markdown Content:
+# Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Yuanfan Li 1 Xiyuan Wei 2 Tianbao Yang 2 Yiming Ying 1
+
+## Abstract 
+
+Contrastive representation learning (CRL) under-pins many modern foundation models. Despite recent theoretical progress, existing analyses suf-fer from several key limitations: (i) the statistical consistency of CRL remains poorly understood; (ii) available generalization bounds deteriorate as the number of negative samples increases, con-tradicting the empirical benefits of large negative sets; and (iii) the retrieval performance of CRL has received limited theoretical attention. In this paper, we develop a unified statistical learn-ing theory for CRL. For downstream tasks, we evaluate retrieval quality using an AUC-type pop-ulation criterion and show that the contrastive loss is statistically consistent with optimal ranking. We further establish a calibration-style inequal-ity that quantitatively relates excess contrastive risk to excess retrieval suboptimality. For up-stream training, we study both supervised and self-supervised contrastive objectives and derive generalization bounds of order O(1 /m + 1 /√n)
+
+and O(1 /√m + 1 /√n), respectively, where m
+
+denotes the number of negative samples and n the number of anchor points. These bounds not only explain the empirical advantages of large negative sets but also reveal an explicit trade-off between 
+
+m and n. Extensive experiments on large-scale vision–language models corroborate our theoreti-cal predictions. 
+
+## 1. Introduction 
+
+Foundation models have emerged as a prominent paradigm in artificial intelligence, achieving remarkable success across diverse domains. A wide class of foundation models is representation models (Radford et al., 2021; Jia et al., 2021; Karpukhin et al., 2020). Such models are trained 
+
+> 1
+
+University of Sydney 2Texas A&M University. Correspon-dence to: Yiming Ying <yiming.ying@sydney.edu.au >.
+
+Preprint. May 5, 2026. 
+
+at scale on large and heterogeneous datasets, often using self-supervision, to learn general-purpose representations that can be adapted to a wide range of downstream tasks. A central paradigm underlying many successful representa-tion models is contrastive representation learning (CRL). For two modalities X and Y, CRL aims to learn a scoring function parameterized by w, sw : X × Y 7 → R, that as-signs higher scores to positive pairs than to negative pairs. By pulling together semantically related pairs (x, y) and pushing apart mismatched pairs (x, y′) in the embedding space, CRL learns transferable and task-agnostic representa-tions. This mechanism can be implemented by minimizing the following objective (Wang & Isola, 2020): 
+
+L(sw) = ExEy∼p+ 
+
+> x
+
+τ log Ey′∼p− 
+
+> x
+
+exp 
+
+ ∆w (x,y,y′)
+
+> τ
+
+
+
+, (1) where p+ 
+
+> x
+
+and p− 
+
+> x
+
+denote the positive and negative data distributions for the anchor point x, respectively, and 
+
+∆w(x, y, y′) := sw(x, y′) − sw(x, y) measures the dif-ference in the similarity score between a negative pair and a positive pair. Typically the scoring function can be the inner product of the neural network encoder/representation fw,i.e., sw(x, y) = fw(x)⊤fw(y).
+
+CRL has demonstrated remarkable empirical success in computer vision, natural language processing, and multi-modal learning (An et al., 2023; Chen et al., 2020; He et al., 2020; Radford et al., 2021). In particular, several large-scale vision–language and multimodal foundation models adopt contrastive objectives as their core pretraining mech-anism, enabling superior zero-shot and few-shot general-ization (Alayrac et al., 2022; Ramesh et al., 2022). These results suggest that CRL serves not merely as a task-specific technique but as a foundational learning paradigm for build-ing general-purpose representations. Despite its impressive empirical success, a unified learning theory that rigorously characterizes the statistical behavior of CRL-based pretrain-ing and its implications for downstream generalization re-mains limited. A fundamental question is how would upstream pretraining affect downstream tasks. In a prominent line of research (Saunshi et al., 2019; Ash et al., 2022; Bao et al., 2022a; Nozawa et al., 2020), the downstream task is evaluated by 1
+
+> arXiv:2605.02116v1 [cs.LG] 4 May 2026 Statistical Consistency and Generalization of Contrastive Representation Learning
+
+the so-called surrogate gap , i.e., the discrepancy between the population risk of the contrastive objective and the mean supervised loss of the downstream task. Existing results establish that a small contrastive risk yields a small mean supervised loss in the downstream task, when using a linear classifier. However, these guarantees fall short of statistical consistency : whether, as the sample size grows, minimizers of the contrastive objective converge to predictors achieving the least possible downstream population risk. In practice, Eq. (1) is usually estimated through finite sam-ples, i.e., n positive pairs and m negative examples for each anchor point. Therefore, another important theoretical prob-lem is to give a generalization analysis that captures the role of m and n. Most existing generalization analyses for CRL typically scale as O(m/ √n) (Saunshi et al., 2019) or O(log m/ √n) (Lei et al., 2023) , which suggest that the generalization performance deteriorates as the number of negative samples m increases. Such theoretical results are at odds with empirical practice, where using a large num-ber of negative samples is known to significantly improve performance. For example, SimCLR (Chen et al., 2020) employs up to 8192 negative examples, while CLIP (Rad-ford et al., 2021) further increases this number to 32 ,768 .Consequently, existing theory fails to provide a satisfactory explanation for the strong generalization behavior observed in modern CRL methods. 
+
+Our first main contribution is to establish statistical con-sistency and a calibration-style inequality for CRL, which are among the most fundamental problems in the framework of Statistical Learning Theory (SLT) (Bartlett et al., 2006; Bousquet et al., 2003; Vapnik, 1998; Zhang, 2004). To mo-tivate our study, we note that the contrastive objective in Eq. (1) is inherently a pairwise ranking loss, encouraging relevant items to receive higher scores than irrelevant ones for a given query. This observation naturally motivates us to evaluate CRL through a retrieval-based criterion rather than classification metrics (e.g. misclassification error or cross entropy loss). Specifically, we consider the following performance measure: 
+
+E(s) = Ex Ey∼p+  
+
+> x,y′∼p−
+> x
+
+I[s(x, y) > s (x, y′)] 
+
++ 12 Ex Ey∼p+  
+
+> x,y′∼p−
+> x
+
+I[s(x, y) = s(x, y′)] , (2) which corresponds to an AUC-type measure (Agarwal et al., 2005; Cl ´emen c¸ on et al., 2008; Cortes & Mohri, 2003; Ying et al., 2016) and represents the expected probability that a relevant item y is ranked above an irrelevant item y′ given a query x. A higher value of E(s) corresponds to better retrieval performance in the downstream task. In this paper, we establish the statistical consistency of contrastive representation learning in the following sense. For any sequence of scoring functions {sn}n≥1,
+
+L(sn) → L ∗ := inf  
+
+> s
+
+L(s)=⇒ E (sn) → E ∗ := sup 
+
+> s
+
+E(s). (3) where the infimum and supremum are taken over all mea-surable scoring functions s : X × Y → R. This result shows that convergence of the contrastive risk guarantees convergence to the optimal achievable retrieval performance in the downstream task. Moreover, we establish a calibration-style inequality of the form 
+
+E∗ − E (s) ≲ pL(s) − L ∗, ∀ s, 
+
+which quantitatively links excess contrastive risk to subopti-mality in retrieval performance and implies statistical consis-tency defined by (3) . The above results provide a principled theoretical explanation for why minimizing the contrastive objective yields statistically optimal ranking performance, addressing a fundamental question that has remained largely unexplored in the existing literature. 
+
+Our second main contribution is a comprehensive gener-alization analysis that reveals how the performance of CRL relies on the number of anchor points and negative exam-ples. In this paper, we consider two learning regimes widely used in practice. In supervised CRL, m negative examples are sampled for each anchor point independently. While in self-supervised CRL, m negative examples are shared 
+
+across all of anchor points. To analyze the generalization performance, note that the contrastive loss in Eq. (1) ex-hibit a compositional structure : the outer structure centers on positive sample pairs (x, y), while the inner structure is formed by the negative samples used to contrast against each positive pair. Inspired by this, we decompose the gener-alization gap into inner error and outer error. The outer error is mainly responsible for the sampling of n positive pairs and is of the order 1/√n. The inner error is introduced to quantify the statistical discrepancy arising from comparing each anchor with only m negative samples rather than the full population of negative examples, and reflects the bias induced by sampling a finite number of negative examples. To control the inner error, we apply uniform convergence theory to derive a bound of O(1 /√m) for self-supervised CRL. For the inner error in supervised CRL, we reformu-late contrastive losses as stochastic minimization problems, which enables us to analyze the resulting estimators using algorithmic stability theory for empirical risk minimization (ERM) (Bousquet & Elisseeff, 2002), yielding an O(1 /m )
+
+bound. Combining these analyses yield overall generaliza-tion bounds of O(1 /√m + 1 /√n) for self-supervised CRL and O(1 /m + 1 /√n) for supervised CRL. Our result has two important implications. First, it formally explains why generalization performance in CRL improves as the num-2Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+ber of negative samples m increases. Second, it reveals an explicit trade-off between m and n.
+
+1.1. Related Work 
+
+A foundational framework for analyzing the generalization error of contrastive representation learning (CRL) was intro-duced by Saunshi et al. (2019), who derived bounds scaling linearly with the number of negative examples m using Rademacher complexity techniques (Bartlett & Mendel-son, 2002). Subsequent work improved this dependence to O(log m) (Lei et al., 2023). Hieu et al. (2024) further derived generalization bounds for deep neural networks. Re-lated generalization results have also been established for Transformer-based CRL (Oko et al., 2025) and adversarial contrastive learning (Zou & Liu, 2023). Complementary to upstream generalization bounds, the sur-rogate gap was studied by Saunshi et al. (2019) and is further refined in (Bao et al., 2022b; Ash et al., 2022; Nozawa & Sato, 2021). These works show that a small contrastive risk implies a small mean supervised loss under linear evaluation. However, such results do not address statistical consistency ,namely whether minimizing the contrastive objective yields 
+
+the least downstream performance in the population limit. In contrast, our work establishes statistical consistency and derives calibration-style inequalities that directly relate up-stream and downstream excess risks. CRL has also been studied from alternative perspectives, in-cluding PAC-Bayesian generalization (Nozawa et al., 2020), spectral analysis (HaoChen et al., 2021), optimization dy-namics (Yuan et al., 2022), and information-theoretic or ge-ometric viewpoints (Tsai et al., 2020; Wang & Isola, 2020; Wang et al., 2022). Recent work has further explored CRL beyond linear evaluation, including zero-shot prediction and vision–language models (Chen et al., 2024; Mehta & Harchaoui, 2025; Oko et al., 2025). CRL can be regarded as conditional (compositional) stochastic optimization, for which generalization bounds have been studied for different structural assumptions (Hu et al., 2020; Yang et al., 2024). Statistical consistency itself is a fundamental topic in Sta-tistical Learning Theory (Lin, 2004; Zhang, 2004; Bartlett et al., 2006), including extensions to top-k classification (Fan et al., 2017; Yang & Koyejo, 2020; Zhu et al., 2023) and ranking losses (Calauz `enes et al., 2013; Gao & Zhou, 2014). Our work differs from this literature in three key respects: (i) we study consistency in the context of modern foundation models trained via contrastive pretraining; (ii) our downstream task is retrieval rather than label prediction; and (iii) the performance measure E(s) has a compositional, pairwise ranking structure over triples (x, y, y′), going be-yond the standard instance–label setting. 
+
+## 2. Problem Formulation 
+
+Notations Let X , Y be two data spaces of different views or modalities. Let p(x, y) be the joint distribution of x
+
+and y, pX (x), p Y (y) be the marginal distribution of x, y,respectively. We denote by [n] = {1, · · · , n }. Denote I
+
+be the indicator function such that an event E holds true if 
+
+I[E] = 0 .We illustrate the CRL framework that encompasses both supervised and self-supervised settings. Let (x, y) denote a data pair with x ∈ X and y ∈ Y . Given an anchor x,we refer to y as positive if it is semantically relevant to 
+
+x, and negative otherwise. We denote by p+ 
+
+> x
+
+and p− 
+
+> x
+
+the conditional distributions of positive and negative samples given x, respectively. Depending on how p+ 
+
+> x
+
+and p− 
+
+> x
+
+are defined and consequently how the empirical risk is constructed, we obtain two dis-tinct instantiations of CRL: supervised and self-supervised learning settings. 
+
+2.1. Supervised CRL (SCRL) 
+
+In the supervised learning setting, relevance between x and 
+
+y is explicitly indicated by a binary label z ∈ {− 1, 1},where z = 1 signifies that y is positive for x, and z = −1
+
+indicates negativity. Accordingly, we define the positive and negative conditional distributions as 
+
+p+ 
+
+> x
+
+(y) = p+(y|x) := p(y|x, z = 1) ,p− 
+
+> x
+
+(y) = p−(y|x) := p(y|x, z = −1) . (4) By the law of total probability, the marginal conditional distribution of y given x decomposes as 
+
+p(y|x) = p(z = 1 |x) p+(y|x) + p(z = −1|x) p−(y|x).
+
+The population risk for SCRL is then defined as 
+
+LS(sw) (5) 
+
+= ExEy∼p+(·| x)
+
+h
+
+τ log Ey′∼p−(·| x) exp 
+
+ ∆w(x, y, y′)
+
+τ
+
+i
+
+.
+
+To estimate this risk from data, we draw n i.i.d. anchor points xi ∼ pX for i ∈ [n]. For each anchor xi, we sample one positive example yi ∼ p+(·| xi) and then m negative examples {y′ 
+
+> ij
+
+∼ p−(·| xi) : j ∈ [m]}. The model parame-ters w are learned by minimizing the following empirical risk 
+
+bLS(sw) = 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+τ log 
+
+ 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+exp 
+
+∆w(xi, yi, y′ 
+
+> ij
+
+)
+
+τ
+
+ 
+
+. (6) 
+
+2.2. Self-supervised CRL (SSCRL) 
+
+In practice, CRL is often deployed in a self-supervised set-ting. Specifically, given an anchor x, we define the positive 3Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+and negative conditional distributions as 
+
+p+ 
+
+> x
+
+(y) = p(y|x), p − 
+
+> x
+
+(y) = pY (y). (7) i.e., positive pairs (x, y) are drawn from the joint distri-bution p(x, y), while negative examples y′ are sampled independently from the marginal distribution pY .Under this construction, the population risk for SSCRL is given by 
+
+LSS (sw) = ExEy|xτ log Ey′ exp 
+
+
+
+∆w(x, y, y′)
+
+τ
+
+
+
+. (8) In CLIP model (Radford et al., 2021), a symmetric variant is used by treating x and y interchangeably: 
+
+L′
+
+> SS
+
+(sw) = ExEy|xτ log Ey′ exp 
+
+∆w(x, y, y′)
+
+τ
+
+
+
++ EyEx|yτ log Ex′ exp 
+
+ ∆w(y, x, x′)
+
+τ
+
+
+
+. (9) It has been shown that minimizing L′
+
+> SS
+
+(s) over all measur-able scoring functions s : X × Y → R is equivalent to max-imizing the mutual information between x and y (Zhang et al., 2023). To get the empirical version of Eq. (8) , we follow the global contrastive loss (GCL) studied in Yuan et al. (2022). We draw n positive pairs {(xi, yi)}ni=1 ∼ p(x, y). Addition-ally, we sample m negative examples {y′ 
+
+> j
+
+}mj=1 
+
+> i.i.d.
+
+∼ pY . Each anchor xi is then contrasted against with all y′ 
+
+> j
+
+, j ∈ [m].The empirical risk is given by 
+
+bLSS (sw) (10) 
+
+= 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+τ log 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+exp 
+
+∆w(xi, yi, y′ 
+
+> j
+
+)) 
+
+τ
+
+!
+
+.
+
+For example, {(xi, yi)} may represent n observed im-age–text pairs, while {y′
+
+> 1
+
+, . . . , y′
+
+> m
+
+} forms a fixed text dictio-nary. It is worth noting that in this setting, negative samples are shared across all anchor data. While supervised CRL treats each anchor independently with its own set of nega-tives. 
+
+## 3. Statistical Consistency of CRL 
+
+In this section, we show that a scoring function learned via contrastive representation learning (CRL) generalizes well to downstream tasks. Specifically, we establish the Fisher consistency and statistical consistency of CRL, together with a calibration-type inequality , following the terminol-ogy of Statistical Learning Theory (SLT) developed for binary classification (Bartlett et al., 2006; Lin, 2004; Zhang, 2004). Leveraging this calibration-type inequality, we de-rive the explicit bounds for the excess risks for downstream retrieval tasks. In Appendix E, we establish statistical consistency and calibration-type inequalities for a general CRL framework based on optimized certainty equivalent (OCE) losses (Ben-Tal & Teboulle, 2007), which instantiates the log-sum-exp loss used in standard CRL Eq. (1) as a special case. 
+
+3.1. Fisher consistency 
+
+We first establish the Fisher consistency of CRL, 
+
+Theorem 3.1. L(s) is statistically consistent with E(s), i.e., a minimizer of L(s) is a maximizer of E(s).
+
+The proof of Theorem 3.1 is based on the following two lemmas. 
+
+Lemma 3.2 (Characterization of minimizers of L). Let 
+
+L(s) be defined as in Eq. (1) . Then a measurable function 
+
+s : X × Y → R minimizes L(s) if and only if it satisfies 
+
+s(x, y) = τ log p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) + g(x), (11) 
+
+for some measurable function g : X → R.
+
+The proof of Lemma 3.2 is deferred to Appendix B.1. 
+
+Lemma 3.3 (Characterization of maximizers of E). Let E(s)
+
+be defined as in Eq. (2) . A measurable scoring function 
+
+s : X × Y → R maximizes E(s) if and only if, for any 
+
+x, y, y′ with p+ 
+
+> x
+
+(y)/p − 
+
+> x
+
+(y)̸ = p+ 
+
+> x
+
+(y′)/p − 
+
+> x
+
+(y′), there holds 
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) > 0.
+
+The proof of Lemma 3.3 is deferred to Appendix B.2. From Lemma 3.2 we know that a minimizer of the contrastive loss 
+
+L(s) is give by Eq. (11) for some g : X → R. Since log( t)
+
+is an increasing function of t over R, it is easy to see that for p+ 
+
+> x
+
+(y)/p − 
+
+> x
+
+(y)̸ = p+ 
+
+> x
+
+(y′)/p − 
+
+> x
+
+(y′), there holds 
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) =τ p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+log p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) −log p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+> 0
+
+and s is therefore indeed a maximizer of the AUC-type functional E(s) according to Lemma 3.3. Consequently, every minimizer attaining inf s L(s) also guarantees to attain 
+
+sup s E(s). In the terminology of statistical learning theory, this establishes the Fisher consistency of the contrastive loss with respect to the downstream ranking objective E(s); see, e.g., Bartlett et al. (2006); Lin (2004) for related discussions in the context of binary classification. 4Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+3.2. Calibration-style inequality 
+
+Theorem 3.1 establishes a qualitative notion of Fisher con-sistency. We next strengthen this result by deriving a quanti-tative relationship between the excess risk of the upstream contrastive objective and the excess risk of downstream performance. The quantitative relationship between the excess risk of the upstream CRL objective and that of the downstream task is captured by the following calibration-style inequality. The proof of the theorem is provided in Appendix B.3. 
+
+Theorem 3.4. For any scoring function s : X × Y → R,there holds 
+
+E∗ − E (s) ≤ p2/τ (L(s) − L ∗).
+
+Remark 3.5 . The results in Theorem 3.1, 3.4 hold for general choices of p+ 
+
+> x
+
+and p− 
+
+> x
+
+; in particular, it can be specialized to SCRL and SSCRL through appropriate constructions of p+
+
+> x
+
+and p− 
+
+> x
+
+(see Eqs. (4) and (7)). 
+
+## 4. Generalization Analysis for CRL 
+
+In this section, we analyze the generalization gap of con-trastive representation learning (CRL) under both super-vised and self-supervised learning objectives. To this end, we make the following assumption. 
+
+Assumption 4.1. Suppose that for any x ∈ X , y ∈Y, ∥x∥2, ∥y∥2 ≤ 1, s w(x, y) = fw(x)⊤fw(y), where 
+
+fw(x) is a deep neural network. Specifically, let Wl ∈
+
+Rdl×dl−1 , 1 ≤ l ≤ L be matrices, σ be ReLU activation function. Then we define 
+
+fw(x) = σ(WLσ(· · · σ(W1x) · · · )) .
+
+The hypothesis space W is the following space of matrices 
+
+W = {Wl ∈ Rdl×dl−1 : ∥Wl∥2 ≤ sl, ∀l ∈ [L]},
+
+where ∥·∥ 2 denotes the spectral norm. The hypothesis space of functions is given by 
+
+F = {x 7 → fw(x) : w ∈ W} .
+
+In this case, sw(x, y) ∈ [−B, B ] with B = Π Ll=1 s2 
+
+> l
+
+.
+
+4.1. Generalization analysis for SCRL 
+
+In this subsection, we focus on the generalization analysis of supervised contrastive representation learning (SCRL). We aim to control the uniform bound for the generalization gap 
+
+sup 
+
+> w∈W
+
+|L S(sw) − bLS(sw)|,
+
+where LS(sw) and bLS(sw) are defined in Eqs. (5) and (6) ,respectively. A key observation is that the contrastive loss formulations in Eqs. (5) and (6) exhibit a compositional structure : the outer structure centers on positive sample pairs (x, y), while the inner structure is formed by the neg-ative samples used to contrast against each positive pair. This compositional property motivates us to decompose the generalization gap into inner and outer components, which we analyze separately. In particular, we have 
+
+LS(sw)− bLS(sw)
+
+≤ LS(sw) − E bLS(sw)
+
+| {z }
+
+> inner error
+
++ E bLS(sw) − bLS(sw)
+
+| {z }
+
+> outer error
+
+. (12) Here, we have 
+
+LS(sw) − E bLS(sw)= Ex,y,{y′ 
+
+> j}
+
+"
+
+τ log Ey′ exp 
+
+ ∆w(x, y, y′)
+
+τ
+
+
+
+− τ log 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+exp 
+
+ ∆w(x, y, y′ 
+
+> j
+
+)
+
+τ
+
+ #
+
+,
+
+where we omit the explicit specification of the underlying distributions for simplicity. The inner error quantifies the bias introduced by using m
+
+negative samples instead of the full population of negative examples. 
+
+Estimation of the inner error. One approach is to apply uniform convergence theory, which usually leads to a bound that scales with 1/√m (Lee et al., 2021). However, we could derive a more refined bound for the inner error by exploring the intrinsic structure of the log-sum-exponential loss in CRL. To be more specific, we can reformulate con-trastive losses as minimization problems in the following lemma. The proof is deferred to Appendix C.1. 
+
+Lemma 4.2. Let Assumption 4.1 hold, then we have 
+
+bLS(sw) = −τ +1
+
+n
+
+> n
+
+X
+
+> i=1
+
+"
+
+min 
+
+> |μi|≤ 2B
+
+τm
+
+> m
+
+X
+
+> j=1
+
+exp 
+
+∆( xi, yi, y′ 
+
+> ij
+
+) − μi
+
+τ
+
+
+
++μi
+
+#
+
+,
+
+(13) 
+
+LS(sw) = −τ +
+
+Ex,y
+
+"
+
+min 
+
+> |μ|≤ 2B
+
+τ Ey′ exp 
+
+ ∆w(x, y, y′) − μτ
+
+
+
++μ
+
+#
+
+. (14) We denote ψw,x,y(μ; y′) = μ + τ [exp((∆ w(x, y, y′) −
+
+μ)/τ )] , which is a strongly convex function for μ in the bounded domain [−2B, 2B]. Then we have 
+
+LS(sw) − E bLS(sw) = Ex,y,{y′ 
+
+> j}
+
+"
+
+f (w, x, y) − ˆf (w, x, y)
+
+#
+
+,
+
+5Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+where f (w, x, y) = min |μ|≤ 2B Ey′ ψw,x,τ (μ; y′) and 
+
+ˆf (w, x, y) = min |μ|≤ 2B 1
+
+> m
+
+Pmj=1 ψw,x,τ (μ; y′ 
+
+> j
+
+).
+
+It can be regarded as the generalization error of empirical risk minimization (ERM). Leveraging the algorithmic sta-bility approach (Bousquet & Elisseeff, 2002), we derive an inner error bound of order O(1 /m ). This result is formal-ized in the following lemma: 
+
+Lemma 4.3. Let Assumption 4.1 hold. Then we have 
+
+sup w∈W L(sw) − E bLS(sw) = O  1
+
+> m
+
+.
+
+The proof of Lemma 4.3 is provided in Appendix C.2. 
+
+Estimation of the outer error. The outer error can be written as 
+
+E bLS(sw) − bLS(sw)=Ex,y,{y′ 
+
+> j}
+
+"
+
+τ log 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+exp ∆w(x, y, y′ 
+
+> j
+
+)
+
+τ
+
+!# 
+
+− 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+τ log 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+exp ∆w(xi, yi, y′ 
+
+> ij
+
+)
+
+τ
+
+!
+
+.
+
+It mainly focuses on the generalization of the outer structure, capturing how would the number of anchor points affect the generalization performance. For w ∈ W , we introduce kw : X × Y m+1 → R as follows: 
+
+kw(x, y, y′
+
+> 1
+
+,· · · ,y′
+
+> m
+
+) = τ log 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+exp ∆w(x,y,y′ 
+
+> j
+
+)
+
+τ
+
+!
+
+.
+
+(15) Then we can bound the outer error through Rademacher complexity RS (K) (Bartlett & Mendelson, 2002), where 
+
+K =(x, y, y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+)
+
+7→ kw(x, y, y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+) : w ∈ W 
+
+and S = (xi, yi, y′
+
+> i1
+
+, · · · , y′
+
+> im
+
+) : i ∈ [n] . The bound for the outer error is stated as follows. 
+
+Lemma 4.4. Let Assumption 4.1 hold. Then with probabil-ity at least 1 − δ, we have 
+
+sup 
+
+> w∈W
+
+bLS(sw) − E bLS(sw) = O
+
+r log(1 /δ )
+
+n
+
+!
+
+.
+
+The proof of Lemma 4.4 is provided in Section C.3 of the Appendix. 
+
+Combining Inner Error and Outer Error Plugging Lemma 4.3, 4.4 into Eq. (16) , we give the full general-ization gap in the following. 
+
+Theorem 4.5. Let Assumption 4.1 hold. Then with probabil-ity at least 1−δ, there holds sup w∈W LS(sw)− bLS(sw) =
+
+O  1 
+
+> m
+
++
+
+q log(1 /δ )
+
+> n
+
+.
+
+Below, we discuss the implication of the above theoretical results and compare them with existing work. 
+
+Firstly , most existing works analyze the generalization per-formance of CRL through the outer error (Saunshi et al., 2019; Lei et al., 2023; Hieu et al., 2024). These analyses typically yield a bound of eO(1 /√n) that deteriorates as the number of negative samples m increases. In contrast, our theory demystifies the role of m in CRL by more refined error decomposition which involves the inner error. We show that the generalization error initially decreases as the number of negative samples m grows, revealing the benefit of large m and aligning with empirical practice. Moreover, our results uncover an explicit trade-off between m and n:when the number of anchor points n is fixed, increasing m
+
+improves generalization only up to a certain point, beyond which the benefit saturates. Further gains therefore require increasing the number of anchor points rather than merely adding more negatives. We conduct experiments to validate this theoretical insight in Section 5. 
+
+Secondly , the minimization formulations in Eqs. (13) , (14) are closely related to optimized certainty equivalent (OCE) (Ben-Tal & Teboulle, 2007). Our analytical techniques are ready to analyze more general OCE and nonlinear pairwise loss ℓ which might be of independent interest; see more details in Section E of the Appendix. 
+
+Thirdly , the problem of bounding inner error is similar to generalization error of risk-averse learning in the literature (Lee et al., 2021), which applied uniform convergence argu-ments to obtain a 1/√m bound. Wang & Isola (2020) used the inner error to analyze uniformity and alignment in CRL, deriving a rate of m−2/3. More recently, Oko et al. (2025) estimated the inner error to show that near-minimizers of CLIP are near-sufficient statistics; their Taylor-expansion-based analysis yields a 1/m rate, comparable to ours. In contrast, our analysis is grounded in algorithmic stability and extends to a more general class of contrastive losses, as detailed in Section E.5. For the classical CRL with the standard log-sum-exp loss, this approach yields a sharp 
+
+O(1 /m ) bound on the inner error. More generally, for broad classes of OCE and nonlinear pairwise losses ℓ, we obtain an O(1 /√m) rate, highlighting both the strength of our method in the CRL setting and its versatility beyond the standard contrastive losses. 
+
+4.2. Generalization analysis for SSCRL 
+
+In this subsection, we turn to the generalization analysis of CRL in the self-supervised learning setting (SSCRL) where 6Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+the population and empirical risks are given by (8) , (10) ,respectively. Our objective is to bound sup w∈W LSS (sw) − bLSS (sw) .
+
+A distinguished feature of SSCRL is that negative examples are shared by anchor points. Specifically, let kw be defined in Eq. (15), we have 
+
+bLSS (sw) = 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+kw(xi, yi, y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+).
+
+Therefore, kw(xi, yi, y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+) share the same negative set {y′ 
+
+> j
+
+} and are thus dependent. This is different from the setting in SCRL. Because of this key difference, the previous analysis no longer works. We will resort to a different analysis for deriving the generalization bound. We define 
+
+hw(x, y) = τ log Ey′∼pY exp(∆ w(x, y, y′)/τ ),
+
+ˆhw(x, y) = τ log 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+exp ∆w(x, y, y′ 
+
+> j
+
+)
+
+τ
+
+!! 
+
+,
+
+which compares (x, y) with all negative examples and m
+
+negative examples {y′ 
+
+> j
+
+}, respectively. Therefore, 
+
+LSS (sw) = Ex,yhw(x, y), bLSS (sw) = 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+ˆhw(xi, yi)
+
+and we can make the following error decomposition: 
+
+|L SS (sw)− bLSS (sw)| = Ex,yhw(x, y) − 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+ˆhw(xi, yi)
+
+≤ Ex,yhw(x, y)− 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+hw(xi, yi)
+
+| {z }
+
+> outer error
+
++ 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+ hw(xi, yi)−ˆhw(xi, yi)| {z }
+
+> inner error
+
+.
+
+(16) 
+
+Estimation of the outer error. The outer error focuses on the generalization of the outer structure, i,e., the con-centration property of hw(x, y) on n positive pairs (xi, yi).Leveraging standard uniform convergence arguments based on Rademacher complexity (Bartlett & Mendelson, 2002), we derive a bound for this component that scales with 1/√n.
+
+Estimation of the inner error. For each positive pair (x, y),
+
+hw(x, y) − ˆhw(x, y) reflects the bias caused by sampling 
+
+m negative examples {y′ 
+
+> j
+
+} instead of all negative data, thus characterizing the error arising from the inner structure, con-sistent with the core intuition of the inner error in SCRL (see Eq. (12) ). A crucial distinction, however, is that the inner error in SCRL is a population-level expectation. In contrast, the inner error here is an empirical quantity, depending on both the n positive pairs and a shared set of m negative samples. By the independence between the negative sam-ples y′ 
+
+> j
+
+and the positive pairs (xi, yi), we can estimate the inner error by analyzing the term hw(xi, yi) − ˆhw(xi, yi)
+
+for each i ∈ [n] independently. Consequently, we derive a bound for inner error that scales with 1/√m.Overall, the generalization gap for SSCRL is stated as fol-lows, the detailed proof is deferred to Appendix D . 
+
+Theorem 4.6. Let Assumption 4.1 hold. We have with probability at least 1 − δ, sup w∈W LSS (sw)− bLSS (sw) =
+
+O
+
+q log(1 /δ ) 
+
+> n
+
++
+
+q log( n/δ )
+
+> m
+
+
+
+.
+
+Remark 4.7 . CRL has a compositional structure analogous to conditional stochastic optimization (CSO), for which sample complexity bounds are well-established in Hu et al. (2020). The conditional and independent sampling strategies correspond directly to our SCRL and SSCRL settings, with qualitatively similar sample complexity results derived. Our work, however, has key advantages: first, CRL’s log-sum-exp loss features a more complex compositional structure, requiring non-trivial technical treatments absent in standard CSO analysis. Second, we adopt distinct techniques from Hu et al. (2020)—notably, we leverage algorithmic stability to analyze the inner error of SCRL. 
+
+Application to retrieval and zero-shot classification Our generalization analysis (Theorem 4.5,4.6) can be used to show that minimizing the empirical CRL risk would generalize well in the downstream tasks. Let ˆw =arg min w∈W bLS(sw), A standard decomposition yields 
+
+LS(s ˆw) − inf  
+
+> s
+
+LS(s) ≤ 2 sup 
+
+> w∈W
+
+LS(sw) − bLS(sw)
+
+| {z }
+
+> generalization gap
+
++ inf  
+
+> w∈W
+
+LS(sw) − inf  
+
+> s
+
+LS(s)
+
+| {z }
+
+> approximation error
+
+.
+
+When W is sufficiently expressive, the approximation error is negligible (Oko et al., 2025). In this paper, we mainly focus on the statistical consistency, the generalization gap, and its role in transferring pretraining performance to down-stream retrieval performance. Combining the above inequal-ity with Theorem 3.4, 4.5, we can establish the excess risk for retrieval sup s E(s) − E (s ˆw). Our generalization gap can be also applied to zero-shot classification downstream task, following the framework in Oko et al. (2025). One can find more details in Section D.3 of the Appendix. 7Statistical Consistency and Generalization of Contrastive Representation Learning 0 25 50 75 100             
+
+> m / n (%)
+> 0
+> 10
+> 20
+> Retrieval Recall (%)
+> n = 14M n = 10M n = 6M 025 50 75 100
+> m / n (%)
+> 0
+> 10
+> 20
+> 30
+> 40
+> ImageNet Accuracy (%)
+> m*025 50 75 100
+> m / n (%)
+> 0
+> 10
+> 20
+> Retrieval Recall (%)
+> m*
+
+(a) 0.6 0.8 1.0 1.2 1.4                 
+
+> n(1e7)
+> 0.0
+> 0.5
+> 1.0
+> m (1e7)
+> m*(n) = n
+> m*(n) = n
+> Empirical,
+> m*(n) = n0.94 0.6 0.8 1.0 1.2 1.4
+> n(1e7)
+> 0.0
+> 0.5
+> 1.0
+> m (1e7)
+
+(b) Figure 1. (a): Zero-shot classification (left) and retrieval (right) results of CLIP training on different sizes of negative samples. n denotes the size of the anchor dataset, while m denotes the size of negative samples. (b): Critical size of m at different n, compared with m = √n
+
+and m = n.
+
+## 5. Empirical Verification 
+
+In this section, we conduct experiments to empirically demonstrate the validity of our results in Theorem 4.6. Specifically, we consider the CLIP training problem (Rad-ford et al., 2021). The objective consists of two symmetric parts: in the first part the anchor data are images and each image is compared with a set of negative texts, while in the second part the anchor are texts and each text is con-trasted with a set of negative images. We choose different sizes of anchor datasets, i.e., n ∈ { 14M , 10M , 6M }, all of which are sampled from the DFN dataset (Fang et al., 2024). To control the number of negative samples, we randomly sample m instances from the original dataset and use their images as negatives for all anchor text instances, and their texts as negatives for all anchor image instances. The value of m is varied such that m/n ∈ { 1.0, 0.7, 0.4, 0.1, 0.01 }.For each choice of n and m, we train a CLIP model using FastCLIP (Wei et al., 2024) by processing 320M samples in total, then evaluate (1) its zero-shot classification perfor-mance on ImageNet (Deng et al., 2009), and (2) its zero-shot retrieval performance on MSCOCO (Chen et al., 2015) and Flickr (Young et al., 2014). The reported metrics are (1) the top-1 accuracy on ImageNet and (2) the average of image recall@1 and text recall@1 across the two retrieval datasets. We present the results in Figure 1a. From the figure, we observe that performance improves as the number of neg-ative samples m increases, but saturates once m exceeds a certain threshold, referred to as the critical negative data size . This behavior is consistent with our generalization results, highlighting the trade-off between m and n. In Fig-ure 1b, we plot the critical negative data size of m∗(n) as a function of n, and compare it with m∗(n) = √n and 
+
+m∗(n) = n. From the figure we can see that the empirical trend lies between m∗(n) = √n and m∗(n) = n but is closer to m∗(n) = n. We provide a theoretical intuition for this observation based on our derived results. Theorem 4.6 establishes that m∗ = n is the optimal scaling when negative examples are fully shared across all anchor points and independent of positive pairs. In contrast, Theo-rem 4.5 shows that m∗ should scale as √n in the supervised setting, where negative samples are drawn independently for each anchor point. While in our experimental setup, neg-ative samples are shared across anchor points (aligning with Theorem 4.6), the empirical scaling for m∗ shows that the generalization in practice indeed has a better dependence than 1/√m as predicted by the theory. 
+
+## 6. Conclusion 
+
+In this paper, we develop a statistical learning theory frame-work for CRL. We establish the statistical consistency of CRL by proving that minimizing the contrastive loss guar-antees optimal performance on downstream retrieval ob-jectives. We also derive a calibration-style inequality that quantifies the quantitative relationship between the excess risk of CRL during pretraining and that of downstream tasks. Additionally, we provide pretraining generalization bounds whose values decrease with the increasing number of nega-tive examples. Several promising directions for future work emerge from our findings. While we have provided a general frame-work for CRL based on OCE and pairwise loss functions in the Appendix, it is not known which choices of disutility function ϕ and pairwise loss ℓ perform best practically and theoretically. Additionally, it would be interesting to adapt our learning theory framework to analyze other foundation models, such as conducting generalization analysis and un-derstanding the statistical consistency for large language models (LLMs). 
+
+## Impact Statement 
+
+This paper presents work whose goal is to advance the field of Machine Learning. There are many potential societal consequences of our work, none which we feel must be specifically highlighted here. 8Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+## References 
+
+Agarwal, S., Graepel, T., Herbrich, R., Har-Peled, S., Roth, D., and Jordan, M. I. Generalization bounds for the area under the roc curve. Journal of Machine Learning Research , 6(4), 2005. Alayrac, J.-B., Donahue, J., Luc, P., Miech, A., Barr, I., Hasson, Y., Lenc, K., Mensch, A., Millican, K., Reynolds, M., et al. Flamingo: a visual language model for few-shot learning. Advances in neural information processing systems , 35:23716–23736, 2022. An, R., Zhang, C., and Song, D. Sparse contrastive learning of sentence embeddings. arXiv preprint arXiv:2311.03881 , 2023. Ash, J., Goel, S., Krishnamurthy, A., and Misra, D. Investi-gating the role of negatives in contrastive representation learning. In International Conference on Artificial Intelli-gence and Statistics , pp. 7187–7209. PMLR, 2022. Bao, H., Nagano, Y., and Nozawa, K. On the surrogate gap between contrastive and supervised losses. In Interna-tional conference on machine learning , pp. 1585–1606. PMLR, 2022a. Bao, H., Nagano, Y., and Nozawa, K. On the surrogate gap between contrastive and supervised losses, 2022b. URL 
+
+https://arxiv.org/abs/2110.02501 .Bartlett, P. and Mendelson, S. Rademacher and gaussian complexities: Risk bounds and structural results. Journal of Machine Learning Research , 3(Nov):463–482, 2002. Bartlett, P., Foster, D. J., and Telgarsky, M. Spectrally-normalized margin bounds for neural networks, 2017. URL https://arxiv.org/abs/1706.08498 .Bartlett, P. L., Jordan, M. I., and McAuliffe, J. D. Convexity, classification, and risk bounds. Journal of the American Statistical Association , 101(473):138–156, 2006. Ben-Tal, A. and Teboulle, M. An old-new concept of con-vex risk measures: The optimized certainty equivalent. 
+
+Mathematical Finance , 17(3):449–476, 2007. Bousquet, O. and Elisseeff, A. Stability and generalization. 
+
+Journal of machine learning research , 2(Mar):499–526, 2002. Bousquet, O., Boucheron, S., and Lugosi, G. Introduction to statistical learning theory. In Summer school on machine learning , pp. 169–207. Springer, 2003. Calauz `enes, C., Usunier, N., and Gallinari, P. Calibration and regret bounds for order-preserving surrogate losses in learning to rank. Machine learning , 93(2):227–260, 2013. Chen, T., Kornblith, S., Norouzi, M., and Hinton, G. Asimple framework for contrastive learning of visual rep-resentations. In International conference on machine learning , pp. 1597–1607. PmLR, 2020. Chen, X., Fang, H., Lin, T.-Y., Vedantam, R., Gupta, S., Doll ´ar, P., and Zitnick, C. L. Microsoft coco captions: Data collection and evaluation server. arXiv preprint arXiv:1504.00325 , 2015. Chen, Z., Deng, Y., Li, Y., and Gu, Q. Understanding trans-ferable representation learning and zero-shot transfer in clip, 2024. URL https://arxiv.org/abs/2310. 00927 .Cl ´emen c¸ on, S., Lugosi, G., and Vayatis, N. Ranking and em-pirical minimization of u-statistics. Annals of Statistics ,36(2):844–874, 2008. Cortes, C. and Mohri, M. Auc optimization vs. error rate minimization. Advances in neural information processing systems , 16, 2003. Deng, J., Dong, W., Socher, R., Li, L.-J., Li, K., and Fei-Fei, L. Imagenet: A large-scale hierarchical image database. In 2009 IEEE conference on computer vision and pattern recognition , pp. 248–255. Ieee, 2009. Fan, Y., Lyu, S., Ying, Y., and Hu, B. Learning with average top-k loss. In Guyon, I., Luxburg, U. V., Bengio, S., Wallach, H., Fergus, R., Vishwanathan, S., and Garnett, R. (eds.), Advances in Neural Information Processing Systems , volume 30. Curran Associates, Inc., 2017. URL https://proceedings.neurips. cc/paper_files/paper/2017/file/ 6c524f9d5d7027454a783c841250ba71-Paper. pdf .Fang, A., Jose, A. M., Jain, A., Schmidt, L., Toshev, A. T., and Shankar, V. Data filtering networks. In The Twelfth International Conference on Learning Representations ,2024. URL https://openreview.net/forum? id=KAk6ngZ09F .Gao, W. and Zhou, Z.-H. On the consistency of auc pairwise optimization, 2014. URL https://arxiv. org/abs/1208.0645 .HaoChen, J. Z., Wei, C., Gaidon, A., and Ma, T. Prov-able guarantees for self-supervised deep learning with spectral contrastive loss. Advances in neural information processing systems , 34:5000–5011, 2021. He, K., Fan, H., Wu, Y., Xie, S., and Girshick, R. Mo-mentum contrast for unsupervised visual representation learning. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pp. 9729–9738, 2020. 9Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Hieu, N. M., Ledent, A., Lei, Y., and Ku, C. Y. General-ization analysis for deep contrastive representation learn-ing, 2024. URL https://arxiv.org/abs/2412. 12014 .Hu, Y., Chen, X., and He, N. Sample complexity of sample average approximation for conditional stochastic opti-mization. SIAM Journal on Optimization , 30(3):2103– 2133, 2020. Jia, C., Yang, Y., Xia, Y., Chen, Y.-T., Parekh, Z., Pham, H., Le, Q., Sung, Y.-H., Li, Z., and Duerig, T. Scaling up visual and vision-language representation learning with noisy text supervision. In International conference on machine learning , pp. 4904–4916. PMLR, 2021. Karpukhin, V., Oguz, B., Min, S., Lewis, P. S., Wu, L., Edunov, S., Chen, D., and Yih, W.-t. Dense passage retrieval for open-domain question answering. In EMNLP (1) , pp. 6769–6781, 2020. Langley, P. Crafting papers on machine learning. In Langley, P. (ed.), Proceedings of the 17th International Conference on Machine Learning (ICML 2000) , pp. 1207–1216, Stan-ford, CA, 2000. Morgan Kaufmann. Ledoux, M. and Talagrand, M. Probability in Banach Spaces: isoperimetry and processes . Springer Science & Business Media, 2013. Lee, J., Park, S., and Shin, J. Learning bounds for risk-sensitive learning, 2021. URL https://arxiv. org/abs/2006.08138 .Lei, Y., Yang, T., Ying, Y., and Zhou, D.-X. Gener-alization analysis for contrastive representation learn-ing. In Krause, A., Brunskill, E., Cho, K., Engel-hardt, B., Sabato, S., and Scarlett, J. (eds.), Proceed-ings of the 40th International Conference on Machine Learning , volume 202 of Proceedings of Machine Learn-ing Research , pp. 19200–19227. PMLR, 23–29 Jul 2023. URL https://proceedings.mlr.press/ v202/lei23a.html .Lin, Y. A note on margin-based loss functions in classi-fication. Statistics & probability letters , 68(1):73–82, 2004. Mehta, R. and Harchaoui, Z. A generalization theory for zero-shot prediction, 2025. URL https://arxiv. org/abs/2507.09128 .Mohri, M., Rostamizadeh, A., and Talwalkar, A. Founda-tions of machine learning . MIT press, 2018. Nozawa, K. and Sato, I. Understanding negative samples in instance discriminative self-supervised representation learning. Advances in Neural Information Processing Systems , 34:5784–5797, 2021. Nozawa, K., Germain, P., and Guedj, B. Pac-bayesian contrastive unsupervised representation learning, 2020. URL https://arxiv.org/abs/1910.04464 .Oko, K., Lin, L., Cai, Y., and Mei, S. A statistical the-ory of contrastive pre-training and multimodal generative ai, 2025. URL https://arxiv.org/abs/2501. 04641 .Qiu, Z.-H., Hu, Q., Yuan, Z., Zhou, D., Zhang, L., and Yang, T. Not all semantics are created equal: Contrastive self-supervised learning with automatic temperature in-dividualization, 2023. URL https://arxiv.org/ abs/2305.11965 .Radford, A., Kim, J. W., Hallacy, C., Ramesh, A., Goh, G., Agarwal, S., Sastry, G., Askell, A., Mishkin, P., Clark, J., Krueger, G., and Sutskever, I. Learning transferable visual models from natural language su-pervision. In Meila, M. and Zhang, T. (eds.), Pro-ceedings of the 38th International Conference on Ma-chine Learning , volume 139 of Proceedings of Machine Learning Research , pp. 8748–8763. PMLR, 18–24 Jul 2021. URL https://proceedings.mlr.press/ v139/radford21a.html .Ramesh, A., Dhariwal, P., Nichol, A., Chu, C., and Chen, M. Hierarchical text-conditional image generation with clip latents. arXiv preprint arXiv:2204.06125 , 1(2):3, 2022. Saunshi, N., Plevrakis, O., Arora, S., Khodak, M., and Khandeparkar, H. A theoretical analysis of con-trastive unsupervised representation learning. In Chaud-huri, K. and Salakhutdinov, R. (eds.), Proceedings of the 36th International Conference on Machine Learn-ing , volume 97 of Proceedings of Machine Learning Research , pp. 5628–5637. PMLR, 09–15 Jun 2019. URL https://proceedings.mlr.press/v97/ saunshi19a.html .Tsai, Y.-H. H., Wu, Y., Salakhutdinov, R., and Morency, L.-P. Demystifying self-supervised learning: An information-theoretical framework. arXiv preprint arXiv:2006.05576 ,2020. Vapnik, V. N. Statistical Learning Theory . Wiley, New York, 1998. Wainwright, M. J. High-dimensional statistics: A non-asymptotic viewpoint , volume 48. Cambridge university press, 2019. Wang, T. and Isola, P. Understanding contrastive represen-tation learning through alignment and uniformity on the hypersphere. In International conference on machine learning , pp. 9929–9939. PMLR, 2020. 10 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Wang, Y., Zhang, Q., Wang, Y., Yang, J., and Lin, Z. Chaos is a ladder: A new theoretical understanding of con-trastive learning via augmentation overlap, 2022. URL 
+
+https://arxiv.org/abs/2203.13457 .Wei, X., Ye, F., Yonay, O., Chen, X., Sun, B., Tao, D., and Yang, T. Fastclip: A suite of optimization techniques to accelerate clip training with limited resources. arXiv preprint arXiv:2407.01445 , 2024. Yang, F. and Koyejo, S. On the consistency of top-k surro-gate losses, 2020. URL https://arxiv.org/abs/ 1901.11141 .Yang, M., Wei, X., Yang, T., and Ying, Y. Stability and gen-eralization of stochastic compositional gradient descent algorithms. In International Conference on Machine Learning , pp. 56542–56593. PMLR, 2024. Ying, Y., Wen, L., and Lyu, S. Stochastic online auc max-imization. Advances in neural information processing systems , 29, 2016. Young, P., Lai, A., Hodosh, M., and Hockenmaier, J. From image descriptions to visual denotations: New similarity metrics for semantic inference over event descriptions. 
+
+Transactions of the Association for Computational Lin-guistics , 2:67–78, 2014. Yuan, Z., Wu, Y., Qiu, Z.-H., Du, X., Zhang, L., Zhou, D., and Yang, T. Provable stochastic optimization for global contrastive learning: Small batch does not harm performance. In Chaudhuri, K., Jegelka, S., Song, L., Szepesvari, C., Niu, G., and Sabato, S. (eds.), Pro-ceedings of the 39th International Conference on Ma-chine Learning , volume 162 of Proceedings of Machine Learning Research , pp. 25760–25782. PMLR, 17–23 Jul 2022. URL https://proceedings.mlr.press/ v162/yuan22b.html .Zhang, T. Statistical behavior and consistency of classifi-cation methods based on convex risk minimization. The Annals of Statistics , 32(1):56–85, 2004. Zhang, Y., Wada, Y., Waida, H., Goto, K., Hino, Y., and Kanamori, T. Deep clustering with a constraint for topo-logical invariance based on symmetric infonce. Neural computation , 35(7):1288–1339, 2023. Zhu, D., Ying, Y., and Yang, T. Label distributionally ro-bust losses for multi-class classification: Consistency, robustness and adaptivity. In Krause, A., Brunskill, E., Cho, K., Engelhardt, B., Sabato, S., and Scarlett, J. (eds.), 
+
+Proceedings of the 40th International Conference on Ma-chine Learning , volume 202 of Proceedings of Machine Learning Research , pp. 43289–43325. PMLR, 23–29 Jul 2023. URL https://proceedings.mlr.press/ v202/zhu23o.html .Zou, X. and Liu, W. Generalization bounds for adversar-ial contrastive learning. Journal of Machine Learning Research , 24(114):1–54, 2023. URL http://jmlr. org/papers/v24/22-0866.html .11 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+## A. Rademacher complexity and covering numbers 
+
+In this section we introduce some useful facts and lemmas on Rademacher complexity and covering numbers. We first introduce notations of Rademacher complexity. For a hypothesis space F and a dataset S = {x1, · · · , xn}, the empirical Rademacher complexity is defined as 
+
+RS (F) = Eϵ
+
+"
+
+sup  
+
+> f∈F
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+ϵif (xi)
+
+#
+
+,
+
+where ϵ = ( ϵi)i∈[n] = {± 1}n are independent Rademacher random variables. The following proposition controls the generalization error through Rademacher complexity. 
+
+Proposition A.1 (Mohri et al. (2018)) . Let F be a class of functions f : Z → [a, b ]. D is a distribution over Z. Let 
+
+S = {z1, · · · , zn} be i.i.d. sampled from D. Then 
+
+sup  
+
+> f∈F
+
+Ez∼D f (z) − ES
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+f (zi) ≤ 2ES RS (F).
+
+Furthermore, with probability at least 1 − δ, there holds 
+
+sup  
+
+> f∈F
+
+Ez∼D f (z) − 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+f (zi) ≤ 2RS (F) + 3( b − a)
+
+r log(2 /δ )2n .
+
+The following contraction lemma is useful for estimating Rademacher complexity. 
+
+Lemma A.2 (Ledoux & Talagrand (2013)) . Suppose ψ : R 7 → R is contractive (i.e., |ψ(t) − ψ(t′)| ≤ η|t − t′|). Then we have 
+
+Eϵ sup  
+
+> f∈F
+> n
+
+X
+
+> i=1
+
+ϵiψ(f (xi)) ≤ ηEϵ sup  
+
+> f∈F
+> n
+
+X
+
+> i=1
+
+ϵif (xi).
+
+We will use covering numbers to estimate Rademacher complexity. Now we introduce some facts about covering numbers. The empirical ϵ-covering number of a real-valued function class w.r.t. L2(S) metric is denoted by N (G, ϵ, L 2(S)) , i.e., 
+
+N (G, ϵ, L 2(S)) = min {|C| : ∀g ∈ G , ∃¯g ∈ C s.t. ∥g − ¯g∥L2(S) ≤ ϵ},
+
+where ∥g − ¯g∥L2(S) =
+
+q 1
+
+> |S|
+
+P 
+
+> x∈S
+
+|g(x) − ¯g(x)|2. We denote N (F, ϵ, L ∞(S)) as the empirical ϵ-covering number of a real-valued function class w.r.t. L∞(S) metric, i.e., 
+
+N (F, ϵ, L ∞(S)) = min {|C| : ∀f ∈ F , ∃ ¯f ∈ C s.t. ∥f − ¯f ∥L∞(S) ≤ ϵ},
+
+where ∥f − ¯f ∥L∞(S) = max s∈S |f (x) − ¯f (x)|. The empirical ϵ-covering number of a vector-valued function class w.r.t. 
+
+L∞,2(S) metric is denoted by N (G, ϵ, L ∞,2), i.e., 
+
+N (G, ϵ, L ∞,2(S)) = min {|C| : ∀g ∈ G , ∃¯g ∈ C s.t. ∥g − ¯g∥L∞,2 ≤ ϵ},
+
+where ∥g − ¯g∥L∞,2(S) = max x∈S ∥g(x) − ¯g(x)∥2. The relationship between Rademacher complexities and covering numbers is established in the following proposition. 
+
+Proposition A.3 (Dudley’s entropy integral, Lemma A.5 in Bartlett et al. (2017)) . Let Z be a vector space and F be a class of functions f : Z 7 → R. Let S = {z1, · · · , zn} be a dataset. Denote BF = sup f ∈F ∥f ∥L2(S), we have 
+
+RS (F) ≤ inf  
+
+> α> 0
+
+4α + 12 
+
+√n
+
+Z BF
+
+> α
+
+plog N (F, ϵ, L 2(S)) dϵ. 
+
+Now we provide some results on the covering numbers for the hypothesis W defined in Assumption 4.1. 12 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Lemma A.4. Let Assumption 4.1 hold. Then for any ε > 0, there exists a cover of W: Cε = { ˜w1, · · · , ˜w|C ε|} with 
+
+log |C ε| ≤ 
+
+> L
+
+X
+
+> l=1
+
+dldl−1 log 1 + 2LΠLl=1 sl
+
+ε
+
+!
+
+.
+
+For any w ∈ W , there exists ˜w ∈ C ε, such that 
+
+∥fw(x) − f ˜w(x)∥2 ≤ ε, ∥fw(y) − f ˜w(y)∥2 ≤ ε (17) 
+
+holds for any x ∈ X , y ∈ Y .Proof. We denote the output of l-th layer by hl(x) and h0(x) = x. Then hl(x) = σ(Wlhl−1(x)) , l ∈ [L]. For any 
+
+x ∈ X , w ∈ W , we have 
+
+∥hl(x)∥2 = ∥σ(Wlhl−1(x)) − 0∥2 ≤ ∥ Wlhl−1(x)∥2 ≤ sl∥hl−1(x)∥2 ≤ · · · ≤ Πlr=1 sl∥x∥2 ≤ Πlr=1 sl. (18) For w′ = ( W ′
+
+> L
+
+, · · · , W ′
+
+> 1
+
+), we denote the output of l-th layer by h′
+
+> l
+
+(x). Then we have, 
+
+∥fw(x) − fw′ (x)∥2 = ∥hL(x) − h′
+
+> L
+
+(x)∥2 = ∥σ(WLhL−1(x)) − σ(W ′
+
+> L
+
+h′
+
+> L−1
+
+(x)) ∥2
+
+≤ ∥ WLhL−1(x) − W ′
+
+> L
+
+h′
+
+> L−1
+
+(x)∥2
+
+≤ ∥ WL(hL−1(x) − h′
+
+> L−1
+
+(x)) ∥2 + ∥(WL − W ′
+
+> L
+
+)h′
+
+> L−1
+
+(x)∥2
+
+≤ ∥ WL∥2∥hL−1(x) − h′
+
+> L−1
+
+(x)∥2 + ∥WL − W ′
+
+> L
+
+∥2∥h′
+
+> L−1
+
+(x)∥2
+
+≤ sL∥hL−1(x) − h′
+
+> L−1
+
+(x)∥2 + Π L−1 
+
+> l=1
+
+sl∥WL − W ′
+
+> L
+
+∥2
+
+≤ · · · ≤ ΠLl=1 slLX
+
+> l=1
+
+∥WL − W ′ 
+
+> l
+
+∥2
+
+sl
+
+.
+
+Given ε > 0, we define 
+
+εl = slεLΠLl=1 sl
+
+.
+
+Let Wl = {Wl ∈ Rdl×dl−1 : ∥Wl∥2 ≤ sl}, according to Example 5.8 in Wainwright (2019), there exists a εl-cover of Wl
+
+w.r.t. ∥ · ∥ 2-which we denote by Cl(Wl, ε l), satisfying 
+
+|C l(Wl, ε l)| ≤ 1 + 2sl
+
+εl
+
+!dldl −1
+
+= 1 + 2LΠLl=1 sl
+
+ε
+
+!dldl−1
+
+.
+
+Now we can construct a cover of W through Cε = C1(W1, ε 1) × · · · × C L(WL, ε ), where × the Cartesian product. For any 
+
+w ∈ W , there exists ˜w = ( fW1, · · · , fWL) ∈ C , such that for any l ∈ [L],
+
+∥Wl − fWl∥2 ≤ εl.
+
+Hence, for any x ∈ X , we have 
+
+∥fw(x) − f ˜w(x)∥2 ≤ ΠLl=1 slLX
+
+> l=1
+
+∥WL − fWl∥2
+
+sl
+
+≤ ΠLl=1 slLX
+
+> l=1
+
+εl
+
+sl
+
+= ε. 
+
+Similarly, for any y ∈ Y , ∥fw(y) − f ˜w(y)∥2 ≤ ε. The covering number satisfies 
+
+log |C ε| ≤ 
+
+> L
+
+X
+
+> l=1
+
+log |C l(Wl, ε l)| ≤ 
+
+> L
+
+X
+
+> l=1
+
+log 1 + 2LΠLl=1 sl
+
+ε
+
+!dldl−1
+
+=
+
+> L
+
+X
+
+> l=1
+
+dldl−1 log 1 + 2LΠLl=1 sl
+
+ε
+
+!
+
+.
+
+The proof is completed. 13 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+We define 
+
+S1 := {(xi, yi, y− 
+
+> ij
+
+) : 1 ≤ i ≤ n, 1 ≤ j ≤ m}, (19) 
+
+H := {(x, y, y′) 7 → ∆w(x, y, y′) : w ∈ W} . (20) An upper bound of N (H, ϵ, L ∞(S1)) in the following lemma. 
+
+Lemma A.5. Let Assumption 4.1 hold. Then for any ε > 0,
+
+log N (H, ϵ, L ∞(S1)) ≤
+
+> L
+
+X
+
+> l=1
+
+dldl−1 log 1 + 8LΠLl=1 s2
+
+> l
+
+ϵ
+
+!
+
+.
+
+Proof. For w, w′ ∈ W and a triplet (x, y, y′), we have 
+
+|∆w(x, y, y′) − ∆w′ (x, y, y′)| =|(sw(x, y′) − sw(x, y)) − (sw′ (x, y′) − sw′ (x, y)) |
+
+=|fw(x)⊤(fw(y′) − fw(y)) − fw′ (x)⊤(fw′ (y′) − fw′ (y)) |≤| (fw(x) − fw′ (x)) ⊤(fw(y′) − fw(y)) |
+
++|fw′ (x)⊤(fw(y′) − fw(y) − fw′ (y′) + fw′ (y)) |≤(∥fw(x)∥2 + ∥fw′ (x)∥2)∥fw(y) − fw′ (y)∥2
+
++∥fw′ (x)∥2(∥fw′ (y) − fw(y)∥2 + ∥fw′ (y′) − fw(y′)∥2)
+
+≤4Π Ll=1 sl max  
+
+> v∈{ x,y,y′}
+
+∥fw(v) − fw′ (v)∥2. (21) we define 
+
+S2 = {xi, y′ 
+
+> ij
+
+, yi : 1 ≤ n, 1 ≤ j ≤ m. }
+
+to be the set of all n(m + 2) training data. Therefore, 
+
+N (H, ϵ, L ∞(S1)) ≤ N (F, ϵ/ (4Π Ll=1 sl), L ∞,2(S2)) .
+
+According to Lemma A.4, suppose Cε = { ˜w1, · · · , ˜wN } is a cover of W such that Eq. (17) holds. Then 
+
+∥fw − f ˜w∥L∞,2(S2) = max 
+
+> v∈S2
+
+∥fw(v) − f ˜w(v)∥2 ≤ sup  
+
+> v∈X ,Y
+
+∥fw(v) − f ˜w(v)∥2 ≤ ε. 
+
+Therefore, N (F, ε, L ∞,2(S2)) ≤ |C ε|. Letting ε = ϵ/ (4Π Ll=1 sl), we have 
+
+log N (H, ϵ, L ∞(S1)) ≤ log |C ϵ/ (4Π Ll=1 sl)| ≤ 
+
+> L
+
+X
+
+> l=1
+
+dldl−1 log 1 + 8LΠLl=1 s2
+
+> l
+
+ϵ
+
+!
+
+.
+
+We have completed the proof of the lemma. 
+
+## B. Proofs in Section 3 
+
+B.1. Proof of Lemma 3.2 
+
+Proof of Lemma 3.2. For a scoring function s and an anchor point x, we define the following distribution 
+
+q+ 
+
+> x
+
+(y) = p− 
+
+> x
+
+(y) exp( s(x, y)/τ )
+
+Ey′∼p− 
+
+> x
+
+exp( s(x, y′)/τ ) . (22) Then we have 
+
+τ ExDKL (p+ 
+
+> x
+
+|| q+ 
+
+> x
+
+) = τ ExEy∼p+ 
+
+> x
+
+log p+ 
+
+> x
+
+(y)
+
+q+ 
+
+> x
+
+(y) = τ ExEy∼p+ 
+
+> x
+
+log p+ 
+
+> x
+
+(y)Ey′∼p− 
+
+> x
+
+exp( s(x, y′)/τ )
+
+p− 
+
+> x
+
+(y) exp( s(x, y)/τ )=τ ExEy∼p+ 
+
+> x
+
+log p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) + τ ExEy∼p+ 
+
+> x
+
+log Ey′∼p− 
+
+> x
+
+exp(( s(x, y′) − s(x, y)) /τ )=L(s) − τ ExEy∼p+ 
+
+> x
+
+log p− 
+
+> x
+
+(y)
+
+p+ 
+
+> x
+
+(y) . (23) 14 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+By the nonnegativity of KL-divergence, there holds 
+
+L(s) ≥ τ ExEy∼p+ 
+
+> x
+
+log p− 
+
+> x
+
+(y)
+
+p+ 
+
+> x
+
+(y) := L∗.
+
+By the equality condition of KL-divergence, L(s) − L ∗ = 0 is achieved if and only if 
+
+p+ 
+
+> x
+
+(y) = q+ 
+
+> x
+
+(y) = p− 
+
+> x
+
+(y) exp( s(x, y)/τ )
+
+Ey′∼p− 
+
+> x
+
+exp( s(x, y′)/τ )
+
+for any x ∈ X , y ∈ Y . Therefore, the set of the minimizers of L is given by 
+
+A =
+
+(
+
+s : p− 
+
+> x
+
+(y) exp( s(x, y)/τ )
+
+p+ 
+
+> x
+
+(y) = Ey′∼p− 
+
+> x
+
+exp( s(x, y′)/τ )
+
+)
+
+.
+
+We also denote 
+
+A′ =
+
+(
+
+s : s(x, y) = τ log p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) + g(x), for some measurable function g : X → R
+
+)
+
+.
+
+We aim to show that A = A′.For any s ∈ A , let gs(x) = τ log Ey′∼p− 
+
+> x
+
+exp( s(x, y′)/τ ) be a measurable function. Then there holds 
+
+s(x, y) = τ log p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) Ey′∼p− 
+
+> x
+
+exp( s(x, y′)/τ )
+
+!
+
+= τ log p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) + gs(x).
+
+Therefore, s ∈ A ′, this implies that A′ ⊆ A ′.To show that A′ ⊆ A , we take a function s ∈ A ′. Then there exists a function g such that 
+
+s(x, y) = τ log p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) + g(x).
+
+Hence, exp( s(x, y)/τ ) = p+   
+
+> x(y)
+> p−
+> x(y)
+
+exp( g(x)/τ ) and 
+
+p− 
+
+> x
+
+(y) exp( s(x, y)/τ )
+
+p+ 
+
+> x
+
+(y) = exp( g(x)/τ ).
+
+It further holds 
+
+Ey′∼p− 
+
+> x
+
+exp( s(x, y′)/τ ) = Ey′∼p−
+
+> x
+
+"
+
+p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) exp( g(x)/τ )
+
+#
+
+=
+
+Z
+
+> Y
+
+p− 
+
+> x
+
+(y′) p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) exp( g(x)/τ )dy′
+
+=
+
+Z
+
+> Y
+
+p+ 
+
+> x
+
+(y′) exp( g(x)/τ )dy′ = exp( g(x)/τ )
+
+Z
+
+> Y
+
+p+ 
+
+> x
+
+(y′)dy′ = exp( g(x)/τ ),
+
+where the last inequality is because p+ 
+
+> x
+
+is a density function and thus R 
+
+> Y
+
+p+ 
+
+> x
+
+(y′)dy′ = 1 .As a result, 
+
+p− 
+
+> x
+
+(y) exp( s(x, y)/τ )
+
+p+ 
+
+> x
+
+(y) = Ey′∼p− 
+
+> x
+
+exp( s(x, y′)/τ ).
+
+This indicates that s ∈ A , and A′ ⊆ A .
+
+Consequently, A = A′. A scoring function s is a minimizer of L if and only if 
+
+s(x, y) = τ log p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) + g(x), for some measurable function g : X → R.
+
+The proof is completed. 15 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+B.2. Proof of Lemma 3.3 
+
+We first present the following technical lemma. 
+
+Lemma B.1. For any x ∈ X , y, y′ ∈ Y and socring function s, there holds 
+
+I
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) ≤ 0
+
+#
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+≤ p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) −
+
+ p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+
+
+(I[s(x, y) > s (x, y′)] − I[s(x, y′) > s (x, y)]) 
+
+≤2I
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) ≤ 0
+
+#
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) .
+
+(24) 
+
+Proof. The above inequality holds true when p+   
+
+> x(y)
+> p−
+> x(y)
+
+− p+   
+
+> x(y′)
+> p−
+> x(y′)
+
+= 0 . We ony need to consider the case p+   
+
+> x(y)
+> p−
+> x(y)
+
+− p+  
+
+> x(y′)
+> p−
+> x(y′)
+
+̸ = 0 .By the symmetry of y, y′, we assume that 
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) > 0.
+
+Similar arguments also follows for p+   
+
+> x(y)
+> p−
+> x(y)
+
+− p+   
+
+> x(y′)
+> p−
+> x(y′)
+
+< 0. We verify Eq. (24) by considering three cases: Case 1: s(x, y) > s (x, y′). We have 
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) −
+
+ p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+
+
+(I[s(x, y) > s (x, y′)] − I[s(x, y′) > s (x, y)]) = p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) −
+
+ p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+
+
+(1 − 0) = 0 ,
+
+I
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) ≤ 0
+
+#
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+= 0 .
+
+Therefore, Eq. (24) becomes 0 ≤ 0 ≤ 0, which holds true. Case 2:s(x, y) = s(x, y′). We have 
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) −
+
+ p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+
+
+(I[s(x, y) > s (x, y′)] − I[s(x, y′) > s (x, y)]) = p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) −
+
+ p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+
+
+(0 − 0) = p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) ,
+
+I
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) ≤ 0
+
+#
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+= p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) .
+
+In this case, Eq. (24) becomes 
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) ≤ p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) ≤ 2 p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+,
+
+which holds true by noting that p+   
+
+> x(y)
+> p−
+> x(y)
+
+− p+   
+
+> x(y′)
+> p−
+> x(y′)
+
+> 0.16 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Case 3:s(x, y) < s (x, y′). We have 
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) −
+
+ p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+
+
+(I[s(x, y) > s (x, y′)] − I[s(x, y′) > s (x, y)]) = p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) −
+
+ p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+
+
+(0 − 1) = 2 p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+,
+
+I
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) ≤ 0
+
+#
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+= p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) .
+
+Consequently, Eq. (24) becomes 
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) ≤ 2 p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+≤ 2 p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+,
+
+which holds true. Combining three cases together, we have completed the proof of the lemma. 
+
+Proof of Lemma 3.3. Recall the definition of E(s) in Eq. (2), there holds 
+
+E(s) = ExEy∼p+  
+
+> x,y′∼p−
+> x
+
+[I[s(x, y) > s (x, y′)]] + 12 ExEy∼p+  
+
+> x,y′∼p−
+> x
+
+[I[s(x, y) = s(x, y′)]] =Ex
+
+" Z Z 
+
+p+ 
+
+> x
+
+(y)p− 
+
+> x
+
+(y′)( I[s(x, y) > s (x, y′)] + 12 I[s(x, y) = s(x, y′)]) dydy′
+
+#
+
+=Ex
+
+" Z Z 
+
+p− 
+
+> x
+
+(y)p− 
+
+> x
+
+(y′) p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) (I[s(x, y) > s (x, y′)] + 12 I[s(x, y) = s(x, y′)]) dydy′
+
+#
+
+=ExEy∼p− 
+
+> x,y′∼p−
+> x
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) (I[s(x, y) > s (x, y′)] + 12 I[s(x, y) = s(x, y′)]) 
+
+#
+
+= 12 ExEy∼p− 
+
+> x,y′∼p−
+> x
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) I[s(x, y) > s (x, y′)] + p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) I[s(x, y′) > s (x, y)] + 14
+
+ p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) + p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+
+
+I[s(x, y) = s(x, y′)] 
+
+#
+
+,
+
+where the last term is by the symmetry of y, y′. By noting that I[s(x, y′) > s (x, y)] + I[s(x, y) > s (x, y′)] + I[s(x, y′) = 
+
+s(x, y)] = 1 , we have 
+
+E(s) = 12 ExEy∼p− 
+
+> x,y′∼p−
+> x
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) I[s(x, y) > s (x, y′)] + p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) I[s(x, y′) > s (x, y)] + 14
+
+ p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) + p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+
+
+(1 − I[s(x, y′) > s (x, y)] − I[s(x, y) > s (x, y′)]) 
+
+#
+
+= 14 ExEy∼p− 
+
+> x,y′∼p−
+> x
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) + p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) +
+
+ p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+
+
+(I[s(x, y) > s (x, y′)] − I[s(x, y′) > s (x, y)]) 
+
+#
+
+≤ 14 ExEy∼p− 
+
+> x,y′∼p−
+> x
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) + p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) + p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+#
+
+:= E∗ (25) 17 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Therefore, 
+
+E∗ − E (s)= 14 ExEy∼p− 
+
+> x,y′∼p−
+> x
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) −
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+
+
+(I[s(x, y) > s (x, y′)] −I[s(x, y′) > s (x, y)]) 
+
+#
+
+.
+
+Applying Lemma B.1 to the above equation, we conclude that 
+
+14 ExEy∼p− 
+
+> x,y′∼p−
+> x
+
+"
+
+I
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) ≤ 0
+
+#
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+#
+
+≤E ∗ − E (s)
+
+≤ 12 ExEy∼p− 
+
+> x,y′∼p−
+> x
+
+"
+
+I
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) ≤ 0
+
+#
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+#
+
+.
+
+(26) Now we derive the necessary and sufficient condition for the optimal scoring function of E.
+
+Necessary condition. If s is an optimal scoring function such that E∗ − E (s) = 0 , the by Eq. (26), there holds 
+
+0 ≤ 14 ExEy∼p− 
+
+> x,y′∼p−
+> x
+
+"
+
+I
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) ≤ 0
+
+#
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+#
+
+≤E ∗ − E (s) ≤ 0.
+
+Therefore, 
+
+ExEy∼p− 
+
+> x,y′∼p−
+> x
+
+"
+
+I
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) ≤ 0
+
+#
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+#
+
+= 0 ,
+
+implying that for any x, y, y′ with p+ 
+
+> x
+
+(y)/p − 
+
+> x
+
+(y)̸ = p+ 
+
+> x
+
+(y′)/p − 
+
+> x
+
+(y′), there holds 
+
+I
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) ≤ 0
+
+#
+
+= 0 ,
+
+=⇒ p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) > 0.
+
+Sufficient condition. Let a scoring function s satisfies that, for any x, y, y′ with p+ 
+
+> x
+
+(y)/p − 
+
+> x
+
+(y)̸ = p+ 
+
+> x
+
+(y′)/p − 
+
+> x
+
+(y′), there holds 
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) > 0.
+
+Then for any x, y, y′, there holds 
+
+I
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) ≤ 0
+
+#
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) = 0 .
+
+Then according to Eq. (26), we have 
+
+E∗ − E (s)
+
+≤ 12 ExEy∼p− 
+
+> x,y′∼p−
+> x
+
+"
+
+I
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) ≤ 0
+
+#
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+#
+
+= 0 ,
+
+indicating that E∗ − E (s) = 0 . This shows that s is an optimal scoring function. 18 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Hence, s is an optimal scoring function if and only if for any x, y, y′ with p+ 
+
+> x
+
+(y)/p − 
+
+> x
+
+(y)̸ = p+ 
+
+> x
+
+(y′)/p − 
+
+> x
+
+(y′), there holds 
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) > 0.
+
+The proof is completed. 
+
+B.3. Proof of Theorem 3.4 
+
+Before we provide the proof of Theorem 3.4, we present following technical lemmas. 
+
+Lemma B.2 (Pinsker’s Inequality) . Let μ and ν be two probability measures on a measurable space (Ω , F), with ν ≪ μ
+
+(i.e., ν is absolutely continuous with respect to μ) so that the Radon-Nikodym derivative dν dμ exists. The KL divergence of ν
+
+with respect to μ is defined as: 
+
+DKL (ν ∥ μ) = 
+
+Z
+
+> Ω
+
+log 
+
+ dν dμ 
+
+
+
+dν, 
+
+where DKL (ν ∥ μ) = + ∞ if the integral is infinite. The total variation distance between μ and ν is: 
+
+∥μ − ν∥TV = sup 
+
+> A∈F
+
+|μ(A) − ν(A)| = 12
+
+Z
+
+> Ω
+
+dν dμ − 1 dμ. 
+
+Pinsker’s inequality relates these two quantities by the bound: 
+
+∥μ − ν∥2 
+
+> TV
+
+≤ 12 DKL (ν ∥ μ).
+
+Lemma B.3. Let 0 < c ≤ 1 be a constant,then there holds 
+
+| exp( t) − 1| ≥ c|t| for all t ≥ log c. 
+
+Proof. When t ≥ 0, there holds exp( t)−1 ≥ t ≥ ct . When t < 0, let K(t) = 1 −exp( t)+ ct , then K′(t) = c−exp( t) ≤ 0,implying that | exp( t) − 1| − c|t| = K(t) ≥ K(0) = 0 . This completes the proof of the lemma. 
+
+Proof of Theorem 3.4. According to Lemma 3.2, we choose an optimal scoring function 
+
+s∗(x, y) = τ log p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) . (27) Then L∗ = L(s∗) = τ ExEy∼p+ 
+
+> x
+
+log p−   
+
+> x(y)
+> p+
+> x(y)
+
+. For a scoring function s, we define 
+
+˜s(x, y) = s(x, y) − τ log Ey′∼p− 
+
+> x
+
+exp( s(x, y′)/τ ).
+
+Then Ey′∼p− 
+
+> x
+
+exp(˜ s(x, y′)/τ ) = 1 . Let g(x) = τ log Ey′∼p− 
+
+> x
+
+exp( s(x, y′)/τ ). We have 
+
+E(˜ s) = ExEy∼p+  
+
+> x,y′∼p−
+> x
+
+I[˜ s(x, y) > ˜s(x, y′)] = ExEy∼p+  
+
+> x,y′∼p−
+> x
+
+I[s(x, y) − g(x) > s (x, y′) − g(x)] =ExEy∼p+  
+
+> x,y′∼p−
+> x
+
+I[s(x, y) > s (x, y′)] = E(s).
+
+There also holds 
+
+L(˜ s) = τ ExEy∼p+ 
+
+> x
+
+log Ey′∼p− 
+
+> x
+
+exp((˜ s(x, y′) − ˜s(x, y)) /τ )= τ ExEy∼p+ 
+
+> x
+
+log Ey′∼p− 
+
+> x
+
+exp(( s(x, y′) − g(x) + g(x) − s(x, y)) /τ )= τ ExEy∼p+ 
+
+> x
+
+log Ey′∼p− 
+
+> x
+
+exp(( s(x, y′) − s(x, y)) /τ ) = L(s).
+
+Therefore, E(˜ s) = E(s), L(˜ s) = L(s) we can replace s by ˜s. In other words, without loss of generality, we can make the following regularity assumption 
+
+Ey′∼p− 
+
+> x
+
+exp( s(x, y′)/τ ) = 1 . (28) 19 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Let the distribution q+ 
+
+> x
+
+be defined in Eq. (22), i.e., 
+
+q+ 
+
+> x
+
+(y) = p− 
+
+> x
+
+(y) exp( s(x, y)/τ )
+
+Ey′∼p− 
+
+> x
+
+exp( s(x, y′)/τ ) = p− 
+
+> x
+
+(y) exp( s(x, y)/τ ).
+
+By Eq. (23), we have 
+
+L(s) − L (s∗) = τ ExDKL (p+ 
+
+> x
+
+|| q+ 
+
+> x
+
+).
+
+According to Pinsker’s inequality (Lemma B.2), we can bound the KL-divergence by total variation distance: 
+
+DKL (p+ 
+
+> x
+
+|| q+ 
+
+> x
+
+) ≥ 12
+
+Z
+
+> Y
+
+|p+ 
+
+> x
+
+(y) − q+ 
+
+> x
+
+(y)|dy
+
+!2
+
+.
+
+Therefore, 
+
+L(s) − L (s∗) ≥ Ex
+
+τ
+
+2
+
+Z
+
+> Y
+
+|p+ 
+
+> x
+
+(y) − q+ 
+
+> x
+
+(y)|dy
+
+!2
+
+= Ex
+
+τ
+
+2
+
+Z
+
+> Y
+
+|p+ 
+
+> x
+
+(y) − p− 
+
+> x
+
+(y) exp( s(x, y)/τ )|dy
+
+!2
+
+= Ex
+
+τ
+
+2
+
+Z
+
+> Y
+
+p− 
+
+> x
+
+(y) p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − exp( s(x, y)/τ ) dy
+
+!2
+
+= Ex
+
+τ
+
+2
+
+Z
+
+> Y
+
+p− 
+
+> x
+
+(y) exp( s∗(x, y)/τ )) − exp( s(x, y)/τ ) dy
+
+!2
+
+= Ex
+
+τ
+
+2 Ey∼p− 
+
+> x
+
+exp( s∗(x, y)/τ )) − exp( s(x, y)/τ )
+
+!2
+
+, (29) where the third equality is due to Eq. (27). Then we make the following decomposition that introduces the pair y, y′:
+
+2Ey∼p− 
+
+> x
+
+| exp( s∗(x, y)/τ )) − exp( s(x, y)/τ )|
+
+=Ey∼p− 
+
+> x
+
+| exp( s∗(x, y)/τ )) − exp( s(x, y)/τ )| + Ey′∼p− 
+
+> x
+
+| exp( s∗(x, y′)/τ )) − exp( s(x, y′)/τ )|
+
+=Ey∼p−  
+
+> x,y′∼p−
+> x
+
+[| exp( s∗(x, y)/τ )) − exp( s(x, y)/τ )| + | exp( s∗(x, y′)/τ )) − exp( s(x, y′)/τ )|]. (30) We will show that for any x, y, y′,
+
+| exp( s∗(x, y)/τ )) − exp( s(x, y)/τ )| + | exp( s∗(x, y′)/τ )) − exp( s(x, y′)/τ )|≥I
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) ≤ 0
+
+#
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) . (31) It is trivial when RHS is equal to 0. We consider the case 
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) ≤ 0, p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)̸ = 0 .
+
+Without loss of generality, suppose that 
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) > p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) , s(x, y) − s(x, y′) ≤ 0.
+
+By the definition of s∗ in Eq. (27), we have 
+
+exp( s∗(x, y)/τ ) − exp( s∗(x, y′)/τ ) = p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) > 0. (32) 20 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+and exp( s(x, y′)/τ )) − exp( s(x, y)/τ ) ≥ 0. Therefore, 
+
+| exp( s∗(x, y)/τ )) − exp( s(x, y)/τ )| + | exp( s∗(x, y′)/τ )) − exp( s(x, y′)/τ )|≥| exp( s∗(x, y)/τ )) − exp( s(x, y)/τ ) − exp( s∗(x, y′)/τ )) + exp( s(x, y′)/τ )|
+
+=|(exp( s∗(x, y)/τ ) − exp( s∗(x, y′)/τ )) + (exp( s(x, y′)/τ ) − exp( s(x, y)/τ )) |
+
+=(exp( s∗(x, y)/τ ) − exp( s∗(x, y′)/τ )) + (exp( s(x, y′)/τ ) − exp( s(x, y)/τ )) 
+
+≥ exp( s∗(x, y)/τ ) − exp( s∗(x, y′)/τ ) = p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) .
+
+As a result, Eq. (31) holds true. Plugging Eq. (31) into Eq. (30) yields 
+
+Ey∼p− 
+
+> x
+
+| exp( s∗(x, y)/τ )) − exp( s(x, y)/τ )|≥ 12 Ey∼p−  
+
+> x,y′∼p−
+> x
+
+I
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) ≤ 0
+
+#
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) . (33) Combining Eqs. (29), (33), we have 
+
+L(s) − L (s∗) ≥ τ
+
+2 Ex Ey∼p− 
+
+> x
+
+| exp( s∗(x, y)/τ )) − exp( s(x, y)/τ )|
+
+!2
+
+≥ τ
+
+2 Ex
+
+12 Ey∼p−  
+
+> x,y′∼p−
+> x
+
+I
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) ≤ 0
+
+#
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!2
+
+≥ τ
+
+2
+
+12 ExEy∼p−  
+
+> x,y′∼p−
+> x
+
+I[( p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) )( s(x, y) − s(x, y′)) ≤ 0] p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!2
+
+≥ τ
+
+2 (E∗ − E (s)) 2,
+
+where the second inequality is due to Jensen’s inequality and the last inequality results from Eq. (26). As a result, 
+
+E∗ − E (s) ≤ p2/τ pL(s) − L (s∗).
+
+The proof is completed by noting that s∗ is a minimizer of L(s).
+
+## C. Proofs in Section 4.1 
+
+Recall the error decomposition 
+
+LS(sw)− bLS(sw)
+
+≤ LS(sw) − E bLS(sw)
+
+| {z }
+
+> inner error
+
++ E bLS(sw) − bLS(sw)
+
+| {z }
+
+> outer error
+
+.
+
+We will control inner error and outer error separately. Before that, we provide the proof of Lemma 4.2. 
+
+C.1. Proof of Lemma 4.2 
+
+Proof of Lemma 4.2. For μi ∈ R, we define 
+
+di(μi) = τm
+
+> m
+
+X
+
+> j=1
+
+exp 
+
+∆w(xi, yi, y′ 
+
+> ij
+
+) − μi
+
+τ
+
+
+
++ μi − τ. 
+
+Then we have 
+
+d′
+
+> i
+
+(μi) = τm
+
+> m
+
+X
+
+> j=1
+
+exp 
+
+∆w(xi, yi, y′ 
+
+> ij
+
+) − μi
+
+τ
+
+ −1
+
+τ
+
+!
+
++ 1 = 1 − 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+exp 
+
+∆w(xi, yi, y′ 
+
+> ij
+
+) − μi
+
+τ
+
+
+
+.
+
+21 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+By taking d′
+
+> i
+
+(μi) = 0 , we obtain the minimizer of di:
+
+μ∗ 
+
+> i
+
+= τ log 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+exp 
+
+∆w(xi, yi, y′ 
+
+> ij
+
+)
+
+τ
+
+
+
+.
+
+Plugging it into di, we have 
+
+min 
+
+> μi∈R
+
+τm
+
+> m
+
+X
+
+> j=1
+
+exp 
+
+∆w(xi, yi, y′ 
+
+> ij
+
+) − μi
+
+τ
+
+
+
++ μi − τ = di(μ∗ 
+
+> i
+
+) = τ log 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+exp 
+
+∆w(xi, yi, y′ 
+
+> ij
+
+)
+
+τ
+
+
+
+.
+
+Since sw(x, y) ∈ [−B, B ] for all x ∈ X , y ∈ Y , w ∈ W , ∆w(xi, yi, y′ 
+
+> ij
+
+) = sw(xi, y′ 
+
+> ij
+
+) − sw(xi, yi) ∈ [−2B, 2B],implying that μ∗ 
+
+> i
+
+∈ [−2B, 2B]. Therefore, 
+
+min 
+
+> μi∈[−2B, 2B]
+
+τm
+
+> m
+
+X
+
+> j=1
+
+exp 
+
+∆w(xi, yi, y′ 
+
+> ij
+
+) − μi
+
+τ
+
+
+
++μi − τ = τ log 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+exp 
+
+∆w(xi, yi, y′ 
+
+> ij
+
+)
+
+τ
+
+
+
+.
+
+Taking summation over all i ∈ [n], we get 
+
+bLS(sw) = 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+τ log 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+exp 
+
+∆w(xi, yi, y′ 
+
+> ij
+
+)
+
+τ
+
+
+
+= −τ +1
+
+n
+
+> n
+
+X
+
+> i=1
+
+"
+
+min 
+
+> |μi|≤ 2B
+
+τm
+
+> m
+
+X
+
+> j=1
+
+exp 
+
+∆( xi, yi, y′ 
+
+> ij
+
+) − μi
+
+τ
+
+
+
++μi
+
+#
+
+.
+
+This completes the proof of Eq. (13). To prove Eq. (14), we define 
+
+d(μ) = τ Ey′ exp 
+
+ ∆w(x, y, y′) − μτ
+
+
+
++μ − τ, μ ∈ R.
+
+Then 
+
+d′(μ) = −Ey′ exp 
+
+ ∆w(x, y, y′) − μτ
+
+
+
++ 1 .
+
+Taking d′(μ) = 0 obtains the optimal value μ∗ = τ log Ey′ exp 
+
+ ∆w (x,y,y′)
+
+> τ
+
+
+
+. Therefore, 
+
+min 
+
+> μ∈R
+
+τ Ey′ exp 
+
+ ∆w(x, y, y′) − μτ
+
+
+
++μ = d(μ∗) = τ log Ey′ exp 
+
+ ∆w(x, y, y′)
+
+τ
+
+
+
+− τ. 
+
+By noting that ∆w(x, y, y′) = sw(x, y′) − sw(x, y) ∈ [−2B, 2B], there holds 
+
+min 
+
+> |μ|∈ [−2B, 2B]
+
+τ Ey′ exp 
+
+ ∆w(x, y, y′) − μτ
+
+
+
++μ = τ log Ey′ exp 
+
+ ∆w(x, y, y′)
+
+τ
+
+
+
+− τ. 
+
+Taking expectation w.r.t. x, y and combining with Eq. (5) complete the proof of the lemma. 22 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+C.2. Proof of Lemma 4.3 
+
+Proof of Lemma 4.3. By Eqs. (13), (14), there holds 
+
+LS(sw) − E bLS(sw)=Ex,y
+
+"
+
+min  
+
+> μ∈[−2B, 2B]
+
+τ Ey′ exp 
+
+ ∆w(x, y, y′) − μτ
+
+
+
+− τ + μ
+
+#
+
+−E{xi,yi,y′ 
+
+> ij }
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+"
+
+min 
+
+> μi∈[−2B, 2B]
+
+τm
+
+> m
+
+X
+
+> j=1
+
+exp ∆w(xi, yi, y′ 
+
+> ij
+
+) − μi
+
+τ
+
+!
+
+− τ + μi
+
+#
+
+=Ex,y
+
+(" 
+
+min  
+
+> μ∈[−2B, 2B]
+
+τ Ey′ exp 
+
+ ∆w(x, y, y′) − μτ
+
+
+
+− τ + μ
+
+#
+
+−E{y′ 
+
+> j}
+
+"
+
+min 
+
+> μ∈[−2B, 2B]
+
+τm
+
+> m
+
+X
+
+> j=1
+
+exp ∆w(x, y, y′ 
+
+> j
+
+) − μτ
+
+!
+
+− τ + μ
+
+#) 
+
+.
+
+Let ψw,x,y(μ; y′) = μ + τ [exp(∆ w(x, y, y′) − μ)/τ ) − 1] . Since ∆w(x, y, y′) ∈ [−2B, 2B], ψw,x,y(μ; y′) is 
+
+exp( −4B/τ )/τ -strongly convex and exp(4 B/τ )-Lipschitz w.r.t. μ over the interval [−2B, 2B]. Therefore, 
+
+LS(w) − E bLS(w) = Ex,y
+
+"
+
+min  
+
+> μ∈[−2B, 2B]
+
+Ey′ ψw,x,y(μ; y′) − E{y′  
+
+> j}
+
+min 
+
+> μ∈[−2B, 2B]
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ψw,x,y(μ; y′ 
+
+> j
+
+)
+
+#
+
+.
+
+For simplicity, we define S′ = {y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+}, and 
+
+¯μw,x,y(S′) = arg min 
+
+> μ∈[−2B, 2B]
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ψw,x,y(μ; y′ 
+
+> j
+
+).
+
+Then for any S′,
+
+min  
+
+> μ∈[−2B, 2B]
+
+Ey′ ψw,x,y(μ; y′) ≤ Ey′ ψw,x,y(¯ μ({S′}); y′).
+
+Taking expectation for S′ yields 
+
+min  
+
+> μ∈[−2B, 2B]
+
+Ey′ ψw,x,y(μ; y′) ≤ ES′ Ey′ ψw,x,y(¯ μ(S′); y′). (34) By the exp( −4B/τ )/τ -strong convexity of ψw,x,y(μ; y′), we can define a convex function 
+
+ˆψw,x,y(μ; y′) := ψw,x,y(μ; y′) − exp( −4B/τ )2τ μ2.
+
+Then 
+
+¯μw,x,y(S′) = arg min 
+
+> μ∈[−2B, 2B]
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ψw,x,y(μ; y′ 
+
+> j
+
+) = arg min 
+
+> μ∈[−2B, 2B]
+
+ 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ˆψw,x,y(μ; y′ 
+
+> j
+
+) + exp( −4B/τ )2τ μ2
+
+
+
+,
+
+which is the regularized empirical risk minimization algorithm. According to Theorem 12, 22 in Bousquet & Elisseeff (2002), for all x, y, w, we have 
+
+ES′
+
+"
+
+Ey′ ˆψw,x,y(¯ μw,x,y(S′); y′) − 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ˆψw,x,y(¯ μw,x,y(S′); y′ 
+
+> j
+
+)
+
+#
+
+≤ 2 exp(4 B/τ )τ
+
+exp( −4B/τ )m = 2 exp(8 B/τ )τm .
+
+23 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+As a result, 
+
+ES′
+
+"
+
+Ey′ ψw,x,y(¯ μw,x,y(S′); y′) − 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ψw,x,y(¯ μw,x,y(S′); y′ 
+
+> j
+
+)
+
+#
+
+=ES′
+
+"
+
+Ey′ ˆψw,x,y(¯ μw,x,y(S′); y′) + exp( −4B/τ )2τ (¯ μw,x,y(S′)) 2
+
+− 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ˆψw,x,y(¯ μw,x,y(S′); y′ 
+
+> j
+
+) − exp( −4B/τ )2τ (¯ μw,x,y(S′)) 2
+
+#
+
+=ES′
+
+"
+
+Ey′ ˆψw,x,y(¯ μw,x,y(S′); y′) − 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ˆψw,x,y(¯ μw,x,y(S′); y′ 
+
+> j
+
+)
+
+#
+
+≤ 2 exp(8 B/τ )τm .
+
+Combined with Eq. (34), for any x, y, w, there holds 
+
+min  
+
+> μ∈[−2B, 2B]
+
+Ey′ ψw,x,y(μ; y′) − Ey′ 
+
+> j
+
+min 
+
+> μ∈[−2B, 2B]
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ψw,x,y(μ; y′ 
+
+> j
+
+)= min  
+
+> μ∈[−2B, 2B]
+
+Ey′ ψw,x,y(μ; y′) − ES′
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ψw,x,y(¯ μw,x,y(S′); y′ 
+
+> j
+
+)
+
+≤ES′
+
+"
+
+Eyψw,x,y(¯ μw,x,y(S′); y′) − 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ψw,x,y(¯ μw,x,y(S′); y′ 
+
+> j
+
+)
+
+#
+
+≤ 2 exp(8 B/τ )τm .
+
+As a result, 
+
+sup 
+
+> w∈W
+
+h
+
+L(w) − E bLS(w)
+
+i
+
+= sup 
+
+> w∈W
+
+Ex,y
+
+"
+
+min  
+
+> μ∈[−2B, 2B]
+
+Ey′ ψw,x,y(μ; y′) − Ey′ 
+
+> j
+
+min 
+
+> μ∈[−2B, 2B]
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ψw,x,y(μ; y′ 
+
+> j
+
+)
+
+#
+
+≤ 2 exp(8 B/τ )τm .
+
+The proof is completed. 
+
+C.3. Proof of Lemma 4.4 
+
+Proof of Lemma 4.4. For w ∈ W , we introduce kw : X × Y m+1 → R as follows: 
+
+kw(x, y, y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+) = τ log 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+exp ∆w(x, y, y′ 
+
+> j
+
+)
+
+τ
+
+!
+
+.
+
+Then we have 
+
+E bLS(w) − bLS(w)=Ex,y,y′ 
+
+> 1,··· ,y′
+> m
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+"
+
+τ log 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+exp ∆w(x, y, y′ 
+
+> j
+
+)
+
+τ
+
+!# 
+
+− 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+"
+
+τ log 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+exp ∆w(xi, yi, y′ 
+
+> ij
+
+)
+
+τ
+
+!# 
+
+=Ex,y,y′ 
+
+> 1,··· ,y′
+> m
+
+h
+
+kw(x, y, y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+)
+
+i
+
+− 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+kw(xi, yi, y′
+
+> i1
+
+, · · · , y′
+
+> im
+
+).
+
+By Proposition A.1, it suffices to bound Rademacher complexity RS (K), where 
+
+K = {(x, y, y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+) 7 → kw(x, y, y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+) : w ∈ W} ,S = {(x1, y1, y′
+
+> 11
+
+, · · · , y′
+
+> 1m
+
+), · · · , (xn, yn, y′
+
+> n1
+
+, · · · , y′
+
+> nm
+
+)}.
+
+24 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Recall that 
+
+S1 := {(xi, yi, y− 
+
+> ij
+
+) : 1 ≤ i ≤ n, 1 ≤ j ≤ m},
+
+H := {(x, y, y′) 7 → ∆w(x, y, y′) : w ∈ W} .
+
+Let kw, k w′ be two functions in K. By Lemma E.4, the logistic loss τ log 1
+
+> m
+
+Pmj=1 exp( tj /τ ) is 1-ℓ∞-Lipschitz, i.e. 
+
+τ log 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+exp( tj /τ ) − τ log 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+exp( t′ 
+
+> j
+
+/τ ) ≤ max  
+
+> j
+
+|tj − t′ 
+
+> j
+
+|.
+
+Therefore, 
+
+∥kw − kw′ ∥L2(S) =
+
+vuut 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+(kw(xi, yi, y′
+
+> i1
+
+, · · · , y′
+
+> im
+
+) − kw′ (xi, yi, y′
+
+> i1
+
+, · · · , y′
+
+> im
+
+)) 2
+
+≤ max  
+
+> i
+
+|kw(xi, yi, y′
+
+> i1
+
+, · · · , y′
+
+> im
+
+) − kw′ (xi, yi, y′
+
+> i1
+
+, · · · , y′
+
+> im
+
+)|≤ max  
+
+> i
+
+max  
+
+> j
+
+|∆w(xi, yi, y′ 
+
+> ij
+
+) − ∆w′ (xi, yi, y′ 
+
+> ij
+
+)|≤ max 
+
+> (ˆ x,ˆy,ˆy′)∈S1
+
+|∆w(ˆ x, ˆy, ˆy′) − ∆w′ (ˆ x, ˆy, ˆy′)| = ∥∆w − ∆w′ ∥L∞(S1)) .
+
+As a result, for any ϵ > 0,
+
+N (K, ϵ, L 2(S)) ≤ N (H, ϵ, L ∞(S1)) .
+
+From Assumption 4.1, ∆w(x, y, y′) ∈ [−2B, 2B] for all x ∈ X , y, y′ ∈ Y , then kw ∈ [−2B, 2B], implying that 
+
+BK := sup 
+
+> w∈W
+
+∥kw∥L2(S) ≤ 2B. 
+
+According to Proposition A.3 and Lemma A.5, there holds 
+
+RS (K) ≤ inf  
+
+> α> 0
+
+4α + 12 
+
+√n
+
+Z BK
+
+> α
+
+plog N (K, ϵ, L 2(S)) dϵ ≤ 4
+
+n + 12 
+
+√n
+
+Z 2B
+
+> 1
+> n
+
+plog N (K, ϵ, L 2(S)) dϵ 
+
+≤ 4
+
+n + 12 
+
+√n
+
+Z 2B
+
+> 1
+> n
+
+plog N (H, ϵ, L ∞(S1)) dϵ ≤ 4
+
+n + 12 
+
+√n
+
+Z 2B
+
+> 1
+> n
+
+vuut LX
+
+> l=1
+
+dldl−1 log 1 + 8LΠLl=1 s2
+
+> l
+
+ϵ
+
+!
+
+dϵ 
+
+≤ 4
+
+n + 12 
+
+√n
+
+vuut LX
+
+> l=1
+
+dldl−1 log(1 + 8 nL ΠLl=1 s2 
+
+> l
+
+)(2 B − 1/n ) = eO B
+
+qPLl=1 dldl−1
+
+n
+
+!
+
+.
+
+Using Proposition A.1, with probability at least 1 − δ, we have 
+
+sup 
+
+> w∈W
+
+h
+
+E bLS(w) − bLS(w)
+
+i
+
+= sup 
+
+> w∈W
+
+Ex,y,y′ 
+
+> 1,··· ,y′
+> m
+
+h
+
+kw(x, y, y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+)
+
+i
+
+− 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+kw(xi, yi, y′
+
+> i1
+
+, · · · , y′
+
+> im
+
+).
+
+≤2RS (K) + 12 B
+
+r log(2 /δ )2n = eO
+
+ Bplog(1 /δ ) + B
+
+qPLl=1 dldl−1
+
+√n
+
+ .
+
+The inequality also holds for the other side following a similar manner. The proof is completed. 25 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+## D. Proof of Theorem 4.6 
+
+Recall that 
+
+|L SS (sw) − bLSS (sw)| ≤ Ex,yhw(x, y) − 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+hw(xi, yi)
+
+| {z }
+
+> outer error
+
++ 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+ hw(xi, yi) − ˆhw(xi, yi)| {z }
+
+> inner error
+
+,
+
+where 
+
+hw(x, y) = τ log Ey′ exp ∆w(x, y, y′)
+
+τ
+
+!
+
+, ˆhw(x, y) = τ log 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+exp ∆w(x, y, y′ 
+
+> j
+
+)
+
+τ
+
+!! 
+
+.
+
+We will control each component respectively. 
+
+D.1. Estimation of the outer error 
+
+We define the following function class and data space: 
+
+H1 = {(x, y) 7 → hw(x, y), w ∈ W} , S4 = {(x1, y1), · · · , (xn, yn)}.
+
+To bound the outer error, we control the covering number log N (H1, ϵ, L 2(S4)) .
+
+Lemma D.1. Let Assumption 4.1 hold, then for any ϵ > 0, we have 
+
+log N (H1, ϵ, L 2(S4)) ≤
+
+> L
+
+X
+
+> l=1
+
+dldl−1 log 1 + exp(4 B/τ )8 LΠLl=1 s2
+
+> l
+
+ϵ
+
+!
+
+.
+
+Proof. Let hw, h w′ be two functions in H1. For x ∈ X , y ∈ Y , we aim bound |hw(x, y) − hw′ (x, y)|. Without loss of generality, we assume hw(x, y) ≥ hw′ (x, y). Then 
+
+|hw(x, y) − hw′ (x, y)| = hw(x, y) − hw′ (x, y)= τ log Ey′ exp ∆w(x, y, y′)
+
+τ
+
+!
+
+− τ log Ey′ exp ∆w′ (x, y, y′)
+
+τ
+
+!
+
+= τ log Ey′ exp(∆ w(x, y, y′)/τ )
+
+Ey′ exp(∆ w′ (x, y, y′)/τ )
+
+≤ τ Ey′ exp(∆ w(x, y, y′)/τ ) − Ey′ exp(∆ w′ (x, y, y′)/τ )
+
+Ey′ exp(∆ w′ (x, y, y′)/τ )
+
+≤ τ Ey′ exp(∆ w(x, y, y′)/τ ) − Ey′ exp(∆ w′ (x, y, y′)/τ )exp( −2B/τ )
+
+≤ τ Ey′ | exp(∆ w(x, y, y′)/τ ) − exp(∆ w′ (x, y, y′)/τ )|
+
+exp( −2B/τ )
+
+≤ τ Ey′ exp(2 B/τ )|∆w(x, y, y′)/τ − ∆w′ (x, y, y′)/τ |
+
+exp( −2B/τ )= exp(4 B/τ )Ey′ |∆w(x, y, y′) − ∆w′ (x, y, y′)|,
+
+where the first inequality is due to log( t) ≤ t − 1, the second inequality results from ∆w′ (x, y, y′) = sw′ (x, y′) −
+
+sw′ (x, y) ∈ [−2B, 2B], the last inequality is by the exp(2 B/τ )-Lipschitzness of exp( t) over the interval [−2B/τ, 2B/τ ].We choose a cover Cε of W such that Eq. (17) holds. By Eq. (21), we know that 
+
+|hw(x, y) − hw′ (x, y)| ≤ exp(4 B/τ )Ey′ |∆w(x, y, y′) − ∆w′ (x, y, y′)|≤4 exp(4 B/τ )Π Ll=1 slEy′ max  
+
+> v∈{ x,y,y′}
+
+∥fw(v) − fw′ (v)∥2
+
+≤4 exp(4 B/τ )Π Ll=1 sl max   
+
+> v∈X ,Y
+
+∥fw(v) − fw′ (v)∥2 ≤ 4 exp(4 B/τ )Π Ll=1 slε. 
+
+26 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+As a result, 
+
+∥hw − hw′ ∥L2(S4) ≤ 4 exp(4 B/τ )Π Ll=1 slε
+
+For ϵ > 0, choosing 
+
+ε = ϵ
+
+4 exp(4 B/τ )Π Ll=1 sl
+
+.
+
+Then by Lemma A.4, we have 
+
+log N (H1, ϵ, L 2(S4)) ≤ log |C ε| ≤ 
+
+> L
+
+X
+
+> l=1
+
+dldl−1 log 1 + 2LΠLl=1 sl
+
+ε
+
+!
+
+=
+
+> L
+
+X
+
+> l=1
+
+dldl−1 log 1 + 8 exp(4 B/τ )LΠLl=1 s2
+
+> l
+
+ϵ
+
+!
+
+.
+
+The proof is completed. The outer error can be bounded as below. 
+
+Lemma D.2. Let Assumption 4.1 hold, then with probability at least 1 − δ, there holds 
+
+Ex,yhw(x, y) − 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+hw(xi, yi) ≤ eO B
+
+qPLl=1 dldl−1 + Bplog(1 /δ )
+
+√n
+
+!
+
+.
+
+Proof. Since ∆w(x, y, y′) = sw(x, y′) − sw(x, y) ∈ [−2B, 2B], we have hw(x, y) ∈ [−2B, 2B]. Then by Proposi-tion A.3 and Lemma D.1, 
+
+RS4 (H1) ≤ inf  
+
+> α> 0
+
+4α + 12 
+
+√n
+
+Z 2Bα
+
+plog N (H1, ϵ, L 2(S4)) dϵ ≤ 4
+
+n + 12 
+
+√n
+
+Z 2B
+
+> 1/n
+
+plog N (H1, ϵ, L 2(S4)) dϵ 
+
+≤ 4
+
+n + 12 
+
+√n
+
+Z 2B
+
+> 1/n
+
+vuut LX
+
+> l=1
+
+dldl−1 log 1 + 8 exp(4 B/τ )LΠLl=1 s2
+
+> l
+
+ϵ
+
+!
+
+dϵ 
+
+≤ 4
+
+n + 12 
+
+√n
+
+vuut LX
+
+> l=1
+
+dldl−1 log(1 + 8 exp(4 B/τ )nL ΠLl=1 s2 
+
+> l
+
+)(2 B − 1/n )
+
+≤ 4
+
+n + 24 
+
+√n B log(1 + 8 exp(4 B/τ )nL ΠLl=1 s2 
+
+> l
+
+)
+
+vuut LX
+
+> l=1
+
+dldl−1.
+
+Combined with Proposition A.1, we have with probability at least 1 − δ,
+
+Ex,yhw(x, y) − 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+hw(xi, yi) ≤ 2RS4 (H1) + 12 B
+
+r log(1 /δ )
+
+n (35) 
+
+≤ eO B
+
+qPLl=1 dldl−1 + Bplog(2 /δ )
+
+√2n
+
+!
+
+. (36) Similar inequality holds for another direction. The proof is completed. 
+
+D.2. Estimation of the inner error 
+
+For any x ∈ X , y ∈ Y , we define the following function class and dataset: 
+
+Gx,y := {y′ → ∆w(x, y, y′), w ∈ W} , S′ = {y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+}. (37) We bound the covering number N (Gx,y, ϵ, L 2(S′)) in the following lemma. 27 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Lemma D.3. Let Assumption 4.1 hold, then for any x, y, S ′ = {y′
+
+> 1
+
+, · · · y′
+
+> m
+
+}, there holds 
+
+log N (Gx,y, ϵ, L 2(S′)) ≤
+
+> L
+
+X
+
+> l=1
+
+dldl−1 log 1 + 8LΠLl=1 s2
+
+> l
+
+ϵ
+
+!
+
+.
+
+Proof. We define S3 = {x, y, y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+}. Let ∆w(x, y, ·), ∆w′ (x, y, ·) be two functions in Gx,y. We choose a cover Cε
+
+of W such that Eq. (17) holds. According to Eq. (21), for any x ∈ X , y, y′ ∈ Y , we have 
+
+|∆w(x, y, y′) − ∆w′ (x, y, y′)| ≤ 4Π Ll=1 sl max  
+
+> v∈{ x,y,y′}
+
+∥fw(v) − fw′ (v)∥2 ≤ 4Π Ll=1 slε. 
+
+It implies that 
+
+∥∆w(x, y, ·) − ∆w′ (x, y, ·)∥L2(S′) =
+
+vuut 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+(∆ w(x, y, y′ 
+
+> j
+
+) − ∆w′ (x, y, y′ 
+
+> j
+
+)) 2
+
+≤
+
+vuut 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+
+
+4Π Ll=1 sl max 
+
+> v∈S3
+
+∥fw(v) − fw′ (v)∥2
+
+2
+
+= 4Π Ll=1 sl max 
+
+> v∈S3
+
+∥fw(v) − fw′ (v)∥2 ≤ 4Π Ll=1 slε. 
+
+Letting ε = ϵ/ (≤ 4Π Ll=1 sl) yields 
+
+log N (Gx,y, ϵ, L 2(S′)) ≤ log N (F, ϵ/ (4Π Ll=1 sl), L ∞,2(S3)) ≤ log |Cε| ≤ 
+
+> L
+
+X
+
+> l=1
+
+dldl−1 log 1 + 8LΠLl=1 s2
+
+> l
+
+ϵ
+
+!
+
+.
+
+The proof is completed. The inner error can be estimated in the following lemma. 
+
+Lemma D.4. Let Assumption 4.1 hold, then with probability at least 1 − δ, we have 
+
+sup 
+
+> w∈W
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+(hw(xi, yi) − ˆhw(xi, yi)) = eO exp(4 B/τ )( B
+
+qPLl=1 dldl−1 + τ plog( n/δ )) 
+
+√m
+
+!
+
+.
+
+Proof. We define 
+
+Ix,y := {y′ → τ exp 
+
+ ∆w(x, y, y′) − μτ
+
+
+
+, w ∈ W , μ ∈ [−2B, 2B]}.
+
+Then we have ∆w (x,y,y′)−μτ ∈ [−4B/τ, 4B/τ ] and τ exp( ·/τ ) is exp(4 B/τ )-Lipschitz over this interval. For any w ∈W, μ ∈ [−2B, 2B], there holds 
+
+0 ≤ τ exp 
+
+ ∆w(x, y, y′) − μτ
+
+
+
+≤ τ exp(4 B/τ ).
+
+28 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Then By Eqs. (13), (14) and Proposition A.1, we have 
+
+sup 
+
+> w∈W
+
+|hw(x, y) − ˆhw(x, y)|
+
+= sup 
+
+> w∈W
+
+τ log Ey′ exp ∆w(x, y, y′)
+
+τ
+
+!
+
+− τ log 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+exp ∆w(x, y, y′ 
+
+> j
+
+)
+
+τ
+
+!! 
+
+= sup 
+
+> w∈W
+
+"
+
+min 
+
+> |μ|≤ 2B
+
+τ Ey′ exp 
+
+ ∆w(x, y, y′) − μτ
+
+
+
+−τ +μ
+
+#
+
+−
+
+"
+
+min 
+
+> |μ|≤ 2B
+
+τm
+
+> m
+
+X
+
+> j=1
+
+exp 
+
+ ∆( x, y, y′ 
+
+> j
+
+) − μτ
+
+
+
+− τ + μ
+
+#
+
+≤ sup 
+
+> w∈W ,|μ|≤ 2B
+
+τ Ey′ exp 
+
+ ∆w(x, y, y′) − μτ
+
+
+
+− τm
+
+> m
+
+X
+
+> j=1
+
+exp 
+
+ ∆( x, y, y′ 
+
+> j
+
+) − μτ
+
+
+
+≤2RS′ (Ix,y) + 3 τ exp(4 B/τ )
+
+r log(2 /δ )2n
+
+with probability at least 1 − δ/ 2. We define 
+
+Kx,y := {y′ → ∆w(x, y, y′) − μ, w ∈ W , μ ∈ [−2B, 2B]}.
+
+According to Lemma A.2, we have 
+
+sup 
+
+> w∈W
+
+|hw(x, y) − ˆhw(x, y)|≤2 exp(4 B/τ )RS′ (Ix,y) + 3 τ exp(4 B/τ )
+
+r log(2 /δ )2n . (38) 
+
+RS′ (Kx,y) = Eϵ sup 
+
+> w∈W ,μ ∈[−2B, 2B]
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ϵj (∆ w(x, y, y′ 
+
+> j
+
+) − μ)
+
+≤Eϵ sup 
+
+> w∈W
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ϵj ∆w(x, y, y′ 
+
+> j
+
+) + Eϵ sup 
+
+> μ∈[−2B, 2B]
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ϵj μ. 
+
+We will control two terms respectively. 
+
+Eϵ sup 
+
+> μ∈[−2B, 2B]
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ϵj μ ≤ 2BEϵ
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ϵj ≤ 2B
+
+vuuutEϵ
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ϵj
+
+> 2
+
+= 2B
+
+√m .
+
+We apply Proposition A.3 and Lemma D.3 to obtain 
+
+Eϵ sup 
+
+> w
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ϵj ∆w(x, y, y′ 
+
+> j
+
+) ≤ inf  
+
+> α> 0
+
+4α + 12 
+
+√m
+
+Z 2Bα
+
+q
+
+log N (Gx,y, ϵ, L 2(S′)) dϵ (39) 
+
+≤ 4
+
+m + 12 
+
+√m
+
+Z 2B
+
+> 1/m
+
+q
+
+log N (Gx,y, ϵ, L 2(S′)) dϵ (40) 
+
+≤ 4
+
+m + 12 
+
+√m
+
+Z 2B
+
+> 1/m
+
+vuut LX
+
+> l=1
+
+dldl−1 log 1 + 8LΠLl=1 s2
+
+> l
+
+ϵ
+
+!
+
+dϵ 
+
+≤ 4
+
+m + 12 
+
+√m
+
+vuut LX
+
+> l=1
+
+dldl−1 log(1 + 8 mL ΠLl=1 s2 
+
+> l
+
+)(2 B − 1/m )
+
+≤ 4
+
+m + 24 
+
+√m B log(1 + 8 mL ΠLl=1 s2 
+
+> l
+
+)
+
+vuut LX
+
+> l=1
+
+dldl−1. (41) 29 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Therefore, 
+
+RS′ (Kx,y) = eO B
+
+s PLl=1 dldl−1
+
+m
+
+!
+
+.
+
+Plugging it into Eq. (38) yields 
+
+sup 
+
+> w∈W
+
+hw(x, y) − ˆhw(x, y) = eO exp(4 B/τ )( B
+
+qPLl=1 dldl−1 + τ plog(1 /δ )) 
+
+√m
+
+!
+
+(42) with probability at least 1 − δ. By the independence of S′ and xi, yi, with probability at least 1 − δ/n , the following holds for all i ∈ [n]:
+
+sup 
+
+> w∈W
+
+hw(xi, yi) − ˆhw(xi, yi) = eO exp(4 B/τ )( B
+
+qPLl=1 dldl−1 + τ plog( n/δ )) 
+
+√m
+
+!
+
+.
+
+Taking summation yields 
+
+sup 
+
+> w∈W
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+(hw(xi, yi) − ˆhw(xi, yi)) = eO exp(4 B/τ )( B
+
+qPLl=1 dldl−1 + τ plog( n/δ )) 
+
+√m
+
+!
+
+.
+
+The other side of the inequality holds for the same reason. The proof of the lemma is completed. Now we prove Theorem 4.6. 
+
+Proof of Theorem 4.6. Plugging Lemma 4.4, D.4 into the error decomposition Eq. (16) , with probability at least 1 − δ, there holds 
+
+sup 
+
+> w∈W
+
+|L SS (sw) − bLSS (sw)| ≤ Ex,yhw(x, y) − 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+hw(xi, yi) + 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+ hw(xi, yi) − ˆhw(xi, yi)
+
+≤ eO B
+
+qPLl=1 dldl−1 + Bplog(1 /δ )
+
+√n + exp(4 B/τ )( B
+
+qPLl=1 dldl−1 + τ plog( n/δ )) 
+
+√m
+
+!
+
+.
+
+The proof is completed. 
+
+D.3. Zero-shot Classification in SSCRL 
+
+In this subsection, we study the generalization performance of SSCRL in zero-shot classification task. We follow the framework in Oko et al. (2025). Given a scoring function s, the goal is to predict the label c of x without training on a task-specific dataset. Suppose there are C classes. For each class c, the distributions of data on two modalities X , Y are denoted by DX (c), DY (c) respectively. we study zero-shot classification performance in a probabilistic modeling regime. Specifically, for a label c, we model the Bayes rule P(c|x) by 
+
+Ps(c|x) = Ey∼D Y (c)pY (y) exp( s(x, y)/τ )
+
+Ey exp( s(x, y)/τ ) . (43) The performance of zero-shot classification is measured by KL-divergence between the Bayes rule and the modeled probability: 
+
+R(s) = τ ExDKL (P(c|x)|| Ps(c|x)) .
+
+Following Oko et al. (2025), we assume a conditional independence property of the data distribution. 
+
+Assumption D.5. For the joint distribution (x, y, c ), x and c are conditionally independent given y. An special case is when c is a deterministic function of y.30 Statistical Consistency and Generalization of Contrastive Representation Learning             
+
+> Table 1. Examples of OCE risk . For α∈(0 ,1) ,VaR α(f(z)) denotes the α-quantile of the distribution of f(z),[t]+= max {0, t }.
+
+Name ϕ(t) oce ϕ(f )
+
+Expected loss t E[f (z)] 
+
+Entropy risk exp( t) − 1 log E[exp( f (z))] 
+
+Mean-variance 12 t2 + t E[f (z)] + 12 Var( f (z)) 
+
+Conditional Value-at-Risk (CVaR) 1 
+
+> α
+
+[t]+ E[ f (z) | f (z) ≥ VaR α(f (z)) ] 
+
+The following proposition shows that zero-shot classification error can be bounded by the pretraining excess risk. 
+
+Proposition D.6 (Proposition 2 in Oko et al. (2025)) . Let Assumption D.5 hold, then the error for zero-shot classification can be bounded by the excess risk of CRL. 
+
+R(s) ≤ L SS (s) − inf  
+
+> s
+
+LSS (s).
+
+We can adapt our generalization bound (Theorem 4.6) and obtain 
+
+Theorem D.7. Let Assumptions 4.1, D.5 hold. Let ˆw1 ∈ arg min w∈W bLSS (w). Then with probability 1 − δ, there holds 
+
+R(s ˆw1 ) ≤ inf  
+
+> w∈W
+
+LSS (sw)−inf  
+
+> s
+
+LSS (s)+ eO 1
+
+√n + 1
+
+√m
+
+!
+
+.
+
+## E. Extension to a general class of contrastive losses 
+
+In Lemma 4.2, we formulate contrastive loss as minimization problems, which forms the theoretical foundation of our generalization analysis. In fact, it is closely related to the so-called optimized certainty equivalent (OCE). Another observation is that CRL inherently relies on a pairwise structure, comparing positive and negative sample pairs via ∆w(x, y, y′). In this section, we unify the OCE framework and general pairwise loss functions to formalize a broad family of CRL losses, where the canonical contrastive loss in Eq. (1) emerges as a natural special case. Building on this general formulation, we extend our earlier analyses of statistical consistency and generalization bounds to this larger class of losses—thereby enhancing the generality and applicability of our theoretical findings beyond the standard CRL setting. 
+
+Optimized certainty equivalent We first introduce the OCE framework (Ben-Tal & Teboulle, 2007), a powerful tool for risk-sensitive analysis. 
+
+Definition E.1 (OCE Risk) . Let ϕ : R → R ∪ { +∞} be a nondecreasing, closed, convex disutility function satisfying 
+
+ϕ(0) = 0 and 1 ∈ ∂ϕ (0) . Suppose τ > 0 is a hyperparameter. For a random variable z and a measurable function f , the corresponding OCE risk is defined as 
+
+oce ϕ(f ) = min 
+
+> μ∈R
+
+(
+
+τ Ez
+
+"
+
+ϕ f (z) − μτ
+
+!# 
+
++ μ
+
+)
+
+.
+
+This formulation encodes a risk-averse perspective by penalizing large realizations of the loss f (z) . Given m i.i.d. samples 
+
+z1, . . . , zm, the empirical OCE risk is 
+
+oce ϕm(f ) = min 
+
+> μ∈R
+
+ τm
+
+> m
+
+X
+
+> j=1
+
+ϕ f (zj ) − μτ
+
+!
+
++ μ
+
+
+
+.
+
+The OCE framework subsumes a broad class of well-known risk measures as special cases, with illustrative examples provided in Table 1 (Lee et al., 2021). Notably, Lemma 4.2 establishes that the canonical contrastive loss corresponds to the OCE with the exponential disutility function ϕ(t) = exp( t) − 1, meaning standard contrastive loss is itself a specific case of the more general OCE risk. A key advantage of framing CRL through the OCE lens lies in its ability to explain the hard negative mining property of contrastive loss (Qiu et al., 2023). In fact, a key property of the OCE risk is its inherent risk aversion: the property ϕ(x) ≥ x
+
+implies oce ϕ(f ) ≥ E[f (z)] , making it a stronger criterion than the standard expected risk. This risk-averse nature compels CRL to prioritize hard negative examples, i.e., those with large ∆w that are more challenging to distinguish. 31 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Pairwise loss Next, we note the pairwise nature of contrastive loss function. The goal of CRL is to discriminate positive data from negative data, i.e. increasing the score difference ∆w(x, y, y′) between positive pairs and negative pairs. This aligns naturally with the pairwise learning paradigm, which employs pairwise losses for discriminative tasks (Gao & Zhou, 2014), motivating us to adopt a general pairwise loss formulation. Specifically, we introduce a general pairwise loss: 
+
+ℓ(∆ w(x, y, y′)) , where ℓ : R → R is a nondecreasing function. Representative instantiations of ℓ include ℓ(t) = exp( t),
+
+ℓ(t) = log(exp( t) + 1) , and ℓ(t) = (max(0 , 1 + t)) 2.By integrating the OCE framework with general pairwise loss, we propose the following contrastive loss for a pairwise loss 
+
+ℓ and a general disutility function ϕ:
+
+Lϕ,ℓ (sw) = ExEy∼p+
+
+> x
+
+"
+
+min  
+
+> μ∈R
+
+τ Ey′∼p− 
+
+> x
+
+ϕ
+
+ ℓ(∆ w(x, y, y′)) − μτ
+
+
+
++ μ
+
+#
+
+. (44) Notably, the InfoNCE loss Eq. (1) is a special case of our general contrastive loss framework when choosing ℓ(t) = 
+
+t, ϕ (t) = exp( t) − 1.Most existing work considers pairwise loss of the form 
+
+T (sw) = ExEy∼p+ 
+
+> x
+
+Ey′∼p− 
+
+> x
+
+[ℓ(∆ w(x, y, y′))] .
+
+However, this standard expected risk has a critical limitation in practical CRL scenarios: the amount of negative examples is much larger than that of positive examples, and it fails to prioritize hard negative examples. However, the OCE-augmented pairwise loss Lϕ,ℓ (sw) inherits the advantages of both components: it retains the pairwise nature of CRL loss while leveraging the risk-averse property of OCE to focus more on hard negative examples. Compared to the standard expected risk T (sw), Lϕ,ℓ (sw) is more robust in imbalanced sample scenarios. Formally, we have the inequality Lϕ,ℓ (sw) ≥ T (sw),which implies that Lϕ,ℓ (sw) is a stronger risk measure. This strength entails a one-way implication: minimizing Lϕ,ℓ (sw)
+
+guarantees a small T (sw), but a small T (sw) does not necessarily imply a small Lϕ,ℓ (sw).In the rest of the paper, we assume ϕ satisfies Definition E.1. 
+
+E.1. Problem formulations 
+
+Now extend the settings in Section 2 to Lϕ,ℓ (sw) and define the statistical consistency. E.1.1. S UPERVISED SETTING 
+
+Similar to Lemma 4.2, the population risk for SCRL with ϕ, ℓ is given by 
+
+Lϕ,ℓ  
+
+> S
+
+(sw) = ExEy∼p+(·| x)
+
+"
+
+min  
+
+> μ∈R
+
+τ Ey′∼p−(·| x)ϕ
+
+ ℓ(∆ w(x, y, y′)) − μτ
+
+
+
++ μ
+
+#
+
+. (45) To estimate it, we draw n i.i.d. anchor points xi ∼ pX for i ∈ [n]. For each anchor xi, we sample one positive example 
+
+yi ∼ p+(·| xi) and then m negative examples {y′ 
+
+> ij
+
+∼ p−(·| xi) : j ∈ [m]}. The empirical risk is defined by 
+
+bLϕ,ℓ  
+
+> S
+
+(sw) = 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+"
+
+min 
+
+> μi∈R
+
+τm
+
+> m
+
+X
+
+> j=1
+
+ϕ ℓ(∆ w(xi, yi, y′ 
+
+> ij
+
+)) − μi
+
+τ
+
+!
+
++ μi
+
+#
+
+. (46) An interesting property of OCE is its relationship with distributional robust optimization (DRO) (Ben-Tal & Teboulle, 2007). Let p = ( p1, · · · , p m) ∈ ∆m, where ∆m is the simplex satisfying ∆m = {p ∈ Rm : Pmj=1 pj = 1 , p j ≥ 0}. Let φ be a proper closed convex function and has a minimum value zero that is attained at t = 1 . The φ-divergence is defined as 
+
+Dϕ(p, q) = Pmj=1 qj φ(pj /q j ). Then we have 
+
+Proposition E.2. Let φ∗(s) = max t≥0 ts − φ(t) be the convex conjugate of ϕ. We have 
+
+bLϕ,ℓ  
+
+> S
+
+(sw) = 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+"
+
+max 
+
+> pi∈∆m
+> m
+
+X
+
+> j=1
+
+pij ℓ(∆ w(xi, yi, y′ 
+
+> ij
+
+)) − τ D φ
+
+
+
+pi, 1
+
+m
+
+ #
+
+. (47) 32 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+The DRO objective considers a distribution shift over an uncertainty set, thus helping the model to be more robust. The term τ D φ
+
+ pi, 1
+
+> m
+
+ controls the deviation from the uniform distribution 1 
+
+> m
+
+. When φ(t) = t log t − t + 1 , φ-divergence corresponds to KL divergence. In this case, we can formulate Eq. (6) as DRO. 
+
+bLS(sw) = 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+"
+
+max 
+
+> pi∈∆m
+> m
+
+X
+
+> j=1
+
+pij (∆ w(xi, yi, y′ 
+
+> ij
+
+)) − τ D KL 
+
+
+
+pi, 1
+
+m
+
+ #
+
+. (48) 
+
+Proof of Proposition E.2. We first prove that for any z1, · · · , z m, there holds 
+
+max 
+
+> p∈△ m
+> m
+
+X
+
+> j=1
+
+pj zj − τ D φ
+
+
+
+p, 1
+
+m
+
+
+
+= min  
+
+> μ∈R
+
+μ + τm
+
+> m
+
+X
+
+> j=1
+
+φ(( zj − μ)/τ ). (49) By Lagrangian duality theory, we have 
+
+max 
+
+> p∈△ m
+> m
+
+X
+
+> j=1
+
+pj zj − τ D φ
+
+
+
+p, 1
+
+m
+
+
+
+= min  
+
+> μ∈R
+
+max   
+
+> pj≥0
+
+μ(1 −
+
+> m
+
+X
+
+> j=1
+
+pj ) + 
+
+> m
+
+X
+
+> j=1
+
+pj zj − τ D φ
+
+
+
+p, 1
+
+m
+
+
+
+= min  
+
+> μ∈R
+
+max   
+
+> pj≥0
+
+μ(1 −
+
+> m
+
+X
+
+> j=1
+
+pj ) + 
+
+> m
+
+X
+
+> j=1
+
+pj zj − τm
+
+> m
+
+X
+
+> j=1
+
+φ(mp j )= min 
+
+> μ∈R
+
+μ + max  
+
+> pj≥0
+
+τm
+
+> m
+
+X
+
+> j=1
+
+(mp j (zj − μ)/τ − φ(mp j )) 
+
+
+
+= min 
+
+> μ∈R
+
+μ + τm
+
+> m
+
+X
+
+> j=1
+
+max  
+
+> pj≥0
+
+(mp j (zj − μ)/τ − φ(mp j )) 
+
+
+
+= min  
+
+> μ∈R
+
+μ + τm
+
+> m
+
+X
+
+> j=1
+
+φ∗(( zj − μ)/τ ),
+
+where the last equality is by the definition of φ∗. Hence, Eq. (49) holds true. Back to Eq. (47) , for i ∈ [n], let 
+
+zj = ℓ(∆ w(xi, yi, y′ 
+
+> ij
+
+)) , applying Eq. (49) implies that 
+
+max 
+
+> pi∈∆m
+> m
+
+X
+
+> j=1
+
+pij ℓ(∆ w(xi, yi, y′ 
+
+> ij
+
+)) − τ D φ
+
+
+
+pi, 1
+
+m
+
+
+
+= min 
+
+> μi∈R
+
+τm
+
+> m
+
+X
+
+> j=1
+
+φ∗ ℓ(∆ w(xi, yi, y′ 
+
+> ij
+
+)) − μi
+
+τ
+
+!
+
++ μi.
+
+Taking summation over i completes the proof. E.1.2. S ELF -SUPERVISED SETTING 
+
+Given an anchor x, we define the positive and negative conditional distributions as 
+
+p+ 
+
+> x
+
+(y) = p(y|x), p − 
+
+> x
+
+(y) = pY (y). (50) We define the population risk as 
+
+Lϕ,ℓ  
+
+> SS
+
+(sw) = ExEy|x
+
+"
+
+min  
+
+> μ∈R
+
+τ Ey′ ϕ
+
+ ℓ(∆ w(x, y, y′)) − μτ
+
+
+
++ μ
+
+#
+
+. (51) To estimate it from data, we draw n positive pairs {(xi, yi)}ni=1 ∼ p(x, y). Additionally, we sample m negative examples 
+
+{y′ 
+
+> j
+
+}mj=1 
+
+> i.i.d.
+
+∼ pY . Each anchor xi is then contrasted against with all y′ 
+
+> j
+
+, j ∈ [m]. The empirical risk is defined to be 
+
+bLϕ,ℓ  
+
+> SS
+
+(sw) = 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+"
+
+min 
+
+> μi
+
+τm
+
+> m
+
+X
+
+> j=1
+
+ϕ ℓ(∆ w(xi, yi, y′ 
+
+> j
+
+)) − μi
+
+τ
+
+!
+
++ μi
+
+#
+
+. (52) 33 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+E.1.3. S TATISTICAL CONSISTENCY 
+
+We will also study the statistical consistency of Lϕ,ℓ . We denote Lϕ,ℓ  
+
+> ∗
+
+= inf s Lϕ,ℓ (s), where the infimum is taken over all measurable scoring functions s : X × Y → R. Recall that E∗
+
+Definition E.3. The contrastive loss Lϕ,ℓ (s) is said to be statistically consistent with respect to E(s) if, for any sequence of scoring functions {sn}, the following holds over all joint distributions on X × Y .If Lϕ,ℓ (sn) → L ϕ,ℓ  
+
+> ∗
+
+then E(sn) → E ∗.
+
+E.2. Useful lemmas about OCE 
+
+Now we introduce an interesting property of the empirical OCE w.r.t. ℓ∞-norm. 
+
+Lemma E.4. For any u = ( u1, · · · , u m), ¯u = (¯ u1, · · · , ¯um), we define 
+
+q(u) = min 
+
+> μ∈R
+
+τm
+
+> m
+
+X
+
+> j=1
+
+ϕ uj − μτ
+
+!
+
++ μ, q(¯ u) = min 
+
+> μ∈R
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+¯uj − μτ
+
+!
+
++ μ
+
+then there holds 
+
+|q(u) − q(¯ u)| ≤ ∥ u − ¯u∥∞ = max  
+
+> j
+
+|uj − ¯uj |.
+
+As a special case, we take ϕ(t) = exp( t) − 1 and derive that τ log[ Pmj=1 exp( uj /τ )/m ] is 1-ℓ∞-Lipschitz. This property plays an important role in controlling the covering numbers. 
+
+Proof of Lemma E.4. We assume that 
+
+μ1 ∈ arg min 
+
+> μ∈R
+
+τm
+
+> j
+
+X
+
+> j=1
+
+ϕ uj − μτ
+
+!
+
++ μ, μ 2 ∈ arg min 
+
+> μ∈R
+
+τm
+
+> m
+
+X
+
+> j=1
+
+ϕ ¯uj − μτ
+
+!
+
++ μ. 
+
+By the optimality, we have 
+
+0 ∈ − τm
+
+> m
+
+X
+
+> j=1
+
+∂ϕ uj − μτ
+
+!
+
++ 1 , 0 ∈ − 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+∂ϕ ¯uj − μτ
+
+!
+
++ 1 . (53) Without loss of generality, we suppose q(u) ≥ q(¯ u), then there holds 
+
+|q(u) − q(¯ u)| = q(u) − q(¯ u)= τm
+
+> m
+
+X
+
+> j=1
+
+ϕ uj − μ1
+
+τ
+
+!
+
++ μ1 − τm
+
+> m
+
+X
+
+> j=1
+
+ϕ ¯uj − μ2
+
+τ
+
+!
+
+− μ2
+
+= τm
+
+> m
+
+X
+
+> j=1
+
+ϕ uj − μ1
+
+τ
+
+!
+
+− ϕ ¯uj − μ2
+
+τ
+
+!! 
+
++ μ1 − μ2
+
+≤ τm
+
+> m
+
+X
+
+> j=1
+
+∂ϕ uj − μ1
+
+τ
+
+!
+
+(uj − μ1 − ¯uj + μ2) + μ1 − μ2
+
+= τm
+
+> m
+
+X
+
+> j=1
+
+∂ϕ uj − μ1
+
+τ
+
+!
+
+(uj − ¯uj ) + ( μ1 − μ2) 1 − τm
+
+> m
+
+X
+
+> j=1
+
+∂ϕ uj − μ1
+
+τ
+
+!! 
+
+,
+
+where the inequality is due to the convexity of ϕ. Since ϕ is nondecreasing, we have ∂ϕ (t) ≥ 0. Combining Eq. (53) yields 
+
+|q(u) − q(¯ u)| = q(u) − q(¯ u) ≤ τm
+
+> m
+
+X
+
+> j=1
+
+∂ϕ uj − μ1
+
+τ
+
+!
+
+|uj − ¯uj |≤ τm
+
+> m
+
+X
+
+> j=1
+
+∂ϕ uj − μ1
+
+τ
+
+!! 
+
+max  
+
+> j
+
+|uj − ¯uj | = max  
+
+> j
+
+|uj − ¯uj | = ∥u − ¯u∥∞.
+
+The proof is completed. 34 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+The following lemma indicates that we can constrain the parameter μ of OCE in a bounded domain. 
+
+Lemma E.5. Suppose the function f satisfies f (z) ∈ [a, b ] for all z. Then for any τ , there holds 
+
+min  
+
+> μ∈R
+
+τ Ezϕ(( f (z) − μ)/τ ) + μ = min  
+
+> μ∈[a,b ]
+
+τ Ezϕ(( f (z) − μ)/τ ) + μ, 
+
+min 
+
+> μ∈R
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ϕ(( f (zi) − μ)/τ ) + μ = min 
+
+> μ∈[a,b ]
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ϕ(( f (zi) − μ)/τ ) + μ. 
+
+Proof. We define 
+
+λ(μ) = τ Ezϕ(( f (z) − μ)/τ ) + μ. 
+
+To prove the first inequality, it suffices to prove that λ(b + ϵ) ≥ λ(b), λ (a − ϵ) ≥ λ(a) for any ϵ > 0.To show that λ(b + ϵ) ≥ λ(b) for ϵ > 0. We define X = f (z) − b ∈ [a − b, 0] . Then we have 
+
+λ(b + ϵ) = τ Ezϕ(( f (z) − b − ϵ)/τ ) + b + ϵ = τ Ezϕ(( X − ϵ)/τ ) + b + ϵ
+
+≥ τ Ez(ϕ(X/τ ) − ϵ/τ ) + b + ϵ = τ Ezϕ(X/τ ) + b = λ(b),
+
+where the inequality is because ϕ is convex having 1 as a sub gradient at 0.To show that λ(a − ϵ) ≥ λ(a) for any ϵ > 0. We define Y = f (z) − a ∈ [0 , b − a]. Then we have 
+
+λ(a − ϵ) = τ Ezϕ(( f (z) − a + ϵ)/τ ) + a − ϵ = τ Ezϕ(( Y + ϵ)/τ ) + a − ϵ
+
+≥ τ Ez(ϕ(Y /τ ) + ϵ/τ ) + a − ϵ = τ Ezϕ(Y /τ ) + a = λ(a),
+
+where the inequality is because ϕ is convex having 1 as a sub gradient at 0. Therefore, the first part in the lemma has been proved. The second part follows similar arguments. The following lemma shows that the expectation of empirical OCE risk can be upper bounded by the population OCE risk. 
+
+Lemma E.6. Let ϕ be a disutility function, τ > 0. Let z be a random variable, {z1, · · · , z m} be m copies of z. Then there holds 
+
+min  
+
+> μ∈R
+
+τ Ez ϕ(( z − μ)/τ ) + μ ≥ Ezj min 
+
+> μ∈R
+
+τm
+
+> m
+
+X
+
+> j=1
+
+ϕ(( zj − μ)/τ ) + μ. 
+
+Proof. Let μ∗ ∈ arg min μ∈R τ Ez ϕ(( z − μ)/τ ) + μ, then 
+
+Ezj min 
+
+> μ∈R
+
+τm
+
+> m
+
+X
+
+> j=1
+
+ϕ(( zj − μ)/τ ) + μ ≤ Ezj
+
+τm
+
+> m
+
+X
+
+> j=1
+
+ϕ(( zj − μ∗)/τ ) + μ∗
+
+=Ez τ ϕ (( z − μ∗)/τ ) + μ∗ = min  
+
+> μ∈R
+
+τ Ez ϕ(( z − μ)/τ ) + μ. 
+
+The proof is completed. 
+
+E.3. Statistical consistency for Lϕ,ℓ (s)
+
+In this subsection, we analyze the statistical consistency of a general class of contrastive losses Lϕ,ℓ (s). To simplify the discussion and avoid measure-theoretic complications, we assume that both X , Y are discrete spaces throughout Section E.3. 
+
+Assumption E.7. We assume that ϕ′′ (t) > 0, ℓ is convex, differentiable, non-decreasing and ℓ′(0) > 0.
+
+Remark E.8 . Similar assumptions for ℓ have been made in Gao & Zhou (2014). The condition for ϕ is used to analyze the optimal μ in OCE through implicit function theorem. The above assumption can be satisfied in many cases, for instance, 
+
+ϕ(t) = exp( t) − 1, 12 t2 + t; ℓ(t) = t, exp( t).
+
+Theorem E.9. Let Assumption E.7 hold. Then Lϕ,ℓ (s) is statistically consistent with E(s).
+
+35 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Remark E.10 . By taking ϕ(t) = exp( t) − 1, ℓ (t) = t, the above theorem shows that standard contrastive loss L(s) is statistically consistent, aligning with the result in Theorem 3.1. However, the proof there depends on the explicit formulation of optimal scoring functions. While the analysis here does not require such knowledge. Furthermore, our theorem demonstrates that there exists a wide class of contrastive losses with different ϕ, ℓ that performs well in downstream tasks, except for log-sum-exp based risk. Compared with the pairwise loss studied in Gao & Zhou (2014), the risk Lϕ,ℓ (s) admits a more complicated OCE structure, which contains a convex function ϕ and a minimization problem. The proof of the previous work relies on the monotonicity of ℓ′(s(x, y′) − s(x, y)) w.r.t. y for each x, y′. However, this property no longer holds in OCE. To address this issue, we show that the expectation of compositional derivative is decreasing. 
+
+Lemma E.11. Let Assumption E.7 hold. ψ(t) = τ ϕ (t/τ ). h is an arbitrary function. We further define 
+
+μ(t) = arg min 
+
+> μ
+
+μ + Ey∼p− 
+
+> x
+
+ψ(ℓ(h(y) − t) − μ),U (t) = Ey∼p− 
+
+> x
+
+ψ′(ℓ(h(y) − t) − μ(t)) ℓ′(h(y) − t).
+
+Then U (t) is a decreasing function of t.Proof. We first show that the optimal μ is unique for each t. Suppose 
+
+μ1, μ 2 ∈ arg min 
+
+> μ
+
+μ + Ey∼p− 
+
+> x
+
+ψ(ℓ(h(y) − t) − μ), μ1 > μ 2.
+
+Then for any y, ℓ(h(y) − t) − μ1 < ℓ (h(y) − t) − μ2. Since ψ is a strictly convex function, we have 
+
+ψ′(ℓ(h(y) − t) − μ1) − ψ′(ℓ(h(y) − t) − μ2) < 0.
+
+By the optimality condition, we have Ey∼p− 
+
+> x
+
+ψ′(ℓ(h(y) − t) − μi) = 1 , i = 1 , 2. Then there holds 
+
+0 = Ey∼p− 
+
+> x
+
+ψ′(ℓ(h(y) − t) − μ1) − Ey∼p− 
+
+> x
+
+ψ′(ℓ(h(y) − t) − μ2)=Ey∼p− 
+
+> x
+
+(ψ′(ℓ(h(y) − t) − μ1) − ψ′(ℓ(h(y) − t) − μ2)) < 0.
+
+This contradiction implies that for each t, the optimal μ is unique, which we denote by μ(t). Hence, 
+
+Ey∼p− 
+
+> x
+
+ψ′(ℓ(h(y) − t) − μ(t)) = 1 (54) for any t. For t ≥ s, we prove that U (t) ≤ U (s).
+
+(t − s)U (t)=Ey∼p− 
+
+> x
+
+ψ′(ℓ(h(y) − t) − μ(t)) ℓ′(h(y) − t)( t − s)
+
+≤Ey∼p− 
+
+> x
+
+ψ′(ℓ(h(y) − t) − μ(t))( ℓ(h(y) − s) − ℓ(h(y) − t)) =Ey∼p− 
+
+> x
+
+ψ′(ℓ(h(y) − t) − μ(t))( ℓ(h(y) − s) − μ(s)) + μ(s)
+
+−[Ey∼p− 
+
+> x
+
+ψ′(ℓ(h(y) − t) − μ(t))( ℓ(h(y) − t) − μ(t)) + μ(t)] =Ey∼p− 
+
+> x
+
+ψ′(ℓ(h(y) − t) − μ(t))[( ℓ(h(y) − s) − μ(s)) − (ℓ(h(y) − t) − μ(t))] +μ(s) − μ(t)
+
+≤Ey∼p− 
+
+> x
+
+(ψ(ℓ(h(y) − s) − μ(s)) − ψ(ℓ(h(y) − t) − μ(t))) + μ(s) − μ(t),
+
+where the second equality is due to Eq. (54) , two inequalities result from the convexity of ℓ, ψ . Applying similar methods, 36 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+we have 
+
+(t − s)U (t)
+
+≤Ey∼p− 
+
+> x
+
+(ψ(ℓ(h(y) − s) − μ(s)) − ψ(ℓ(h(y) − t) − μ(t))) + μ(s) − μ(t)
+
+≤Ey∼p− 
+
+> x
+
+ψ′(ℓ(h(y) − s) − μ(s))[( ℓ(h(y) − s) − μ(s)) − (ℓ(h(y) − t) − μ(t))] +μ(s) − μ(t)=Ey∼p− 
+
+> x
+
+ψ′(ℓ(h(y) − s) − μ(s))( ℓ(h(y) − s) − μ(s)) + μ(s)
+
+−[Ey∼p− 
+
+> x
+
+ψ′(ℓ(h(y) − s) − μ(s))( ℓ(h(y) − t) − μ(t)) + μ(t)] =Ey∼p− 
+
+> x
+
+ψ′(ℓ(h(y) − s) − μ(s))( ℓ(h(y) − s) − ℓ(h(y) − t)) 
+
+≤Ey∼p− 
+
+> x
+
+ψ′(ℓ(h(y) − s) − μ(s)) ℓ′(h(y) − s)( t − s) = U (s)( t − s).
+
+Since t ≥ s, we have U (t) ≤ U (s). The proof is completed. For a function h : Y → R, disutility function ϕ and pairwise loss ℓ, we define 
+
+Qϕ,ℓ  
+
+> x
+
+(h) = Ey∼p+
+
+> x
+
+"
+
+min  
+
+> μ∈R
+
+τ Ey′∼p− 
+
+> x
+
+ϕ
+
+ ℓ(h(y′) − h(y)) − μτ
+
+
+
++ μ
+
+#
+
+. (55) Then Lϕ,ℓ (s) = ExQϕ,ℓ  
+
+> x
+
+(s(x, ·)) . Therefore, s∗ is the minimum of Lϕ,ℓ (s) if and only if s∗(x, ·) is the minimum of Qϕ,ℓ 
+
+> x
+
+for all x. Let B be the set of all scoring functions that maximize E(s). According to Lemma 3.3, we have 
+
+B =
+
+(
+
+s : p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) > p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) > 0, if p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y)̸ = p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+)
+
+.
+
+To prove Theorem E.9, we present the following lemma. 
+
+Lemma E.12. Let Assumption E.7 hold, then we have 
+
+inf  
+
+> s / ∈B
+
+Lϕ,ℓ (s) > inf  
+
+> s
+
+Lϕ,ℓ (s).
+
+Proof of Lemma E.12. We prove by contradiction. Note that inf s / ∈B Lϕ,ℓ (s) ≥ inf s Lϕ,ℓ (s). If the lemma does not hold true, we have inf s / ∈B Lϕ,ℓ (s) = inf s Lϕ,ℓ (s). Then there exists an optimal scoring function s∗ such that Lϕ,ℓ (s∗) = Lϕ,ℓ  
+
+> ∗
+
+, s ∗ /∈ B .Therefore, there exists x ∈ X , y1, y2 ∈ Y with 
+
+p+ 
+
+> x1
+
+(y1)
+
+p− 
+
+> x
+
+(y1) − p+ 
+
+> x
+
+(y2)
+
+p− 
+
+> x
+
+(y2) > 0, s ∗(x, y1) − s∗(x, y2) ≤ 0.
+
+According to Eq. (55) , h∗(·) := s∗(x, ·) is a minimum of Qϕ,ℓ  
+
+> x
+
+. We introduce a function h1 s.t. h1(y)̸ = 0 if y̸ = y1 and 
+
+h1(y1) = 1 . Let g(β) = Qϕ,ℓ  
+
+> x1
+
+(h∗ + βh 1) for β ∈ R, then g is convex. By the optimality of h∗, we have g′(0) = 0 .For simplicity, we denote ψ = τ ϕ (·/τ ), then ψ′′ > 0 and 
+
+g(β) = Ey∼p+ 
+
+> x
+
+min  
+
+> μ∈R
+
+Ey′∼p− 
+
+> x
+
+ψ(ℓ(h∗(y′) − h∗(y) + β(h1(y′) − h1(y))) − μ) + μ. 
+
+For β and y, we define the optimal μ(β, h ∗(y)) as 
+
+μ(β, h ∗(y)) = arg min 
+
+> μ∈R
+
+Ey′∼p− 
+
+> x
+
+ψ(ℓ(h∗(y′) − h∗(y) + β(h1(y′) − h1(y))) − μ) + μ. 
+
+It satisfies the following equality 
+
+Ey′∼p− 
+
+> x
+
+ψ′(ℓ(h∗(y′) − h∗(y) + β(h1(y′) − h1(y))) − μ(β, h ∗(y))) − 1 = 0 . (56) 37 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+When β = 0 , there holds μ(0 , h ∗(y)) = μ(h∗(y)) by the definition of μ(h∗(y)) in Lemma E.11. Since ψ′′ > 0, implicit function theorem guarantees the existence of ∂μ (β,h ∗(y))  
+
+> ∂β
+
+. Therefore, 
+
+g′(0) =Ey∼p+
+
+> x
+
+"
+
+Ey′∼p− 
+
+> x
+
+ψ′(ℓ(h∗(y′) − h∗(y)) − μ(0 , h ∗(y))) 
+
+ℓ′(h∗(y′) − h∗(y))( h1(y′) − h1(y)) − ∂μ (β, h ∗(y)) 
+
+∂β β=0 
+
+
+
++ ∂μ (β, h ∗(y)) 
+
+∂β β=0 
+
+#
+
+=Ey∼p+
+
+> x
+
+"
+
+Ey′∼p− 
+
+> x
+
+ψ′(ℓ(h∗(y′) − h∗(y)) − μ(h∗(y))) ℓ′(h∗(y′) − h∗(y))( h1(y′) − h1(y)) 
+
+− ∂μ (β, h ∗(y)) 
+
+∂β β=0 
+
+(Ey′∼p− 
+
+> x
+
+ψ′(ℓ(h∗(y′) − h∗(y)) − μ(0 , h ∗(y))) − 1) 
+
+#
+
+=Ey∼p+ 
+
+> x
+
+Ey′∼p− 
+
+> x
+
+ψ′(ℓ(h∗(y′) − h∗(y)) − μ(h∗(y))) ℓ′(h∗(y′) − h∗(y))( h1(y′) − h1(y)) ,
+
+where the last equality is due to Eq. (56) with β = 0 . By noting g′(0) = 0 and the definition of h1, we further have 
+
+Z
+
+> Y/y1
+
+p+ 
+
+> x
+
+(y) p− 
+
+> x
+
+(y1)
+
+p+ 
+
+> x
+
+(y1) ψ′(ℓ(h∗(y1) − h∗(y)) − μ(h∗(y)) ℓ′(h∗(y1) − h∗(y)) 
+
+−p− 
+
+> x
+
+(y)ψ′(ℓ(h∗(y) − h∗(y1)) − μ(h∗(y1)) ℓ′(h∗(y) − h∗(y1)) dy = 0 , (57) In a similar way, we get 
+
+Z
+
+> Y/y2
+
+p+ 
+
+> x
+
+(y) p− 
+
+> x
+
+(y2)
+
+p+ 
+
+> x
+
+(y2) ψ′(ℓ(h∗(y2) − h∗(y)) − μ(h∗(y)) ℓ′(h∗(y2) − h∗(y)) 
+
+−p− 
+
+> x
+
+(y)ψ′(ℓ(h∗(y) − h∗(y2)) − μ(h∗(y2)) ℓ′(h∗(y) − h∗(y2)) dy = 0 . (58) Combining Eqs. (57), (58) yields 
+
+A + B + C + D = 0 , (59) where we define 
+
+A =
+
+Z
+
+> Y/{y1,y2}
+
+p+ 
+
+> x
+
+(y)
+
+"
+
+p− 
+
+> x
+
+(y1)
+
+p+ 
+
+> x
+
+(y1) ψ′(ℓ(h∗(y1) − h∗(y)) − μ(h∗(y)) ℓ′(h∗(y1) − h∗(y)) 
+
+− p− 
+
+> x
+
+(y2)
+
+p+ 
+
+> x
+
+(y2) ψ′(ℓ(h∗(y2) − h∗(y)) − μ(h∗(y)) ℓ′(h∗(y2) − h∗(y)) 
+
+#
+
+dy,B =
+
+Z
+
+> Y
+
+p− 
+
+> x
+
+(y)[( ψ′(ℓ(h∗(y) − h∗(y2)) − μ(h∗(y2)) ℓ′(h∗(y) − h∗(y2)) 
+
+−ψ′(ℓ(h∗(y) − h∗(y1)) − μ(h∗(y1)) ℓ′(h∗(y) − h∗(y1)))] dy,C =p− 
+
+> x
+
+(y1)ψ′(ℓ(0) − μ(h∗(y1)) ℓ′(0) 
+
+−p+ 
+
+> x
+
+(y1) p− 
+
+> x
+
+(y2)
+
+p+ 
+
+> x
+
+(y2) ψ′(ℓ(h∗(y2) − h∗(y1)) − μ(h∗(y1)) ℓ′(h∗(y2) − h∗(y1))) ,D =( p+ 
+
+> x
+
+(y2) p− 
+
+> x
+
+(y1)
+
+p+ 
+
+> x
+
+(y1) ψ′(ℓ(h∗(y1) − h∗(y2)) − μ(h∗(y2)) ℓ′(h∗(y1) − h∗(y2)) 
+
+−p− 
+
+> x
+
+(y2)ψ′(ℓ(0) − μ(h∗(y2)) ℓ′(0)) .
+
+Now we bound each term respectively. Since p−   
+
+> x(y1)
+> p+
+> x(y1)
+
+< p−   
+
+> x(y2)
+> p+
+> x(y2)
+
+, h ∗(y1) ≤ h∗(y2), by the convexity of ψ, ℓ , we have 
+
+ψ′(ℓ(h∗(y1) − h∗(y)) − μ(h∗(y)) ≤ ψ′(ℓ(h∗(y2) − h∗(y)) − μ(h∗(y)) ,ℓ′(h∗(y1) − h∗(y)) ≤ ℓ′(h∗(y2) − h∗(y)) , ∀y ∈ Y /{y1, y2}.
+
+38 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Therefore, A ≤ 0.Applying Lemma E.11 yields 
+
+B = U (h∗(y2)) − U (h∗(y1)) ≤ 0.
+
+Now we control C and D. Note that 0 < ℓ ′(0) ≤ ℓ′(h∗(y2) − h∗(y1)) , ℓ (0) ≤ ℓ(h∗(y2) − h∗(y1)) . Hence, there holds 
+
+ψ′(ℓ(0) − μ(h∗(y1)) ℓ′(0) ≤ ψ′(ℓ(h∗(y2) − h∗(y1)) − μ(h∗(y1)) ℓ′(h∗(y2) − h∗(y1)) .
+
+As a result, 
+
+C ≤ p+ 
+
+> x
+
+(y1) p− 
+
+> x
+
+(y2)
+
+p+ 
+
+> x
+
+(y2) ψ′(ℓ(h∗(y2) − h∗(y1)) − μ(h∗(y1)) ℓ′(h∗(y2) − h∗(y1)) < 0.
+
+In a similar manner, we can prove that D < 0.Combining above results together, we have 
+
+A + B + C + D < 0,
+
+which is contrary to Eq. (59). Therefore, the lemma holds true. 
+
+Proof of Theorem E.9. By Lemma E.12, we set δ = inf s / ∈B Lϕ,ℓ (s) − inf s Lϕ,ℓ (s) > 0. Suppose {sn} be a sequence such that Lϕ,ℓ (sn) → L ϕ,ℓ  
+
+> ∗
+
+, then there exists N > 0 such that 
+
+Lϕ,ℓ (sn)) − L ϕ,ℓ  
+
+> ∗
+
+< δ/ 2 < inf  
+
+> s / ∈B
+
+Lϕ,ℓ (s) − L ϕ,ℓ  
+
+> ∗
+
+, n ≥ N. 
+
+Therefore, for n ≥ N , we have hn ∈ B . It means that R(hn) = R∗. Hence, Lϕ,ℓ (s) is statistically consistent with E(s).Now we derive the calibration-style inequality, relating the excess risks of CRL and downstream task. We make the following assumptions. 
+
+Assumption E.13. We assume the pairwise loss ℓ is linear: ℓ(t) = t. Furthermore, suppose that |s(x, y)| ≤ B and 
+
+ϕ′′ (t) ∈ [γ1, γ 2] over [−2B, 2B], where γ2 > γ 1 > 0. For the optimal scoring function s∗ ∈ arg min s Lϕ,ℓ (s), we assume that |s∗(x, y)| ≤ B. Additionally, for any x, y, y′, there exists a convex function κ with κ(0) = 0 such that 
+
+(s∗(x, y) − s∗(x, y′)) 2 ≥ κ 12
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+.
+
+Theorem E.14. Let Assumption E.13 hold. Then we have 
+
+L(s) − min  
+
+> s
+
+L(s) ≳ κ(max  
+
+> s
+
+E(s) − E (s)) .
+
+Remark E.15 . For log-sum-exp contrastive loss L(s), the optimal scoring functions are captured in Lemma 3.2. According to Eq. (32), Assumption E.13 holds κ(t) = 4 τ 2t2/α 2. We could get similar results in Theorem 3.4. 
+
+Proof of Theorem E.14. We denote ψ(·) = τ ϕ (·/τ ) for simplicity. We define the norm ∥ · ∥ by ∥s∥ =
+
+q
+
+ExEy∼p− 
+
+> x
+
+s(x, y)2.Let 
+
+g1(x, y) = s(x, y) − s∗(x, y)
+
+∥s − s∗∥ . (60) We define sr = s∗ + rg 1, r ∈ [0 , ∥h − h∗∥], then s0 = s∗, s ∥h−h∗∥ = s, sup x,y |sr (x, y)| ≤ B. We further define 
+
+G(r) = Lϕ,ℓ (sr ) = ExEy∼p+ 
+
+> x
+
+min  
+
+> μ∈R
+
+Ey′∼p− 
+
+> x
+
+ψ(sr (x, y′) − sr (x, y) − μ) + μ. 
+
+We define the optimal μ for each triple (r, x, y) as 
+
+μ(r, x, y) = arg min 
+
+> μ∈R
+
+Ey′∼p− 
+
+> x
+
+ψ(sr (x, y′) − sr (x, y) − μ) + μ. 
+
+39 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+By Lemma E.5 and sr (x, y′) − sr (x, y) ∈ [−2B, 2B], we can suppose that μ(r, x, y) ∈ [−2B, 2B]. Then we have 
+
+Ey′∼p− 
+
+> x
+
+ψ′(sr (x, y′) − sr (x, y) − μ(r, x, y)) = 1 . (61) Therefore, 
+
+G′(r) = ExEy∼p+ 
+
+> x
+
+Ey′∼p− 
+
+> x
+
+ψ′(sr (x, y′) − sr (x, y) − μ(r, x, y))[( g1(x, y′) − g1(x, y)) − ∂μ (r, x, y)
+
+∂r ] + ∂μ (r, x, y)
+
+∂r 
+
+= ExEy∼p+ 
+
+> x
+
+Ey′∼p− 
+
+> x
+
+ψ′(sr (x, y′) − sr (x, y) − μ(r, x, y))( g1(x, y′) − g1(x, y)) + ExEy∼p+
+
+> x
+
+∂μ (r, x, y)
+
+∂r (Ey′∼p− 
+
+> x
+
+ψ′(sr (x, y′) − sr (x, y) − μ(r, x, y)) − 1) = ExEy∼p+ 
+
+> x
+
+Ey′∼p− 
+
+> x
+
+ψ′(sr (x, y′) − sr (x, y) − μ(r, x, y))( g1(x, y′) − g1(x, y)) .
+
+By the optimality of s∗, G has a minimum 0, implying that G′(0) = 0 . We further have 
+
+G′′ (r)=ExEy∼p+ 
+
+> x
+
+Ey′∼p− 
+
+> x
+
+ψ′′ (sr (x, y′)−sr (x, y)−μ(r, x, y))[( g1(x, y′)−g1(x, y)) − ∂μ (r, x, y)
+
+∂r ]( g1(x, y′)−g1(x, y)) .
+
+Taking derivative to Eq. (61) w.r.t. r, we know that 
+
+Ey′∼p− 
+
+> x
+
+ψ′′ (sr (x, y′) − sr (x, y) − μ(r, x, y))( g1(x, y′) − g1(x, y) − ∂μ (r, x, y)
+
+∂r ) = 0 . (62) We define the density function for each (x, y, r ):
+
+qr, x,y(y′) = p− 
+
+> x
+
+(y′)ψ′′ (sr (x, y′) − sr (x, y) − μ(r, x, y)) 
+
+Ey′∼p− 
+
+> x
+
+ψ′′ (sr (x, y′) − sr (x, y) − μ(r, x, y)) .
+
+Then by Eq. (62), we have 
+
+∂μ (r, x, y)
+
+∂r = Ey′∼p− 
+
+> x
+
+ψ′′ (sr (x, y′) − sr (x, y) − μ(r, x, y))( g1(x, y′) − g1(x, y)) 
+
+Ey′∼p− 
+
+> x
+
+ψ′′ (sr (x, y′) − sr (x, y) − μ(r, x, y)) =
+
+Z
+
+qr, x,y(y′)( g1(x, y′) − g1(x, y)) dy′ = Ey′∼qr, x,y (g1(x, y′) − g1(x, y)) .
+
+Consequently, 
+
+G′′ (r)=ExEy∼p+ 
+
+> x
+
+Ey′∼p− 
+
+> x
+
+ψ′′ (sr (x, y′) − sr (x, y) − μ(r, x, y))[( g1(x, y′) − g1(x, y)) − ∂μ (r, x, y)
+
+∂r ]( g1(x, y′) − g1(x, y)) =ExEy∼p+ 
+
+> x
+
+Ey′∼p− 
+
+> x
+
+ψ′′ (sr (x, y′) − sr (x, y) − μ(r, x, y))[( g1(x, y′) − g1(x, y)) − ∂μ (r, x, y)
+
+∂r ]( g1(x, y′) − g1(x, y)) 
+
+−ExEy∼p+ 
+
+> x
+
+Ey′∼p− 
+
+> x
+
+ψ′′ (sr (x, y′) − sr (x, y) − μ(r, x, y))( g1(x, y′) − g1(x, y) − ∂μ (r, x, y)
+
+∂r ) ∂μ (r, x, y)
+
+∂r 
+
+=ExEy∼p+ 
+
+> x
+
+Ey′∼p− 
+
+> x
+
+ψ′′ (sr (x, y′) − sr (x, y) − μ(r, x, y))[( g1(x, y′) − g1(x, y)) − ∂μ (r, x, y)
+
+∂r ]2, (63) where the first equality is due to Eq. (62). By the definition of qr, x,y, we have 
+
+Ey′∼p− 
+
+> x
+
+ψ′′ (sr (x, y′) − sr (x, y) − μ(r, x, y))[( g1(x, y′) − g1(x, y)) − ∂μ (r, x, y)
+
+∂r ]2
+
+=( Ey′∼p− 
+
+> x
+
+ψ′′ (sr (x, y′) − sr (x, y) − μ(r, x, y))) 
+
+×Ey′∼p−
+
+> x
+
+ψ′′ (sr (x, y′) − sr (x, y) − μ(r, x, y)) 
+
+Ey′∼p− 
+
+> x
+
+ψ′′ (sr (x, y′) − sr (x, y) − μ(r, x, y)) [( g1(x, y′) − g1(x, y)) − ∂μ (r, x, y)
+
+∂r ]2
+
+=( Ey′∼p− 
+
+> x
+
+ψ′′ (sr (x, y′) − sr (x, y) − μ(r, x, y))) Ey′∼qr, x,y [( g1(x, y′) − g1(x, y)) − ∂μ (r, x, y)
+
+∂r ]2
+
+=Ey′∼p− 
+
+> x
+
+ψ′′ (sr (x, y′) − sr (x, y) − μ(r, x, y)) Ey′∼qr, x,y [( g1(x, y′) − g1(x, y)) − Ey′∼qr, x,y (g(x, y′) − g(x, y))] 2
+
+≥ γ1
+
+τ Var y′∼qr, x,y [( g1(x, y′) − g1(x, y))] , (64) 40 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+where the last inequality results from ψ′′ (t) = ϕ′′ (t/τ )/τ ≥ γ1/τ . According to Lemma 3.2, we can choose s∗ such that for all x, Ey∼p− 
+
+> x
+
+s(x, y) = Ey∼p− 
+
+> x
+
+s∗(x, y). From the definition of qr, x,y, we know that qr, x,y(y′)/p − 
+
+> x
+
+(y′) ≥ γ1/γ 2 for all 
+
+y′ ∈ Y . Hence, for fixed r, x, y,
+
+Var y′∼qr, x,y [( g1(x, y′) − g1(x, y)] = 12 Ey′,y′′ ∼qr, x,y (g1(x, y′) − g1(x, y′′ )) 2
+
+= 12
+
+Z Z
+
+qr, x,y(y′)qr, x,y′′ (y′′ )( g1(x, y′) − g1(x, y′′ )) 2dy′dy′′ 
+
+≥ γ21
+
+2γ22
+
+Z Z
+
+p− 
+
+> x
+
+(y′)p− 
+
+> x
+
+(y′′ )( g1(x, y′) − g1(x, y′′ )) 2dy′dy′′ 
+
+= γ21
+
+2γ22
+
+Ey′,y′′ ∼p− 
+
+> x
+
+(g1(x, y′) − g1(x, y)) 2
+
+= γ21
+
+2γ22
+
+Ey′,y′′ ∼p− 
+
+> x
+
+(g1(x, y′)2 + g1(x, y′′ )2) − γ21
+
+γ22
+
+Ey′∼p− 
+
+> x
+
+g1(x, y′)Ey′′ ∼p− 
+
+> x
+
+g1(x, y′′ ) = γ21
+
+γ22
+
+Ey′∼p− 
+
+> x
+
+g1(x, y′)2, (65) where the first inequality is due to Var[ X] = 12 EX,X ′ (X − X′)2, the last inequality is by 
+
+Ey′∼p− 
+
+> x
+
+g1(x, y) = Ey′∼p− 
+
+> x
+
+s(x, y′) − Ey′∼p− 
+
+> x
+
+s∗(x, y′)
+
+∥s − s∗∥2
+
+= 0 .
+
+Combining Eqs. (63), (64), (65) together, we have 
+
+G′′ (r) ≥ γ31
+
+γ22 τ ExEy∼p+ 
+
+> x
+
+Ey′∼p− 
+
+> x
+
+g1(x, y′)2 = γ31
+
+γ22 τ ExEy′∼p− 
+
+> x
+
+g1(x, y′)2
+
+= γ31
+
+γ22 τ ExEy′∼p−
+
+> x
+
+(s(x, y′) − s∗(x, y′)) 2
+
+∥s − s∗∥22
+
+= γ31
+
+γ22 τ .
+
+Applying Taylor’s expansion yields 
+
+Lϕ,ℓ (s) − L ϕ,ℓ (s∗) = G(∥s − s∗∥) − G(0) = G′(0) ∥s − s∗∥ + 12 G′′ (ξ)∥s − s∗∥2, ξ ∈ [0 , ∥s − s∗∥]
+
+≥ γ31
+
+2γ22 τ ExEy∼p− 
+
+> x
+
+(s(x, y) − s∗(x, y)) 2.
+
+Then we make the following decomposition that introduces the pair y, y′:
+
+2Ey∼p− 
+
+> x
+
+|s(x, y) − s∗(x, y)|2
+
+=Ey∼p− 
+
+> x
+
+|s(x, y) − s∗(x, y)|2 + Ey′∼p− 
+
+> x
+
+|s(x, y′) − s∗(x, y′)|2
+
+=Ey∼p−  
+
+> x,y′∼p−
+> x
+
+(|s(x, y) − s∗(x, y)|2 + |s(x, y′) − s∗(x, y′)|2). (66) We will show that for any x, y, y′,
+
+|s(x, y) − s∗(x, y)|2 + |s(x, y′) − s∗(x, y′)|2
+
+≥ 12 I
+
+"
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+(s(x, y) − s(x, y′)) ≤ 0
+
+#
+
+κ 12
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+. (67) It is trivial when RHS is equal to 0. We consider the case 
+
+( p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) )( s(x, y) − s(x, y′)) ≤ 0, p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)̸ = 0 .
+
+Without loss of generality, suppose that 
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) > p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) , s(x, y) − s(x, y′) ≤ 0.
+
+41 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Therefore, 
+
+|s(x, y) − s∗(x, y)|2 + |s(x, y′) − s∗(x, y′)|2
+
+≥ 12 |s(x, y) − s∗(x, y) − s(x, y′) + s∗(x, y′)|2
+
+= 12 |s(x, y′) − s(x, y) + s∗(x, y) − s∗(x, y′)|2
+
+= 12 (s(x, y′) − s(x, y) + s∗(x, y) − s∗(x, y′)) 
+
+≥ 12 (s∗(x, y) − s∗(x, y′)) 2 ≥ 12 κ 12
+
+p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′)
+
+!
+
+.
+
+As a result, Eq. (67) holds true. According to Eq. (26), 
+
+E∗ − E (s) ≤ 12 ExEy∼p−  
+
+> x,y′∼p−
+> x
+
+I[( p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) )( s(x, y) − s(x, y′)) ≤ 0] | p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) |.
+
+Therefore, 
+
+Lϕ,ℓ (s) − L ϕ,ℓ (s∗) ≥ γ31
+
+2γ22 τ ExEy∼p− 
+
+> x
+
+(s(x, y) − s∗(x, y)) 2
+
+≥ γ31
+
+8γ22 τ ExEy,y′∼p−
+
+> x
+
+"
+
+I[( p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) )( s(x, y) − s(x, y′)) ≤ 0] κ( 12 | p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) |)
+
+#
+
+= γ31
+
+8γ22 τ ExEy,y′∼p−
+
+> x
+
+"
+
+κ( 12 | p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) |I[( p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) )( s(x, y) − s(x, y′)) ≤ 0]) 
+
+#
+
+≥ γ31
+
+8γ22 τ κ( 12 ExEy,y′∼p− 
+
+> x
+
+I[( p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) )( s(x, y) − s(x, y′)) ≤ 0] | p+ 
+
+> x
+
+(y)
+
+p− 
+
+> x
+
+(y) − p+ 
+
+> x
+
+(y′)
+
+p− 
+
+> x
+
+(y′) |)= γ31
+
+8γ22 τ κ(E∗ − E (s)) ,
+
+where the first equality results from κ(0) = 0 , the last inequality is due to Jenson’s inequality and the convexity of κ. The proof is completed. 
+
+E.4. Generalization analysis of SCRL for general OCE and pairwise loss 
+
+In this subsection, we give generalization analysis of SCRL for general OCE and pairwise loss. For disutility function ϕ and pairwise loss ℓ, recall that 
+
+Lϕ,ℓ  
+
+> S
+
+(sw) = ExEy
+
+"
+
+min  
+
+> μ∈R
+
+τ Ey′ ϕ
+
+ ℓ(∆ w(x, y, y′)) − μτ
+
+
+
++ μ
+
+#
+
+,
+
+bLϕ,ℓ  
+
+> S
+
+(sw) = 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+"
+
+min 
+
+> μi∈R
+
+τm
+
+> m
+
+X
+
+> j=1
+
+ϕ ℓ(∆ w(xi, yi, y′ 
+
+> ij
+
+)) − μi
+
+τ
+
+!
+
++ μi
+
+#
+
+.
+
+We aim to control the uniform convergence bound 
+
+sup 
+
+> w∈W
+
+Lϕ,ℓ  
+
+> S
+
+(sw) − bLϕ,ℓ  
+
+> S
+
+(sw) .
+
+We make similar error decomposition as Eq. (12). 
+
+Lϕ,ℓ  
+
+> S
+
+(sw) − bLϕ,ℓ  
+
+> S
+
+(sw) ≤ Lϕ,ℓ  
+
+> S
+
+(sw) − E
+
+h bLϕ,ℓ  
+
+> S
+
+(sw)
+
+i| {z }
+
+> inner error
+
++ E
+
+h bLϕ,ℓ  
+
+> S
+
+(sw)
+
+i
+
+− bLϕ,ℓ  
+
+> S
+
+(sw)
+
+| {z }
+
+> outer error
+
+. (68) 42 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+We will estimate inner error and outer error respectively. To start, we impose mild assumptions on the pairwise loss function ℓ and the disutility function ϕ.
+
+Assumption E.16. Assume that ℓ is G-Lipschitz continuous over the interval [−2B, 2B]. Moreover, there exists a constant 
+
+M > 0 such that ℓ(t) ∈ [−M, M ] for all t ∈ [−2B, 2B] .
+
+Assumption E.17. The disutility function ϕ is η-Lipschitz continuous over the interval [−2M /τ, 2M /τ ].
+
+Assumption E.18. Suppose that ϕ is γ-strongly convex over the interval [−2M /τ, 2M/τ ], where γ > 0 denotes the strong convexity parameter. 
+
+Remark E.19 . It is worth noting that the above assumptions do not require ℓ or ϕ to satisfy Lipschitz continuity or strong convexity globally over R—a condition that is often too restrictive for practical functions in CRL. Instead, our analysis is confined to the bounded domain of ℓ(t), which lies within [−2B, 2B] when Assumption 4.1 holds. This boundedness renders Assumption E.16 valid for most commonly used pairwise loss functions in practice. By the same token, the Lipschitz continuity and strong convexity of ϕ only need to hold over the bounded interval 
+
+[−2M/τ, 2M/τ ], which is induced by the boundedness of ℓ(t) (Assumption E.16). For instance, consider the exponential disutility function ϕ(t) = exp( t) − 1, which is neither Lipschitz continuous nor strongly convex over the entire real line. However, over the bounded interval [−2M/τ, 2M/τ ], ϕ is exp(2 M/τ )-Lipschitz continuous and exp( −2M/τ )-strongly convex. E.4.1. O UTER ERROR 
+
+For w ∈ W , we introduce gw : X × Y m+1 → R as follows: 
+
+gw(x, y, y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+) = min 
+
+> μ∈R
+
+τm
+
+> m
+
+X
+
+> j=1
+
+ϕ ℓ(∆ w(x, y, y′ 
+
+> j
+
+)) − μτ
+
+!
+
++ μ. 
+
+Then we have 
+
+E
+
+h bLϕ,ℓ  
+
+> S
+
+(w)
+
+i
+
+− bLϕ,ℓ  
+
+> S
+
+(w) = Ex,y,y′ 
+
+> 1,··· ,y′
+> m
+
+"
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+min 
+
+> μi∈R
+
+τm
+
+> m
+
+X
+
+> j=1
+
+ϕ ℓ(∆ w(x, y, y′ 
+
+> j
+
+)) − μi
+
+τ
+
+!
+
++ μi
+
+!# 
+
+− 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+min 
+
+> μi∈R
+
+τm
+
+> m
+
+X
+
+> j=1
+
+ϕ ℓ(∆ w(xi, yi, y′ 
+
+> ij
+
+)) − μi
+
+τ
+
+!
+
++ μi
+
+!
+
+=Ex,y,y′ 
+
+> 1,··· ,y′
+> m
+
+h
+
+gw(x, y, y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+)
+
+i
+
+− 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+gw(xi, yi, y′
+
+> i1
+
+, · · · , y′
+
+> im
+
+).
+
+By Proposition A.1, we can estimate it through Rademacher complexity RS (G), where 
+
+G = {(x, y, y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+) 7 → gw(x, y, y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+) : w ∈ W} .
+
+and recall that 
+
+S = {(x1, y1, y′
+
+> 11
+
+, · · · , y′
+
+> 1m
+
+), · · · , (xn, yn, y′
+
+> n1
+
+, · · · , y′
+
+> nm
+
+)}.
+
+According to Proposition A.3, RS (G) can be controlled by N (G, ϵ, L 2(S)) . Let S1, H be defined in Eqs. (19) , (20) . Then we have 
+
+Lemma E.20. Let Assumptions 4.1, E.16 hold. Then we have 
+
+N (G, ϵ, L 2(S)) ≤ N (H, ϵ/ (G), L ∞(S1)) .
+
+Proof. Let gw, g w′ be two functions in G. For i ∈ [n], we define 
+
+ui = (( ℓ(∆ w(xi, yi, y′
+
+> i1
+
+)) , · · · , ℓ (∆ w(xi, yi, y′
+
+> im
+
+))) , u′ 
+
+> i
+
+= ( ℓ(∆ w′ (xi, yi, y′
+
+> i1
+
+)) , · · · , ℓ (∆ w′ (xi, yi, y′
+
+> im
+
+))) .
+
+43 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+According to Lemma E.4, there holds 
+
+∥gw − gw′ ∥L2(S) =
+
+vuut 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+(gw(xi, yi, y′
+
+> i1
+
+, · · · , y′
+
+> im
+
+) − gw′ (xi, yi, y′
+
+> i1
+
+, · · · , y′
+
+> im
+
+)) 2
+
+≤ max  
+
+> i
+
+|gw(xi, yi, y′
+
+> i1
+
+, · · · , y′
+
+> im
+
+) − gw′ (xi, yi, y′
+
+> i1
+
+, · · · , y′
+
+> im
+
+)|
+
+= max  
+
+> i
+
+|q(ui) − q(¯ ui)| ≤ max  
+
+> i
+
+∥ui − ¯ui∥∞
+
+= max  
+
+> i
+
+max  
+
+> j
+
+|ℓ(∆ w(xi, yi, y′ 
+
+> ij
+
+)) − ℓ(∆ w′ (xi, yi, y′ 
+
+> ij
+
+)) |≤G max  
+
+> i
+
+max  
+
+> j
+
+|∆w(xi, yi, y′ 
+
+> ij
+
+) − ∆w′ (xi, yi, y′ 
+
+> ij
+
+)|≤G max 
+
+> (ˆ x,ˆy,ˆy′)∈S1
+
+|∆w(ˆ x, ˆy, ˆy′) − ∆w′ (ˆ x, ˆy, ˆy′)| = G∥∆w − ∆w′ ∥L∞(S1)) .
+
+Therefore, 
+
+N (G, ϵ, L 2(S)) ≤ N (H, ϵ/ (G), L ∞(S1)) .
+
+The proof is completed. The outer error for general ϕ, ℓ is stated as follows. 
+
+Lemma E.21. Suppose that Assumptions 4.1, E.16, E.17 hold. Then with probability at least 1 − δ, there holds 
+
+sup 
+
+> w∈W
+
+E
+
+h bLϕ,ℓ  
+
+> S
+
+(sw)
+
+i
+
+− bLϕ,ℓ  
+
+> S
+
+(sw) = eO
+
+ (GB + M )( plog(1 /δ ) + 
+
+qPLl=1 dldl−1)
+
+√n
+
+ .
+
+Proof. We first give a uniform bound for gw(x, y, y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+) for w ∈ W , x ∈ X , y, y′ 
+
+> j
+
+∈ Y . Let 
+
+u = ( ℓ(∆ w(x, y, y′
+
+> 1
+
+)) , · · · , ℓ (∆ w(x, y, y′
+
+> 1
+
+))) , u′ = ( ℓ(0) , · · · , ℓ (0)) ∈ Rm.
+
+Let function q(·) be defined in Lemma E.4. We have 
+
+q(u′) = min  
+
+> μ∈R
+
+τ ϕ (( ℓ(0) − μ)/τ ) + μ ≥ ℓ(0) − μ + μ = ℓ(0) 
+
+and the minimum can be obtained at μ = ℓ(0) . Therefore, q(u′) = ℓ(0) . Applying Lemma E.4 to u, u′ yields 
+
+|gw(x, y, y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+)| = |q(u)| ≤| q(u) − q(u′)| + |q(u′)| ≤ ∥ u − u′∥∞ + |ℓ(0) |≤ sup  
+
+> x∈X ,y,y′∈Y
+
+|ℓ(∆ w(x, y, y′)) | + |ℓ(0) |≤ sup  
+
+> x∈X ,y,y′∈Y
+
+|ℓ(∆ w(x, y, y′)) − ℓ(0) | + 2 |ℓ(0) |≤G sup  
+
+> x∈X ,y,y′∈Y
+
+|∆w(x, y, y′)| + 2 |ℓ(0) | ≤ 2GB + 2 M, 
+
+where we have used the G-Lipschitzness of ℓ in the last inequality. Then 
+
+BG := sup 
+
+> w
+
+∥gw∥L2(S) ≤ max  
+
+> i
+
+sup 
+
+> w
+
+|gw(xi, yi, y′
+
+> i1
+
+, · · · , y′
+
+> im
+
+)| ≤ 2GB + 2 M. 
+
+According to Proposition A.3 and Lemma A.5, there holds 
+
+RS (G) ≤ inf  
+
+> α> 0
+
+4α + 12 
+
+√n
+
+Z BG
+
+> α
+
+plog N (G, ϵ, L 2(S)) dϵ ≤ 4
+
+n + 12 
+
+√n
+
+Z 2GB +2 M
+
+> 1
+> n
+
+plog N (G, ϵ, L 2(S)) dϵ 
+
+≤ 4
+
+n + 12 
+
+√n
+
+Z 2GB +2 M
+
+> 1
+> n
+
+plog N (H, ϵ/G, L ∞(S1)) dϵ ≤ 4
+
+n + 12 
+
+√n
+
+Z 2GB +2 M
+
+> 1
+> n
+
+vuut LX
+
+> l=1
+
+dldl−1 log 1 + 8LΠLl=1 s2
+
+> l
+
+ϵ
+
+!
+
+dϵ 
+
+≤ 4
+
+n + 12 
+
+√n
+
+vuut LX
+
+> l=1
+
+dldl−1 log(1 + 8 nL ΠLl=1 s2 
+
+> l
+
+)(2 GB + 2 M − 1/n ) = eO (GB + M )
+
+qPLl=1 dldl−1
+
+n
+
+!
+
+.
+
+44 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Using Proposition A.1, with probability at least 1 − δ, we have 
+
+sup 
+
+> w∈W
+
+h
+
+E
+
+h bLϕ,ℓ  
+
+> S
+
+(sw)
+
+i
+
+− bLϕ,ℓ  
+
+> S
+
+(sw)
+
+i
+
+= sup 
+
+> w∈W
+
+h
+
+Ex,y,y′  
+
+> 1,··· ,y′
+> m
+
+[gw(x, y, y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+)] − 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+gw(xi, yi, y′
+
+> i1
+
+, · · · , y′
+
+> im
+
+)
+
+i
+
+≤2RS (G) + 12( GB + M )
+
+r log(2 /δ )2n = eO
+
+ (GB + M )( plog(1 /δ ) + 
+
+qPLl=1 dldl−1)
+
+√n
+
+ .
+
+The same upper bound also holds for the other side. The proof is completed. E.4.2. I NNER ERROR 
+
+In this part, we will estimate the inner error |L ϕ,ℓ  
+
+> S
+
+(sw) − E[ bLϕ,ℓ  
+
+> S
+
+(sw)] |. We apply algorithmic stability methods to handle with strongly convex ϕ, and uniform convergence theory to study general ϕ.Note that 
+
+Lϕ,ℓ  
+
+> S
+
+(sw) − E bLϕ,ℓ  
+
+> S
+
+(sw)=Ex,y
+
+(" 
+
+min  
+
+> μ∈R
+
+Ey′ τ ϕ ℓ(∆ w(x, y, y′)) − μτ
+
+!
+
++ μ
+
+#
+
+− Ey′
+
+> j
+
+"
+
+min 
+
+> μ∈R
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+τ ϕ 
+
+ ℓ(∆ w(x, y, y′ 
+
+> j
+
+)) − μτ
+
+
+
++ μ
+
+#) (69) According to Lemma E.6, for any w, x, y, there holds 
+
+"
+
+min  
+
+> μ∈R
+
+Ey′ τ ϕ ℓ(∆ w(x, y, y′)) − μτ
+
+!
+
++ μ
+
+#
+
+− Ey′
+
+> j
+
+"
+
+min 
+
+> μ∈R
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+τ ϕ 
+
+ ℓ(∆ w(x, y, y′ 
+
+> j
+
+)) − μτ
+
+
+
++ μ
+
+#
+
+≥ 0.
+
+Hence, 
+
+Lϕ,ℓ  
+
+> S
+
+(sw) − E bLϕ,ℓ  
+
+> S
+
+(sw) ≥ 0. (70) 
+
+General ϕ The inner error is similar to generalization error of risk-averse learning in Lee et al. (2021). However, they only considered one random variable, while we need to deal with triplet (x, y, y′) and a pairwise loss ℓ, which requires a more refined analysis. For x, y, according to Eq. (37), we have 
+
+Gx,y := {y′ → ∆w(x, y, y′), w ∈ W} , S′ = {y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+}.
+
+The inner error for general disutility function ϕ is stated as follows. 
+
+Lemma E.22. Let Assumptions 4.1, E.16, E.17 hold. Then there holds 
+
+sup 
+
+> w∈W
+
+Lϕ,ℓ  
+
+> S
+
+(sw) − E
+
+h bLϕ,ℓ  
+
+> S
+
+(sw)
+
+i
+
+= eO η(GB 
+
+qPLl=1 dldl−1 + M )
+
+√m
+
+!
+
+.
+
+Proof. For w, x, y, we define 
+
+ˆμw,x,y(S′) ∈ arg min 
+
+> μ∈R
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+τ ϕ 
+
+ ℓ(∆ w(x, y, y′ 
+
+> j
+
+)) − μτ
+
+
+
++ μ. (71) By Lemma E.5 and ℓ(∆ w(x, y, y′ 
+
+> j
+
+)) ∈ [−M, M ], we can assume that ˆμw,x,y(S′) ∈ [−M, M ]. We further have 
+
+min  
+
+> μ∈R
+
+Ey′ τ ϕ 
+
+ ℓ(∆ w(x, y, y′)) − μτ
+
+
+
++ μ ≤ Ey′ τ ϕ 
+
+ ℓ(∆ w(x, y, y′)) − ˆμw,x,y(S′)
+
+τ
+
+
+
++ ˆ μw,x,y(S′). (72) 45 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Taking expectation over S′ yields 
+
+min  
+
+> μ∈R
+
+Ey′ τ ϕ 
+
+ ℓ(∆ w(x, y, y′)) − μτ
+
+
+
++ μ ≤ ES′ Ey′ τ ϕ 
+
+ ℓ(∆ w(x, y, y′)) − ˆμw,x,y(S′)
+
+τ
+
+
+
++ ˆ μw,x,y(S′).
+
+Let 
+
+Hx,y := {y′ 7 → ℓ(∆ w(x, y, y′)) − μ : w ∈ W , μ ∈ [−M, M ]}.
+
+Then we have 
+
+sup 
+
+> w∈W
+
+min  
+
+> μ∈R
+
+Ey′ τ ϕ 
+
+ ℓ(∆ w(x, y, y′)) − μτ
+
+
+
++ μ − E{y′ 
+
+> j}
+
+min 
+
+> μ∈R
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+τ ϕ 
+
+ ℓ(∆ w(x, y, y′ 
+
+> j
+
+)) − μτ
+
+
+
++ μ
+
+
+
+≤ sup 
+
+> w∈W
+
+ES′ Ey′ τ ϕ 
+
+ ℓ(∆ w(x, y, y′)) − ˆμw,x,y(S′)
+
+τ
+
+
+
++ ˆ μw,x,y(S′)
+
+−
+
+ 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+τ ϕ 
+
+ ℓ(∆ w(x, y, y′ 
+
+> j
+
+)) − ˆμw,x,y(S′)
+
+τ
+
+
+
++ ˆ μw,x,y(S′)
+
+
+
+≤ES′ sup 
+
+> w∈W
+
+Ey′ τ ϕ 
+
+ ℓ(∆ w(x, y, y′)) − ˆμw,x,y(S′)
+
+τ
+
+
+
+−
+
+ 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+τ ϕ 
+
+ ℓ(∆ w(x, y, y′ 
+
+> j
+
+)) − ˆμw,x,y(S′)
+
+τ
+
+
+
+≤ES′ sup  
+
+> w∈W ,μ ∈[−M,M ]
+
+Ey′ τ ϕ 
+
+ ℓ(∆ w(x, y, y′)) − μτ
+
+
+
+−
+
+ 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+τ ϕ 
+
+ ℓ(∆ w(x, y, y′ 
+
+> j
+
+)) − μτ
+
+
+
+≤2ηES′ RS′ (Hx,y),
+
+(73) where the second inequality results from the convexity of sup and Jenson’s inequality, the last inequality is due to Proposition A.1, A.2. Now we derive an upper bound of RS′ (Hx,y). Note that 
+
+RS′ (Hx,y) = Eϵ sup  
+
+> w∈W ,μ ∈[−M,M ]
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ϵj (ℓ(∆ w(x, y, y′ 
+
+> j
+
+)) − μ)
+
+≤Eϵ sup 
+
+> w∈W
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ϵj ℓ(∆ w(x, y, y′ 
+
+> j
+
+)) + Eϵ sup  
+
+> μ∈[−M,M ]
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ϵj μ. (74) We will control two terms respectively. 
+
+Eϵ sup  
+
+> μ∈[−M,M ]
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ϵj μ ≤ M Eϵ
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ϵj ≤ M
+
+vuuutEϵ
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ϵj
+
+> 2
+
+= M
+
+√m . (75) Note that ℓ is G-Lipschitz. We apply Lemma A.2, Eq. (39) and derive 
+
+Eϵ sup 
+
+> w
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ϵj ℓ(∆ w(x, y, y′ 
+
+> j
+
+)) ≤ GEϵ sup 
+
+> w
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ϵj ∆w(x, y, y′ 
+
+> j
+
+) ≤ eO GB 
+
+qPLl=1 dldl−1
+
+√m
+
+!
+
+. (76) Plugging Eqs. (75), (76) into Eq. (74) yields 
+
+RS′ (Hx,y) ≤Eϵ sup 
+
+> w
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ϵj ℓ(∆ w(x, y, y′ 
+
+> j
+
+)) + Eϵ sup  
+
+> μ∈[−M,M ]
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ϵj μ ≤ eO GB 
+
+qPLl=1 dldl−1 + M
+
+√m
+
+!
+
+. (77) 46 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Combining Eq. (73) and Eq. (77), we know that for all x, y, there holds 
+
+sup 
+
+> w∈W
+
+min  
+
+> μ∈R
+
+Ey′ τ ϕ 
+
+ ℓ(∆ w(x, y, y′)) − μτ
+
+
+
++ μ − E{y′ 
+
+> j}
+
+min 
+
+> μ∈R
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+τ ϕ 
+
+ ℓ(∆ w(x, y, y′ 
+
+> j
+
+)) − μτ
+
+
+
++ μ
+
+
+
+≤ eO η(GB 
+
+qPLl=1 dldl−1 + M )
+
+√m
+
+!
+
+. (78) By the convexity of sup and Jenson’s inequality, we have 
+
+sup 
+
+> w∈W
+
+Lϕ,ℓ  
+
+> S
+
+(sw) − E bLϕ,ℓ  
+
+> S
+
+(sw)= sup 
+
+> w∈W
+
+Ex,y
+
+(" 
+
+min  
+
+> μ∈R
+
+Ey′ τ ϕ ℓ(∆ w(x, y, y′)) − μτ
+
+!
+
++ μ
+
+#
+
+− Ey′
+
+> j
+
+"
+
+min 
+
+> μ∈R
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+τ ϕ 
+
+ ℓ(∆ w(x, y, y′ 
+
+> j
+
+)) − μτ
+
+
+
++ μ
+
+#) 
+
+≤Ex,y sup 
+
+> w∈W
+
+(
+
+min  
+
+> μ∈R
+
+Ey′ τ ϕ 
+
+ ℓ(∆ w(x, y, y′)) − μτ
+
+
+
++ μ − E{y′ 
+
+> j}
+
+min 
+
+> μ∈R
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+τ ϕ 
+
+ ℓ(∆ w(x, y, y′ 
+
+> j
+
+)) − μτ
+
+
+
++ μ
+
+)
+
+≤ eO η(GB 
+
+qPLl=1 dldl−1 + M )
+
+√m
+
+!
+
+,
+
+where the last inequality is due to Eq. (78). The proof is completed by noting Eq. (70). 
+
+Strongly convex ϕ The OCE risk contains an inner minimization problem. For strongly convex ϕ, we could obtain a fine-grained analysis through algorithmic stability, similar to Lemma 4.3. 
+
+Lemma E.23. Let Assumptions 4.1, E.16, E.17, E.18 hold. Then we have 
+
+sup 
+
+> w
+
+Lϕ,ℓ  
+
+> S
+
+(w) − E bLϕ,ℓ  
+
+> S
+
+(w) ≤ 2ητ γm .
+
+Proof. We denote Ψw,x,y(μ; y′) = τ ϕ 
+
+ ℓ(∆ w (x,y,y′)) −μτ
+
+
+
++ μ, μ ∈ [−M, M ]. Then Ψw,x,y(μ; y′) is γ/τ -strongly convex w.r.t. μ. We also have 
+
+∂Ψw,x,y(μ; y′)
+
+∂μ = 1 − ∂ϕ 
+
+ ℓ(∆ w(x, y, y′)) − μτ
+
+
+
+∈ [1 − η, 1] .
+
+By the property of ϕ in Definition E.1, we have η ≥ 1. Therefore, for any μ1, μ 2 ∈ [−M, M ],
+
+|Ψw,x,y(μ1; y′) − Ψw,x,y(μ2; y′)| ≤ η|μ1 − μ2|.
+
+Let ˆμ(S′) be defined in Eq. (71). Then for any S′,
+
+min   
+
+> μ∈[−M,M ]
+
+Ey′ Ψw,x,y(μ; y′) ≤ Ey′ Ψw,x,y(ˆ μ({S′}); y′),
+
+therefore, 
+
+min   
+
+> μ∈[−M,M ]
+
+Ey′ Ψw,x,y(μ; y′) ≤ ES′ Ey′ Ψw,x,y(¯ μ(S′); y′). (79) By the γ/τ -strong convexity of Ψw,x,y(μ; y′), we can define a convex function 
+
+ˆΨw,x,y(μ; y′) := Ψ w,x,y(μ; y′) − γ
+
+2τ μ2.
+
+47 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Then 
+
+ˆμw,x,y(S′) = arg min  
+
+> μ∈[−M,M ]
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+ˆΨw,x,y(μ; y′ 
+
+> j
+
+) + γ
+
+2τ μ2,
+
+which is the regularized empirical risk minimization algorithm. According to Theorem 12, 22 in Bousquet & Elisseeff (2002), we have 
+
+ES′
+
+"
+
+Ey′ Ψw,x,y(ˆ μw,x,y(S′); y′) − 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+Ψw,x,y(ˆ μw,x,y(S′); y′ 
+
+> j
+
+)
+
+#
+
+≤ 2ητ γm 
+
+holds uniformly for x, y, w. Combined with Eq. (79), for any x, y, w, there holds 
+
+min   
+
+> μ∈[M,M ]
+
+Ey′ Ψw,x,y(μ; y′) − ES′
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+Ψw,x,y(¯ μw,x,y(S′); y′ 
+
+> j
+
+)
+
+≤E{y′ 
+
+> j}
+
+"
+
+EyΨw,x,y(ˆ μw,x,y(S′); y′) − 1
+
+m
+
+> m
+
+X
+
+> j=1
+
+Ψw,x,y(ˆ μw,x,y(S′); y′ 
+
+> j
+
+)
+
+#
+
+≤ 2ητ γm .
+
+As a result, 
+
+sup 
+
+> w
+
+h
+
+Lϕ,ℓ (w)−E bLϕ,ℓ  
+
+> S
+
+(w)
+
+i
+
+= sup 
+
+> w
+
+Ex,y
+
+"
+
+min   
+
+> μ∈[−M,M ]
+
+Ey′ Ψw,x,y(μ; y′)−Ey′ 
+
+> j
+
+min  
+
+> μ∈[−M,M ]
+
+1
+
+m
+
+> m
+
+X
+
+> j=1
+
+Ψw,x,y(μ; y′ 
+
+> j
+
+)
+
+#
+
+≤ 2ητ γm .
+
+The proof is completed. Combining Lemma E.21, E.22, E.23 with Eq. (68) establishes the generalization error for Lϕ,ℓ  
+
+> S
+
+(w).
+
+Theorem E.24. Let Assumptions 4.1, E.16, E.17 hold, with probability at least 1 − δ, we have 
+
+sup 
+
+> w∈W
+
+Lϕ,ℓ  
+
+> S
+
+(sw) − bLϕ,ℓ  
+
+> S
+
+(sw) = eO η(GB + M )( plog(1 /δ ) + 
+
+vuut LX
+
+> l=1
+
+dldl−1)( 1
+
+√n + 1
+
+√m )
+
+!
+
+.
+
+If Assumption E.18 holds, we obtain a tighter bound 
+
+sup 
+
+> w∈W
+
+Lϕ,ℓ  
+
+> S
+
+(sw) − ˆLϕ,ℓ  
+
+> S
+
+(sw) = eO (GB + M )( plog(1 /δ ) + PLl=1 
+
+pdldl−1)
+
+√n + 2ητ γm 
+
+!
+
+.
+
+The above theorem indicates that strongly convex disutility function ϕ admits a better generalization performance. A special case is ϕ(t) = exp( t) − 1, corresponding to standard contrastive loss L. This shows the advantage of the log-sum-exp structure. 
+
+E.5. Generalization analysis of SSCRL for general OCE and pairwise loss 
+
+In this subsection, we turn to the generalization analysis of SSCRL for general OCE and pairwise loss Recall that 
+
+Lϕ,ℓ  
+
+> SS
+
+(sw) = Ex,y
+
+"
+
+min  
+
+> μ∈R
+
+Ey′ τ ϕ ℓ(∆ w(x, y, y′)) − μτ
+
+!
+
++ μ
+
+#
+
+,
+
+bLϕ,ℓ  
+
+> SS
+
+(sw) = 1
+
+n
+
+" nX
+
+> i=1
+
+min 
+
+> μi
+
+τm
+
+> m
+
+X
+
+> j=1
+
+ϕ
+
+ ℓ(∆ w(xi, yi, y′ 
+
+> j
+
+)) − μi
+
+τ
+
+
+
++ μi
+
+#
+
+.
+
+We aim to bound the uniform convergence 
+
+sup 
+
+> w∈W
+
+Lϕ,ℓ  
+
+> SS
+
+(sw) − bLϕ,ℓ  
+
+> SS
+
+(sw) .
+
+48 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Similar to the analysis in Section D, we make the following error decomposition: 
+
+|L ϕ,ℓ  
+
+> SS
+
+(sw) − bLϕ,ℓ  
+
+> SS
+
+(sw)|≤ Ex,yHw(x, y) − 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+Hw(xi, yi)
+
+| {z }
+
+> outer error
+
++ 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+ Hw(xi, yi) − bHw(xi, yi)| {z }
+
+> inner error
+
+, (80) where we define 
+
+Hw(x, y) = min  
+
+> μ∈R
+
+Ey′ τ ϕ ℓ(∆ w(x, y, y′)) − μτ
+
+!
+
++ μ, 
+
+bHw(x, y) = min 
+
+> μ∈R
+
+τm
+
+> m
+
+X
+
+> j=1
+
+ϕ
+
+ ℓ(∆ w(x, y, y′ 
+
+> j
+
+)) − μτ
+
+
+
++ μ. 
+
+We will analyze inner error and outer error respectively. E.5.1. E STIMATION OF THE OUTER ERROR 
+
+Recall that S4 = {(x1, y1), · · · , (xn, yn)}, we define the function class 
+
+Hw = {(x, y) 7 → Hw(x, y), w ∈ W} .
+
+We establish the following bound for the integral of the covering number N (Hw, ϵ, L 2(S4)) .
+
+Lemma E.25. Let Assumption 4.1 hold, we have 
+
+Z ηM 
+
+> 1/n
+
+plog N (Hw, ϵ, L 2(S4)) dϵ ≤ eO ηM 
+
+vuut LX
+
+> l=1
+
+dldl−1
+
+!
+
+.
+
+Proof. we define 
+
+μ1 ∈ arg min  
+
+> μ∈[−M,M ]
+
+Ey′ τ ϕ ℓ(∆ w(x, y, y′)) − μτ
+
+!
+
++ μ, μ 2 ∈ arg min  
+
+> μ∈[−M,M ]
+
+Ey′ τ ϕ ℓ(∆ w′ (x, y, y′)) − μτ
+
+!
+
++ μ. 
+
+We suppose that Hw(x, y) − Hw′ (x, y) ≥ 0, we have 
+
+|Hw(x, y) − Hw′ (x, y)| = Hw(x, y) − Hw′ (x, y)=Ey′ τ ϕ ℓ(∆ w(x, y, y′)) − μ1
+
+τ
+
+!
+
++ μ1 − Ey′ τ ϕ ℓ(∆ w′ (x, y, y′)) − μ2
+
+τ
+
+!
+
+− μ2
+
+≤Ey′ τ ϕ ℓ(∆ w(x, y, y′)) − μ2
+
+τ
+
+!
+
+− Ey′ τ ϕ ℓ(∆ w′ (x, y, y′)) − μ2
+
+τ
+
+!
+
+≤Ey′ τ ϕ ℓ(∆ w(x, y, y′)) − μ2
+
+τ
+
+!
+
+− ϕ ℓ(∆ w′ (x, y, y′)) − μ2
+
+τ
+
+!
+
+≤Ey′ η|ℓ(∆ w(x, y, y′)) − ℓ(∆ w′ (x, y, y′)) |≤Ey′ ηG |∆w(x, y, y′) − ∆w′ (x, y, y′)|,
+
+where the first inequality is by the definition of μ1, the second and third inequalities use the Lipschitzness of ϕ, ℓ , respectively. We choose a cover Cε of W such that Eq. (17) holds. By Eq. 21, we know that 
+
+|Hw(x, y) − Hw′ (x, y)| ≤ ηG Ey′ |∆w(x, y, y′) − ∆w′ (x, y, y′)|≤4ηG ΠLl=1 slEy′ max  
+
+> v∈{ x,y,y′}
+
+∥fw(v) − fw′ (v)∥2
+
+≤4ηG ΠLl=1 sl max   
+
+> v∈X ,Y
+
+∥fw(v) − fw′ (v)∥2 ≤ 4ηG ΠLl=1 slε. 
+
+49 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+As a result, 
+
+∥hw − hw′ ∥L2(S4) ≤ 4ηG ΠLl=1 slε
+
+For ϵ > 0, choosing 
+
+ε = ϵ
+
+4ηG ΠLl=1 sl
+
+.
+
+Then we have 
+
+log N (Hw, ϵ, L 2(S4)) ≤ log |C ε| ≤ 
+
+> L
+
+X
+
+> l=1
+
+dldl−1 log 1 + 2LΠLl=1 sl
+
+ε
+
+!
+
+=
+
+> L
+
+X
+
+> l=1
+
+dldl−1 log 1 + 8ηGL ΠLl=1 s2
+
+> l
+
+ϵ
+
+!
+
+.
+
+It implies that 
+
+Z ηM 
+
+> 1/n
+
+plog N (Hw, ϵ, L 2(S4)) dϵ ≤
+
+Z ηM 
+
+> 1/n
+
+vuut LX
+
+> l=1
+
+dldl−1 log 1 + 8ηGL ΠLl=1 s2
+
+> l
+
+ϵ
+
+!
+
+dϵ 
+
+≤
+
+vuut LX
+
+> l=1
+
+dldl−1 log(1 + 8 ηGnL ΠLl=1 s2 
+
+> l
+
+)( ηM − 1/n )
+
+≤ηM log(1 + 8 ηGnL ΠLl=1 s2 
+
+> l
+
+)
+
+vuut LX
+
+> l=1
+
+dldl−1.
+
+The proof is completed. The outer error can be estimated as follows 
+
+Lemma E.26. Let Assumption 4.1, then with probability at least 1 − δ, there holds 
+
+sup 
+
+> w∈W
+
+Ex,yHw(x, y) − 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+Hw(xi, yi) ≤ eO ηM (
+
+qPLl=1 dldl−1 + plog(1 /δ )) 
+
+√n
+
+!
+
+Proof. Since ϕ(0) = 0 , ϕ (x) ≥ x, we have 
+
+Hw(x, y) = min  
+
+> μ∈R
+
+Ey′ τ ϕ ℓ(∆ w(x, y, y′)) − μτ
+
+!
+
++ μ ≤ Ey′ τ ϕ ℓ(∆ w(x, y, y′)) − 0
+
+τ
+
+!
+
++ 0 
+
+≤ Ey′ τ ϕ ℓ(∆ w(x, y, y′)) 
+
+τ
+
+!
+
+− 0 ≤ Ey′ η|ℓ(∆ w(x, y, y′)) | ≤ ηM. 
+
+and 
+
+Hw(x, y) = min  
+
+> μ∈R
+
+Ey′ τ ϕ ℓ(∆ w(x, y, y′)) − μτ
+
+!
+
++ μ ≥ Ey′ ℓ(∆ w(x, y, y′)) ≥ − M. 
+
+By noting that η ≥ 1, we have |Hw(x, y)| ≤ ηM . For the similar reason, there also holds bHw(x, y)| ≤ ηM Then by Proposition A.3 and Lemma E.25, we have 
+
+RS4 (Hw) ≤ inf  
+
+> α> 0
+
+4α + 12 
+
+√n
+
+Z ηM α
+
+plog N (Hw, ϵ, L 2(S4)) dϵ ≤ 4
+
+n + 12 
+
+√n
+
+Z ηM 
+
+> 1/n
+
+plog N (Hw, ϵ, L 2(S4)) dϵ 
+
+= eO ηM 
+
+qPLl=1 dldl−1
+
+√n
+
+!
+
+.
+
+50 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Combined with Proposition A.1, we have with probability at least 1 − δ,
+
+sup 
+
+> w∈W
+
+Ex,yHw(x, y) − 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+Hw(xi, yi) ≤ 2RS4 (Hw) + 6 ηM 
+
+r log(1 /δ )
+
+n (81) 
+
+≤ eO ηM (
+
+qPLl=1 dldl−1 + plog(1 /δ )
+
+√n)
+
+!
+
+. (82) Similar inequality holds for another direction. The proof is completed. E.5.2. E STIMATION OF THE INNER ERROR 
+
+Lemma E.27. Let Assumption 4.1 hold, then with probability at least 1 − δ, we have 
+
+sup 
+
+> w∈W
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+(Hw(xi, yi) − bHw(xi, yi)) = eO η(GB 
+
+qPLl=1 dldl−1 + M plog(1 /δ )) 
+
+√m
+
+!
+
+.
+
+Proof. Recall that 
+
+Gx,y = {y′ → ∆w(x, y, y′), w ∈ W} , S′ = {y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+},
+
+Hx,y = {y′ 7 → ℓ(∆ w(x, y, y′)) − μ : w ∈ W , μ ∈ [−M, M ]}.
+
+By Proposition A.1 and Eqs. (73) , (77) , for any fixed (x, y), with probability at least 1 − δ over the sampling of y′
+
+> 1
+
+, · · · , y′
+
+> m
+
+,there holds 
+
+Hw(x, y) − bHw(x, y) ≤2ηRS′ (Hx,y) + 12 ηM 
+
+r log(1 /δ )
+
+m
+
+= eO η(GB 
+
+qPLl=1 dldl−1 + M plog(2 /δ )) 
+
+√2m
+
+!
+
+By the independence of S′ and xi, yi, with probability at least 1 − δ/n , the following holds for all i ∈ [n]:
+
+sup 
+
+> w∈W
+
+Hw(xi, yi) − bHw(xi, yi) = eO η(GB 
+
+qPLl=1 dldl−1 + M plog(1 /δ )) 
+
+√m
+
+!
+
+.
+
+Taking summation yields 
+
+sup 
+
+> w∈W
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+(Hw(xi, yi) − bHw(xi, yi)) = eO η(GB 
+
+qPLl=1 dldl−1 + M plog( n/δ )) 
+
+√m
+
+!
+
+.
+
+The other side of the inequality holds for the same reason. The proof of the lemma is completed. The generalization bound is stated in the following theorem. 
+
+Theorem E.28. Suppose Assumption 4.1, E.16, E.17 hold. Then with probability at least 1 − δ, there holds 
+
+sup 
+
+> w∈W
+
+Lϕ,ℓ  
+
+> SS
+
+(sw) − bLϕ,ℓ  
+
+> SS
+
+(sw) ≤ eO η(GB + M )( 
+
+vuut LX
+
+> l=1
+
+dldl−1 + plog( n/δ ))( 1
+
+√m + 1
+
+√n )
+
+!
+
+51 Statistical Consistency and Generalization of Contrastive Representation Learning 
+
+Proof. Plugging Lemma E.26, E.27 into the error decomposition Eq. (80), with probability at least 1 − δ, there holds 
+
+sup 
+
+> w∈W
+
+|L SS (sw) − bLSS (sw)| ≤ Ex,yhw(x, y) − 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+hw(xi, yi) + 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+ hw(xi, yi) − ˆhw(xi, yi)
+
+≤ eO ηM (
+
+qPLl=1 dldl−1 + plog(1 /δ )) 
+
+√n + η(GB 
+
+qPLl=1 dldl−1 + M plog( n/δ )) 
+
+√m
+
+!
+
+≤ eO η(GB + M )( 
+
+vuut LX
+
+> l=1
+
+dldl−1 + plog( n/δ ))( 1
+
+√m + 1
+
+√n )
+
+!
+
+.
+
+The proof is completed. 52
