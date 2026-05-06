@@ -1,0 +1,94 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.03075v1/fig-001.webp",
+      "caption": "Figure 3: Plan quality comparisons of CompDiffuser, CDGS, and RCD. Each column shows 20 sampled plans in the AntMaze-Giant-Stitch environment for 5 test-time tasks defined in OGBench. Plans that violate environment constraints (wall penetration) are shown in red; feasible plans in green.",
+      "page": 6,
+      "index": 1,
+      "width": 406,
+      "height": 333
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03075v1/fig-002.webp",
+      "caption": "Figure 6: Visualization of RCD rollout execution on AntMaze-Giant-Stitch. The ant agent navigates from the starting region to the pink goal.",
+      "page": 25,
+      "index": 2,
+      "width": 782,
+      "height": 1198
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03075v1/fig-003.webp",
+      "caption": "Figure 7: Visualization of RCD rollout execution on AntSoccer-Medium-Stitch. The ant agent dribbles the soccer ball toward the goal location.",
+      "page": 26,
+      "index": 3,
+      "width": 782,
+      "height": 810
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03075v1/fig-004.webp",
+      "caption": "Table 8: Evaluation environments and datasets in OGBench. We follow the evaluation setup of CompDiffuser [49].",
+      "page": 21,
+      "index": 4,
+      "width": 822,
+      "height": 561
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03075v1/fig-005.webp",
+      "caption": "Table 9: Hyperparameters across environments.",
+      "page": 21,
+      "index": 5,
+      "width": 830,
+      "height": 248
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03075v1/fig-006.webp",
+      "caption": "Table 1: Quantitative results on OGBench locomotion tasks. Each environment provides 5 goalconditioned tasks; we evaluate 20 episodes per task and report mean ± std across 5 seeds.",
+      "page": 7,
+      "index": 6,
+      "width": 827,
+      "height": 223
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03075v1/fig-007.webp",
+      "caption": "Table 10: Number of composed segments M per environment. For locomotion mazes and antsoccer, values follow the same setting as CompDiffuser [49].",
+      "page": 22,
+      "index": 7,
+      "width": 859,
+      "height": 491
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03075v1/fig-008.webp",
+      "caption": "Figure 1: Toy illustration of the mode-averaging problem. (a) Training data consists of overlapping",
+      "page": 3,
+      "index": 8,
+      "width": 835,
+      "height": 241
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03075v1/fig-009.webp",
+      "caption": "Figure 5: Plan quality comparisons on PointMaze-Giant-Stitch. Each column shows 20 sampled plans from CompDiffuser, CDGS, and RCD for 5 test-time tasks defined in OGBench. Plans that violate environment constraints (wall penetration) are shown in red; feasible plans in green.",
+      "page": 23,
+      "index": 9,
+      "width": 768,
+      "height": 631
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03075v1/fig-010.webp",
+      "caption": "Figure 8: Visualization of RCD rollout execution on Cube-Triple. The 6-DoF UR5e robot arm arranges three cubes into their target configuration via pick-and-place.",
+      "page": 27,
+      "index": 10,
+      "width": 782,
+      "height": 622
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03075v1/fig-011.webp",
+      "caption": "Figure 2: Overview of RCD, contrasted with CompDiffuser and CDGS. Trajectories are planned",
+      "page": 5,
+      "index": 11,
+      "width": 826,
+      "height": 238
+    }
+  ]
+}

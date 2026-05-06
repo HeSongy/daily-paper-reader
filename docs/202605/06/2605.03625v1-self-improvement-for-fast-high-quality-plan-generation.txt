@@ -1,0 +1,3282 @@
+Title: Self-Improvement for Fast, High-Quality Plan Generation
+
+URL Source: https://arxiv.org/pdf/2605.03625v1
+
+Published Time: Wed, 06 May 2026 00:49:48 GMT
+
+Number of Pages: 29
+
+Markdown Content:
+## Self-Improvement for Fast, High-Quality Plan Generation 
+
+Robert Gieselmann, Henrike von Huelsen, Mihai Samson, Marie-Christine Meyer, Dariusz Piotrowski, Oleksandr Radomskyi, Justin Okamoto, Turan Gojayev, Michael Painter, Gavin Brown, Federico Pecora, Jeremy L. Wyatt 
+
+Amazon 
+
+{robgie, vohenrik, samsonmf, mariemea, piotrod, radomole, justmoto, otugojay, painterm, brorgav, fpecora, jeremywy }@amazon.com 
+
+Abstract 
+
+Generative models trained on synthetic plan data are a promising approach to generalized planning. Recent work has focused on finding any valid plan, rather than a high-quality solution. We address the challenge of producing high-quality plans, a computationally hard problem, in sub-exponential time. First, we demonstrate that, given optimal data, a decoder-only transformer can generate high-quality plans for unseen problem instances. Second, we show how to self-improve an initial model trained on sub-optimal data. Each round of self-improvement combines multiple model calls with graph search to generate improved plans, used for model fine-tuning. An experimental study on four domains: Blocksworld, Logistics, Labyrinth, and Sokoban, shows on average a 30% reduction in plan length over the source sym-bolic planner, with over 80% of plans being optimal, where the optimum is known. Plan quality is further improved by inference-time search. The model’s latency scales sub-exponentially in contrast to the satisficing and optimal sym-bolic planners to which we compare. Together, these results suggest that self-improvement with generative models offers a scalable approach for high-quality plan generation. 
+
+1 Introduction 
+
+Generative models have emerged as a useful tool for auto-mated planning, providing a mechanism for retrieving and generalizing previously observed action sequences. Autore-gressive models like transformers can quickly generate com-plete plan sequences that are then validated against formal verifiers like VAL (Howey, Long, and Fox 2004). Recent work (Rossetti et al. 2024b) has shown that this approach can achieve high completion rates across classical planning domains when trained on large datasets of valid plans. These generative models enable a form of generalized planning 
+
+(Hu and De Giacomo 2011): once trained, they solve new problems within the same domain without requiring per-instance search. Prior work such as Rossetti et al. (2024b) has focused primarily on plan validity rather than optimality. Generat-ing optimal plans is computationally much harder than find-ing a valid solution. For instance, while Blocksworld admits linear-time algorithms, optimal planning in this domain is NP-hard (Slaney and Thi´ ebaux 2001; Helmert 2003). This computational barrier makes it infeasible to generate large optimal training datasets, fundamentally limiting generative models to the quality of their training data. To overcome this quality ceiling, we present SiGPlan 
+
+(Self-improvement for Generalized Plan ning), a framework that iteratively refines a generative model to produce near-optimal plans without requiring optimal training data. Un-like search-based self-improvement frameworks such as Al-phaGo (Silver et al. 2016), SiGPlan is designed to leverage the rapid candidate plan synthesis that generative models excel at. Starting from a model pretrained on sub-optimal plans, our self-improvement loop alternates between (1) dis-covering improved plans by combining model predictions with search, and (2) model finetuning on these improved la-bels. SiGPlan automatically derives a near-optimal, domain-specific generalized planner from sub-optimal training data. We first establish an upper bound on generative model performance by training on optimal plans for Blocksworld, achieving a 78.9% optimality rate for problems with up to 100 blocks. We then evaluate SiGPlan on four domains: Blocksworld, Logistics, Labyrinth, and Sokoban. Across all domains, SiGPlan substantially improves upon the ini-tial model, achieving plan length reductions of 39.3% on Blocksworld and 38.0% on Labyrinth, demonstrating that self-improvement can break through the supervised learning quality ceiling. Moreover, SiGPlan is computationally effi-cient, solving problems in seconds while optimal symbolic planners may require hours or days. In summary, our main contributions are: • An empirical analysis establishing the performance of generative models trained on optimal plans for Blocksworld with up to 100 blocks. • SiGPlan , a self-improvement framework that iteratively refines generative planning models to approach optimal performance without requiring optimal training data. • A benchmark across four domains demonstrating that self-improvement enables models to substantially exceed their initial training data quality, producing generalized planners with near-optimal efficiency. • A runtime analysis showing that learned models achieve orders-of-magnitude speedups over optimal symbolic planners while maintaining near-optimal plan quality. 
+
+> arXiv:2605.03625v1 [cs.AI] 5 May 2026
+
+2 Background and Related Work 
+
+Automated Planning in PDDL. Automated planning (Nau, Ghallab, and Traverso 2004) finds action sequences that transform an initial state into one satisfying goal condi-tions. The Planning Domain Definition Language (PDDL) (McDermott et al. 1998; Fox and Long 2003) provides a standardized formalism for planning problems. Classical PDDL domains consist of predicates, object types, and op-erators with preconditions and effects. Problem instances in-clude objects, an initial state, and goal specifications. States are sets of atoms (propositional statements combining pred-icates with object tuples) that hold true in specific config-urations. PDDL has become the standard representation in planning research and serves as the foundation for compe-titions like the International Planning Competition 1. We use PDDL as our main formalism, providing a general recipe to tokenize planning problems for training and sequence gen-eration with transformer models. 
+
+Sequence Modeling with Transformers. Transformers (Vaswani et al. 2017) are a neural network architecture that have revolutionized sequence modeling across multi-ple domains. They leverage self-attention mechanisms to capture dependencies between all positions simultaneously, enabling efficient parallel computation. Multi-head atten-tion allows joint attention to information from different rep-resentation subspaces, while position encodings preserve sequential information. The Generative Pretrained Trans-former (GPT) (Radford et al. 2019) is designed for sequence generation, predicting sequences autoregressively by feed-ing generated tokens back as input. It scales effectively through parallelizable training via causal masking and infer-ence speedup via kv-caching. The GPT architecture under-pins modern large language models and has been adopted in domains where applications can be formulated as sequence prediction, e.g., offline reinforcement learning (Janner, Li, and Levine 2021) or Boolean satisfiability (Pan et al. 2025). 
+
+Pre-trained LLMs for Planning. Recent work has ex-plored leveraging pre-trained language transformers for au-tomated planning. Pallagani et al. (2023) rely on an LLM that was pretrained for coding tasks and finetuned it for op-timal planning in several PDDL benchmark domains. They demonstrated that for small-scale problems (e.g., 2-5 blocks in Blocksworld), their approach outperformed the base LLM in both completion rate and plan quality. Moreover, the model generated plans significantly faster than an optimal symbolic solver. Other research has focused on LLMs for planning from natural language descriptions, including auto-formalizing problems into PDDL (Liu et al. 2023), generat-ing world models (Guan et al. 2023; Katz et al. 2024), and synthesizing domain-specific planning policies as Python code (Silver et al. 2024). Despite these promising results, there remains skepticism about large pre-trained transform-ers due to the high inference costs and limited reliability (Kambhampati et al. 2024). 
+
+Training Planning Generative Models from Scratch. 
+
+Smaller, domain-specialized transformers have recently 
+
+> 1https://ipc2023-classical.github.io/
+
+emerged as effective alternatives for automated plan gen-eration. PlanGPT (Rossetti et al. 2024b) uses a large cor-pus of valid plans generated by a domain-independent plan-ner to train domain-specific GPT transformers from scratch. The authors developed a specialized tokenization scheme representing actions as sequences of predicate and object tokens, achieving notable results across domains, such as 100% plan completion on unseen Blocksworld test prob-lems with up to 20 blocks. In follow-up work, Rossetti et al. (2024a) integrated an action validator into the sequence gen-eration pipeline to prevent infeasible plans and thereby im-proved completion rates. Tummolo et al. (2024) introduce an additional processing step which repairs invalid plans by using them as the initialization for a local planning al-gorithm. Fritzsche, Gestrin, and Seipp (2025) proposed a symmetry-aware contrastive learning objective to enhance 
+
+PlanGPT ’s ability to generalize to unseen configurations, especially problem instances with numbers of objects that were not seen during training. 
+
+PlanGPT is neither trained on optimal data nor evaluated in terms of the length of the generated plans. To address this gap, we devise a method that reduces plan lengths over time through an iterative process that alternates between search and learning. 
+
+Self-Improvement via Search. The idea of combining search and learning in a loop of self-improvement dates back to Arthur Samuel’s checkers program (Samuel 1959). Jab-bari Arfaee, Zilles, and Holte (2011) applied this concept to classical planning with heuristic search. Their method al-ternates between graph search and training a shallow neu-ral network heuristic, where the current model guides search while solved instances update the model for subsequent iter-ations. Self-improvement with deep neural networks gained widespread attention with AlphaGo (Silver et al. 2016), which integrated Monte Carlo Tree Search with deep pol-icy and value networks. Groshev et al. (2018) used a neu-ral network as a learned policy and heuristic for general-ized planning. Under the name leapfrogging , they introduce a system where model-guided A* search provides training labels for a curriculum of increasingly harder problem in-stances. In contrast, our work centers around autoregressive generative models, while focusing on improving plan opti-mality while maintaining fast runtimes. Recently, numerous studies have adopted search-based self-improvement frame-works to enhance transformers (Lehnert et al. 2024; Zhang et al. 2024; Chen et al. 2024). Our work applies this strategy to automated planning, leveraging the efficiency of smaller specialized models as demonstrated by PlanGPT (Rossetti et al. 2024b). 
+
+3 Training an Optimal Plan Generator 
+
+Our aim is to train a generative model that can generate (near-)optimal plans on unseen PDDL problem instances from the same distribution as the training data. In this sec-tion, we show that a generative model trained on optimal plans can generate optimal solutions for the majority of un-seen test instances, and near-optimal solutions for the rest. 3.1 Problem Definition 
+
+We consider single-agent planning problems defined over a finite set of objects O and predicates P. Each predi-cate p ∈ P has arity arity (p). The set of grounded atoms is X = S
+
+> p∈P
+
+ p(o1, . . . , o arity( p)) | oi ∈ O . The state space is S = 2 X , where each state s ∈ S is the set of propositions that are true in that world configuration. The action space A consists of all grounded operators a =
+
+⟨pre( a), add( a), del( a)⟩, where pre( a), add( a) and del( a)
+
+are subsets of X defining preconditions, add, and delete effects, respectively. The deterministic transition function is F (s, a ) = ( s \ del( a)) ∪ add( a) which applies when 
+
+pre( a) ⊆ s. The goal space G ⊆ S consists of partial states 
+
+g ∈ G , where a state s satisfies a goal g if g ⊆ s. A valid plan is a sequence of actions τ = ( a0, . . . , a T −1) such that, starting from an initial state s0 ∈ S and applying transitions 
+
+st+1 = F (st, a t), the resulting state sT satisfies g ⊆ sT for a given goal g ∈ G . Among all valid plans, we define the optimal solution as the one that minimizes the plan length. We define I = S × G as the space of problem instances, where each instance (s0, g ) ∈ I consists of an initial state 
+
+s0 ∈ S and a goal g ∈ G . These problem instances are gen-erated from an unknown distribution PI . Given a planning domain, our objective is to learn a fast plan generator that generalizes across problems from PI while minimizing plan length. To achieve this, we assume access to a training set of problem instances DI generated by sampling from PI .
+
+3.2 Generative Model 
+
+We train a generative model π which maps from a starting state s0 ∈ S , goal g ∈ G , and action history a<t ∈ A t to a distribution over next actions: π(at|s0, g, a <t ). Following Rossetti et al. (2024b), π is implemented as a decoder-only transformer (Radford et al. 2019) that operates at the token level. The model generates action sequences token-by-token through iterative forward passes, handling the combinatori-ally large space of grounded actions with a fixed-size vo-cabulary. For instance, in Blocksworld, the grounded action 
+
+unstack b1 b2 (unstacking block b1 from block b2 ) is represented as a token sequence: the unstack operator to-ken followed by tokens for b1 and b2 . The model operates autoregressively, appending each generated token to its input sequence after every prediction step. The vocabulary is constructed from PDDL domain and problem files, comprising predicate names, object identi-fiers, types, and special delimiter tokens. For each domain, we define a maximum number of objects per type. Fig-ure 1 illustrates the tokenization scheme during inference on a Blocksworld problem instance. The PDDL problem file (1a) is translated into a sequence of tokens (1b). Special to-kens such as [startofproblem] , [startofplan] ,and [endofplan] structure the input. The model then generates a plan as a sequence of action tokens, terminated by [endofplan] (1c). Generated plans are validated by splitting sequences into actions and verifying syntactic and semantic validity using VAL (Howey, Long, and Fox 2004). During training, the model is optimized using the standard cross-entropy loss for next-token prediction. (a) PDDL problem string: (c) Generated sequence (b) Transformer input tokens:                        
+
+> (define (problem bw_5blocks_122733) (:domain blocksworld) (:objects b1 b2 b3 b4 b5 )(:init (arm-empty) (clear b1) (clear b2) (on b1 b4) (on b2 b5) (on b5 b3) (on-table b3) (on-table b4) )(:goal (and (on b3 b2) (on b4 b5) (on b5 b3) )))[startofproblem] (define(problem[redacted]) (:domain[redacted]) (:objectsb1b2b3b4b5) (:init(arm-empty)(clearb1) (clearb2)(onb1b4)(onb2b5) (onb5b3)(on-tableb3)
+> (on-tableb4)(:goal(and(onb3b2) (onb4b5)(onb5b3)))) [startofplan] (unstackb1b4)(putdownb1)
+> (unstackb2b5)(putdownb2)
+> (unstackb5b3)(putdownb5)
+> (pickupb3)(stackb3b2) (pickupb5)(stackb5b3) (pickupb4)(stackb4b5) [endofplan]
+> tokenize model.generate()
+> 14352
+
+Figure 1: Illustration of our tokenization scheme. 
+
+3.3 Training from Optimal Plan Data 
+
+Obtaining optimal training data with domain-independent classical solvers is usually prohibitively expensive. How-ever, for the Blocksworld domain, a domain-specific opti-mal solver was introduced by Slaney and Thi´ ebaux (2001). Blocksworld is a common benchmark domain where blocks must be rearranged from an initial configuration to a goal configuration by stacking and unstacking one block at a time. We generate a training dataset of 999,270 Blocksworld problem instances of 3 to 100 blocks with optimal plans computed by the Slaney-Thi´ ebaux solver. To satisfy the as-sumptions of the solver, problem instances are generated such that all objects appear in the goal specification. To es-tablish whether efficient generation of (near-) optimal plans scales to larger problems, we evaluate performance of the trained model (Section 3.2) on three held-out test sets: 1000 problems each with 3-10 blocks, 11-25 blocks, and 26-100 blocks, respectively. During inference, we generate plans in batches of size 10 and report the best solution. We compare the generative model against Fast Downward 
+
+(FD) (Helmert 2006), a state-of-the-art domain-independent solver, in an optimal setting with a 20-minute timeout. To quantify plan quality (among solved instances), we report the percentage of optimal plans and the regret, which we de-fine as the percentage length increase over the optimal solu-tion: cost −cost optimal  
+
+> cost optimal
+
+· 100% (defined as 0% when cost optimal =0 ). 3-10 blocks 11-25 blocks 26-100 blocks 
+
+Generative Model (GPT2 transformer) 
+
+Compl. (%) 99.80 100.00 97.50 Optimal (%) 100.0 98.70 39.18 Regret (%) 0.00 (± 0.00) 0.06 (± 0.02) 1.65 (± 0.06) Runtime (s) 0.60 (± 0.01) 1.85 (± 0.02) 9.53 (± 0.15) 
+
+FD-optimal ( <20min )Compl. (%) 100.00 44.30 0.00 Runtime (s) 0.48 (± 0.06) 116.70 (± 10.76) -Table 1: Results of scalability analyses for 3 Blocksworld test sets containing 1000 unique problems each. For regret and runtime we report mean ± std. error. The results in Table 1 show that our model generates op-timal or near-optimal plans across all three test sets (3-100 blocks). Even for the most challenging set with 26-100 block problem instances, the model maintained 97.5% completion rate. While the ratio of optimally solved instances dropped from almost 100% for less than 25 blocks to 39% for prob-lems with 26-100 blocks, even the non-optimally solved problems were solved with less than 2% regret on average. Notably, for the test sets with more than 10 blocks, the model shows a significantly lower runtime than Fast-Downward . While Fast Downward could not solve any problem instance with over 25 blocks within 20 minutes, the model solved almost all problem instances with an average runtime of under 10 secs. This underlines the prohibitively long runtime of classical (optimal) solvers, which grows ex-ponentially with the problem complexity. The analysis shows that even for complex problems, the transformer model was able to generate a high percentage of optimal plans (78.9% for 3-100 blocks), and near-optimal otherwise. The bottleneck, however, is computing optimal training data at scale, which is often infeasible in prac-tice. This highlights the need for a method that can initially train on sub-optimal data and improve plan quality via self-refinement, which we address in the following section. 
+
+4 A Self-improving Plan Generator 
+
+We introduce SiGPlan (Self-improvement for Generalized 
+
+Plan ning), a self-improving planning framework that boot-straps from sub-optimal solvers. As shown in Figure 2, our approach has three components: pretraining, plan improve-ment via graph search, and model finetuning. We train an initial generative model π0 from scratch on a dataset of sub-optimal plans ( Dpretrain ) generated by an off-the-shelf, domain-independent planner (Figure 2a). We then begin our self-improvement loop. For m problem instances drawn randomly from DI , we sample candidate plans from the current model to construct state graphs, then extract the shortest valid plans from these graphs via search (Figure 2b). The collection of improved plans forms a new dataset 
+
+Di
+
+> finetune
+
+, which we use to finetune the generative model from the previous iteration. We choose finetuning over training from scratch as it requires significantly fewer new plans per iteration which is critical since generating these im-proved plans is computationally expensive due to numerous model calls. Preliminary experiments confirmed finetuning provides a better trade-off between plan quality improve-ment and computational cost. SiGPlan runs for nloop steps, with each iteration i using model πi−1 to guide graph con-struction and extract improved training labels. Next, we detail our framework’s building blocks: the gen-erative model, graph search, and model finetuning. 
+
+4.1 Graph Construction 
+
+A critical step within SiGPlan is to compute better plans for model finetuning. In summary, we first sample plans from our generative model and combine these to a graph repre-sentation of states and actions. To obtain improved training labels, the shortest path that satisfies the goal is extracted Algorithm 1: Self-improvement Loop 
+
+Input : Problem set DI , initial data Dpretrain , number of prob-lem instances for finetuning m, number of candidate plans per problem n, self-improvement iterations nloop 
+
+Output : π 
+
+> 1:
+
+# Pretrain model on suboptimal data  
+
+> 2:
+
+π0 ← pretrain (Dpretrain ) 
+
+> 3:
+
+for i in 1 . . . n loop do  
+
+> 4:
+
+# Sample subset of m problem instances  
+
+> 5:
+
+Di 
+
+> I
+
+← sample problems (DI , num= m) 
+
+> 6:
+
+# Generate set of candidate plans for each problem  
+
+> 7:
+
+{T j } ← sample plans (Di 
+
+> I
+
+, πi−1, num= n) 
+
+> 8:
+
+# Compute states (compile) and filter valid plans  
+
+> 9:
+
+{ ˆTj } ← compile and filter (Di 
+
+> I
+
+, {T j }) 
+
+> 10:
+
+# Create set of state graphs  
+
+> 11:
+
+{Gj } ← construct graphs ({ ˆTj }) 
+
+> 12:
+
+# Search graphs and extract shortest plan data  
+
+> 13:
+
+Di 
+
+> finetune
+
+← search and extract data ({Gj }) 
+
+> 14:
+
+# Finetune plan generator  
+
+> 15:
+
+πi ← finetune (πi−1, Di
+
+> finetune
+
+) 
+
+> 16:
+
+end for  
+
+> 17:
+
+return π
+
+from each graph (Figure 2b). The procedure is formalized in Algorithm 1. At each iteration i=1 , . . . , n loop , we start by drawing 
+
+m problem instances uniformly from DI . The result-ing problem subset is denoted by Di 
+
+> I
+
+. For each problem 
+
+(s0, g ) ∈ Di 
+
+> I
+
+, we use our most recent generative model 
+
+πi−1 to synthesize n candidate plans {τk}nk=1 , where each 
+
+τk={a0, a 1, . . . , a Tk −1} is a sequence of actions with indi-vidual length Tk. This sampling procedure can be performed efficiently by leveraging batch computation on GPUs. For each problem, the autoregressive generation stops either if the [endofplan] token is generated or a maximum token limit is exhausted. Generated sequences that do not follow the correct syntax of PDDL are discarded. The set of re-maining plans for each problem instance j ∈ { 1, . . . , m } is denoted by Tj .We continue by compiling the candidate plans in Tj , using the transition model st+1 =F (st, a t) to translate them into state-action sequences ˆτk=( s0, a 0, s 1, a 1, . . . , s Tk ). During this process, we filter out invalid plans and retain only those satisfying the following conditions: 1. Actions at fulfill the operator preconditions at every step in the plan, i.e., pre( at) ⊆ st
+
+2. The plan achieves the goal g, i.e., g ⊆ sTk , where sTk =
+
+F (sTk −1, a Tk −1).We collect all valid plans across the n candidates for each problem j ∈ { 1, . . . , m } into a set ˆTj .Finally, we construct a set of state graphs {Gj }mj=1 , one per problem instance. Each directed graph Gj = ( Vj , E j ) is constructed such that Vj contains all unique states appearing in ˆTj , and Ej contains all unique state-action-state transi-tions present in ˆTj .(b) Graph construction and search (a) Pretraining (c) Supervised finetuning Generated candidate plans State graph Validated plans   
+
+> Check syntactic and semantic correctness Run fast, suboptimal solver Filter successful plans Train model from scratch Sample action sequences Run graph search Repeat self-improvement loop for n loop iterations Add improved plan Merge valid plans into graph
+> Shortest path to a goal Finetuning dataset Sample m problem instances from pretraining set. Repeat for each:
+> New finetuning data Updated model weights
+> Collection of problem instances Pretraining dataset Pretrained generative model +
+
+Figure 2: Overview of SiGPlan . (a) The generative model is pretrained on plans generated by a domain-independent planner. (b) For a subset of m problem instances, we sample candidate plans from our model, construct state graphs, and compute the shortest valid plans on these graphs. A finetuning dataset is created based on the best plan found for each problem in the subset. (c) The model is finetuned on the new data. Self-improvement iterates between (b) and (c) for a fixed number of steps. 
+
+4.2 Plan Harvesting and Finetuning 
+
+After obtaining the graphs {Gj }, we extract new plan labels to improve our model. For each graph Gj , we apply breadth-first search (BFS) to compute the shortest sequence of ac-tions from the initial state to a goal. A new finetuning dataset 
+
+Di 
+
+> finetune
+
+is created based on the shortest paths extracted from 
+
+{Gj } for all m problems. If no plan can be extracted from 
+
+Gj for a problem instance j (i.e., when our generative model cannot synthesize valid plans), j is excluded from Di
+
+> finetune
+
+.To prevent performance regression over iterations, we maintain a global best solution cache across all iterations. For each problem in Di
+
+> finetune
+
+, if a shorter or equally short plan was found in previous iterations or during pretraining, we use that plan instead. This ensures Di 
+
+> finetune
+
+contains only the shortest plans observed so far for each solved problem. Finally, we update the previous iteration model πi−1 on 
+
+Di 
+
+> finetune
+
+to obtain a new model πi via supervised learning on the (problem, plan) pairs. To avoid overfitting on this fine-tuning data, we use a lower learning rate and fewer gradient updates compared to the pretraining phase. 
+
+5 Experiments 
+
+We benchmark SiGPlan to demonstrate how it effectively enhances plan quality when starting from a model initially trained on suboptimal data. We evaluate on four domains: • Blocksworld : Introduced in Section 3.3. Here we use a more general setting where not all blocks are required to appear in the goal specification. Optimal planning in Blocksworld is NP-hard (Slaney and Thi´ ebaux 2001). • Logistics : A transportation domain where packages are delivered between airports and cities using trucks and air-planes. We consider instances with 1-50 cities, city sizes 1-5, 1-50 packages, 1-10 airplanes, and 1 truck per city. • Labyrinth : A navigation domain where each grid cell represents an intersection with different connectivity pat-terns (e.g., L-shaped or I-shaped). The agent can move between connected cells, as well as shift entire rows or columns left/right/up/down, where cells pushed beyond one edge are reinserted at the opposite edge. We consider grid sizes of 3 ×3 and 4 ×4 cells. • Sokoban : A puzzle domain where an agent pushes boxes to designated target locations while navigating around walls. We consider grid sizes of 5 ×5 to 14 ×14 cells with 1-10 boxes and 0-10 walls. Solving Sokoban is PSPACE-complete (Culberson 1998). 
+
+Initial Datasets and Pretraining. For each domain, we generate |D I |=|D pretrain |=10 5 problem instances and com-pute corresponding suboptimal plans using FD-LAMA-first (Richter and Westphal 2010). We pretrain a generative model π0 on Dpretrain for 60 epochs on Blocksworld, 30 on Logistics, and 100 on Labyrinth and Sokoban. The check-point with the lowest validation loss (computed on 128 held-out problems) is selected as the starting point for SiGPlan .We use 32 NVIDIA A100 GPUs (40 GB) for training and 100 parallel GPU workers for plan sampling. Blocksworld and Labyrinth completed 15 iterations within one day, Lo-gistics within two days, and Sokoban within 3.5 days. 
+
+Hyperparameters. For all domains, we run nloop =15 
+
+self-improvement iterations. At each iteration i, we sample 
+
+m=2000 unique problem instances and construct graphs us-ing n=200 generated plans per instance. For Logistics and Labyrinth, we use a transformer softmax temperature of 1, while for Blocksworld and Sokoban, a temperature of 2 pro-vided a better trade-off between plan diversity and validity. We finetune on Di 
+
+> finetune
+
+for 30 epochs, empirically deter-mined to improve the model without overfitting. The final checkpoint provides the model for the next iteration. 
+
+Evaluation Set and Methods. We evaluate on 1000 held-out problems per domain. These instances are sampled from Blocksworld Logistics Labyrinth Sokoban                                                                                               
+
+> Method Compl. (%) Plan length Compl. (%) Plan length Compl. (%) Plan length Compl. (%) Plan length
+> SiGPlan (nloop =15 ,N=10 )99.40 41.86 (± 0.57) 99.30 146.12 (± 3.20) 98.70 15.50 (± 0.23) 94.40 118.79 (± 2.97)
+> SiGPlan (nloop =15 ,N=10 3)99.90 40.91 (± 0.55) 99.70 145.25 (± 3.16) 99.30 14.80 (± 0.20) 98.60 121.98 (± 2.96)
+> SiGPlan +BFS ( nloop =15 ,N=10 3)99.90 40.86 (± 0.55) 99.70 145.20 (± 3.16) 99.30 14.61 (± 0.18) 98.60 121.91 (± 2.95)
+> π0(N=10 )99.80 68.98 (± 1.25) 99.30 161.85 (± 3.59) 96.70 25.01 (± 0.54) 94.60 134.26 (± 3.41)
+> π0(N=10 3)99.90 59.85 (± 1.01) 99.90 157.10 (± 3.47) 100.00 18.13 (± 0.25) 99.20 132.52 (± 3.25)
+> π0+BFS ( N=10 3)99.90 57.19 (± 0.94) 99.90 156.62 (± 3.46) 100.00 17.52 (± 0.23) 99.20 130.69 (± 3.17)
+> FD-LAMA-first ( <20min) 100.00 79.43 (± 1.50) 100.00 165.32 (± 3.42) 100.00 25.78 (± 0.50) 100.00 149.05 (± 3.62)
+> FD-LAMA-anytime ( <20min) 100.00 44.85 (± 0.72) 100.00 160.93 (± 3.57) 100.00 16.25 (± 0.32) 100.00 143.43 (± 3.84)
+> FD-optimal (<48h) 63.00 30.12 (± 0.48) 16.90 27.31 (± 1.48) 100.00 12.82 (± 0.13) 48.90 47.03 (± 1.08)
+
+Table 2: Comparison of performance across domains. Plan length reports the mean (± standard error) for those problems which the respective method solved. N indicates the number of candidate plans generated per problem.                                                                                                  
+
+> Blocksworld Logistics Labyrinth Sokoban
+> Method Optimal plans Plan length Optimal plans Plan length Optimal plans Plan length Optimal plans Plan length
+> SiGPlan (nloop =15 ,N=10 )495 / 625 30.83 (± 0.50) 95 / 169 28.29 (± 1.55) 619 / 955 15.24 (± 0.23) 406 / 468 47.14 (± 1.14)
+> SiGPlan (nloop =15 ,N=10 3)600 / 625 30.24 (± 0.49) 95 / 169 28.25 (± 1.55) 657 / 955 14.51 (± 0.20) 439 / 468 46.76 (± 1.12)
+> SiGPlan +BFS ( nloop =15 ,N=10 3)606 / 625 30.20 (± 0.48) 95 / 169 28.25 (± 1.55) 662 / 955 14.37 (± 0.18) 442 / 468 46.73 (± 1.12)
+> π0(N=10 )76 / 625 46.42 (± 1.00) 62 / 169 30.31 (± 1.76) 284 / 955 24.80 (± 1.54) 195 / 468 52.24 (± 1.32)
+> π0(N=10 3)103 / 625 40.83 (± 0.80) 63 / 169 29.80 (± 1.71) 357 / 955 17.77 (± 0.25) 247 / 468 50.12 (± 1.23)
+> π0+BFS ( N=10 3)116 / 625 39.39 (± 0.76) 63 / 169 29.76 (± 1.71) 389 / 955 17.22 (± 0.24) 258 / 468 49.89 (± 1.22)
+> FD-LAMA-first ( <20min) 62 / 625 52.47 (± 1.22) 47 / 169 31.21 (± 1.83) 246 / 955 25.35 (± 0.51) 118 / 468 57.25 (± 1.45)
+> FD-LAMA-anytime ( <20min) 595 / 625 30.50 (± 0.51) 106 / 169 28.51 (± 1.62) 635 / 955 15.95 (± 0.32) 421 / 468 47.13 (± 1.16)
+> FD-optimal (<48h) 625 / 625 30.14 (± 0.48) 169 / 169 27.31 (± 1.48) 955 / 955 12.82 (± 0.13) 468 / 468 46.46 (± 1.11)
+
+Table 3: Comparison of performance on the intersection of problems for which all methods found a solution . ‘Optimal plans’ gives the ratio between the number of problems for which the respective method found optimal plans, and the number of problems in the intersective set (e.g., out of 625 Blocksworld problems solved by all methods in the table). the set of problems solved by FD-LAMA-first in less than 20 minutes. The following baselines are considered: • SiGPlan : Our finetuned generative model after nloop iter-ations of self-improvement • π0: The generative model pretrained on Dpretrain .• FD-LAMA-first : Fast Downward with LAMA-first con-figuration. This symbolic planner generated Dpretrain .• FD-LAMA-anytime : Fast Downward with LAMA any-time planning configuration (20min time limit). • FD-optimal : Fast Downward with LM-Cut heuristic for optimal planning (48h time limit). 
+
+Test-time compute. For SiGPlan and π0, we evaluate two inference settings: N =10 and N =10 3, where N is the number of candidate plans generated per problem in-stance. We report results for the shortest valid plan among the N candidates. Additionally, we evaluate SiGPlan +BFS and π0+BFS, which augment the model predictions with graph construction and BFS (see Section 4.2). 
+
+Benchmark Results. Table 2 shows SiGPlan ’s perfor-mance for all domains. Our method achieves high com-pletion rates (98.6-99.9%) across all tested domains, com-pared to FD-optimal which solves 16.9-100.0% of problems within its 48-hour timeout. Despite allowing FD-LAMA-anytime a maximum compute time of 20 minutes, SiGPlan 
+
+still achieves lower average plan cost across all domains. 
+
+SiGPlan generates shorter plans compared to the pretrained generative model in all domains. Notably, plan lengths are reduced by 39.3% in the Blocksworld domain (from 68.98 to 41.86 with N =10 ), and by 38.0% for Labyrinth (from 25.01 to 15.50 with N =10 ). SiGPlan (N =10 3) improves both completion rates and plan quality across all domains, showing benefits from increased sampling. SiGPlan +BFS (N =10 3) yields only marginal improvements in plan length compared to SiGPlan (N =10 3), i.e., the additional search components provide minimal benefits beyond what the fine-tuned model already achieves. The benefits of search are, however, larger for the pretrained model, as shown by the plan length improvements of π0+BFS ( N =10 3) over π0
+
+(N =10 3) — e.g., a reduction from 132.52 to 130.69 in Sokoban. These findings support that SiGPlan scales to complex problems where optimal planners are intractable, while maintaining both high completion and short plans. 
+
+Convergence Behavior. Figure 3 shows average plan length and completion rates obtained with SiGPlan (N =10) over self-improvement iterations on 1000 validation in-stances. Across all domains, SiGPlan demonstrates rapid improvement in plan quality during the early iterations, with the most substantial gains occurring within the first 5 loop iterations. For Blocksworld and Labyrinth, the mean plan length decreases sharply from the pretrained model (69.7 to 41.8 and 25.5 to 15.6, respectively), with convergence stabi-lizing around iterations 8-10. Logistics exhibits more grad-ual but consistent model improvement throughout all 15 iter-ations (161.0 to 145.7). Sokoban shows initial improvement from the pretrained model (127.8) to iteration 6 (116.4), ulti-mately reaching 112.5 by iteration 15. Notably, completion 40                                 
+
+> 60
+> 80
+> Plan len.  69.7
+> 49.2 44.7 42.7 42.2 41.8
+> 80
+> 90
+> 100
+> Compl.  [%]
+> (a) Blocksworld (validation set) 15
+> 16
+> 17
+> Plan len.  161.0
+> 155.1 151.7 148.6 146.8 145.7
+> ×10
+> 80
+> 90
+> 100
+> Compl.  [%]
+> (b) Logistics (validation set) 15
+> 20
+> 25
+> 30
+> Plan len.
+> 25.5
+> 18.7 16.3 15.7 15.5 15.6
+> 80
+> 90
+> 100
+> Compl.  [%]
+> (c) Labyrinth (validation set) L. P. 12345678910 11 12 13 14 15
+> Loop iteration
+> 11
+> 12
+> 13
+> 14
+> 15
+> Plan len.
+> 127.8
+> 117.2 116.4 113.2 112.3 112.5
+> ×10
+> 80
+> 85
+> 90
+> 95
+> Compl.  [%] (d) Sokoban (validation set)
+
+Figure 3: Plan length (mean ± std. error) and completion rates over self-improvement iterations (on 1000 unseen val-idation instances). ‘L.’ refers to FD-LAMA-first and ’P.’ to the pretrained model. rates remain stable at near 100% for Blocksworld, Logis-tics, and Labyrinth throughout, indicating that the iterative refinement process improves plan quality without degrada-tion. 
+
+How close are we to optimal? To obtain optimal baseline data, we ran FD-optimal for 48 hours on all test sets. Ta-ble 3 evaluates plan optimality on the subset of test problems solved by all methods. Using SiGPlan (nloop =15 , N =10 3), we optimally solve 600/625 (96%) of the Blocksworld problems, 95/169 (56.2%) of Logistics problems, 657/955 (68.8%) of Labyrinth problems, and 439/468 (93.8%) of the Sokoban problems. When adding BFS at inference time, the number of optimal plans increases, e.g. to 606/625 (97%) for Blocksworld and 442/468 (94.4%) for Sokoban. This substantially outperforms both the pretrained model π0 and the classical FD-LAMA-first planner. Notably, the mean plan lengths produced by SiGPlan (N =10 3) closely approach those of FD-optimal : 30.24 vs. 30.14 for Blocksworld, 28.25 vs. 27.31 for Logistics, and 46.76 vs. 46.46 for Sokoban. Figure 4 shows that most plans generated by SiGPlan 
+
+(N =10 3) in Sokoban are either optimal or few actions longer than the corresponding optimal plans. These results demonstrate that SiGPlan drives the model toward near-optimal and often optimal solutions. 
+
+Runtime Comparison. Table 7 presents the average test runtimes across domains. As shown, SiGPlan (N =10 ) re-quires on average only a few seconds of runtime. Despite requiring only a fraction of the time budget afforded to clas-0                       
+
+> 100
+> 200
+> n=476
+> Optimal: 41.8%
+> π0(N=10)
+> n=486
+> Optimal: 51.9%
+> π0(N=1000)
+> 0816 24 32 40 48 56 64
+> 0
+> 200
+> 400 n=477
+> Optimal: 85.7%
+> SiGPlan ( nloop =15, N=10)
+> 04812 16 20 24 28 32
+> n=484
+> Optimal: 92.8%
+> SiGPlan ( nloop =15, N=1000)
+
+Difference to Optimal Plan Length - Sokoban 
+
+> Diff. to optimal [#actions]
+> Count [#instances] 100
+> 125
+> 150
+> 175
+> 200
+> 225
+> Norm. Plan Length (%)
+> FD-LAMA-first
+> FD-LAMA-anytime
+> 0 (N=10)
+> 0 (N=1000)
+> SiGPlan
+> (nloop  = 15, N=10)
+> SiGPlan
+> (nloop  = 15, N=1000)
+> SiGPlan+BFS
+> (nloop  = 15, N=1000)
+> Normalized Plan Length Distribution - Sokoban
+> Optimal (100%)
+
+Figure 4: Plan length metrics for Sokoban. Histograms show the distribution of plan length differences to optimal. Violin plots show the distribution of normalized plan length, i.e., the plan length as a percentage of the optimal plan.                                  
+
+> Method Blocksw. Logistics Labyrinth Sokoban
+> SiGPlan (nloop =15 ,N=10 )0.49 2.15 0.54 4.08
+> SiGPlan (nloop =15 ,N=10 3)21.21 112.91 27.81 407.66
+> FD-LAMA-first (<20min) 0.39 7.32 270.15 12.70
+> FD-LAMA-anyt. (<20min) 985.82 765.71 935.28 796.18
+> FD-optimal (<48h) 13311.40 16670.74 3083.48 9762.96
+
+Table 4: Average solving times in seconds on test sets across different domains (computed on solved instances only). sical planners, SiGPlan produces shorter plans across all domains (Table 2), making it a compelling approach for fast and high-quality plan generation. Figure 5 compares the solving times of π0 (N =10 ) and SiGPlan (nloop =15 ,
+
+N =10 ) against FD-optimal on Blocksworld. For this com-parison, we ran FD-optimal for 5 days on the test set, solv-ing 643 instances. Both generative models solve problems in 0.1-10 seconds with consistent runtimes, while FD-optimal 
+
+requires anywhere from few seconds to over 10 5 seconds (>27 hours). SiGPlan demonstrates similar runtime char-acteristics to π0, indicating that the improvements in plan quality come without additional computational cost at infer-ence time. This highlights a key advantage of learned mod-els: they provide near-optimal solutions at a fraction of the computational cost required by optimal symbolic planners. 
+
+Statistical Analysis. While Table 2 contains the descrip-tive statistics comparing our methods on the two perfor-10 −2 10 −1 10 0 10 1    
+
+> π0(N=10)
+> Solving Time [s]
+> 10 −1
+> 10 0
+> 10 1
+> 10 2
+> 10 3
+> 10 4
+> 10 5
+> FD-optimal Solving Time [s]
+> y=x
+> 10×
+> 10 2×
+> 10 3×
+> 10 4×
+> 10 5× slower
+> 10 −2 10 −1 10 010 1
+> SiGPlan ( nloop =15, N=10)
+> Solving Time [s]
+> y=x
+> 10×
+> 10 2×
+> 10 3×
+> 10 4×
+> 10 5×
+> Runtime Comparison: Blocksworld
+
+Figure 5: Runtime comparison between FD-optimal and the generative models. Green dots represent instances where the model generated a plan with same length as FD-optimal .mance metrics plan length and completion rate, inferential statistics is necessary to establish which of the observed dif-ferences are meaningful rather than due to random varia-tion. We therefore conducted a statistical analysis (on com-monly solved instances) comparing six specific conditions: (1) π0 vs. SiGPlan with N =10 , (2) π0 vs. SiGPlan with 
+
+N =10 3, (3) π0 with N =10 vs. N =10 3, (4) SiGPlan with 
+
+N =10 vs. N =10 3, (5) SiGPlan (N =10 3) vs. SiGPlan+BFS 
+
+(N =10 3), and (6) SiGPlan+BFS (N =10 3) vs. FD-LAMA-anytime .For Blocksworld , all six comparisons of plan length were highly significant after Bonferroni-corrections ( p< 0.001 ). 
+
+SiGPlan reduced mean plan length from 69.1 to 41.8 at 
+
+N =10 , and from 60.1 to 40.9 at N =10 3. Adding BFS improved plan quality significantly, but with a small ef-fect size ( SiGPlan : 40.90 vs. SiGPlan+BFS : 40.85). SiG-Plan+BFS substantially outperformed FD-LAMA-anytime 
+
+(40.9 vs. 44.9). Completion rates were consistently high (99.4–100%) with no significant differences. For Logistics , plan length differences were again highly significant ( p< 0.001 ). SiGPlan yielded mean reductions of 15.9 actions with N =10 (161.4 to 145.5) and 11.6 actions with N =10 3 (155.9 to 144.4). Increasing candidate plans to 
+
+N =10 3 reduced plan length by 5.5 for π0 and by 1.1 for 
+
+SiGPlan . Adding BFS improved plan quality significantly, but with a very small effect size ( SiGPlan : 144.37 vs. SiG-Plan+BFS : 144.33), and SiGPlan+BFS substantially out-performed FD-LAMA-anytime (144.3 vs. 159.8). Comple-tion rates showed no significant differences. For Labyrinth , all differences in plan length are highly significant ( p< 0.001 ) as well. SiGPlan reduced mean plan length from 24.8 to 15.2 with N =10 , and from 17.8 to 14.5 with N =10 3. Adding BFS improved plan quality signifi-cantly, but with a small effect size ( SiGPlan : 14.51 vs. SiG-Plan+BFS : 14.37 actions), while SiGPlan+BFS substan-tially outperformed FD-LAMA-anytime (14.4 vs. 15.9 ac-tions). In addition, completion rates varied meaningfully (96.7–100%), with N =10 3 increasing completion from 96.7% to 100% ( p< 0.001 ), and SiGPlan improving com-pletion from 96.7% to 98.7% ( p = 0 .022 ) with N =10 .Plan length for Sokoban was again significantly different across all comparisons ( p< 0.001 ). SiGPlan reduced mean plan length by 14.6 with N =10 (130.5 vs. 115.9) and by 9.4 with N =10 3 (124.4 vs. 115.0). For π0, increasing N
+
+from 10 to 1000 reduced plan length by 6.2, and by 0.9 for 
+
+SiGPlan . Adding BFS improved plan quality significantly but only very slightly ( SiGPlan : 115.04 vs. SiGPlan+BFS :114.99). Lastly, SiGPlan+BFS again outperformed FD-LAMA-anytime (115.0 vs. 133.6). For completion rates, we found a significant effect of N =10 3 vs. N =10 for both π0
+
+and SiGPlan (p< 0.001 ). FD-LAMA-anytime achieved sig-nificantly higher completion than SiGPlan+BFS (p< 0.001 ), though all rates were high (94.4-100%). 
+
+6 Complexity Analysis 
+
+Plan validation runs in O(T ×M ) time, where T is the max-imum plan length and M is the maximum number of pre-condition and effect atoms per action. Graph construction 
+
+inserts each unique transition from valid plans using hash table lookups, running in time linear in the total number of transitions with memory complexity O(D×N ), where D is the maximum rollout length and N is the number of gener-ated plans. BFS explores the graph from the initial state in 
+
+O(V +E), where V is the number of states and E the num-ber of transitions. For graphs constructed from at least one valid plan, every graph contains at least one goal state, and BFS’s exhaustive exploration in order of increasing depth guarantees that the shortest path is found, making it both complete and optimal with respect to the constructed graph. 
+
+7 Discussion & Conclusions 
+
+Finding efficient algorithms for optimal and near-optimal planning has been a long-standing goal in AI. We presented 
+
+SiGPlan , a self-improving generalized planning system that combines transformer models with symbolic graph search to iteratively improve plan quality, scaling favorably compared to traditional symbolic solvers. The resulting system produces optimal plans for 72.8% of the benchmark problems solved by FD-optimal , with average per-domain latencies ranging from 0.49 seconds (Blocksworld) to 4.08 seconds (Sokoban). Inference-time scaling increases this proportion to 80.8%, with la-tencies ranging from 21.21 seconds (Blocksworld) to 407.66 seconds (Sokoban), compared to 13311.40 seconds and 9762.96 seconds for FD-optimal . Unlike FD-optimal ,model latency scales polynomially with the combined con-text and plan length. SiGPlan represents an important step toward computationally efficient near-optimal planning. 
+
+Future Work. Despite strong performance, several limi-tations remain. First, our approach requires an initial dataset of solutions, which may be hard to obtain for complex prob-lems (e.g., Sokoban remains PSPACE-complete). Second, our exploration strategy is essentially on-policy, so conver-gence to optimal plans requires optimal actions to lie within the pretrained policy’s support. Future work could incorpo-rate off-policy exploration via A* or MCTS, and establish probabilistic guarantees for completeness or optimality. Acknowledgments 
+
+The authors would like to thank Marc Toussaint, Alexan-der Melkozerov, Aaron Parness, Sara Anwar, and Michael Zhang for their valuable support and contributions to this work. 
+
+References 
+
+Bacchus, F. 2001. AIPS 2000 Planning Competition: The Fifth International Conference on Artificial Intelligence Planning and Scheduling Systems. Ai Magazine , 22: 47–56. Chen, G.; Liao, M.; Li, C.; and Fan, K. 2024. AlphaMath Almost Zero: Process Supervision without Process. In Neu-ral Information Processing Systems , volume 37. Culberson, J. 1998. Sokoban is PSPACE complete. Pro-ceedings of the International Conference on Fun with Algo-rithms , 65–76. Eifler, R.; and Fiˇ ser, D. 2023. Labyrinth PDDL Domain. https://github.com/ipc2023-classical/domain-labyrinth. Fox, M.; and Long, D. 2003. PDDL2.1: An Extension to PDDL for Expressing Temporal Planning Domains. Journal of Artificial Intelligence Research , 20: 61–124. Fritzsche, M.; Gestrin, E.; and Seipp, J. 2025. Symmetry-Aware Transformer Training for Automated Planning. arXiv preprint arXiv:2508.07743 .Groshev, E.; Goldstein, M.; Tamar, A.; Srivastava, S.; and Abbeel, P. 2018. Learning generalized reactive policies us-ing deep neural networks. In Intl. Conf. on Automated Plan-ning and Scheduling , volume 28, 408–416. Guan, L.; Valmeekam, K.; Sreedharan, S.; and Kambham-pati, S. 2023. Leveraging Pre-trained Large Language Mod-els to Construct and Utilize World Models for Model-based Task Planning. In Neural Information Processing Systems .Helmert, M. 2003. Complexity results for standard bench-mark domains in planning. Artificial Intelligence , 143(2): 219–262. Helmert, M. 2006. The fast downward planning system. J. Artif. Int. Res. , 26(1): 191–246. Howey, R.; Long, D.; and Fox, M. 2004. VAL: Automatic plan validation, continuous effects and mixed initiative plan-ning using PDDL. In 16th IEEE Intl. Conf. on Tools with Artificial Intelligence , 294–301. IEEE. Hu, Y.; and De Giacomo, G. 2011. Generalized planning: Synthesizing plans that work for multiple environments. In IJCAI Proceedings-Intl. Joint Conf. on Artificial Intelli-gence .Jabbari Arfaee, S.; Zilles, S.; and Holte, R. C. 2011. Learn-ing heuristic functions for large state spaces. Artificial Intel-ligence , 175(16): 2075–2098. Janner, M.; Li, Q.; and Levine, S. 2021. Offline Reinforce-ment Learning as One Big Sequence Modeling Problem. In 
+
+Neural Information Processing Systems , volume 34. Kambhampati, S.; Valmeekam, K.; Guan, L.; Verma, M.; Stechly, K.; Bhambri, S.; Saldyt, L. P.; and Murthy, A. B. 2024. Position: LLMs can’t plan, but can help planning in LLM-modulo frameworks. In Intl. Conf. Machine Learning .Katz, M.; Kokel, H.; Srinivas, K.; and Sohrabi, S. 2024. Thought of Search: Planning with Language Models Through The Lens of Efficiency. In Neural Information Pro-cessing Systems , volume 37. Lehnert, L.; Sukhbaatar, S.; Su, D.; Zheng, Q.; Mcvay, P.; Rabbat, M.; and Tian, Y. 2024. Beyond a*: Better planning with transformers via search dynamics bootstrapping. arXiv preprint arXiv:2402.14083 .Liu, B.; Jiang, Y.; Zhang, X.; Liu, Q.; Zhang, S.; Biswas, J.; and Stone, P. 2023. LLM+P: Empowering Large Language Models with Optimal Planning Proficiency. arXiv preprint arXiv:2304.11477 .McDermott, D.; Ghallab, M.; Howe, A.; Knoblock, C.; Ram, A.; Veloso, M.; Weld, D.; and Wilkins, D. 1998. PDDL-the planning domain definition language. Technical Report TR-98-003/DCS TR-1165, Yale Center for Computational Vision and Control. Nau, D.; Ghallab, M.; and Traverso, P. 2004. Automated Planning: Theory & Practice . San Francisco, CA, USA: Morgan Kaufmann Publishers Inc. ISBN 1558608567. Pallagani, V.; Muppasani, B.; Srivastava, B.; Rossi, F.; Horesh, L.; Murugesan, K.; Loreggia, A.; Fabiano, F.; Joseph, R.; Kethepalli, Y.; et al. 2023. Plansformer Tool: Demonstrating Generation of Symbolic Plans Using Trans-formers. In IJCAI .Pan, L.; Ganesh, V.; Abernethy, J.; Esposo, C.; and Lee, W. 2025. Can Transformers Reason Logically? A Study in SAT Solving. In Intl. Conf. on Machine Learning .Radford, A.; Wu, J.; Child, R.; Luan, D.; Amodei, D.; Sutskever, I.; et al. 2019. Language models are unsupervised multitask learners. OpenAI blog , 1(8): 9. Richter, S.; and Westphal, M. 2010. The LAMA planner: Guiding cost-based anytime planning with landmarks. Jour-nal of Artificial Intelligence Research , 39: 127–177. Rossetti, N.; Tummolo, M.; Gerevini, A. E.; Olivato, M.; Putelli, L.; and Serina, I. 2024a. Enhancing GPT-based plan-ning policies by model-based plan validation. In Intl. Conf. on Neural-Symbolic Learning and Reasoning . Springer. Rossetti, N.; Tummolo, M.; Gerevini, A. E.; Putelli, L.; Se-rina, I.; Chiari, M.; and Olivato, M. 2024b. Learning general policies for planning through GPT models. In Intl. Conf. on Automated Planning and Scheduling , volume 34, 500–508. Samuel, A. L. 1959. Some Studies in Machine Learning Using the Game of Checkers. IBM Journal of Research and Development , 3(3): 210–229. Seipp, J.; Torralba, ´ A.; and Hoffmann, J. 2022. PDDL Gen-erators. https://doi.org/10.5281/zenodo.6382173. Silver, D.; Huang, A.; Maddison, C. J.; Guez, A.; Sifre, L.; Van Den Driessche, G.; Schrittwieser, J.; Antonoglou, I.; Panneershelvam, V.; Lanctot, M.; et al. 2016. Mastering the game of Go with deep neural networks and tree search. Na-ture , 529(7587): 484–489. Silver, T.; Dan, S.; Srinivas, K.; Tenenbaum, J. B.; Kael-bling, L.; and Katz, M. 2024. Generalized planning in pddl domains with pretrained large language models. In AAAI Conf. on artificial intelligence .Slaney, J.; and Thi´ ebaux, S. 2001. Blocks World revisited. 
+
+Artificial Intelligence , 125(1): 119–153. Taitler, A.; Alford, R.; Espasa, J.; Behnke, G.; Fiˇ ser, D.; Gimelfarb, M.; Pommerening, F.; Sanner, S.; Scala, E.; Schreiber, D.; Segovia-Aguas, J.; and Seipp, J. 2024. The 2023 International Planning Competition. AI Mag. , 45(2): 280–296. Tummolo, M.; Rossetti, N.; Gerevini, A. E.; Olivato, M.; Putelli, L.; and Serina, I. 2024. Integrating classical planners with gpt-based planning policies. In Intl. Conf. of the Italian Association for Artificial Intelligence , 315–329. Springer. Valmeekam, K.; Marquez, M.; Olmo, A.; Sreedharan, S.; and Kambhampati, S. 2023. PlanBench: An Extensible Benchmark for Evaluating Large Language Models on Plan-ning and Reasoning about Change. In Oh, A.; Naumann, T.; Globerson, A.; Saenko, K.; Hardt, M.; and Levine, S., eds., 
+
+Advances in Neural Information Processing Systems , vol-ume 36, 38975–38987. Curran Associates, Inc. Vaswani, A.; Shazeer, N.; Parmar, N.; Uszkoreit, J.; Jones, L.; Gomez, A. N.; Kaiser, Ł.; and Polosukhin, I. 2017. At-tention is all you need. Neural Information Processing Sys-tems .Zhang, D.; Zhoubian, S.; Yue, Y.; Dong, Y.; and Tang, J. 2024. ReST-MCTS*: LLM Self-Training via Process Re-ward Guided Tree Search. arXiv preprint arXiv:2406.03816 .Appendix A Datasets 
+
+For each of the four evaluated domains, we constructed datasets of PDDL problem instances and reference solutions. More information on the domain files can be found in Section H. The dataset for each domain consists of 100k unique training instances, 1k unique validation instances (used to choose best iteration and/or checkpoint), and 1k unique test instances. All instances were solved by the Fast Downward planner in the LAMA-first setting with a timeout of 20 minutes. Only problem instances that were solved within this timeout appear in the dataset. 
+
+A.1 Blocksworld 
+
+For the Blocksworld domain, we include problem instances from 3 to 25 blocks. All generated instances with up to 25 blocks were solved by Fast Downward in the LAMA-first setting with a timeout of 20 minutes. The distribution of instances in the dataset rises logarithmically with the number of blocks. A uniform distribution over block count is not possible in this domain, since there are only a few unique problem instances for lower block counts. We used the problem instance generator from the PDDL generators repository (Seipp, Torralba, and Hoffmann 2022). 
+
+A.2 Logistics 
+
+We generated a dataset including problem instances with 1 – 50 cities with a city size of 1 – 5, 1 – 50 packages and 1 – 10 airplanes, and 1 truck per city. The problems were sampled using a uniform distribution over all combinations of object counts. Within 20 minutes, Fast Downward in the LAMA-first setting solved 99.97 % of the instances. More instances were added to ensure a size of 100k/1k/1k. With these parameters, our dataset spans a wider range of objects than most previous investigations in the domain. The Logistics domain was part of the IPC in 1998 and 2000 (Bacchus 2001). The dataset from IPC 1998 shows similar numbers of objects to our dataset, while the IPC 2000 Logistics dataset contains a maximum of 15 packages and 5 cities. The Logistics domain is also included in the PlanBench benchmark dataset (Valmeekam et al. 2023), where the dataset includes a maximum of 24 objects distributed across the different types. We re-implemented the problem instance generator in Python, closely following the provided C-implementation of (Seipp, Torralba, and Hoffmann 2022). 
+
+A.3 Labyrinth 
+
+The Labyrinth domain was part of the most recent IPC 2023 (Taitler et al. 2024). The competition dataset included 20 problem instances with map sizes between 5 ×5 and 8 ×8. We first generated a dataset with map sizes between 3 ×3 and 12 ×12 and up to 10 card rotations. On this dataset, Fast Downward in the LAMA-first setting solved only about 29%. No problem instances with a map size bigger than 5 ×5 were solved, and only about 15% of the 5 ×5 maps. Therefore, we only include maps of sizes 3×3 and 4 ×4 in the final dataset. To the best of our knowledge, the complexity of the Labyrinth domain has not been formally explored. We use the problem instance generator provided within the IPC 2023 GitHub repository (Eifler and Fiˇ ser 2023). 
+
+A.4 Sokoban 
+
+The Sokoban domain was part of the IPC in 2008 and 2011. In both years, the datasets contained mostly instances with grid sizes between 7 and 15, and one map with grid size 30. The number of boxes reached up to 12. Given grid sizes between 5 ×5and 30 ×30, up to 12 boxes and up to 9 walls, Fast Downward in the LAMA-first setting solved only about 24% of the problem instances. We therefore decided to lower the grid size to a maximum of 14 ×14 with 1 to 10 boxes and up to 10 walls. We used the problem instance generator from the PDDL generators repository (Seipp, Torralba, and Hoffmann 2022). 
+
+B Training Details 
+
+The model training for each domain was performed on 4 machines with 8 NVIDIA A100 GPUs with 40 GB VRAM. Pretraining took 2.5 hours for Blocksworld, 6.5 hours for Logistics, 4.5 hours for Labyrinth, and 48 hours for Sokoban. The hyperparameters for SiGPlan can be found in Tables 5 and 6 for the pretraining and finetuning, respectively. 
+
+C Comparing Solving Times 
+
+Table 7 presents the solving time statistics across the different domains for each method. The mean solving times were computed on the test sets (based on the subset of solved instances). Figure 6 extends Figure 5 of the main paper. The scatterplots show per-instance comparisons of the runtimes of FD-optimal 
+
+(y-axis) against different ablations of our method (x-axis). Both axes are on a log scale. Hyperparameter Value (BW/Log/Lab/Sok) 
+
+Number of transformer blocks ( nlayer ) 12 Number of attention heads ( nhead ) 12 Embedding dimension ( nembd ) 768 Feedforward dimension ( ninner ) 3072 Attention dropout rate 0.1 Embeddings dropout rate 0.1 Learning rate 5e-5 Learning rate scheduler Cosine Warmup steps 1000 Optimizer AdamW Batch size 6/4/6/1 Max sequence length 14000 Training epochs 60/30/100/100 Table 5: Pretraining hyperparameters for the transformer decoder (GPT2). Unless otherwise indicated, values are identical across domains. 
+
+Hyperparameter Value (BW/Log/Lab/Sok) 
+
+Learning rate 5e-6 Learning rate scheduler Cosine Optimizer AdamW Batch size 6/4/6/1 Finetuning epochs 30 Softmax temperature (inference) 2/1/1/2 Dataset size ( m) 2000 Candidate plans per problem ( n) 200 Table 6: Finetuning hyperparameters for the transformer decoder (GPT2). Unless otherwise indicated, values are identical across domains. 
+
+Model Blocksworld Logistics Labyrinth Sokoban 
+
+π0 (N =10 ) 0.89 (± 0.02) 2.45 (± 0.06) 1.733 (± 0.03) 3.01 (± 0.10) 
+
+SiGPlan (nloop =15 , N =10 ) 0.49 (± 0.01) 2.15 (± 0.05) 0.54 (± 0.02) 4.08 (± 0.20) 
+
+SiGPlan (nloop =15 , N =1000 ) 21.21 (± 0.61) 112.91 (± 2.92) 27.81 (± 0.85) 407.66 (± 19.71) 
+
+FD-LAMA-first (<20min) 0.39 (± 0.00) 7.32 (± 0.79) 270.15 (± 8.91) 12.70 (± 2.31) 
+
+FD-LAMA-anytime (<20min) 985.82 (± 14.25) 765.71 (± 9.25) 935.28 (± 14.86) 796.18 (± 17.29) 
+
+FD-optimal ( <48h) 13311.40 (± 1648.04) 16670.74 (± 2702.41) 3083.48 (± 197.18) 9762.96 (± 1179.95) Table 7: Solving times in seconds (mean ± std. error) on the test set for each domain (based on the subset of solved problems for each method). 10 2 10 1 10 0 10 1
+
+Model Solving Time (s, log scale) 
+
+10 1
+
+10 0
+
+10 1
+
+10 2
+
+10 3
+
+10 4
+
+10 5
+
+> FD-optimal Solving Time (s, log scale)
+
+10× slower 
+
+10 2× slower 
+
+10 3× slower 
+
+10 4× slower 
+
+10 5× slower 
+
+0 (N=10) 
+
+Optimal n=76 
+
+Non-optimal n=567 
+
+10 2 10 1 10 0 10 1
+
+Model Solving Time (s, log scale) 
+
+10× slower 
+
+10 2× slower 
+
+10 3× slower 
+
+10 4× slower 
+
+10 5× slower 
+
+SiGPlan ( nloop =15, N=10) 
+
+n=502 
+
+n=136 
+
+10 0 10 1 10 2 10 3
+
+Model Solving Time (s, log scale) 
+
+Equal time (y=x) 
+
+10× slower 
+
+10 2× slower 
+
+10 3× slower 
+
+10 4× slower 
+
+10 5× slower 
+
+SiGPlan ( nloop =15, N=1000) 
+
+n=615 
+
+n=27 
+
+Runtime Comparison: Blocksworld 10 2 10 1 10 0 10 1
+
+Model Solving Time (s, log scale) 
+
+10 0
+
+10 1
+
+10 2
+
+10 3
+
+10 4
+
+10 5
+
+> FD-optimal Solving Time (s, log scale)
+
+10 2× slower 
+
+10 3× slower 
+
+10 4× slower 
+
+10 5× slower 
+
+0 (N=10) 
+
+Optimal n=62 
+
+Non-optimal n=107 
+
+10 2 10 1 10 0 10 1
+
+Model Solving Time (s, log scale) 
+
+10 2× slower 
+
+10 3× slower 
+
+10 4× slower 
+
+10 5× slower 
+
+SiGPlan ( nloop =15, N=10) 
+
+n=95 
+
+n=74 
+
+10 0 10 1 10 2 10 3
+
+Model Solving Time (s, log scale) 
+
+Equal time (y=x) 
+
+10× slower 
+
+10 2× slower 
+
+10 3× slower 
+
+10 4× slower 
+
+SiGPlan ( nloop =15, N=1000) 
+
+n=95 
+
+n=74 
+
+Runtime Comparison: Logistics 10 2 10 1 10 0 10 1
+
+Model Solving Time (s, log scale) 
+
+10 1
+
+10 2
+
+10 3
+
+10 4
+
+10 5
+
+> FD-optimal Solving Time (s, log scale)
+
+10 3× slower 
+
+10 4× slower 
+
+10 5× slower 
+
+0 (N=10) 
+
+Optimal n=285 
+
+Non-optimal n=682 
+
+10 2 10 1 10 0 10 1
+
+Model Solving Time (s, log scale) 
+
+10 3× slower 
+
+10 4× slower 
+
+10 5× slower 
+
+SiGPlan ( nloop =15, N=10) 
+
+n=633 
+
+n=354 
+
+10 0 10 1 10 2 10 3
+
+Model Solving Time (s, log scale) 
+
+10× slower 
+
+10 2× slower 
+
+10 3× slower 
+
+10 4× slower 
+
+SiGPlan ( nloop =15, N=1000) 
+
+n=675 
+
+n=318 
+
+Runtime Comparison: Labyrinth 10 2 10 1 10 0 10 1
+
+Model Solving Time (s, log scale) 
+
+10 0
+
+10 1
+
+10 2
+
+10 3
+
+10 4
+
+10 5
+
+> FD-optimal Solving Time (s, log scale)
+
+10 2× slower 
+
+10 3× slower 
+
+10 4× slower 
+
+10 5× slower 
+
+0 (N=10) 
+
+Optimal n=199 
+
+Non-optimal n=277 
+
+10 2 10 1 10 0 10 1
+
+Model Solving Time (s, log scale) 
+
+10 2× slower 
+
+10 3× slower 
+
+10 4× slower 
+
+10 5× slower 
+
+SiGPlan ( nloop =15, N=10) 
+
+n=409 
+
+n=68 
+
+10 0 10 1 10 2 10 3
+
+Model Solving Time (s, log scale) 
+
+Equal time (y=x) 
+
+10× slower 
+
+10 2× slower 
+
+10 3× slower 
+
+10 4× slower 
+
+SiGPlan ( nloop =15, N=1000) 
+
+n=449 
+
+n=35 
+
+Runtime Comparison: Sokoban Figure 6: Comparison of solving times (log scale) on all four domains. For the Blocksworld comparison, we ran FD-optimal 
+
+for 5 days on the 1000 test problems, resulting in 643 solved instances. For all other domains, FD-optimal ran for 48 hours, which led to 169 (Logistics), 1000 (Labyrinth), and 489 (Sokoban) solved instances, respectively. D Runtime of the Self-Improvement Loop 
+
+To obtain the finetuned models with SiGPlan , we performed 15 iterations of the self-improvement loop for each domain. Table 8 reports the wall clock time for each loop component, accumulated over all 15 iterations. The Inference column shows the total time spent on model calls to generate candidate plans, executed on 100 GPUs in parallel with 48 GB VRAM each. The number of plans that can be generated in parallel depends on the available memory; in our setup, this is 40 plans for Blocksworld, 25 for Logistics and Labyrinth, and 10 for Sokoban. This step scales straightforwardly with additional memory. The Graph construction + BFS column reports the time required to process candidate plans into graphs and extract the shortest plans on the CPU, performed on a single machine with 192 CPU cores. The Training column reports the accumulated training time over 15 iterations, carried out on 4 machines with 8 NVIDIA A100 GPUs (40 GB VRAM each). Hyperparameters used during training are provided in Section B. The Duration of 15 Iterations column reports the total wall clock time to complete 15 iterations on our hardware. Finally, GPU hours reports the total GPU hours accumulated across inference and training (scaled by the number of GPUs). Blocksworld and Labyrinth completed 15 iterations within a day, Logistics within 2 days, and Sokoban in 3.5 days. 
+
+Domain Inference (h) Graph construction + BFS (h) Training (h) Duration of 15 Iterations (h) GPU hours (h) 
+
+Blocksworld 8.13 1.75 8.42 18.3 1083 Logistics 16.78 5.22 16.98 38.98 2222 Labyrinth 7.22 1.75 7.98 16.95 977 Sokoban 19.22 7.83 56.58 83.63 3733 Table 8: Time spent in the different components of the iterative self-improvement loop over 15 iterations. 
+
+E Gap to Optimal Plans 
+
+Figure 7 illustrates the relationships between problem size, completion rate, and regret of a generative model trained on optimal Blocksworld data with up to 100 blocks. It extends Section 3.3 of the main paper. The generative model maintains near-perfect completion rates for problems up to approximately 60 blocks, after which occasional dips occur. Regarding solution quality, the regret remains predominantly at 0% for problems with fewer than 30 blocks, then gradually increases with problem size. 0 5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90 95 100 
+
+> Number of blocks
+> 0.0
+> 20.0
+> 40.0
+> 60.0
+> 80.0
+> 100.0
+> Completion [%]
+> 0
+> 1
+> 2
+> 3
+> 4
+> 5
+> 6
+> 7
+> 8
+> 9
+> 10
+> 11
+> 12
+> 13
+> 14
+> 15
+> Regret [%]
+
+Figure 7: Completion rate (%, in blue) and regret ( cost −cost optimal  
+
+> cost optimal
+
+· 100% , in green) by block count. Results are shown for the union of the 3 test splits, showing the full block range from 3-100 blocks. In Section 5 of the main paper, we show that SiGPlan produces optimal plans in most test cases. As shown there, our Sokoban model generates optimal plans in over 90% of test cases (where the optimal plan length is known) after the self-improvement loop with N =1000 . Figures 8–11 show the corresponding differences to optimal plan length for all four domains. We also include an additional setting with further test-time scaling: in the last column of each figure, we construct a graph from the 1000 candidate plans and perform a BFS to extract the shortest plan present in the graph. This is the same procedure used to generate improved training plans during the self-improvement loop. 0 15 30 45 60 75 90 
+
+Difference to optimal (#actions) 
+
+0
+
+20 
+
+40 
+
+60 
+
+80 
+
+100 
+
+120 
+
+> Count (#instances)
+
+76 
+
+45 
+
+47 
+
+49 
+
+36 
+
+51 
+
+34 
+
+24 
+
+26 
+
+21 
+
+24 
+
+26 
+
+15 
+
+22 
+
+18 
+
+25 
+
+16 
+
+14 
+
+12 
+
+6
+
+11 
+
+3 5 4 7
+
+3 2 2 3 4 1 3 1 1 1 1 2 1 1
+
+n=643 
+
+Mean: 16.70 
+
+Num. of optimal: 76 (11.8%) 
+
+Blocksworld: initial model, pass@10 
+
+0 10 20 30 40 50 60 70 80 90 
+
+Difference to optimal (#actions) 
+
+0
+
+20 
+
+40 
+
+60 
+
+80 
+
+100 
+
+120 
+
+> Count (#instances)
+
+103 
+
+58 59 
+
+70 
+
+35 
+
+60 
+
+41 40 
+
+27 
+
+23 
+
+21 
+
+27 
+
+14 13 
+
+15 
+
+10 
+
+5 4 4 1 1 2 3 2 2 1 1 1
+
+n=643 
+
+Mean: 11.03 
+
+Num. of optimal: 103 (16.0%) 
+
+Initial model, pass@1k 
+
+0 10 20 30 40 50 60 70 80 
+
+Difference to optimal (#actions) 
+
+0
+
+20 
+
+40 
+
+60 
+
+80 
+
+100 
+
+120 
+
+> Count (#instances)
+
+116 
+
+69 
+
+59 
+
+80 
+
+39 
+
+62 
+
+43 
+
+26 29 
+
+24 25 
+
+15 15 
+
+5
+
+10 8
+
+3 2 1 2 2 1 1
+
+5
+
+1
+
+n=643 
+
+Mean: 9.57 
+
+Num. of optimal: 116 (18.0%) 
+
+Initial model, 1k plans, graph + search 0 2 4 6 8 10 12 14 16 
+
+Difference to optimal (#actions) 
+
+0
+
+100 
+
+200 
+
+300 
+
+400 
+
+500 
+
+600 
+
+> Count (#instances)
+
+502 
+
+91 
+
+24 12 4 1 3 1
+
+n=638 
+
+Mean: 0.70 
+
+Num. of optimal: 502 (78.7%) 
+
+Blocksworld: iteration 15, pass@10 
+
+0 2 4 6 8 10 
+
+Difference to optimal (#actions) 
+
+0
+
+100 
+
+200 
+
+300 
+
+400 
+
+500 
+
+600 
+
+> Count (#instances)
+
+615 
+
+22 4 1
+
+n=642 
+
+Mean: 0.11 
+
+Num. of optimal: 615 (95.8%) 
+
+Iteration 15, pass@1k 
+
+0 1 2 3 4
+
+Difference to optimal (#actions) 
+
+0
+
+100 
+
+200 
+
+300 
+
+400 
+
+500 
+
+600 
+
+> Count (#instances)
+
+621 
+
+19 2
+
+n=642 
+
+Mean: 0.07 
+
+Num. of optimal: 621 (96.7%) 
+
+Iteration 15, 1k plans, graph + search Figure 8: Blocksworld – Plan length differences between generated plans and optimal solutions. The top row shows performance of the pretrained model, while the bottom row shows the model’s performance after 15 iterations of self-improvement. For both, we present findings for different inference parameters. 0 4 8 12 16 20 24 28 32 
+
+Difference to optimal (#actions) 
+
+0
+
+10 
+
+20 
+
+30 
+
+40 
+
+50 
+
+60 
+
+> Count (#instances)
+
+62 
+
+39 
+
+18 
+
+6 7
+
+10 
+
+2 4 3 3 2 1 1 2 1 2 1 1 2 1 1
+
+n=169 
+
+Mean: 3.00 
+
+Num. of optimal: 62 (36.7%) 
+
+Logistics: initial model, pass@10 
+
+0 4 8 12 16 20 24 28 32 
+
+Difference to optimal (#actions) 
+
+0
+
+10 
+
+20 
+
+30 
+
+40 
+
+50 
+
+60 
+
+> Count (#instances)
+
+63 
+
+46 
+
+16 
+
+11 
+
+5 7
+
+2
+
+5 3 2 1 2 1 2 2 1
+
+n=169 
+
+Mean: 2.49 
+
+Num. of optimal: 63 (37.3%) 
+
+Initial model, pass@1k 
+
+0 4 8 12 16 20 24 28 32 
+
+Difference to optimal (#actions) 
+
+0
+
+10 
+
+20 
+
+30 
+
+40 
+
+50 
+
+60 
+
+> Count (#instances)
+
+63 
+
+46 
+
+16 
+
+11 
+
+6 6
+
+3 4
+
+1 2 1 2 2 1 2 2 1
+
+n=169 
+
+Mean: 2.45 
+
+Num. of optimal: 63 (37.3%) 
+
+Initial model, 1k plans, graph + search 0 2 4 6 8 10 12 
+
+Difference to optimal (#actions) 
+
+0
+
+20 
+
+40 
+
+60 
+
+80 
+
+> Count (#instances)
+
+95 
+
+41 
+
+16 
+
+7
+
+3 2 1 1 1 1 1
+
+n=169 
+
+Mean: 0.98 
+
+Num. of optimal: 95 (56.2%) 
+
+Logistics: iteration 15, pass@10 
+
+0 2 4 6 8 10 12 
+
+Difference to optimal (#actions) 
+
+0
+
+20 
+
+40 
+
+60 
+
+80 
+
+> Count (#instances)
+
+95 
+
+43 
+
+15 
+
+6 3 1 1 1 2 1 1
+
+n=169 
+
+Mean: 0.93 
+
+Num. of optimal: 95 (56.2%) 
+
+Iteration 15, pass@1k 
+
+0 2 4 6 8 10 12 
+
+Difference to optimal (#actions) 
+
+0
+
+20 
+
+40 
+
+60 
+
+80 
+
+> Count (#instances)
+
+95 
+
+43 
+
+15 
+
+6 3 1 1 1 2 1 1
+
+n=169 
+
+Mean: 0.93 
+
+Num. of optimal: 95 (56.2%) 
+
+Iteration 15, 1k plans, graph + search 
+
+Figure 9: Logistics – Plan length differences between generated plans and optimal solutions. The top row shows performance of the pretrained model, while the bottom row shows the model’s performance after 15 iterations of self-improvement. For both, we present findings for different inference parameters. 0 10 20 30 40 50 60 70 80 90 
+
+Difference to optimal (#actions) 
+
+0
+
+50 
+
+100 
+
+150 
+
+200 
+
+250 
+
+300 
+
+350 
+
+400 
+
+> Count (#instances)
+
+287 
+
+63 
+
+81 
+
+35 
+
+69 
+
+33 
+
+68 
+
+1
+
+30 
+
+52 
+
+30 29 
+
+20 19 
+
+1
+
+22 16 
+
+7
+
+17 
+
+4
+
+13 9 8 5 4 5 7 5 1 6 1 1 1 2 3 2 2 2 1 1 1 2 1
+
+n=967 
+
+Mean: 12.16 
+
+Num. of optimal: 285 (29.5%) 
+
+Labyrinth: initial model, pass@10 
+
+0 5 10 15 20 25 30 35 40 
+
+Difference to optimal (#actions) 
+
+0
+
+50 
+
+100 
+
+150 
+
+200 
+
+250 
+
+300 
+
+350 
+
+400 
+
+> Count (#instances)
+
+363 
+
+1
+
+49 45 
+
+132 
+
+11 
+
+62 
+
+1
+
+109 
+
+9
+
+52 
+
+6
+
+63 
+
+1
+
+30 
+
+2
+
+28 
+
+5 9 8 2 4 1 2 2 2 1
+
+n=1000 
+
+Mean: 5.17 
+
+Num. of optimal: 363 (36.3%) 
+
+Initial model, pass@1k 
+
+0 4 8 12 16 20 24 28 
+
+Difference to optimal (#actions) 
+
+0
+
+50 
+
+100 
+
+150 
+
+200 
+
+250 
+
+300 
+
+350 
+
+400 
+
+> Count (#instances)
+
+397 
+
+2
+
+51 48 
+
+132 
+
+10 
+
+61 
+
+1
+
+107 
+
+8
+
+52 
+
+4
+
+56 
+
+21 
+
+2
+
+25 
+
+4 8 4 1 2 2 1 1
+
+n=1000 
+
+Mean: 4.56 
+
+Num. of optimal: 397 (39.7%) 
+
+Initial model, 1k plans, graph + search 0 4 8 12 16 20 24 28 32 36 
+
+Difference to optimal (#actions) 
+
+0
+
+100 
+
+200 
+
+300 
+
+400 
+
+500 
+
+600 
+
+700 
+
+> Count (#instances)
+
+633 
+
+5
+
+61 
+
+21 
+
+73 
+
+5
+
+53 
+
+2
+
+54 
+
+318 11 111 9 11 5 2 1 2 1 2 1 1 1
+
+n=987 
+
+Mean: 2.56 
+
+Num. of optimal: 633 (64.1%) 
+
+Labyrinth: iteration 15, pass@10 
+
+0 5 10 15 20 25 30 35 40 
+
+Difference to optimal (#actions) 
+
+0
+
+100 
+
+200 
+
+300 
+
+400 
+
+500 
+
+600 
+
+700 
+
+> Count (#instances)
+
+675 
+
+6
+
+69 
+
+21 
+
+79 
+
+5
+
+45 
+
+1
+
+48 
+
+112 11 110 1 3 2 1 1 1
+
+n=993 
+
+Mean: 1.84 
+
+Num. of optimal: 675 (68.0%) 
+
+Iteration 15, pass@1k 
+
+0 3 6 9 12 15 18 21 24 
+
+Difference to optimal (#actions) 
+
+0
+
+100 
+
+200 
+
+300 
+
+400 
+
+500 
+
+600 
+
+700 
+
+> Count (#instances)
+
+682 
+
+6
+
+72 
+
+21 
+
+77 
+
+6
+
+45 53 
+
+1 9 9 1 8 1 1 1
+
+n=993 
+
+Mean: 1.65 
+
+Num. of optimal: 682 (68.7%) 
+
+Iteration 15, 1k plans, graph + search Figure 10: Labyrinth – Plan length differences between generated plans and optimal solutions. The top row shows performance of the pretrained model, while the bottom row shows the model’s performance after 15 iterations of self-improvement. For both, we present findings for different inference parameters. 0 8 16 24 32 40 48 56 64 
+
+Difference to optimal (#actions) 
+
+0
+
+50 
+
+100 
+
+150 
+
+200 
+
+250 
+
+> Count (#instances)
+
+199 
+
+37 
+
+47 
+
+38 42 
+
+21 21 24 
+
+10 7 4 10 5 2 3 1 3 1 1
+
+n=476 
+
+Mean: 5.67 
+
+Num. of optimal: 199 (41.8%) 
+
+Sokoban: initial model, pass@10 
+
+0 4 8 12 16 20 24 28 32 
+
+Difference to optimal (#actions) 
+
+0
+
+50 
+
+100 
+
+150 
+
+200 
+
+250 
+
+> Count (#instances)
+
+252 
+
+56 
+
+41 39 
+
+28 
+
+19 14 12 10 3 5 2 2 1 1 1
+
+n=486 
+
+Mean: 3.61 
+
+Num. of optimal: 252 (51.9%) 
+
+Initial model, pass@1k 
+
+0 4 8 12 16 20 24 28 32 
+
+Difference to optimal (#actions) 
+
+0
+
+50 
+
+100 
+
+150 
+
+200 
+
+250 
+
+> Count (#instances)
+
+265 
+
+54 
+
+40 34 28 
+
+18 13 11 9 4 3 4 1 1 1
+
+n=486 
+
+Mean: 3.36 
+
+Num. of optimal: 265 (54.5%) 
+
+Initial model, 1k plans, graph + search 0 3 6 9 12 15 18 21 24 27 
+
+Difference to optimal (#actions) 
+
+0
+
+100 
+
+200 
+
+300 
+
+400 
+
+> Count (#instances)
+
+409 
+
+34 20 
+
+5 3 2 2 1 1
+
+n=477 
+
+Mean: 0.60 
+
+Num. of optimal: 409 (85.7%) 
+
+Sokoban: iteration 15, pass@10 
+
+0 2 4 6 8 10 12 14 16 
+
+Difference to optimal (#actions) 
+
+0
+
+100 
+
+200 
+
+300 
+
+400 
+
+> Count (#instances)
+
+449 
+
+25 
+
+7 1 1 1
+
+n=484 
+
+Mean: 0.23 
+
+Num. of optimal: 449 (92.8%) 
+
+Iteration 15, pass@1k 
+
+0 2 4 6 8 10 12 14 16 
+
+Difference to optimal (#actions) 
+
+0
+
+100 
+
+200 
+
+300 
+
+400 
+
+> Count (#instances)
+
+452 
+
+23 
+
+7 1 1
+
+n=484 
+
+Mean: 0.21 
+
+Num. of optimal: 452 (93.4%) 
+
+Iteration 15, 1k plans, graph + search 
+
+Figure 11: Sokoban – Plan length differences between generated plans and optimal solutions. The top row shows performance of the pretrained model, while the bottom row shows the model’s performance after 15 iterations of self-improvement. For both, we present findings for different inference parameters. F Plan Length Distributions FD-Lama FD-Lama-anytime 0 (N=10) 0 (N=1000) SiGplan 
+
+(nloop = 15, N=10) 
+
+SiGplan 
+
+(nloop = 15, N=1000) 
+
+SiGplan+BFS 
+
+(nloop = 15, N=1000) 
+
+Method 
+
+0
+
+50 
+
+100 
+
+150 
+
+200 
+
+250 
+
+300 
+
+> Plan Length
+
+Plan Length Distribution - Blocksworld FD-Lama FD-Lama-anytime 0 (N=10) 0 (N=1000) SiGplan 
+
+(nloop = 15, N=10) 
+
+SiGplan 
+
+(nloop = 15, N=1000) 
+
+SiGplan+BFS 
+
+(nloop = 15, N=1000) 
+
+Method 
+
+200 
+
+400 
+
+600 
+
+800 
+
+1000 
+
+> Normalized Plan Length (%)
+
+Normalized Plan Length Distribution - Blocksworld FD-Lama FD-Lama-anytime 0 (N=10) 0 (N=1000) SiGplan 
+
+(nloop = 15, N=10) 
+
+SiGplan 
+
+(nloop = 15, N=1000) 
+
+SiGplan+BFS 
+
+(nloop = 15, N=1000) 
+
+Method 
+
+0
+
+100 
+
+200 
+
+300 
+
+400 
+
+> Plan Length
+
+Plan Length Distribution - Logistics FD-Lama FD-Lama-anytime 0 (N=10) 0 (N=1000) SiGplan 
+
+(nloop = 15, N=10) 
+
+SiGplan 
+
+(nloop = 15, N=1000) 
+
+SiGplan+BFS 
+
+(nloop = 15, N=1000) 
+
+Method 
+
+100 
+
+110 
+
+120 
+
+130 
+
+140 
+
+150 
+
+> Normalized Plan Length (%)
+
+Normalized Plan Length Distribution - Logistics 
+
+Optimal (100%) FD-Lama FD-Lama-anytime 0 (N=10) 0 (N=1000) SiGplan 
+
+(nloop = 15, N=10) 
+
+SiGplan 
+
+(nloop = 15, N=1000) 
+
+SiGplan+BFS 
+
+(nloop = 15, N=1000) 
+
+Method 
+
+0
+
+20 
+
+40 
+
+60 
+
+80 
+
+100 
+
+120 
+
+> Plan Length
+
+Plan Length Distribution - Labyrinth FD-Lama FD-Lama-anytime 0 (N=10) 0 (N=1000) SiGplan 
+
+(nloop = 15, N=10) 
+
+SiGplan 
+
+(nloop = 15, N=1000) 
+
+SiGplan+BFS 
+
+(nloop = 15, N=1000) 
+
+Method 
+
+200 
+
+400 
+
+600 
+
+800 
+
+1000 
+
+> Normalized Plan Length (%)
+
+Normalized Plan Length Distribution - Labyrinth FD-Lama FD-Lama-anytime 0 (N=10) 0 (N=1000) SiGPlan 
+
+(nloop = 15, N=10) 
+
+SiGPlan 
+
+(nloop = 15, N=1000) 
+
+SiGPlan+BFS 
+
+(nloop = 15, N=1000) 
+
+Method 
+
+0
+
+100 
+
+200 
+
+300 
+
+400 
+
+500 
+
+600 
+
+> Plan Length
+
+Plan Length Distribution - Sokoban FD-LAMA-first FD-LAMA-anytime 0 (N=10) 0 (N=1000) SiGPlan 
+
+(nloop = 15, N=10) 
+
+SiGPlan 
+
+(nloop = 15, N=1000) 
+
+SiGPlan+BFS 
+
+(nloop = 15, N=1000) 
+
+Method 
+
+100 
+
+120 
+
+140 
+
+160 
+
+180 
+
+200 
+
+220 
+
+240 
+
+> Normalized Plan Length (%)
+
+Normalized Plan Length Distribution - Sokoban 
+
+Optimal (100%) 
+
+Figure 12: Distribution of plan length (left column) and normalized plan length (right column) for different methods across different domains. Normalized plan length expresses the plan length as a percentage of the optimal plan length (100% = optimal): cost +1 
+
+cost optimal +1 · 100% , where adding 1 avoids division by zero for trivial problems with optimal plan length 0. The outlier in the normalized plan length plot for the Blocksworld domain corresponds to a trivial problem where the goal conditions are already satisfied in the initial state, and SiGPlan (nloop = 15 , N = 10 ) generated a plan with 10 actions. G Statistical Analysis 
+
+We compared the following conditions: (1) π0 vs. SiGPlan with N =10 , (2) π0 vs. SiGPlan with N =10 3, (3) π0 with N =10 
+
+vs. N =10 3, (4) SiGPlan with N =10 vs. N =10 3, (5) SiGPlan (N =10 3) vs. SiGPlan+BFS (N =10 3), and (6) SiGPlan+BFS 
+
+(N =10 3) vs. FD-LAMA-anytime .Prior to analysis, we conducted a Shapiro-Wilk test on our Blocksworld results, which revealed that the paired differences in plan length significantly deviate from normality across all comparisons (all p < 0.001 ). For the plan length analysis, we therefore chose the non-parametric Wilcoxon signed-rank test rather than a paired t-test, applied consistently across all domains. The Wilcoxon signed-rank test is a conservative method requiring fewer assumptions about the data distribution than a parametric t-test, while maintaining statistical power. Since plan length can only be compared when all methods successfully generate a plan, we restricted the analysis to problems where all methods under comparison found valid plans. This resulted in sample sizes of 992 (Blocksworld), 986 (Logistics), 955 (Labyrinth), and 910 (Sokoban) problems, respectively. All p-values reported in the main paper are Bonferroni-corrected for six comparisons (adjusted α-level: 0.008). For completion rate, we applied McNemar’s test to all 1000 problems per domain, as this metric is defined for all prob-lems regardless of solution status. Again, all reported p-values are Bonferroni-corrected for six comparisons (adjusted α-level: 0.008). H Domains 
+
+For Blocksworld, Logistics, and Sokoban, domain files and problem instance generators were generated using the PDDL gen-erator collection from Seipp, Torralba, and Hoffmann (2022). 
+
+H.1 Blocksworld 
+
+Listing 1: Blocksworld domain file 
+
+1 (define (domain blocksworld-4ops) 
+
+2 (:requirements :strips) 
+
+3 (:predicates (clear ?x) 
+
+4 (on-table ?x) 
+
+5 (arm-empty) 
+
+6 (holding ?x) 
+
+7 (on ?x ?y)) 
+
+89 (:action pickup 
+
+10 :parameters (?ob) 
+
+11 :precondition (and (clear ?ob) (on-table ?ob) (arm-empty)) 
+
+12 :effect (and (holding ?ob) (not (clear ?ob)) (not (on-table ?ob)) 
+
+13 (not (arm-empty)))) 
+
+14 15 (:action putdown 
+
+16 :parameters (?ob) 
+
+17 :precondition (holding ?ob) 
+
+18 :effect (and (clear ?ob) (arm-empty) (on-table ?ob) 
+
+19 (not (holding ?ob)))) 
+
+20 21 (:action stack 
+
+22 :parameters (?ob ?underob) 
+
+23 :precondition (and (clear ?underob) (holding ?ob)) 
+
+24 :effect (and (arm-empty) (clear ?ob) (on ?ob ?underob) 
+
+25 (not (clear ?underob)) (not (holding ?ob)))) 
+
+26 27 (:action unstack 
+
+28 :parameters (?ob ?underob) 
+
+29 :precondition (and (on ?ob ?underob) (clear ?ob) (arm-empty)) 
+
+30 :effect (and (holding ?ob) (clear ?underob) 
+
+31 (not (on ?ob ?underob)) (not (clear ?ob)) (not (arm-empty))))) H.2 Logistics 
+
+Listing 2: Logistics domain file 
+
+1 (define (domain logistics) 
+
+2 (:requirements :strips :typing) 
+
+3 (:types 
+
+4 package location vehicle - object 
+
+5 truck airplane - vehicle 
+
+6 city airport - location) 
+
+78 (:predicates 
+
+9 (at ?vehicle-or-package - (either vehicle package) ?location - location) 
+
+10 (in ?package - package ?vehicle - vehicle) 
+
+11 (in-city ?loc-or-truck - (either location truck) ?citys - city)) 
+
+12 13 (:action load-truck 
+
+14 :parameters 
+
+15 (?obj - package 
+
+16 ?truck - truck 
+
+17 ?loc - location) 
+
+18 :precondition 
+
+19 (and (at ?truck ?loc) 
+
+20 (at ?obj ?loc)) 
+
+21 :effect 
+
+22 (and (not (at ?obj ?loc)) 
+
+23 (in ?obj ?truck))) 
+
+24 25 (:action load-airplane 
+
+26 :parameters 
+
+27 (?obj - package 
+
+28 ?airplane - airplane 
+
+29 ?loc - airport) 
+
+30 :precondition 
+
+31 (and 
+
+32 (at ?obj ?loc) 
+
+33 (at ?airplane ?loc)) 
+
+34 :effect 
+
+35 (and (not (at ?obj ?loc)) 
+
+36 (in ?obj ?airplane))) 
+
+37 38 (:action unload-truck 
+
+39 :parameters 
+
+40 (?obj - package 
+
+41 ?truck - truck 
+
+42 ?loc - location) 
+
+43 :precondition 
+
+44 (and (at ?truck ?loc) 
+
+45 (in ?obj ?truck)) 
+
+46 :effect 
+
+47 (and (not (in ?obj ?truck)) 
+
+48 (at ?obj ?loc))) 
+
+49 50 (:action unload-airplane 
+
+51 :parameters 
+
+52 (?obj - package 
+
+53 ?airplane - airplane 
+
+54 ?loc - airport) 
+
+55 :precondition 
+
+56 (and (in ?obj ?airplane) 
+
+57 (at ?airplane ?loc)) 
+
+58 :effect 
+
+59 (and 
+
+60 (not (in ?obj ?airplane)) 
+
+61 (at ?obj ?loc))) 
+
+62 63 (:action drive-truck 
+
+64 :parameters 
+
+65 (?truck - truck 
+
+66 ?loc-from - location 
+
+67 ?loc-to - location 
+
+68 ?city - city) 
+
+69 :precondition 
+
+70 (and (at ?truck ?loc-from) 
+
+71 (in-city ?loc-from ?city) 
+
+72 (in-city ?loc-to ?city)) 
+
+73 :effect 
+
+74 (and (not (at ?truck ?loc-from)) 
+
+75 (at ?truck ?loc-to))) 
+
+76 77 (:action fly-airplane 
+
+78 :parameters 
+
+79 (?airplane - airplane 
+
+80 ?loc-from - airport 
+
+81 ?loc-to - airport) 
+
+82 :precondition 
+
+83 (at ?airplane ?loc-from) 
+
+84 :effect 
+
+85 (and (not (at ?airplane ?loc-from)) 
+
+86 (at ?airplane ?loc-to))) 
+
+87 )H.3 Labyrinth 
+
+The Labyrinth domain was part of the Satisficing track of the most recent International Planning Competition (IPC) 2023 (Eifler and Fiˇ ser 2023). We chose this domain as it was shown to be particularly challenging for the competing planners at the IPC 2023 (Taitler et al. 2024). The original domain defined a cost of 0 for move-card-⟨direction ⟩ and end-move-card-⟨direction ⟩
+
+actions. Since we define plan length by the number of actions in a plan, we adapted the domain definition to add a cost of 1 to every action for optimal plan generation with Fast Downward. Listing 3: Labyrinth domain file 
+
+1 (define (domain labyrinth) 
+
+2 (:requirements :adl :action-costs :strips :typing :numeric-fluents) 
+
+34 (:types 
+
+5 card - object 
+
+6 direction - object 
+
+7 directionV - direction 
+
+8 directionH - direction 
+
+9 gridpos - object 
+
+10 )
+
+11 12 (:constants 
+
+13 s n - directionV 
+
+14 w e - directionH 
+
+15 )
+
+16 17 (:predicates 
+
+18 (next ?p1 - gridpos ?p2 - gridpos) 
+
+19 (max-pos ?p - gridpos) 
+
+20 (min-pos ?p - gridpos) 
+
+21 (blocked ?c - card ?d - direction) 
+
+22 (robot-at ?c - card) 
+
+23 (card-at ?c - card ?x - gridpos ?y - gridpos) 
+
+24 (left) 
+
+25 (cards-moving) 
+
+26 (cards-moving-west) 
+
+27 (cards-moving-east) 
+
+28 (cards-moving-south) 
+
+29 (cards-moving-north) 
+
+30 (next-moving-card ?c - card) 
+
+31 (new-headtail-card ?c - card) 
+
+32 33 )
+
+34 35 (:functions 
+
+36 (total-cost) - number 
+
+37 (move-robot-cost) - number 
+
+38 (move-card) - number 
+
+39 )
+
+40 41 (:action move-west 
+
+42 :parameters (?cfrom - card ?xfrom - gridpos ?yfrom - gridpos ?dfrom - directionH ?cto - card ?xto - gridpos ?yto - gridpos ?dto - directionH) 
+
+43 :precondition 
+
+44 (and 
+
+45 (not (cards-moving)) 
+
+46 (= ?dfrom w) 
+
+47 (robot-at ?cfrom) 
+
+48 (card-at ?cfrom ?xfrom ?yfrom) 
+
+49 (card-at ?cto ?xto ?yto) 
+
+50 (next ?xfrom ?xto) 
+
+51 (= ?yfrom ?yto) 
+
+52 (not (= ?dfrom ?dto)) 
+
+53 (not (blocked ?cfrom ?dfrom)) 
+
+54 (not (blocked ?cto ?dto)) 
+
+55 )56 :effect 
+
+57 (and 
+
+58 (not (robot-at ?cfrom)) 
+
+59 (robot-at ?cto) 
+
+60 (increase (total-cost) (move-robot-cost)) 
+
+61 )
+
+62 )
+
+63 64 (:action move-east 
+
+65 :parameters (?cfrom - card ?xfrom - gridpos ?yfrom - gridpos ?dfrom - directionH ?cto - card ?xto - gridpos ?yto - gridpos ?dto - directionH) 
+
+66 :precondition 
+
+67 (and 
+
+68 (not (cards-moving)) 
+
+69 (= ?dfrom e) 
+
+70 (robot-at ?cfrom) 
+
+71 (card-at ?cfrom ?xfrom ?yfrom) 
+
+72 (card-at ?cto ?xto ?yto) 
+
+73 (next ?xto ?xfrom) 
+
+74 (= ?yfrom ?yto) 
+
+75 (not (= ?dfrom ?dto)) 
+
+76 (not (blocked ?cfrom ?dfrom)) 
+
+77 (not (blocked ?cto ?dto)) 
+
+78 )
+
+79 :effect 
+
+80 (and 
+
+81 (not (robot-at ?cfrom)) 
+
+82 (robot-at ?cto) 
+
+83 (increase (total-cost) (move-robot-cost)) 
+
+84 )
+
+85 )
+
+86 87 (:action move-north 
+
+88 :parameters (?cfrom - card ?xfrom - gridpos ?yfrom - gridpos ?dfrom - directionV ?cto - card ?xto - gridpos ?yto - gridpos ?dto - directionV) 
+
+89 :precondition 
+
+90 (and 
+
+91 (not (cards-moving)) 
+
+92 (= ?dfrom n) 
+
+93 (robot-at ?cfrom) 
+
+94 (card-at ?cfrom ?xfrom ?yfrom) 
+
+95 (card-at ?cto ?xto ?yto) 
+
+96 (next ?yfrom ?yto) 
+
+97 (= ?xfrom ?xto) 
+
+98 (not (= ?dfrom ?dto)) 
+
+99 (not (blocked ?cfrom ?dfrom)) 
+
+100 (not (blocked ?cto ?dto)) 
+
+101 )
+
+102 :effect 
+
+103 (and 
+
+104 (not (robot-at ?cfrom)) 
+
+105 (robot-at ?cto) 
+
+106 (increase (total-cost) (move-robot-cost)) 
+
+107 )
+
+108 )
+
+109 110 (:action move-south 
+
+111 :parameters (?cfrom - card ?xfrom - gridpos ?yfrom - gridpos ?dfrom - directionV ?cto - card ?xto - gridpos ?yto - gridpos ?dto - directionV) 
+
+112 :precondition 
+
+113 (and 
+
+114 (not (cards-moving)) 
+
+115 (= ?dfrom s) 
+
+116 (robot-at ?cfrom) 
+
+117 (card-at ?cfrom ?xfrom ?yfrom) 118 (card-at ?cto ?xto ?yto) 
+
+119 (next ?yto ?yfrom) 
+
+120 (= ?xfrom ?xto) 
+
+121 (not (= ?dfrom ?dto)) 
+
+122 (not (blocked ?cfrom ?dfrom)) 
+
+123 (not (blocked ?cto ?dto)) 
+
+124 )
+
+125 :effect 
+
+126 (and 
+
+127 (not (robot-at ?cfrom)) 
+
+128 (robot-at ?cto) 
+
+129 (increase (total-cost) (move-robot-cost)) 
+
+130 )
+
+131 )
+
+132 133 (:action start-move-card-west 
+
+134 :parameters(?cm - card ?x - gridpos ?y - gridpos ?cnext - card ?nextx - gridpos) 
+
+135 :precondition 
+
+136 (and 
+
+137 (not (cards-moving)) 
+
+138 (not (cards-moving-west)) 
+
+139 (not (robot-at ?cm)) 
+
+140 (card-at ?cm ?x ?y )
+
+141 (min-pos ?x) 
+
+142 (card-at ?cnext ?nextx ?y) 
+
+143 (next ?nextx ?x) 
+
+144 )
+
+145 :effect 
+
+146 (and 
+
+147 (cards-moving) 
+
+148 (cards-moving-west) 
+
+149 (not (card-at ?cm ?x ?y )) 
+
+150 (new-headtail-card ?cm) 
+
+151 (next-moving-card ?cnext) 
+
+152 (increase (total-cost) (move-card)) 
+
+153 )
+
+154 )
+
+155 156 (:action move-card-west 
+
+157 :parameters(?cm - card ?x - gridpos ?y - gridpos ?cnext - card ?nextx - gridpos ?prevx -gridpos) 
+
+158 :precondition 
+
+159 (and 
+
+160 (cards-moving) 
+
+161 (cards-moving-west) 
+
+162 (not (robot-at ?cm)) 
+
+163 (next-moving-card ?cm) 
+
+164 (card-at ?cm ?x ?y )
+
+165 (card-at ?cnext ?nextx ?y) 
+
+166 (next ?x ?prevx) 
+
+167 (next ?nextx ?x) 
+
+168 )
+
+169 :effect 
+
+170 (and 
+
+171 (cards-moving) 
+
+172 (cards-moving-west) 
+
+173 (not (card-at ?cm ?x ?y)) 
+
+174 (card-at ?cm ?prevx ?y) 
+
+175 (not (next-moving-card ?cm)) 
+
+176 (next-moving-card ?cnext) 
+
+177 (increase (total-cost) (move-card)) 
+
+178 )
+
+179 )
+
+180 181 (:action stop-move-card-west 182 :parameters(?cm - card ?x - gridpos ?y - gridpos ?prevx - gridpos ?newtc - card) 
+
+183 :precondition 
+
+184 (and 
+
+185 (cards-moving) 
+
+186 (cards-moving-west) 
+
+187 (not (robot-at ?cm)) 
+
+188 (next-moving-card ?cm) 
+
+189 (card-at ?cm ?x ?y )
+
+190 (next ?x ?prevx) 
+
+191 (max-pos ?x) 
+
+192 (new-headtail-card ?newtc) 
+
+193 )
+
+194 :effect 
+
+195 (and 
+
+196 (not (cards-moving)) 
+
+197 (not (cards-moving-west)) 
+
+198 (not (card-at ?cm ?x ?y)) 
+
+199 (card-at ?cm ?prevx ?y) 
+
+200 (card-at ?newtc ?x ?y) 
+
+201 (not (new-headtail-card ?newtc)) 
+
+202 (not (next-moving-card ?cm)) 
+
+203 (increase (total-cost) (move-card)) 
+
+204 )
+
+205 )
+
+206 207 (:action start-move-card-east 
+
+208 :parameters(?cm - card ?x - gridpos ?y - gridpos ?cnext - card ?nextx - gridpos) 
+
+209 :precondition 
+
+210 (and 
+
+211 (not (cards-moving)) 
+
+212 (not (cards-moving-east)) 
+
+213 (not (robot-at ?cm)) 
+
+214 (card-at ?cm ?x ?y )
+
+215 (max-pos ?x) 
+
+216 (card-at ?cnext ?nextx ?y) 
+
+217 (next ?x ?nextx) 
+
+218 )
+
+219 :effect 
+
+220 (and 
+
+221 (cards-moving) 
+
+222 (cards-moving-east) 
+
+223 (not (card-at ?cm ?x ?y )) 
+
+224 (new-headtail-card ?cm) 
+
+225 (next-moving-card ?cnext) 
+
+226 (increase (total-cost) (move-card)) 
+
+227 )
+
+228 )
+
+229 230 (:action move-card-east 
+
+231 :parameters(?cm - card ?x - gridpos ?y - gridpos ?cnext - card ?nextx - gridpos ?prevx -gridpos) 
+
+232 :precondition 
+
+233 (and 
+
+234 (cards-moving) 
+
+235 (cards-moving-east) 
+
+236 (not (robot-at ?cm)) 
+
+237 (next-moving-card ?cm) 
+
+238 (card-at ?cm ?x ?y )
+
+239 (card-at ?cnext ?nextx ?y) 
+
+240 (next ?prevx ?x) 
+
+241 (next ?x ?nextx) 
+
+242 )
+
+243 :effect 
+
+244 (and 
+
+245 (cards-moving) 246 (cards-moving-east) 
+
+247 (not (card-at ?cm ?x ?y)) 
+
+248 (card-at ?cm ?prevx ?y) 
+
+249 (not (next-moving-card ?cm)) 
+
+250 (next-moving-card ?cnext) 
+
+251 (increase (total-cost) (move-card)) 
+
+252 )
+
+253 )
+
+254 255 (:action stop-move-card-east 
+
+256 :parameters(?cm - card ?x - gridpos ?y - gridpos ?prevx - gridpos ?newtc - card) 
+
+257 :precondition 
+
+258 (and 
+
+259 (cards-moving) 
+
+260 (cards-moving-east) 
+
+261 (not (robot-at ?cm)) 
+
+262 (next-moving-card ?cm) 
+
+263 (card-at ?cm ?x ?y )
+
+264 (next ?prevx ?x) 
+
+265 (min-pos ?x) 
+
+266 (new-headtail-card ?newtc) 
+
+267 )
+
+268 :effect 
+
+269 (and 
+
+270 (not (cards-moving)) 
+
+271 (not (cards-moving-east)) 
+
+272 (not (card-at ?cm ?x ?y)) 
+
+273 (card-at ?cm ?prevx ?y) 
+
+274 (card-at ?newtc ?x ?y) 
+
+275 (not (new-headtail-card ?newtc)) 
+
+276 (not (next-moving-card ?cm)) 
+
+277 (increase (total-cost) (move-card)) 
+
+278 )
+
+279 )
+
+280 281 (:action start-move-card-north 
+
+282 :parameters(?cm - card ?x - gridpos ?y - gridpos ?cnext - card ?nexty - gridpos) 
+
+283 :precondition 
+
+284 (and 
+
+285 (not (cards-moving)) 
+
+286 (not (cards-moving-north)) 
+
+287 (not (robot-at ?cm)) 
+
+288 (card-at ?cm ?x ?y )
+
+289 (min-pos ?y) 
+
+290 (card-at ?cnext ?x ?nexty) 
+
+291 (next ?nexty ?y) 
+
+292 )
+
+293 :effect 
+
+294 (and 
+
+295 (cards-moving) 
+
+296 (cards-moving-north) 
+
+297 (not (card-at ?cm ?x ?y )) 
+
+298 (new-headtail-card ?cm) 
+
+299 (next-moving-card ?cnext) 
+
+300 (increase (total-cost) (move-card)) 
+
+301 )
+
+302 )
+
+303 304 (:action move-card-north 
+
+305 :parameters(?cm - card ?x - gridpos ?y - gridpos ?cnext - card ?nexty - gridpos ?prevy -gridpos) 
+
+306 :precondition 
+
+307 (and 
+
+308 (cards-moving) 
+
+309 (cards-moving-north) 310 (not (robot-at ?cm)) 
+
+311 (next-moving-card ?cm) 
+
+312 (card-at ?cm ?x ?y )
+
+313 (card-at ?cnext ?x ?nexty) 
+
+314 (next ?y ?prevy) 
+
+315 (next ?nexty ?y) 
+
+316 )
+
+317 :effect 
+
+318 (and 
+
+319 (cards-moving) 
+
+320 (cards-moving-north) 
+
+321 (not (card-at ?cm ?x ?y)) 
+
+322 (card-at ?cm ?x ?prevy) 
+
+323 (not (next-moving-card ?cm)) 
+
+324 (next-moving-card ?cnext) 
+
+325 (increase (total-cost) (move-card)) 
+
+326 )
+
+327 )
+
+328 329 (:action stop-move-card-north 
+
+330 :parameters(?cm - card ?x - gridpos ?y - gridpos ?prevy - gridpos ?newtc - card) 
+
+331 :precondition 
+
+332 (and 
+
+333 (cards-moving) 
+
+334 (cards-moving-north) 
+
+335 (not (robot-at ?cm)) 
+
+336 (next-moving-card ?cm) 
+
+337 (card-at ?cm ?x ?y )
+
+338 (next ?y ?prevy) 
+
+339 (max-pos ?y) 
+
+340 (new-headtail-card ?newtc) 
+
+341 )
+
+342 :effect 
+
+343 (and 
+
+344 (not (cards-moving)) 
+
+345 (not (cards-moving-north)) 
+
+346 (not (card-at ?cm ?x ?y)) 
+
+347 (card-at ?cm ?x ?prevy) 
+
+348 (card-at ?newtc ?x ?y) 
+
+349 (not (new-headtail-card ?newtc)) 
+
+350 (not (next-moving-card ?cm)) 
+
+351 (increase (total-cost) (move-card)) 
+
+352 )
+
+353 )
+
+354 355 (:action start-move-card-south 
+
+356 :parameters(?cm - card ?x - gridpos ?y - gridpos ?cnext - card ?nexty - gridpos) 
+
+357 :precondition 
+
+358 (and 
+
+359 (not (cards-moving)) 
+
+360 (not (cards-moving-south)) 
+
+361 (not (robot-at ?cm)) 
+
+362 (card-at ?cm ?x ?y )
+
+363 (max-pos ?y) 
+
+364 (card-at ?cnext ?x ?nexty) 
+
+365 (next ?y ?nexty) 
+
+366 )
+
+367 :effect 
+
+368 (and 
+
+369 (cards-moving) 
+
+370 (cards-moving-south) 
+
+371 (not (card-at ?cm ?x ?y )) 
+
+372 (new-headtail-card ?cm) 
+
+373 (next-moving-card ?cnext) 
+
+374 (increase (total-cost) (move-card)) 375 )
+
+376 )
+
+377 378 (:action move-card-south 
+
+379 :parameters(?cm - card ?x - gridpos ?y - gridpos ?cnext - card ?nexty - gridpos ?prevy -gridpos) 
+
+380 :precondition 
+
+381 (and 
+
+382 (cards-moving) 
+
+383 (cards-moving-south) 
+
+384 (not (robot-at ?cm)) 
+
+385 (next-moving-card ?cm) 
+
+386 (card-at ?cm ?x ?y )
+
+387 (card-at ?cnext ?x ?nexty) 
+
+388 (next ?prevy ?y) 
+
+389 (next ?y ?nexty) 
+
+390 )
+
+391 :effect 
+
+392 (and 
+
+393 (cards-moving) 
+
+394 (cards-moving-south) 
+
+395 (not (card-at ?cm ?x ?y)) 
+
+396 (card-at ?cm ?x ?prevy) 
+
+397 (not (next-moving-card ?cm)) 
+
+398 (next-moving-card ?cnext) 
+
+399 (increase (total-cost) (move-card)) 
+
+400 )
+
+401 )
+
+402 403 (:action stop-move-card-south 
+
+404 :parameters(?cm - card ?x - gridpos ?y - gridpos ?prevy - gridpos ?newtc - card) 
+
+405 :precondition 
+
+406 (and 
+
+407 (cards-moving) 
+
+408 (cards-moving-south) 
+
+409 (not (robot-at ?cm)) 
+
+410 (next-moving-card ?cm) 
+
+411 (card-at ?cm ?x ?y )
+
+412 (next ?prevy ?y) 
+
+413 (min-pos ?y) 
+
+414 (new-headtail-card ?newtc) 
+
+415 )
+
+416 :effect 
+
+417 (and 
+
+418 (not (cards-moving)) 
+
+419 (not (cards-moving-south)) 
+
+420 (not (card-at ?cm ?x ?y)) 
+
+421 (card-at ?cm ?x ?prevy) 
+
+422 (card-at ?newtc ?x ?y) 
+
+423 (not (new-headtail-card ?newtc)) 
+
+424 (not (next-moving-card ?cm)) 
+
+425 (increase (total-cost) (move-card)) 
+
+426 )
+
+427 )
+
+428 429 (:action leave 
+
+430 :parameters(?c - card ?prow - gridpos ?pcolumn - gridpos) 
+
+431 :precondition 
+
+432 (and 
+
+433 (not (cards-moving)) 
+
+434 (robot-at ?c) 
+
+435 (card-at ?c ?prow ?pcolumn) 
+
+436 (max-pos ?prow) 
+
+437 (max-pos ?pcolumn) 
+
+438 (not (blocked ?c s )) 439 )
+
+440 :effect 
+
+441 (and 
+
+442 (increase (total-cost) (move-card)) 
+
+443 (left) 
+
+444 )
+
+445 )
+
+446 )
+
+H.4 Sokoban 
+
+We slightly modified the Sokoban domain (Seipp, Torralba, and Hoffmann 2022) by adding an additional predicate (has-box ?l - LOC) . With this predicate, we specify goal conditions through a set of target positions for boxes, but without an explicit assignment of boxes to those positions. This definition is in line with other state-of-the-art Sokoban solvers like the Sokolution and Festival solvers. Listing 4: Sokoban domain file 
+
+1 (define (domain typed-sokoban) 
+
+2 (:requirements :typing) 
+
+3 (:types LOC DIR) 
+
+4 (:predicates 
+
+5 (at-robot ?l - LOC) 
+
+6 (has-box ?l - LOC) 
+
+7 (adjacent ?l1 - LOC ?l2 - LOC ?d - DIR) 
+
+8 (clear ?l - LOC) 
+
+9 )
+
+10 11 12 (:action move 
+
+13 :parameters (?from - LOC ?to - LOC ?dir - DIR) 
+
+14 :precondition (and (clear ?to) (at-robot ?from) (adjacent ?from ?to ?dir)) 
+
+15 :effect (and (at-robot ?to) (not (at-robot ?from))) 
+
+16 )
+
+17 18 19 (:action push 
+
+20 :parameters (?rloc - LOC ?bloc - LOC ?floc - LOC ?dir - DIR) 
+
+21 :precondition (and (at-robot ?rloc) (has-box ?bloc) (clear ?floc) 
+
+22 (adjacent ?rloc ?bloc ?dir) (adjacent ?bloc ?floc ?dir)) 
+
+23 24 :effect (and (at-robot ?bloc) (has-box ?floc) (clear ?bloc) 
+
+25 (not (at-robot ?rloc)) (not (has-box ?bloc)) (not (clear ?floc))) 
+
+26 )

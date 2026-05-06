@@ -6,53 +6,43 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-05-05
-- 运行时间：2026-05-05 20:54:02 UTC
+- 最新运行日期：2026-05-06
+- 运行时间：2026-05-06 21:06:53 UTC
 - 运行状态：成功
-- 本次总论文数：11
-- 精读区：6
-- 速读区：5
+- 本次总论文数：7
+- 精读区：5
+- 速读区：2
 
 ### 今日简报（AI）
-探索世界模型与空间智能的最新突破，今日完成 11 篇论文阅读。重点关注《Latent State Design》和《Embody4D》，前者聚焦潜在状态约束设计，后者推进通用 4D 具身建模。建议读者继续关注具身 AI 与空间功能理解的融合趋势，洞察下一代智能代理的发展方向。
-- 详情：[/202605/05/README](/202605/05/README)
+聚焦机器人感知与规划，今日精读 5 篇、速读 2 篇高分新作。  
+TrajRAG 与 RoboAlign-R1 显示几何语义检索及多模态奖励对齐正成为零样本导航与视频世界模型的关键突破口。  
+建议关注跨模态表征在实际导航与操作任务中的泛化能力测试与落地应用。
+- 详情：[/202605/06/README](/202605/06/README)
 
 ### 精读区论文标签
-1. [Latent State Design for World Models under Sufficiency Constraints](/202605/05/2605.01694v1-latent-state-design-for-world-models-under-sufficiency-constraints)  
+1. [TrajRAG: Retrieving Geometric-Semantic Experience for Zero-Shot Object Navigation](/202605/06/2605.01700v1-trajrag-retrieving-geometric-semantic-experience-for-zero-shot-object-navigation)  
    标签：评分：9.0/10、query:navwm
-   evidence：将世界模型研究视为用于规划和控制的隐状态设计
-2. [Embody4D: A Generalist 4D World Model for Embodied AI](/202605/05/2605.01799v1-embody4d-a-generalist-4d-world-model-for-embodied-ai)  
+   evidence：用于零样本导航的拓扑极坐标轨迹表示
+2. [RoboAlign-R1: Distilled Multimodal Reward Alignment for Robot Video World Models](/202605/06/2605.03821v1-roboalign-r1-distilled-multimodal-reward-alignment-for-robot-video-world-models)  
    标签：评分：9.0/10、query:navwm
-   evidence：用于具身空间推理和动态环境建模的4D世界模型
-3. [Beyond Specialization: Robust Reinforcement Learning Navigation via Procedural Map Generators](/202605/05/2605.02528v1-beyond-specialization-robust-reinforcement-learning-navigation-via-procedural-map-generators)  
+   evidence：机器人视频世界模型的奖励对齐
+3. [A Benchmark for Interactive World Models with a Unified Action Generation Framework](/202605/06/2605.03941v1-a-benchmark-for-interactive-world-models-with-a-unified-action-generation-framework)  
    标签：评分：9.0/10、query:navwm
-   evidence：在复杂环境中使用程序化生成的强化学习导航策略
-4. [Safe Navigation using Neural Radiance Fields via Reachable Sets](/202605/05/2604.26899v2-safe-navigation-using-neural-radiance-fields-via-reachable-sets)  
+   evidence：交互式世界模型的基准测试
+4. [REALM: An RGB and Event Aligned Latent Manifold for Cross-Modal Perception](/202605/06/2605.00271v2-realm-an-rgb-and-event-aligned-latent-manifold-for-cross-modal-perception)  
    标签：评分：8.0/10、query:navwm
-   evidence：在复杂环境中使用体积表示和路径规划进行安全导航
-5. [Action Agent: Agentic Video Generation Meets Flow-Constrained Diffusion](/202605/05/2605.01477v1-action-agent-agentic-video-generation-meets-flow-constrained-diffusion)  
+   evidence：用于跨模态感知和环境理解的对齐隐式流形
+5. [Optimal Navigation in Stochastic and Disordered Gridworlds](/202605/06/2605.03568v1-optimal-navigation-in-stochastic-and-disordered-gridworlds)  
    标签：评分：8.0/10、query:navwm
-   evidence：智能体导航视频生成以及用于机器人导航的连续速度指令控制
-6. [TRAP: Tail-aware Ranking Attack for World-Model Planning](/202605/05/2605.01950v1-trap-tail-aware-ranking-attack-for-world-model-planning)  
-   标签：评分：8.0/10、query:navwm
-   evidence：分析了通用智能体世界模型中规划与决策的安全性漏洞。
+   evidence：随机无序网格世界中的最优导航
 
 ### 速读区论文标签
-1. [Change-Robust Online Spatial-Semantic Topological Mapping](/202605/05/2605.02227v1-change-robust-online-spatial-semantic-topological-mapping)  
-   标签：评分：8.0/10、query:navwm
-   evidence：用于机器人导航的空间语义拓扑映射
-2. [Optimizing Trajectory-Trees in Belief Space: An Application from Model Predictive Control to Task and Motion Planning](/202605/05/2605.01860v1-optimizing-trajectory-trees-in-belief-space-an-application-from-model-predictive-control-to-task-and-motion-planning)  
+1. [Refining Compositional Diffusion for Reliable Long-Horizon Planning](/202605/06/2605.03075v1-refining-compositional-diffusion-for-reliable-long-horizon-planning)  
    标签：评分：7.0/10、query:navwm
-   evidence：在部分可观测环境下的信念空间规划
-3. [From Where Things Are to What They Are For: Benchmarking Spatial-Functional Intelligence in Multimodal LLMs](/202605/05/2605.02130v1-from-where-things-are-to-what-they-are-for-benchmarking-spatial-functional-intelligence-in-multimodal-llms)  
+   evidence：侧重于使用扩散模型进行长程规划和轨迹生成。
+2. [Self-Improvement for Fast, High-Quality Plan Generation](/202605/06/2605.03625v1-self-improvement-for-fast-high-quality-plan-generation)  
    标签：评分：7.0/10、query:navwm
-   evidence：评估具身智能中的结构化空间推理与认知映射能力
-4. [Video Generation with Predictive Latents](/202605/05/2605.02134v1-video-generation-with-predictive-latents)  
-   标签：评分：7.0/10、query:navwm
-   evidence：利用预测世界模型原理优化时空隐空间表示
-5. [Statistical Consistency and Generalization of Contrastive Representation Learning](/202605/05/2605.02116v1-statistical-consistency-and-generalization-of-contrastive-representation-learning)  
-   标签：评分：6.0/10、query:navwm
-   evidence：对比表示学习在下游检索和一致性方面的理论分析
+   evidence：利用图搜索生成高质量规划
 
 
 <div class="dpr-home-promo-card">

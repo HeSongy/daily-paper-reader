@@ -1,0 +1,46 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.01700v1/fig-001.webp",
+      "caption": "Figure 1. Comparisons with LLM/VLM-based Zero-shot ObjectNav methods. (a) Single-step context. the planner (LLM/VLM) receives raw textual observations from the single timestep. (b) Episodic context. episodic memory is structured into prompts for reasoning but discarded after each episode. (c) Episode + experience context. our TrajRAG serves as long-term memory that continuously accumulates episodic memory and retrieves geometric–semantic experience for planning.",
+      "page": 1,
+      "index": 1,
+      "width": 483,
+      "height": 367
+    },
+    {
+      "url": "assets/figures/arxiv/2605.01700v1/fig-002.webp",
+      "caption": "Figure 3. Retrieved Examples. Given a partial trajectory, TrajRAG uses its accumulated keypoints (green) to retrieve a layoutconsistent scene and the assistant goal-reaching trajectory (blue). For pre-retrieval, the top-5 matched keypoints within the visible map are highlighted in red.",
+      "page": 7,
+      "index": 2,
+      "width": 487,
+      "height": 572
+    },
+    {
+      "url": "assets/figures/arxiv/2605.01700v1/fig-003.webp",
+      "caption": "Figure 4. Navigation with TrajRAG. The left column shows the agent’s ego-view RGB images. The middle column presents the skeletonization and detected keypoints (red) on the skeleton map, where the location icon indicates the ground-truth location of the target (“bed”) for visualization purposes only; the target location is unknown to the agent during navigation. The right column illustrates the agent’s traversed trajectory from the start to the pre-navigation position (light gray), candidate trajectories from the current location to various frontiers (light-colored, with blue dots indicating frontiers), and the trajectory selected by the model (burgundy).",
+      "page": 8,
+      "index": 3,
+      "width": 1014,
+      "height": 343
+    },
+    {
+      "url": "assets/figures/arxiv/2605.01700v1/fig-004.webp",
+      "caption": "Table 5. Comparisons with the related works on MP3D, HM3Dv1 and HM3Dv2 datasets. “OV” denotes if the method supports openvocabulary object goals.",
+      "page": 8,
+      "index": 4,
+      "width": 521,
+      "height": 502
+    },
+    {
+      "url": "assets/figures/arxiv/2605.01700v1/fig-005.webp",
+      "caption": "Figure 2. Navigation Framework of TrajRAG. The agent incrementally maintains a semantic map during navigation. Based on this map, we convert the explored area into a topo-polar trajectory. Candidate trajectories are then generated according to the potential frontiers. For each candidate, TrajRAG retrieves relevant experiences to help the planner estimate which trajectory can reach the goal more efficiently. A coarse-to-fine retrieval strategy is adopted to accelerate retrieval.",
+      "page": 5,
+      "index": 5,
+      "width": 1001,
+      "height": 501
+    }
+  ]
+}

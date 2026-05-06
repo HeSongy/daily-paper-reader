@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.03568v1/fig-001.webp",
+      "caption": "FIG. 2. Optimal policies in gridworld with traps. Results obtained via DP on a 65 × 65 lattice. Trap depth: ∆E/kBT = 10. Colored regions denote sites with a unique optimal orientation; white regions indicate a degenerate policy. (a) Homogeneous environment. (b) Single trap. (c) Four traps. (d) 1% trap concentration cd = 0.01. (e) 10%, cd = 0.1. (f) 50%, cd = 0.5.",
+      "page": 2,
+      "index": 1,
+      "width": 460,
+      "height": 679
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03568v1/fig-002.webp",
+      "caption": "FIG. 3. Density of change of the optimal policy. (a) Maps computed via DP on a 65× 65 square lattice at R = 42251. The rightmost column reports the analytical results of the CLT. (b) DP simulation in a 65× 65 gridworld at s = (8, 20). (c) Weak force regime at s = (8, 20) with Fd/kBT = 10−4, and CLT prediction. In (b) and (c), the insets show the local density of change ρ̂s̄s at fixed number of traps nd extracted from the same DP data. In (a,b,c), each point is obtained from an average over 2000 disorder realizations with at least one defect.",
+      "page": 4,
+      "index": 2,
+      "width": 1060,
+      "height": 437
+    }
+  ]
+}

@@ -1,0 +1,1175 @@
+Title: Refining Compositional Diffusion for Reliable Long-Horizon Planning
+
+URL Source: https://arxiv.org/pdf/2605.03075v1
+
+Published Time: Wed, 06 May 2026 00:11:09 GMT
+
+Number of Pages: 27
+
+Markdown Content:
+# Refining Compositional Diffusion for Reliable Long-Horizon Planning 
+
+Kyowoon Lee 1 Yunhao Luo 2 Anh Tong 3 Jaesik Choi 1,41 KAIST 2 University of Michigan 3 Korea University 4 INEEJI 
+
+## Abstract 
+
+Compositional diffusion planning generates long-horizon trajectories by stitching together overlapping short-horizon segments through score composition. However, when local plan distributions are multimodal, existing compositional methods suffer from mode-averaging, where averaging incompatible local modes leads to plans that are neither locally feasible nor globally coherent. We propose Refin-ing Compositional Diffusion (RCD), a training-free guidance method that steers compositional sampling toward high-density, globally coherent plans. RCD lever-ages the self-reconstruction error of a pretrained diffusion model as a proxy for the log-density of composed plans, combined with an overlap consistency 
+
+term that enforces consistency at segment boundaries. We show that the com-bined guidance concentrates sampling on high-density plans that mitigate mode-averaging. Experiments on challenging long-horizon tasks from OGBench, in-cluding locomotion, object manipulation, and pixel-based observations, demon-strate that RCD consistently outperforms existing methods. Project website at 
+
+https://refining-compositional-diffusion.github.io/ .
+
+## 1 Introduction 
+
+Planning plays a fundamental role in sequential decision-making, enabling agents to reason about future consequences before committing to actions. Classical approaches such as Model Predictive Control [ 72 ] and Monte Carlo tree search [ 67 , 68 , 39 ] achieve strong performance when accurate dynamics models are available, yet constructing such models for high-dimensional, continuous systems remains a significant challenge [ 31 ]. Diffusion probabilistic models have recently emerged as a compelling alternative for trajectory planning, learning to sample directly from the distribution of feasible plans and incorporating task-specific guidance through auxiliary gradient signals [ 31 , 3, 45 ]. However, the effectiveness of a diffusion planner is inherently constrained by the horizon of available training data. Collecting long-horizon demonstrations covering all possible start-to-goal combinations is prohibitively expensive, motivating compositional approaches that assemble long plans from short, reusable segments [51, 81, 49, 52]. Compositional approaches address this limitation by decomposing a long trajectory into overlapping local segments, each modeled by a single short-horizon diffusion model, and composing their score functions at inference time to sample from an approximation of the joint distribution [ 17 , 18 , 81 ]. This strategy is data efficient and modular, allowing a model trained on short data to plan over arbitrarily long horizons. GSC [ 51 ] pioneered this for trajectory planning by chaining short-horizon diffusion trajectories via score composition. In practice, this composition averages the noise predictions of adjacent segments at every denoising step on their shared overlap regions. CompDiffuser [ 49 ]additionally introduced a bidirectional conditioning mechanism that propagates information between adjacent chunks during denoising. However, when the local plan distribution is multimodal , this averaging-based composition suffers from mode-averaging [52 ]. Adjacent segments independently commit to incompatible modes, and their averaged scores produce composed trajectories that lie in 
+
+> Preprint.
+> arXiv:2605.03075v1 [cs.RO] 4 May 2026
+
+low-density regions of the true distribution. While CDGS [ 52 ] mitigates this issue through population-based search and DDIM-inversion-based pruning [ 69 ], it incurs substantial inference-time overhead because many candidate trajectories must be repeatedly resampled, ranked, and filtered during the denoising process. More importantly, it improves final outcomes primarily through post hoc candidate selection, rather than by directly steering the denoising process toward more coherent plans. In this paper, we propose Refining Compositional Diffusion ( RCD ), a training-free guidance method that steers compositional sampling toward high-density regions of the local plan distributions while maintaining consistency across overlapping boundaries. We first show that the self-reconstruction error , the discrepancy between a predicted clean sample and its reconstruction after partial renoising, provides a differentiable proxy for the local log-density. High-density samples reconstruct faithfully, whereas off-manifold trajectories, including mode-averaging artifacts, exhibit large reconstruction error. We then introduce an overlap consistency term that penalizes score disagreement between adjacent segments at shared boundaries. Computed from pretrained local models alone, the combined signal directly steers denoising toward a tilted distribution that concentrates on high-density, globally coherent plans, mitigating mode-averaging without the population-based resampling and ranking overhead of prior search-based approaches, making RCD a plug-and-play component universally applicable to diffusion models. Our main contributions are as follows: (1) We analyze the self-reconstruction error as a density proxy for composed trajectories and show its formal connection to the diffusion Evidence Lower Bound (ELBO), complemented by an overlap consistency term that measures score disagreement at segment boundaries. (2) We propose Refining Compositional Diffusion (RCD), a training-free guidance method that combines these signals to steer compositional sampling toward high-density, globally coherent plans using only a pretrained local diffusion model. (3) We evaluate RCD on OGBench long-horizon tasks spanning locomotion, object manipulation, and pixel-based observations, where it consistently improves success rates over prior compositional methods while running an order of magnitude faster than search-based alternatives, all without additional training or architectural changes to the local diffusion model. 
+
+## 2 Background 
+
+2.1 Planning with Diffusion Models 
+
+Diffusion probabilistic models [ 29 , 71 ] learn a data distribution by defining a forward process that gradually adds Gaussian noise and a reverse process that recovers the clean data. Given a clean trajectory τ (0) ∼ p(τ ), the forward process produces a sequence of increasingly noisy versions 
+
+τ (1) , . . . , τ (T ) via 
+
+τ (t) = √αt τ (0) + √1 − αt ϵ, ϵ ∼ N (0, I), (1) where α1 > α 2 > · · · > α T ≈ 0 is a monotonically decreasing noise schedule. The reverse process recovers τ (0) by learning a noise-prediction network ϵθ (τ (t), t ) trained to minimize E[∥ϵ −
+
+ϵθ (τ (t), t )∥2]. Sampling proceeds iteratively from τ (T ) ∼ N (0, I):
+
+τ (t−1) = μθ (τ (t), t ) + σt z, z ∼ N (0, I), (2) where μθ is the predicted mean derived from ϵθ and σt is the reverse-process standard deviation. Diffuser [ 31 ] applies this framework to trajectory planning by training a diffusion model over trajectories τ = ( s0, a0, s1, a1, . . . ) from offline data. Task-specific objectives such as goal-reaching or return maximization are incorporated via gradient-based guidance at inference time [13]. 
+
+2.2 Compositional Diffusion via Factor Graphs 
+
+Consider a global plan τ = ( x1, . . . , x N ) ∈ RN ×D decomposed into M overlapping local segments (factors) yj , where each variable xi ∈ RD represents a state or state-action pair and adjacent segments yj and yj+1 share boundary variables in the overlap yj ∩ yj+1 . Following the Bethe approximation [78, 52], the global distribution factorizes as: 
+
+p(τ ) = 
+
+QMj=1 p(yj )
+
+QNi=1 p(xi)di−1 , (3) 2x1 x2 x3 x4 x5
+
+> ¡1
+> 0
+> +1
+
+(a) Training Segments x1 x2 x3 x4 x5 x6 x7 x8 x9 x10  
+
+> Valid Rate 43.5%
+
+(b) CompDiffuser x1 x2 x3 x4 x5 x6 x7 x8 x9 x10  
+
+> Valid Rate 94.5%
+
+(c) RCD (ours) 4 6 8 10 12 14 16 18 20  
+
+> Inference Horizon
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> Valid Rate
+> RCD
+> CompDiffuser
+
+(d) Valid Rate vs. Horizon 
+
+Figure 1: Toy illustration of the mode-averaging problem. (a) Training data consists of overlapping 
+
+l=3 segments, each shown in a distinct color. They are anchored at a fixed start and goal ,and pass through a bimodal distribution with modes at +1 and −1. (b) CompDiffuser averages incompatible modes in overlap regions, producing many invalid (red) trajectories off both modes. 
+
+(c) RCD guides the denoising toward high-density modes, yielding mostly valid (green) trajectories. 
+
+(d) Valid rate drops sharply with horizon for CompDiffuser, while RCD maintains high validity. where di is the degree of variable xi in the factor graph ( di = 2 for overlap variables, di = 1 
+
+otherwise). Taking log-gradients yields the compositional score: 
+
+∇ log p(τ ) = 
+
+> M
+
+X
+
+> j=1
+
+∇ log p(yj ) + 
+
+> N
+
+X
+
+> i=1
+
+(1 − di)∇ log p(xi). (4) In practice, each p(yj ) is represented by a shared diffusion model conditioned on the noisy states of its neighbors, ϵθ (y(t) 
+
+> j
+
+, t | y(t)
+
+> j−1
+
+, y (t)
+
+> j+1
+
+) [ 49 ]. For notational simplicity, we write ϵθ (y(t) 
+
+> j
+
+, t ) throughout, with the neighbor conditioning left implicit. The global score is computed by averaging noise predictions in overlapping regions [ 51 , 81 , 52 ]. Bethe marginal consistency requires pyj (xi) = 
+
+pyj+1 (xi) for all shared variables xi ∈ yj ∩ yj+1 . When local distributions are multimodal, score averaging blends incompatible modes, pushing samples toward low-density inter-modal regions. This problem worsens with the number of composed segments. 
+
+2.3 Tweedie’s Formula for Denoising 
+
+When samples are perturbed by Gaussian noise ˜τ ∼ N (τ , σ 2I), Tweedie’s formula [ 64 ] provides the Bayes-optimal denoised estimate E[τ |˜τ ] = ˜ τ + σ2∇˜τ log p(˜ τ ). Applying this to the diffusion forward process in Equation (1), we obtain the posterior mean [11]: 
+
+E[τ (0) |τ (t)] = 1
+
+√αt
+
+ τ (t) + (1 − αt)∇τ (t) log p(τ (t)) ≈ 1
+
+√αt
+
+ τ (t) − √1 − αt ϵθ (τ (t), t ), (5) where the score function sθ is approximated by ∇τ (t) log p(τ (t)) ≈ − ϵθ (τ (t), t )/√1 − αt. The right-hand side of Equation (5) defines the Tweedie denoised estimate ˆτ (t)0 , which serves as a one-step prediction of the clean trajectory from a noisy sample at timestep t.
+
+## 3 Refining Compositional Diffusion 
+
+3.1 Mode-Averaging Problem in Compositional Diffusion 
+
+Compositional score averaging as described in Section 2.2 provides a reasonable approximation when the Bethe-style factorization is accurate and the composed score field faithfully represents the intended global distribution. In practice, however, both are only approximate, and the resulting artifacts are especially severe when p(y) is multimodal, where incompatible local modes can be averaged together. Consider two adjacent segments yk and yk+1 sharing overlap variables. If p(y) is bimodal, for instance the overlap variables can take values near +1 or −1 with equal probability, then 
+
+yk and yk+1 may independently commit to different modes. When the scores from the two segments point in opposite directions, their average nearly cancels, leaving the overlap variables stranded in a low-density region between modes (near 0). The composed trajectory thus contains transitions that are 3individually implausible under any local model, leading to plan failure (Figure 1b). The probability of mode mismatch grows with the number of segments M . Under idealized independent mode selection, the probability that all M −1 adjacent pairs agree on the same mode decays exponentially with M .In practice, iterative denoising introduces correlations that slow the decay, but the qualitative trend persists and the valid rate drops sharply as M grows (Figure 1d). Figure 2 illustrates how RCD addresses this problem. 
+
+3.2 Self-Reconstruction Error as a Density Proxy 
+
+The core observation of RCD is that a pretrained diffusion model already provides an intrinsic density signal. Samples in high-density regions are faithfully reconstructed through a noise-denoise cycle, while mode-averaged samples in low-density regions are not. This self-reconstruction error serves as a training-free density proxy for compositional guidance. Given a candidate clean trajectory ˆτ 0
+
+obtained via the Tweedie estimate in Equation (5), we assess its quality by measuring how well it can be self-reconstructed through the local models. 
+
+Definition 1 (Self-Reconstruction Error) . Given a candidate trajectory ˆτ 0, a shared diffusion model 
+
+ϵθ , and a probe noise level s ∈ { 1, . . . , T }, the self-reconstruction error is 
+
+Erecon (ˆ τ 0; s) = Eϵ
+
+ ∥ˆτ 0 − ˆτ rec 0 (ˆ τ 0, ϵ, s )∥2 , (6) 
+
+where ˆτ rec 0 (ˆ τ 0, ϵ, s ) is the composed Tweedie reconstruction obtained from the noised sample 
+
+ˆτ s = √αs ˆτ 0 + √1−αs ϵ: each local segment ˆyj,s = ˆ τ s[j] is independently denoised via ˆyj, 0 =(ˆ yj,s −√1−αs ϵθ (ˆ yj,s , s )) /√αs, and the per-segment estimates are merged by the Bethe composition rule in Equation (3) .
+
+The probe timestep s controls the perturbation magnitude. In practice, we approximate the expectation with a single Monte Carlo sample. Intuitively, when ˆτ 0 lies near a mode of p(τ ), the score network 
+
+ϵθ accurately predicts the injected noise at level s, yielding a small reconstruction error. Conversely, when ˆτ 0 falls between modes, as occurs under mode-averaging, the score prediction is biased toward a neighboring mode rather than recovering the original inter-modal input, resulting in large reconstruction error. The following proposition formalizes this connection. 
+
+Proposition 1 (Reconstruction Error as Density Proxy) . Consider the self-reconstruction error 
+
+Erecon (ˆ τ 0; s) with squared-error distance. Assume that each local denoiser ϵθ is trained via the standard DDPM objective. Then the weighted sum over probe timesteps satisfies 
+
+> T
+
+X
+
+> s=1
+
+αs
+
+1 − αs
+
+Erecon (ˆ τ 0; s) = 
+
+> T
+
+X
+
+> s=1
+
+Eϵ
+
+h
+
+ϵ − ¯ϵθ
+
+ √αs ˆτ 0 + √1−αs ϵ, s  22
+
+i
+
+≥ − log pθ (ˆ τ 0), (7) 
+
+where ¯ϵθ is the composed noise prediction and pθ (ˆ τ 0) is the marginal likelihood. 
+
+The proof can be found in Appendix D.1. Since Erecon at a single probe timestep s is one non-negative term of this upper bound on − log pθ (ˆ τ 0), minimizing it is directionally aligned with maximizing the composed log-density, providing a principled justification for using Erecon as a guidance objective. 
+
+3.3 Overlap Consistency 
+
+The self-reconstruction error captures overall fidelity but may miss local inconsistencies at segment boundaries. Two adjacent segments may each reconstruct well individually while predicting different values for their shared variables yk ∩ yk+1 . We introduce the overlap consistency term to detect and penalize such disagreements. 
+
+Definition 2 (Overlap Consistency) . Let ˆy1,0, . . . , ˆyM, 0 be the per-segment Tweedie estimates from the reconstruction step of Definition 1. The overlap consistency is 
+
+Eov (ˆ y1: M ) := 1
+
+M − 1 
+
+> M−1
+
+X
+
+> k=1
+
+ˆyk, 0 yk ∩yk+1 
+
+− ˆyk+1 ,0 yk ∩yk+1 
+
+> 22
+
+, (8) 
+
+where ˆyj, 0 yk ∩yk+1 
+
+denotes the Tweedie estimate of segment j restricted to the variables shared between segments k and k+1 .
+
+4(b) CDGS ( Mishra et al., 2026 )(a)  CompDiffuser  (Luo et al., 2025 ) (c) RCD  (ours) Figure 2: Overview of RCD, contrasted with CompDiffuser and CDGS. Trajectories are planned from start to goal over a transition distribution . (a) CompDiffuser composes overlapping segments via bidirectional conditioning and autoregressive denoising, but produces mode-averaged trajectories in low-density regions when local distributions are multimodal. (b) CDGS mitigates this through population-based search and pruning at substantial inference cost. (c) RCD iteratively refines each denoising step toward high-density, globally coherent plans using the self-reconstruction error and overlap consistency (Section 3.4). The overlap consistency is zero when all segments agree perfectly in their shared regions, a necessary condition for the Bethe approximation to be self-consistent, and grows when independent denoising pushes adjacent segments toward incompatible modes. 
+
+Proposition 2 (Overlap Consistency Measures Score Disagreement) . Let ˆyk, 0 yk ∩yk+1 
+
+and 
+
+ˆyk+1 ,0 yk ∩yk+1 
+
+be the per-segment Tweedie estimates restricted to the overlap region yk ∩ yk+1 .Since both segments receive the same noisy input in the overlap (extracted from ˆτ s), the overlap mismatch decomposes as 
+
+ˆyk, 0 yk ∩yk+1 
+
+− ˆyk+1 ,0 yk ∩yk+1  
+
+> 2
+
+= (1 −αs)2
+
+αs
+
+s(k) 
+
+> θ
+
+− s(k+1)  
+
+> θ
+> 2
+> yk∩yk+1
+
+, (9) 
+
+where s(j) 
+
+> θ
+
+:= −ϵ(j) 
+
+> θ
+
+/√1−αs is the score from segment j.
+
+The proof can be found in Appendix D.2. Proposition 2 reveals that the overlap consistency measures the score disagreement between adjacent segments. Bethe marginal consistency requires that both segments produce identical scores in their shared region, so s(k)
+
+> θ
+
+̸ = s(k+1)  
+
+> θ
+
+signals a violation. When they disagree, the overlap variables are pulled in different directions, a hallmark of mode-averaging. Minimizing Eov thus encourages the marginal consistency implicit in the Bethe approximation, providing complementary information to the global reconstruction error. 
+
+3.4 RCD Guidance for Compositional Diffusion 
+
+Combining the self-reconstruction error and overlap consistency, we define the RCD guidance objective: 
+
+ERCD (ˆ τ 0; s) := Erecon (ˆ τ 0; s) + λov Eov (ˆ y1: M ), (10) where λov ≥ 0 weights the overlap consistency. Following the training-free guidance framework (Appendix C), RCD treats ERCD as the loss function and applies its gradient to steer the reverse process. At each denoising step t, we first obtain the Tweedie estimate ˆτ (t)0 from the current noisy sample τ (t) via Equation (5), then compute the guidance gradient with respect to τ (t) through the Tweedie estimate: 
+
+g(t) = ∇τ (t) ERCD 
+
+ ˆτ (t)0 ; s. (11) The gradient is normalized and applied as a correction to the standard reverse step [66]: 
+
+τ (t−1) = μθ (τ (t), t ) + σt z − w σ 2 
+
+> t
+
+˜g(t), ˜g(t) = g(t)
+
+∥g(t)∥∞ + δ , (12) where w > 0 is the guidance weight and δ > 0 ensures numerical stability. The resulting guided reverse process targets a tilted distribution ˜p(τ ) ∝ pθ (τ ) · exp( −w · E RCD (τ )) that concentrates 5on high-density, globally coherent plans, with the guidance weight w controlling the sharpness of this concentration (see Proposition 3 in Appendix D.3 for the formal statement and proof). The full procedure is summarized as pseudo-code in Algorithm 1, with further practical details provided in Appendix E. 
+
+## 4 Experiments 
+
+In this section, we present the effectiveness of RCD on long-horizon planning tasks from OG-Bench [ 58 ]. Specifically, we demonstrate (1) that RCD produces more physically feasible plans than existing compositional methods, (2) that it further enhances planning performance on locomotion, object manipulation, and pixel-based observation tasks, and (3) that the two guidance components are complementary. Additional details regarding our experimental setup and implementation are provided in Appendix F, and further results including additional ablation studies in Appendix G. 
+
+Datasets and Environments. We evaluate on OGBench [ 58 ], a recently proposed bench-mark for offline goal-conditioned reinforcement learning that provides diverse long-horizon tasks with varying difficulty levels. Our evaluation covers three broad categories: (1) Locomotion: 
+
+PointMaze , AntMaze , and HumanoidMaze environments in Stitch datasets across Medium ,
+
+Large , and Giant maze sizes. (2) Object Manipulation: Cube manipulation tasks ( Single ,
+
+Double , Triple , Quadruple ) and AntSoccer (Arena , Medium ). (3) Pixel-based Observations: 
+
+AntMaze-Medium-Stitch and AntMaze-Large-Stitch with visual observations, where planning operates in a learned latent space. The Stitch datasets are constructed from short, unconnected trajectory segments that do not individually span start-to-goal pairs, making long-horizon planning critically dependent on compositional stitching. Further details on environments and evaluation protocol are provided in Appendix F. 
+
+Baselines. We compare with offline goal-conditioned RL methods including goal-conditioned behavioral cloning (GCBC) [ 50 ], goal-conditioned implicit V-learning (GCIVL) and Q-learning (GCIQL) [ 35 ], Quasimetric RL (QRL) [ 73 ], Contrastive RL (CRL) [ 19 ], and Hierarchical implicit Q-learning (HIQL) [ 56 ]. We also include diffusion-based generative planning baselines: Generative Skill Chaining (GSC) [ 51 ], CompDiffuser (CD) [ 49 ], and CDGS [ 52 ]. For CD, CDGS, and RCD, we use the same pretrained local diffusion model for fair comparison. 
+
+4.1 Plan Feasibility Analysis CompDiffuser         
+
+> Task 1
+> Valid (45%)
+> Task 2
+> Valid (50%)
+> Task 3
+> Valid (15%)
+> Task 4
+> Valid (35%)
+> Task 5
+> Valid (60%)
+> CDGS
+> Valid (90%) Valid (95%) Valid (75%) Valid (65%) Valid (100%)
+> RCD
+> Valid (95%) Valid (95%) Valid (95%) Valid (85%) Valid (100%)
+
+Figure 3: Plan quality comparisons of Com-pDiffuser, CDGS, and RCD. Each column shows 20 sampled plans in the AntMaze-Giant-Stitch 
+
+environment for 5 test-time tasks defined in OG-Bench. Plans that violate environment constraints (wall penetration) are shown in red; feasible plans in green. We first assess whether RCD improves the phys-ical feasibility of composed plans. Figure 3 shows 20 sampled plans from CompDiffuser, CDGS, and RCD on each of the 5 test-time tasks in AntMaze-Giant-Stitch , together with the 
+
+valid plan rate : the fraction of plans that do not pass through maze walls. CompDiffuser pro-duces many infeasible plans, with valid rates ranging from 15% to 60% across tasks, as mode-averaging at corridor junctions pushes plans into physically impossible regions. CDGS improves validity through population-based pruning, but remains inconsistent across tasks since prun-ing only filters already-corrupted trajectories post hoc, and tends to collapse plan diversity toward a single mode. RCD achieves the highest valid rates across all 5 tasks by directly steering denoising toward high-density regions through the self-reconstruction error and overlap con-sistency, while preserving diverse plans across different feasible modes. We observe similar trends on PointMaze-Giant-Stitch ; see Ap-pendix G.1 for additional visualizations. 6Table 1: Quantitative results on OGBench locomotion tasks. Each environment provides 5 goal-conditioned tasks; we evaluate 20 episodes per task and report mean ± std across 5 seeds.                                                                                                          
+
+> Env Type Size GCBC GCIVL GCIQL QRL CRL HIQL GSC CD CDGS RCD
+> pointmaze stitch Medium 23 ±18 70 ±14 21 ±980 ±12 0±174 ±6100 ±0100 ±0100 ±0100 ±0
+> Large 7±512 ±631 ±284 ±15 0±013 ±6100 ±0100 ±0100 ±0100 ±0
+> Giant 0±00±00±050 ±80±00±029 ±369 ±374 ±3100 ±0
+> antmaze stitch Medium 45 ±11 44 ±629 ±659 ±753 ±694 ±197 ±291 ±293 ±397 ±2
+> Large 3±318 ±27±218 ±211 ±267 ±566 ±289 ±263 ±491 ±2
+> Giant 0±00±00±00±00±02±220 ±167 ±383 ±389 ±2
+> humanoid maze stitch Medium 29 ±512 ±212 ±318 ±236 ±288 ±292 ±192 ±290 ±293 ±2
+> Large 6±31±10±03±14±128 ±370 ±374 ±363 ±479 ±3
+> Giant 0±00±00±00±00±03±25±144 ±435 ±462 ±3
+
+4.2 Enhancing Long-Horizon Planning Performance Locomotion. Table 1 reports success rates on PointMaze-Stitch , AntMaze-Stitch , and 
+
+HumanoidMaze-Stitch tasks, where all methods plan in the 2D x-y position space and execute actions via a learned inverse dynamics model [ 49 ]. Offline GCRL algorithms struggle on Giant 
+
+mazes, where the required planning horizon far exceeds the length of any single training trajectory. Compositional diffusion-based planners overcome this limitation by assembling long plans from short segments. RCD achieves the best performance across nearly all tasks. As indicated by the enhanced plan feasibility in Section 4.1, RCD translates improved plan quality into higher success rates, particularly on the most challenging Giant tasks where mode-averaging is most severe. 
+
+→
+
+Figure 4: A cube manipulation se-quence executed by RCD. Object Manipulation in High-Dimensional State Spaces. 
+
+Table 3 reports success rates on Cube and AntSoccer 
+
+tasks, which involve planning in high-dimensional state spaces. For Cube , the planner operates on the full state including the 6-DoF robot arm joint positions and all cube poses, and actions are generated by a DQL-based value-learning policy [ 75 ]; for AntSoccer , we use the 17D plan-ner that includes the x-y positions of the ant and ball along with all 13 joint positions of the ant [ 49 ], with actions produced by a learned inverse dynamics model. 
+
+Cube tasks require composing dexterous pick-and-place sequences, ranging from Single cube to 
+
+Quadruple with increasing horizon requirements. AntSoccer requires coordinating ant locomotion with ball dribbling to reach a goal location. Among offline GCRL methods, GCIQL performs best on Cube , while most baselines struggle on AntSoccer due to the long planning horizon. RCD achieves the best or competitive performance across all tasks, demonstrating that the RCD guidance generalizes effectively to high-dimensional planning spaces. Table 2: Quantitative results on OGBench visual antmaze tasks.                
+
+> Env Size GSC CD CDGS RCD
+> visual antmaze Medium 40 ±455 ±326 ±463 ±3
+> Large 8±315 ±311 ±318 ±3Visual AntMaze Pixels
+
+Visual AntMaze. To evaluate RCD beyond state-based settings, we test on AntMaze-Stitch tasks with pixel observations, where the agent observes 
+
+64 × 64 RGB images and planning operates in a 16-dimensional latent space learned by a variational autoencoder. Actions are produced by an inverse dy-namics model that maps consecutive latent states to actions. Table 2 reports results for GSC, CD, CDGS, and RCD. RCD achieves improved performance on both Medium and Large mazes, confirming that the self-reconstruction error provides a meaningful den-sity signal even in a compressed latent space where the original pixel-level structure is abstracted away. 
+
+4.3 Additional Results 
+
+We present an ablation on the two RCD guidance components, an analysis of replanning, and a planning-time comparison with baselines below. Additional ablations on the guidance weight, the 7Table 3: Quantitative results on OGBench object manipulation tasks. Each environment provides 5 goal-conditioned tasks; we evaluate 20 episodes per task and report mean ± std across 5 seeds.                                                                            
+
+> Env Type Size GCBC GCIVL GCIQL QRL CRL HIQL GSC CD CDGS RCD
+> cube play Single 6±253 ±468 ±65±119 ±215 ±3100 ±0100 ±0100 ±0100 ±0
+> Double 1±136 ±340 ±51±010 ±26±270 ±475 ±378 ±485 ±3
+> Triple 1±11±03±10±04±13±145 ±451 ±460 ±460 ±3
+> Quadruple 0±00±00±00±00±00±030 ±448 ±451 ±455 ±3
+> antsoccer stitch Arena 24 ±821 ±32±01±11±015 ±165 ±369 ±361 ±372 ±3
+> Medium 2±11±00±00±00±04±112 ±217 ±311 ±220 ±2
+
+overlap consistency weight, and the probe level are provided in Appendix G.2, confirming that RCD is robust to the choice of these hyperparameters. Table 4: Ablation on guidance com-ponents. Success rates with different combinations of Erecon and Eov .           
+
+> Erecon Eov pointmaze Giant antmaze Giant
+> ✗✓59 ±356 ±3
+> ✓✗95 ±279 ±3
+> ✓✓100 ±089 ±2
+
+Ablation on Guidance Components. RCD combines two guidance signals: the self-reconstruction error ( Erecon )and the overlap consistency ( Eov ). Table 4 isolates their contributions on PointMaze-Giant-Stitch and 
+
+AntMaze-Giant-Stitch . The self-reconstruction error alone already provides a large improvement over the un-guided baseline by steering samples toward high-density re-gions. Adding the overlap consistency further improves per-formance, particularly on AntMaze-Giant-Stitch , con-firming that the two signals are complementary. Erecon 
+
+addresses global density while Eov targets local boundary agreement. Table 5: Ablation study on replanning. Success rates on pointmaze and antmaze stitch , comparing CD and RCD with ( ✓) and without ( ✗) replanning. 
+
+Env Size CD RCD 
+
+✗ ✓ ✗ ✓
+
+pointmaze Medium 100 ±0 100 ±0 100 ±0 100 ±0
+
+Large 100 ±0 100 ±0 100 ±0 100 ±0
+
+Giant 55 ±5 69 ±3 98 ±1 100 ±0
+
+antmaze Medium 90 ±3 91 ±3 91 ±2 97 ±2
+
+Large 73 ±3 89 ±2 76 ±3 91 ±2
+
+Giant 29 ±4 67 ±3 69 ±3 89 ±2
+
+Average 74 .5 86 .0 89 .0 96 .2
+
+Ablation Study on Replanning. Replan-ning periodically regenerates a plan from the current state during execution to mitigate ex-ecution drift (see Appendix F.4 for details). Table 5 compares CD and RCD with and without replanning on PointMaze-Stitch 
+
+and AntMaze-Stitch tasks. Replanning improves both methods, with the largest gains on Giant mazes where long plans are most susceptible to drift. Notably, RCD without replanning already outperforms CD with replanning on the most challenging 
+
+Giant tasks, highlighting the importance of refining plans during generation where mode-averaging is most severe. Table 6: Planning-time comparison with baselines. 
+
+Success rates and planning times (sec.). 
+
+Method pointmaze-Giant antmaze-Giant 
+
+Succ. Time (s) Succ. Time (s) 
+
+CD 69 ±3 8.0±0.5 67 ±3 8.9±0.7
+
+CDGS 74 ±3 44 .7±3.9 83 ±3 56 .7±7.4
+
+RCD 100 ±0 4.9±0.1 89 ±2 4.6±0.3
+
+Planning-Time Comparison. Table 6compares the success rate and planning time of RCD with CompDiffuser (CD) and CDGS on PointMaze-Giant-Stitch and 
+
+AntMaze-Giant-Stitch , measured on a single NVIDIA H100 GPU. RCD applies its guidance on top of the parallel composi-tional score averaging (Equation (4)). De-spite introducing this guidance step, its plan-ning time remains below CD, which adopts an autoregressive variant for bidirectional conditioning, and is an order of magnitude below CDGS (population-based search). Intuitively, RCD is fast because all M segments are evaluated in a single batched call at each denoising step, whereas CD must sweep segments sequentially to propagate bidirectional conditioning and CDGS runs multiple sequential resampling and pruning passes per step. 85 Related Work 
+
+Planning with Diffusion Models. Diffusion probabilistic models [ 29 , 71 ] have emerged as a power-ful framework for trajectory planning in reinforcement learning. Diffuser [ 31 ] pioneered this direction by training an unconditional diffusion model on offline trajectories and guiding it toward high-return regions via a learned value function. Decision Diffuser [ 3] introduced classifier-free guidance, condi-tioning directly on reward or constraint signals, while AdaptDiffuser [ 45 ] progressively fine-tuned the model with synthetic high-quality data. Subsequent work extended diffusion planning to hierarchical settings [ 8 , 43 ], multi-agent coordination [ 85 ], latent trajectory spaces [ 76 ], and inference-time tree search over diffusion rollouts [ 79 , 80 ]. Monolithic diffusion planners, however, are limited by the training data horizon, motivating compositional approaches that stitch short segments at inference time. GSC [ 51 ] chains skills via score composition, CompDiffuser [ 49 ] introduces bidirectional neighbor conditioning for smoother stitching, and CDGS [ 52 ] combines compositional diffusion with population-based guided search to mitigate mode-averaging. A complementary line of work improves the reliability of plans produced by a diffusion planner. LoMAP [ 37 ] projects intermediate diffusion samples onto a local approximation of the data manifold to suppress off-manifold artifacts, while RGG [ 40 ] detects infeasible plans via a separately trained, time-dependent classifier and resamples them, which requires additional training data. RCD shares the goal of refining diffusion-generated plans but targets the compositional setting, where mode-averaging is the dominant failure mode. Unlike RGG, which trains a time-dependent classifier on additional labeled data, RCD is fully training-free and uses only the pretrained local denoiser as an intrinsic density proxy. 
+
+Trajectory Stitching. The ability to compose novel long-horizon behaviors from short trajectory fragments is a long-standing challenge in offline RL. One broad category of approaches relies on offline data augmentation, where short or reward-suboptimal trajectories are stitched or synthesized and a downstream policy is retrained on the enriched data, spanning generative augmentation [ 41 , 30 ,36 , 38 , 9], model-based stitching [ 6, 28 , 84 ], and clustering-based augmentation [ 25 ]. RCD instead follows the inference-time compositional diffusion line of CompDiffuser [ 49 ] and CDGS [ 52 ], which compose local diffusion models directly at sampling time and avoid regenerating the dataset. 
+
+## 6 Conclusion 
+
+We presented Refining Compositional Diffusion (RCD), a training-free guidance method that ad-dresses the mode-averaging problem in compositional diffusion planning. By leveraging the self-reconstruction error of a pretrained diffusion model as a density proxy and combining it with an overlap consistency term that penalizes score disagreement at segment boundaries, RCD steers compositional sampling toward high-density, globally coherent plans without additional training. We established theoretical connections between the reconstruction error and the composed model’s evidence lower bound, and showed that the RCD-guided reverse process targets a tilted distribution concentrating on globally coherent plans. Empirically, RCD achieves consistent improvements over existing compositional methods across OGBench tasks spanning locomotion, object manipu-lation, and pixel-based observations, with particularly pronounced gains on the most challenging long-horizon tasks where mode-averaging is most severe. 
+
+Limitations. The current formulation operates within the Bethe factor graph framework of [ 78 ,52 ], which assumes chain-structured overlapping segments. Extending RCD guidance to other compositional structures, such as hierarchical or temporal abstractions, or factor graphs with loops, is an interesting future direction. Another practical aspect, shared with prior compositional planners such as CompDiffuser [ 49 ] and CDGS [ 52 ], is that the number of local segments used to determine the total horizon is pre-specified at inference time. Adaptively choosing it is another promising direction, for instance via tree-search-style horizon expansion [ 79 ] or by monitoring the self-reconstruction error along candidate horizons. 
+
+Impact Statement. This paper advances compositional diffusion planning by introducing a training-free guidance method that refines long-horizon plans toward high-density, globally coherent tra-jectories. While we do not identify direct negative societal impacts stemming from this research, practitioners deploying diffusion-based planners in real-world decision-making systems are encour-aged to carefully assess safety and reliability prior to deployment, particularly in settings where unsafe actions could carry significant consequences. 9References 
+
+[1] Agrawalla, B., Nauman, M., Agrawal, K., and Kumar, A. floq: Training critics via flow-matching for scaling compute in value-based rl. In International Conference on Learning Representations (ICLR) , 2026. [2] Ahn, H., Choi, H., Han, J., and Moon, T. Option-aware temporally abstracted value for offline goal-conditioned reinforcement learning. In Advances in Neural Information Processing Systems (NeurIPS) , 2025. [3] Ajay, A., Du, Y., Gupta, A., Tenenbaum, J. B., Jaakkola, T. S., and Agrawal, P. Is conditional generative modeling all you need for decision making? In International Conference on Learning Representations (ICLR) , 2023. [4] Baek, S., Park, T., Park, J., Oh, S., and Kim, Y. Graph-assisted stitching for offline hierarchical reinforcement learning. In International Conference on Machine Learning (ICML) , 2025. [5] Cai, Y., Wu, Y., Li, K., Zhou, Y., Zheng, B., and Liu, H. Flooddiffusion: Tailored diffusion forcing for streaming motion generation. arXiv preprint arXiv:2512.03520 , 2025. [6] Char, I., Mehta, V., Villaflor, A., Dolan, J. M., and Schneider, J. Bats: Best action trajectory stitching. arXiv preprint arXiv:2204.12026 , 2022. [7] Chen, B., Martí Monsó, D., Du, Y., Simchowitz, M., Tedrake, R., and Sitzmann, V. Diffusion forcing: Next-token prediction meets full-sequence diffusion. In Advances in Neural Information Processing Systems (NeurIPS) , 2024. [8] Chen, C., Deng, F., Kawaguchi, K., Gulcehre, C., and Ahn, S. Simple hierarchical planning with diffusion. arXiv preprint arXiv:2401.02644 , 2024. [9] Chen, C., Hamed, H., Baek, D., Kang, T., Bengio, Y., and Ahn, S. Extendable long-horizon planning via hierarchical multiscale diffusion. arXiv e-prints , pp. arXiv–2503, 2025. [10] Chi, C., Feng, S., Du, Y., Xu, Z., Cousineau, E., Burchfiel, B., and Song, S. Diffusion policy: Visuomotor policy learning via action diffusion. In Proceedings of Robotics: Science and Systems (RSS) , 2023. [11] Chung, H., Kim, J., Mccann, M. T., Klasky, M. L., and Ye, J. C. Diffusion posterior sampling for general noisy inverse problems. In International Conference on Learning Representations (ICLR) , 2023. [12] Clark, Q. and Shkurti, F. What do you need for diverse trajectory composition in diffusion planning? arXiv preprint arXiv:2505.18083 , 2025. [13] Dhariwal, P. and Nichol, A. Diffusion models beat gans on image synthesis. In Advances in Neural Information Processing Systems (NeurIPS) , 2021. [14] Dong, J., Huang, W., Zhang, J., Chen, Z., Yuan, X., Gu, Q., Jiang, Z., and Ye, N. Proximal action replacement for behavior cloning actor-critic in offline reinforcement learning. arXiv preprint arXiv:2602.07441 , 2026. [15] Dong, Z., Hao, J., Yuan, Y., Ni, F., Wang, Y., Li, P., and Zheng, Y. Diffuserlite: Towards real-time diffusion planning. In Advances in Neural Information Processing Systems (NeurIPS) ,2024. [16] Dong, Z., Yuan, Y., Hao, J., Ni, F., Ma, Y., Li, P., and Zheng, Y. Cleandiffuser: An easy-to-use modularized library for diffusion models in decision making. In Advances in Neural Information Processing Systems (NeurIPS), Datasets and Benchmarks Track , 2024. [17] Du, Y., Li, S., and Mordatch, I. Compositional visual generation with energy based models. In 
+
+Advances in Neural Information Processing Systems (NeurIPS) , 2020. [18] Du, Y., Durkan, C., Strudel, R., Tenenbaum, J. B., Dieleman, S., Fergus, R., Sohl-Dickstein, J., Doucet, A., and Grathwohl, W. S. Reduce, reuse, recycle: Compositional generation with energy-based diffusion models and mcmc. In International Conference on Machine Learning (ICML) , 2023. 10 [19] Eysenbach, B., Zhang, T., Levine, S., and Salakhutdinov, R. R. Contrastive learning as goal-conditioned reinforcement learning. In Advances in Neural Information Processing Systems (NeurIPS) , 2022. [20] Farebrother, J., Pirotta, M., Tirinzoni, A., Munos, R., Lazaric, A., and Touati, A. Temporal difference flows. In International Conference on Machine Learning (ICML) , 2025. [21] Feng, F., Ge, S., Fu, M., Li, Z., Zheng, Y., Tang, Z., Hu, Y., Huang, B., and Zhang, K. Ada-diffuser: Latent-aware adaptive diffusion for decision-making. In International Conference on Learning Representations (ICLR) , 2026. [22] Feng, L., Gu, P., An, B., and Pan, G. Resisting stochastic risks in diffusion planners with the trajectory aggregation tree. In International Conference on Machine Learning (ICML) , 2024. [23] Frans, K., Park, S., Abbeel, P., and Levine, S. Diffusion guidance is a controllable policy improvement operator. arXiv preprint arXiv:2505.23458 , 2025. [24] Ghosh, D., Gupta, A., Reddy, A., Fu, J., Devin, C., Eysenbach, B., and Levine, S. Learning to reach goals via iterated supervised learning. arXiv preprint arXiv:1912.06088 , 2019. [25] Ghugare, R., Geist, M., Berseth, G., and Eysenbach, B. Closing the gap between td learning and supervised learning–a generalisation point of view. In International Conference on Learning Representations (ICLR) , 2024. [26] Haramati, D., Qi, C., Daniel, T., Zhang, A., Tamar, A., and Konidaris, G. Hierarchical entity-centric reinforcement learning with factored subgoal diffusion. In International Conference on Learning Representations (ICLR) , 2026. [27] He, Y., Murata, N., Lai, C.-H., Takida, Y., Uesaka, T., Kim, D., Liao, W.-H., Mitsufuji, Y., Kolter, J. Z., Salakhutdinov, R., et al. Manifold preserving guided diffusion. In International Conference on Learning Representations (ICLR) , 2024. [28] Hepburn, C. A. and Montana, G. Model-based trajectory stitching for improved offline rein-forcement learning. arXiv preprint arXiv:2211.11603 , 2022. [29] Ho, J., Jain, A., and Abbeel, P. Denoising diffusion probabilistic models. In Advances in Neural Information Processing Systems (NeurIPS) , 2020. [30] Jackson, M. T., Matthews, M. T., Lu, C., Ellis, B., Whiteson, S., and Foerster, J. Policy-guided diffusion. arXiv preprint arXiv:2404.06356 , 2024. [31] Janner, M., Du, Y., Tenenbaum, J. B., and Levine, S. Planning with diffusion for flexible behavior synthesis. In International Conference on Machine Learning (ICML) , 2022. [32] Jeon, H., Min, C., and Park, J. Tree-guided diffusion planner. In Advances in Neural Information Processing Systems (NeurIPS) , 2025. [33] Ki, D., Oh, J., Shim, S.-W., and Lee, B.-J. Prior-guided diffusion planning for offline reinforce-ment learning. In Advances in Neural Information Processing Systems (NeurIPS) , 2025. [34] Kim, C., Lee, H., Seo, Y., Lee, K., and Zhu, Y. DEAS: DEtached value learning with action sequence for scalable offline RL. In International Conference on Learning Representations (ICLR) , 2026. [35] Kostrikov, I., Nair, A., and Levine, S. Offline reinforcement learning with implicit q-learning. In International Conference on Learning Representations (ICLR) , 2022. [36] Lee, J., Yun, S., Yun, T., and Park, J. Gta: Generative trajectory augmentation with guidance for offline reinforcement learning. arXiv preprint arXiv:2405.16907 , 2024. [37] Lee, K. and Choi, J. Local manifold approximation and projection for manifold-aware diffusion planning. In International Conference on Machine Learning (ICML) , 2025. [38] Lee, K. and Choi, J. State-covering trajectory stitching for diffusion planners. In Advances in Neural Information Processing Systems (NeurIPS) , 2025. 11 [39] Lee, K., Kim, S.-A., Choi, J., and Lee, S.-W. Deep reinforcement learning in continuous action spaces: a case study in the game of simulated curling. In International Conference on Machine Learning (ICML) , 2018. [40] Lee, K., Kim, S., and Choi, J. Refining diffusion planner for reliable behavior synthesis by automatic detection of infeasible plans. In Advances in Neural Information Processing Systems (NeurIPS) , 2023. [41] Li, G., Shan, Y., Zhu, Z., Long, T., and Zhang, W. Diffstitch: Boosting offline reinforcement learning with diffusion-based trajectory stitching. In International Conference on Machine Learning (ICML) , 2024. [42] Li, Q., Park, S., and Levine, S. Decoupled q-chunking. In International Conference on Learning Representations (ICLR) , 2026. [43] Li, W., Wang, X., Jin, B., and Zha, H. Hierarchical diffusion for offline decision making. In 
+
+International Conference on Machine Learning (ICML) , 2023. [44] Liang, J., Christopher, J. K., Koenig, S., and Fioretto, F. Simultaneous multi-robot motion planning with projected diffusion models. In International Conference on Machine Learning (ICML) , 2025. [45] Liang, Z., Mu, Y., Ding, M., Ni, F., Tomizuka, M., and Luo, P. Adaptdiffuser: Diffusion models as adaptive self-evolving planners. In International Conference on Machine Learning (ICML) ,2023. [46] Lu, H., Han, D., Shen, Y., and Li, D. What makes a good diffusion planner for decision making? In International Conference on Learning Representations (ICLR) , 2025. [47] Lu, Y., Han, D., Wang, Y., and Li, D. Improving diffusion planners by self-supervised action gating with energies. arXiv preprint arXiv:2603.02650 , 2026. [48] Luo, Y., Sun, C., Tenenbaum, J. B., and Du, Y. Potential based diffusion motion planning. In 
+
+International Conference on Machine Learning (ICML) , 2024. [49] Luo, Y., Mishra, U. A., Du, Y., and Xu, D. Generative trajectory stitching through diffusion composition. In Advances in Neural Information Processing Systems (NeurIPS) , 2025. [50] Lynch, C., Khansari, M., Xiao, T., Kumar, V., Tompson, J., Levine, S., and Sermanet, P. Learning latent plans from play. In Conference on robot learning , 2020. [51] Mishra, U. A., Xue, S., Chen, Y., and Xu, D. Generative skill chaining: Long-horizon skill planning with diffusion models. In Conference on Robot Learning , pp. 2905–2925. PMLR, 2023. [52] Mishra, U. A., He, D., Chen, Y., and Xu, D. Compositional diffusion with guided search for long-horizon planning. In International Conference on Learning Representations (ICLR) , 2026. [53] Nandiraju, G., Ju, Y., Xu, C., and Wang, H. Hdflow: Hierarchical diffusion-flow planning for long-horizon robotic assembly. In NeurIPS 2025 Workshop on Embodied World Models for Decision Making , 2025. [54] Opryshko, E., Quan, J., Voelcker, C., Du, Y., and Gilitschenski, I. Test-time graph search for goal-conditioned reinforcement learning. arXiv preprint arXiv:2510.07257 , 2025. [55] Park, K., Park, S., Lee, Y., and Levine, S. Scalable offline model-based RL with action chunks. In International Conference on Learning Representations (ICLR) , 2026. [56] Park, S., Ghosh, D., Eysenbach, B., and Levine, S. Offline goal-conditioned rl with latent states as actions. In Advances in Neural Information Processing Systems (NeurIPS) , 2023. [57] Park, S., Kreiman, T., and Levine, S. Foundation policies with hilbert representations. In 
+
+International Conference on Machine Learning (ICML) , 2024. 12 [58] Park, S., Frans, K., Eysenbach, B., and Levine, S. Ogbench: Benchmarking offline goal-conditioned rl. In International Conference on Learning Representations (ICLR) , 2025. [59] Park, S., Frans, K., Mann, D., Eysenbach, B., Kumar, A., and Levine, S. Horizon reduction makes rl scalable. In Advances in Neural Information Processing Systems (NeurIPS) , 2025. [60] Park, S., Li, Q., and Levine, S. Flow q-learning. In International Conference on Machine Learning (ICML) , 2025. [61] Park, S., Mann, D., and Levine, S. Dual goal representations. In International Conference on Learning Representations (ICLR) , 2026. [62] Park, S., Oberai, A., Atreya, P., and Levine, S. Transitive rl: Value learning via divide and conquer. In International Conference on Learning Representations (ICLR) , 2026. [63] Ren, Y., Gao, W., Ying, L., Rotskoff, G. M., and Han, J. Driftlite: Lightweight drift control for inference-time scaling of diffusion models. In International Conference on Learning Representations (ICLR) , 2026. [64] Robbins, H. E. An empirical bayes approach to statistics. In Breakthroughs in Statistics: Foundations and basic theory , pp. 388–394. Springer, 1992. [65] Shaoul, Y., Mishani, I., Vats, S., Li, J., and Likhachev, M. Multi-robot motion planning with diffusion models. In International Conference on Learning Representations (ICLR) , 2025. [66] Shen, Y., Jiang, X., Yang, Y., Wang, Y., Han, D., and Li, D. Understanding and improving training-free loss-based diffusion guidance. In Advances in Neural Information Processing Systems (NeurIPS) , 2024. [67] Silver, D., Huang, A., Maddison, C. J., Guez, A., Sifre, L., Van Den Driessche, G., Schrittwieser, J., Antonoglou, I., Panneershelvam, V., Lanctot, M., et al. Mastering the game of go with deep neural networks and tree search. nature , 529(7587):484–489, 2016. [68] Silver, D., Schrittwieser, J., Simonyan, K., Antonoglou, I., Huang, A., Guez, A., Hubert, T., Baker, L., Lai, M., Bolton, A., et al. Mastering the game of go without human knowledge. 
+
+nature , 550(7676):354–359, 2017. [69] Song, J., Meng, C., and Ermon, S. Denoising diffusion implicit models. In International Conference on Learning Representations (ICLR) , 2021. [70] Song, J., Zhang, Q., Yin, H., Mardani, M., Liu, M.-Y., Kautz, J., Chen, Y., and Vahdat, A. Loss-guided diffusion models for plug-and-play controllable generation. In International Conference on Machine Learning (ICML) , 2023. [71] Song, Y., Sohl-Dickstein, J., Kingma, D. P., Kumar, A., Ermon, S., and Poole, B. Score-based generative modeling through stochastic differential equations. In International Conference on Learning Representations (ICLR) , 2021. [72] Tassa, Y., Erez, T., and Todorov, E. Synthesis and stabilization of complex behaviors through online trajectory optimization. In 2012 IEEE/RSJ International Conference on Intelligent Robots and Systems , pp. 4906–4913, 2012. [73] Wang, T., Torralba, A., Isola, P., and Zhang, A. Optimal goal-reaching reinforcement learning via quasimetric learning. In International Conference on Machine Learning (ICML) , 2023. [74] Wang, Y., Wang, L., Du, Y., Sundaralingam, B., Yang, X., Chao, Y.-W., Pérez-D’Arpino, C., Fox, D., and Shah, J. Inference-time policy steering through human interactions. In IEEE International Conference on Robotics and Automation (ICRA) , 2025. [75] Wang, Z., Hunt, J. J., and Zhou, M. Diffusion policies as an expressive policy class for offline reinforcement learning. arXiv preprint arXiv:2208.06193 , 2022. [76] Xie, A., Rybkin, O., Sadigh, D., and Finn, C. Latent diffusion planning for imitation learning. In International Conference on Machine Learning (ICML) , 2025. 13 [77] Yang, L., Ding, S., Cai, Y., Yu, J., Wang, J., and Shi, Y. Guidance with spherical gaussian constraint for conditional diffusion. In International Conference on Machine Learning (ICML) ,2024. [78] Yedidia, J. S., Freeman, W. T., and Weiss, Y. Constructing free-energy approximations and generalized belief propagation algorithms. IEEE Transactions on information theory , 51(7): 2282–2312, 2005. [79] Yoon, J., Cho, H., Baek, D., Bengio, Y., and Ahn, S. Monte carlo tree diffusion for system 2 planning. In International Conference on Machine Learning (ICML) , 2025. [80] Yoon, J., Cho, H., Bengio, Y., and Ahn, S. Fast monte carlo tree diffusion: 100x speedup via parallel sparse planning. arXiv preprint arXiv:2506.09498 , 2025. [81] Zhang, Q., Song, J., Huang, X., Chen, Y., and Liu, M.-Y. Diffcollage: Parallel generation of large content with diffusion models. In 2023 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pp. 10188–10198. IEEE, 2023. [82] Zhang, Y., Luo, Y., Mishra, U. A., Shin, W. C., Chen, Y., and Xu, D. Compositional vi-sual planning via inference-time diffusion scaling. In International Conference on Learning Representations (ICLR) , 2026. [83] Zheng, Y., Liang, R., Zheng, K., Zheng, J., Mao, L., Li, J., Gu, W., Ai, R., Li, S. E., Zhan, X., et al. Diffusion-based planning for autonomous driving with flexible guidance. In International Conference on Learning Representations (ICLR) , 2025. [84] Zhou, Z., Zhu, C., Zhou, R., Cui, Q., Gupta, A., and Du, S. S. Free from bellman completeness: Trajectory stitching via model-based return-conditioned supervised learning. In International Conference on Learning Representations (ICLR) , 2023. [85] Zhu, Z., Liu, M., Mao, L., Kang, B., Xu, M., Yu, Y., Ermon, S., and Zhang, W. Madiff: Offline multi-agent learning with diffusion models. arXiv preprint arXiv:2305.17330 , 2023. 14 Appendix 
+
+# Table of Contents 
+
+Appendix A. Notation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 16 
+
+Appendix B. Extended Related Work . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 16 
+
+Appendix C. Training-free Diffusion Guidance . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18 
+
+Appendix D. Proofs . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18 D.1. Proof of Proposition 1 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18 D.2. Proof of Proposition 2 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18 D.3. Proof of Proposition 3 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 19 
+
+Appendix E. Algorithm . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 19 
+
+Appendix F. Implementation Details . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 20 F.1. Environments and Datasets . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 20 F.2. Diffusion Model Architecture and Training . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 20 F.3. Hyperparameters . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 21 F.4. Evaluation Protocol . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .21 F.5. Compute Resources . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22 F.6. Low-Level Controllers . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22 
+
+Appendix G. Additional Results . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22 G.1. Additional Plan Quality Visualizations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22 G.2. Additional Ablation Studies . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22 
+
+Appendix H. Baseline Result Sources . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 24 15 A Notation 
+
+Table 7: Table of notation. Notation Description Factor Graph & Plan Structure 
+
+τ = ( x1, . . . , x N ) ∈ RN ×D Global plan consisting of N variable nodes 
+
+xi ∈ RD Variable node i (state or state-action pair) 
+
+D Per-variable dimension (state or state-action) 
+
+yj Factor node j (local segment, contiguous subsequence of τ )
+
+M Number of factors (local segments) 
+
+N Number of variable nodes 
+
+yj ∩ yj+1 Overlap region between adjacent segments j and j+1 
+
+di Degree of variable xi (di = 2 for overlap, di = 1 otherwise) 
+
+Diffusion Process 
+
+τ (t), y(t) 
+
+> j
+
+Noisy sample at diffusion timestep t
+
+τ (0) , y(0)  
+
+> j
+
+Clean sample 
+
+αt Cumulative noise schedule (DDPM) 
+
+ϵ Gaussian noise 
+
+T Total number of diffusion timesteps 
+
+ϵθ (y(t) 
+
+> j
+
+, t ) Noise prediction network; neighbor conditioning implicit (see Section 2.2) 
+
+sθ (·, t ) Score function sθ := −ϵθ /√1−αt (see Section 2.3) 
+
+¯ϵθ Composed noise prediction (averaging in overlaps) 
+
+ˆτ (t)0 , ˆy(t) 
+
+> j, 0
+
+Tweedie denoised estimate 
+
+ˆτ rec 0 Composed Tweedie reconstruction 
+
+μθ , σt Predicted mean and standard deviation of reverse process 
+
+RCD-Specific 
+
+Erecon (ˆ τ 0; s) Self-reconstruction error at probe level s
+
+Eov (ˆ y1: M ) Overlap consistency 
+
+ERCD Combined RCD guidance objective 
+
+s Probe timestep for self-reconstruction 
+
+w Guidance weight 
+
+λov Weight for overlap consistency 
+
+˜p(τ ) RCD-guided (tilted) distribution 
+
+δ Numerical stability constant for gradient normalization 
+
+## B Extended Related Work 
+
+Diffusion and Flow Models for Offline Decision Making. Beyond trajectory planning, diffusion and flow models have been widely adopted as policy and value classes in offline RL and imitation learning. Diffusion Policy [ 10 ] and Latent Diffusion Planning [ 76 ] train diffusion- (or latent-diffusion-) based visuomotor policies, and Ada-Diffuser [ 21 ] extends this line with a causal diffusion framework that identifies latent dynamics from short temporal observation blocks and applies to both planning and policy learning. Diffusion Q-Learning [75] and more recent flow-matching-based variants such as FQL [ 60 ], DEAS [ 34 ], MAC [ 55 ], and DQC [ 42 ] combine diffusion/flow policy classes with Q-learning. floq [ 1] instead applies flow matching on the critic side. On a different axis, training-time data augmentations such as Proximal Action Replacement [ 14 ] progressively replace low-value actions in the offline buffer with high-value ones from a stable actor to lift the performance ceiling of behavior-cloning-regularized actor-critic methods. A complementary line treats guidance itself as a policy-improvement step [ 23 , 30 ], including Prior-Guided Diffusion Planning [ 33 ], which replaces the standard Gaussian noise prior of a behavior-cloned diffusion planner with a state-conditioned learnable prior concentrated on high-value trajectories. Sequence-level diffusion models have also been extended along the time axis: Diffusion Forcing [ 7 ] unifies next-token prediction with full-16 sequence denoising, FloodDiffusion [ 5] streams motion generation online, and DiffuserLite [ 15 ]employs a coarse-to-fine planning refinement process to accelerate inference. Structured variants of diffusion planners include Hierarchical Diffusion for Offline Decision Making [ 43 ], which uses a two-level trajectory-level diffusion with classifier-free guidance, and Potential-Based Diffusion Motion Planning [ 48 ], which parametrizes motion-planning potentials with diffusion models and composes constraints by summing the learned potentials, and HDFlow [ 53 ], which couples a high-level diffusion planner over latent subgoals with a low-level rectified-flow trajectory generator for long-horizon robotic assembly. Diffusion planners have further been deployed across domains: Diffusion-Based Planning for Autonomous Driving [ 83 ] brings related ideas to driving-policy generation, and multi-robot motion planning methods [ 65 , 44 ] compose single-robot diffusion planners under collision and kinematic constraints. An empirical study of design principles by Lu et al. [46] systematically evaluates over 6,000 diffusion-planner configurations for offline RL, Clark & Shkurti [12] identifies shift equivariance and local receptive fields as the architectural ingredients that enable diffusion planners to compose diverse trajectories from short BC-trained segments, and CleanDiffuser [ 16 ]provides a modular library that unifies many of the above components. A broader set of inference-time methods such as Inference-Time Policy Steering [ 74 ] and DriftLite [ 63 ] modify a pretrained diffusion model at test time without additional training, but target settings orthogonal to compositional long-horizon planning. 
+
+Offline Goal-Conditioned RL and Horizon Reduction. Offline goal-conditioned RL [ 24 , 73 ,19 , 35 , 56 , 58 ] studies how to train a policy that can reach any target state from any starting state using only a fixed, pre-collected dataset. Representation-learning approaches such as HILP [ 57 ], Dual Goal Representations [ 61 ], Transitive RL [ 62 ], and Temporal Difference Flows [ 20 ] learn geometry-aware state embeddings tailored for long-horizon value estimation or temporal-distance prediction. Horizon-reduction strategies explicitly shrink the effective planning horizon and shift reasoning to a hierarchical or graph-based representation: SHARSA [ 59 ], option-aware temporal abstraction [ 2 ], Graph-Assisted Stitching [ 4], hierarchical RL with factored subgoal diffusion [ 26 ], and Test-Time Graph Search [ 54 ], which builds a weighted graph over offline dataset states and assembles a subgoal sequence at inference time for a frozen goal-conditioned policy, all trade long reasoning chains for shorter, compositional segments. Along the data-centric axis, trajectory-stitching methods synthesize longer trajectories offline , either via model-based return-conditioned supervised learning [ 84 ] or generative augmentation [ 41 , 30 , 36 , 38 , 9], after which a downstream policy is retrained on the enriched dataset. 
+
+Inference-Time Search and Plan Refinement for Diffusion Planners. A recent line of work explores explicit search or population-based selection over diffusion-generated plans. Monte Carlo Tree Diffusion [ 79 ] and its faster variant [ 80 ] perform MCTS over denoising trajectories, and Tree-Guided Diffusion Planner [ 32 ] balances exploration and exploitation through a bi-level tree-search sampling procedure. Within the compositional diffusion setting, CDGS [ 52 ] augments segment-level score composition with population-based guided search and plan pruning. Plan-refinement methods instead detect or project infeasible trajectories: RGG [ 40 ] trains a time-dependent classifier to flag infeasible plans, LoMAP [ 37 ] projects intermediate samples onto a local approximation of the data manifold, TAT [ 22 ] aggregates multiple diffusion-generated trajectories into a dynamic tree and filters unreliable predictions via weighted majority voting over shared states, SAGE [ 47 ] re-ranks sampled plans at inference time using a JEPA-based latent prediction error as a feasibility energy combined with value estimates, and AdaptDiffuser [ 45 ] generates synthetic trajectories via reward-gradient guidance, filters them with a discriminator, and fine-tunes the diffusion planner on the filtered high-quality samples in a self-evolving loop. In contrast, RCD uses the pretrained diffusion model’s own self-reconstruction error as an intrinsic density proxy, directly at the composed-trajectory level where mode-averaging originates, and requires no auxiliary classifier, manifold estimator, or search tree. Compositional Visual Planning [ 82 ] addresses long-horizon video planning by enforcing boundary residual constraints across overlapping chunks via message passing. RCD instead introduces a self-reconstruction density signal with a formal ELBO connection that explicitly targets mode-averaging, and applies gradient guidance on a single composed trajectory rather than residual-based message passing. 17 C Training-free Diffusion Guidance 
+
+Training-free guidance methods steer diffusion sampling toward a target condition y without retraining the model. Starting from classifier guidance [ 13 ], which modifies the score via ∇τ (t) log p(τ (t)|y) = 
+
+∇τ (t) log p(τ (t)) + ∇τ (t) log p(y|τ (t)), recent methods avoid the need for a time-dependent classifier by operating directly on the Tweedie estimate. Given a differentiable loss function L(ˆ τ (t)0 ) defined on the clean-data support, the likelihood term is approximated as [11, 70]: 
+
+∇τ (t) log p(y|τ (t)) ≈ − γ ∇τ (t) L ˆτ (t)0
+
+, (13) where γ > 0 is a guidance scale and the gradient is taken with respect to τ (t) through the Tweedie estimate. This approach requires only a pretrained diffusion model and a differentiable objective, making it applicable to a wide range of tasks without additional training [77, 27]. 
+
+## D Proofs 
+
+D.1 Proof of Proposition 1 (Reconstruction Error as Density Proxy) 
+
+We provide the full derivation of the ELBO connection. 
+
+Per-segment ELBO. For a single segment yj with clean sample y(0)  
+
+> j
+
+, the per-segment reconstruc-tion error at probe timestep s is: 
+
+Eϵ
+
+h
+
+∥y(0)  
+
+> j
+
+− ˆy(s) 
+
+> j, 0
+
+∥2i
+
+= Eϵ
+
+ y(0)  
+
+> j
+
+−√αs y(0)  
+
+> j
+
++ √1−αs ϵ − √1−αs ϵθ (y(s) 
+
+> j
+
+, s )
+
+√αs
+
+> 2
+
+
+
+= 1 − αs
+
+αs
+
+Eϵ
+
+h
+
+∥ϵ − ϵθ (y(s) 
+
+> j
+
+, s )∥2i
+
+. (14) Multiplying both sides by αs/(1 −αs) and summing over s = 1 , . . . , T :
+
+> T
+
+X
+
+> s=1
+
+αs
+
+1−αs
+
+Eϵ
+
+h
+
+∥y(0)  
+
+> j
+
+− ˆy(s) 
+
+> j, 0
+
+∥2i
+
+=
+
+> T
+
+X
+
+> s=1
+
+Eϵ
+
+h
+
+∥ϵ − ϵθ (y(s) 
+
+> j
+
+, s )∥2i
+
+. (15) The right-hand side is the negative ELBO for the local diffusion model [ 29 ], providing an upper bound on − log pθ (y(0)  
+
+> j
+
+).
+
+Composed trajectory. Let ¯ϵθ (ˆ τ s, s ) denote the composed noise prediction : equal to ϵ(j) 
+
+> θ
+
+on non-overlap variables xi ∈ yj and to 12
+
+ ϵ(k) 
+
+> θ
+
++ ϵ(k+1) 
+
+> θ
+
+ on overlap variables xi ∈ yk ∩ yk+1 .By the definition of the composed Tweedie reconstruction ˆτ rec 0 in Definition 1, a direct algebraic manipulation with ˆτ s = √αs ˆτ 0 + √1−αs ϵ yields 
+
+ˆτ 0 − ˆτ rec 0 = −
+
+q 1−αs
+
+> αs
+
+ ϵ − ¯ϵθ (ˆ τ s, s ). (16) Squaring and taking the expectation over ϵ gives 
+
+αs
+
+1−αs
+
+Erecon (ˆ τ 0; s) = Eϵ
+
+h
+
+ϵ − ¯ϵθ
+
+ √αs ˆτ 0 + √1−αs ϵ, s  2i
+
+. (17) Summing over s = 1 , . . . , T , the right-hand side is the DDPM simple loss Lsimple for the composed denoiser ¯ϵθ . By the standard variational argument [ 29 ], Lsimple upper-bounds − log pθ (ˆ τ 0) up to a timestep re-weighting, where pθ is the distribution implicitly defined by the composed denoiser ¯ϵθ .This establishes the inequality in Equation (7). 
+
+D.2 Proof of Proposition 2 (Overlap Consistency Measures Score Disagreement) 
+
+Both segments k and k+1 receive the same noisy trajectory ˆτ s in the overlap region yk ∩ yk+1 . Let 
+
+z := ˆ τ s yk ∩yk+1 
+
+be the common noisy overlap. The Tweedie estimates from each segment in the 18 overlap are: 
+
+ˆyk, 0 yk ∩yk+1 
+
+= z − √1−αs ϵ(k) 
+
+> θ
+
+(y(s) 
+
+> k
+
+, s )
+
+√αs
+
+, (18) 
+
+ˆyk+1 ,0 yk ∩yk+1 
+
+= z − √1−αs ϵ(k+1)  
+
+> θ
+
+(y(s)
+
+> k+1
+
+, s )
+
+√αs
+
+, (19) where ϵ(j) 
+
+> θ
+
+(y(s) 
+
+> j
+
+, s ) is the noise prediction from segment j evaluated on its full noisy input y(s) 
+
+> j
+
+.Taking the difference: 
+
+ˆyk, 0 yk ∩yk+1 
+
+− ˆyk+1 ,0 yk ∩yk+1 
+
+=
+
+√1−αs
+
+√αs
+
+ ϵ(k+1)  
+
+> θ
+
+− ϵ(k)
+
+> θ
+
+ 
+
+> yk∩yk+1
+
+. (20) Squaring yields: 
+
+∥ˆyk, 0 − ˆyk+1 ,0∥2 
+
+> yk∩yk+1
+
+= 1−αs
+
+αs
+
+∥ϵ(k+1)  
+
+> θ
+
+− ϵ(k) 
+
+> θ
+
+∥2 
+
+> yk∩yk+1
+
+. (21) Substituting the score identity ϵ(j) 
+
+> θ
+
+= −√1−αs s(j) 
+
+> θ
+
+from Section 2.3 yields Equation (9). 
+
+Connection to marginal consistency. In the Bethe approximation, marginal consistency requires 
+
+pk(xi) = pk+1 (xi) for all xi ∈ yk ∩ yk+1 . Taking gradients: ∇xi log pk(xi) = ∇xi log pk+1 (xi),i.e., scores from both segments must agree at overlap variables. Eov is a relaxation of this hard constraint, penalizing violations via the squared score difference. 
+
+D.3 Proof of Proposition 3 (Guided Distribution) Proposition 3 (Guided Distribution) . Let pθ (τ ) denote the composed distribution obtained via score averaging. The RCD-guided reverse process targets the modified distribution 
+
+˜p(τ ) ∝ pθ (τ ) · exp  −w · E RCD (τ ), (22) 
+
+which up-weights high-density, globally coherent plans and down-weights mode-averaged plans. Proof. Consider the reverse-time SDE for the composed distribution pθ (τ ) [71]: 
+
+dτ = f (τ , t ) − g(t)2∇τ log pt(τ ) dt + g(t) d ¯ w, (23) where f and g are the drift and diffusion coefficients and ¯w is a reverse-time Wiener process. The RCD guidance modifies the score by adding −w∇τ ERCD (τ ):
+
+dτ = f (τ , t ) − g(t)2 ∇τ log pt(τ ) − w∇τ ERCD (τ ) dt + g(t) d ¯ w. (24) This is the reverse SDE for the modified distribution: 
+
+˜pt(τ ) ∝ pt(τ ) · exp  −w · E RCD (τ ), (25) since ∇τ log ˜ pt(τ ) = ∇τ log pt(τ ) − w∇τ ERCD (τ ).At t = 0 , the marginal is ˜p(τ ) ∝ pθ (τ ) · exp( −w · E RCD (τ )) . Since ERCD ≥ 0 with equality for perfectly reconstructed, globally coherent plans, the exponential factor exp( −w ERCD ) up-weights plans with low reconstruction error and high overlap consistency, while down-weighting mode-averaged plans. 
+
+## E Algorithm 
+
+Each RCD guidance step requires one additional forward pass through the score network (to compute the reconstruction at probe level s) and one backward pass for the gradient. The expectation in Equation (6) is approximated with a single Monte Carlo noise sample. The complete procedure is summarized in Algorithm 1. 19 Algorithm 1 Refining Compositional Diffusion  
+
+> 1:
+
+Require: Shared diffusion model ϵθ , guidance weight w, overlap weight λov , probe level s 
+
+> 2:
+
+Observe current state s; initialize τ (T ) ∼ N (0, I) 
+
+> 3:
+
+for t = T, . . . , 1 do  
+
+> 4:
+
+// compositional denoising via score averaging over segments {yj } 
+
+> 4:
+
+¯ϵθ (τ (t), t ) ← average per-segment predictions ϵθ (y(t) 
+
+> j
+
+, t ), sharing in overlaps  
+
+> 5:
+
+ˆτ (t)0 ←  τ (t) − √1−αt ¯ϵθ (τ (t), t )/√αt // Tweedie estimate  
+
+> 6:
+
+// self-reconstruction: perturb and reconstruct  
+
+> 6:
+
+Sample ϵ ∼ N (0, I) 
+
+> 7:
+
+ˆτ s ← √αs ˆτ (t)0 + √1−αs ϵ 
+
+> 8:
+
+for each segment j = 1 , . . . , M do  
+
+> 9:
+
+ˆyj, 0 ←  ˆyj,s − √1−αs ϵθ (ˆ yj,s , s )/√αs // per-segment Tweedie  
+
+> 10:
+
+end for  
+
+> 11:
+
+// compose per-segment estimates via overlap averaging (Eq. 3)  
+
+> 11:
+
+ˆτ rec 0 ← merge {ˆyj, 0}Mj=1 , averaging in overlap regions  
+
+> 12:
+
+// RCD guidance objective (Eq. 10)  
+
+> 12:
+
+Erecon ← ∥ ˆτ (t)0 − ˆτ rec 0 ∥2 // self-reconstruction error  
+
+> 13:
+
+Eov ← 1 
+
+> M−1
+
+PM −1 
+
+> k=1
+
+∥ˆyk, 0 − ˆyk+1 ,0∥2 
+
+> yk∩yk+1
+
+// overlap consistency  
+
+> 14:
+
+g(t) ← ∇ τ (t)
+
+ Erecon + λov Eov 
+
+ 
+
+> 15:
+
+˜g(t) ← g(t)/∥g(t)∥∞ // normalized guidance  
+
+> 16:
+
+// reverse step with guidance (Eq. 12)  
+
+> 16:
+
+τ (t−1) ← μθ (τ (t), t ) + σt z − w σ 2 
+
+> t
+
+˜g(t), z ∼ N (0, I) 
+
+> 17:
+
+τ (t−1)  
+
+> s0
+
+← s // constrain start state  
+
+> 18:
+
+end for  
+
+> 19:
+
+return τ (0) 
+
+## F Implementation Details 
+
+F.1 Environments and Datasets 
+
+We evaluate on OGBench [ 58 ], which provides diverse long-horizon goal-conditioned tasks with 
+
+stitch and play datasets. Locomotion. pointmaze , antmaze , and humanoid maze require an agent to navigate from a start position to a goal in mazes of increasing size ( Medium , Large , Giant ). The stitch datasets consist of short, disconnected trajectory segments that do not individually span start-to-goal pairs, requiring methods to compose multiple segments at inference time. Object Manipulation. cube tasks require a 6-DoF UR5e robot arm to pick and place one to four cubes into target configurations. The play datasets contain diverse, unstructured manipulation trajectories. 
+
+antsoccer requires an ant agent to dribble a ball to a goal location, combining locomotion and object interaction. Visual. visual antmaze provides 64 × 64 RGB image observations. We pretrain a VAE to encode observations into a 16-dimensional latent space, and all planning and inverse dynamics operate in this latent space. Table 8 lists all evaluation environments with their corresponding OGBench dataset names and the maximum environment steps per episode. 
+
+F.2 Diffusion Model Architecture and Training 
+
+Our implementation is built on top of the public CompDiffuser codebase 1 [ 49 ], and we use the same pretrained local diffusion model as CompDiffuser for all experiments. For pointmaze and 
+
+antmaze (2D), the model architecture follows a 1D temporal U-Net with residual blocks, group normalization, and sinusoidal timestep embeddings. For humanoid maze , antsoccer , and cube ,we use a DiT-based architecture [ 49 ] with environment-specific hidden dimensions and patch sizes. Training uses the standard DDPM [ 29 ] objective with a linear noise schedule. All models are trained until convergence using the Adam optimizer with learning rate 2 × 10 −4.
+
+> 1https://github.com/devinluo27/comp_diffuser_release
+
+20 Table 8: Evaluation environments and datasets in OGBench. We follow the evaluation setup of CompDiffuser [49]. 
+
+Environment Type Size Dataset Name Env Steps 
+
+pointmaze stitch Medium pointmaze-medium-stitch-v0 1000 
+
+Large pointmaze-large-stitch-v0 1000 
+
+Giant pointmaze-giant-stitch-v0 1000 
+
+antmaze stitch Medium antmaze-medium-stitch-v0 1000 
+
+Large antmaze-large-stitch-v0 2000 
+
+Giant antmaze-giant-stitch-v0 2000 
+
+humanoid maze stitch Medium humanoidmaze-medium-stitch-v0 5000 
+
+Large humanoidmaze-large-stitch-v0 5000 
+
+Giant humanoidmaze-giant-stitch-v0 8000 
+
+antsoccer stitch Arena antsoccer-arena-stitch-v0 5000 
+
+Medium antsoccer-medium-stitch-v0 5000 
+
+cube play Single cube-single-play-v0 2000 
+
+Double cube-double-play-v0 2000 
+
+Triple cube-triple-play-v0 2000 
+
+Quadruple cube-quadruple-play-v0 2000 
+
+visual antmaze stitch Medium antmaze-medium-stitch-v0 2000 
+
+Large antmaze-large-stitch-v0 2000 
+
+F.3 Hyperparameters 
+
+Table 9 lists the diffusion model and RCD hyperparameters used across all environments. We use a 
+
+single fixed set of RCD hyperparameters (w=0 .25 , λov =0 .5, s/T =0 .4) across every benchmark in this paper, including locomotion mazes of three different scales, high-dimensional object manipula-tion, and visual AntMaze. The hyperparameter ablations in Appendix G.2 confirm that RCD is robust to the choice of these hyperparameters. Table 9: Hyperparameters across environments. Parameter PointMaze AntMaze Humanoid Maze Cube AntSoccer Visual AntMaze 
+
+Architecture U-Net U-Net DiT DiT DiT U-Net Segment length H 160 160 336 160 160 160 Overlap size 64 64 128 56 56 64 Diffusion steps T 1000 512 512 512 512 512 Probe ratio s/T 0.40 0.40 0.40 0.40 0.40 0.40 Guidance weight w 0.25 0.25 0.25 0.25 0.25 0.25 Overlap weight λov 0.5 0.5 0.5 0.5 0.5 0.5 
+
+F.4 Evaluation Protocol 
+
+We follow the OGBench evaluation protocol [ 58 ]. Each environment specifies 5 test-time start-goal pairs. For each pair, we run 20 episodes and report the binary success rate (reaching within a threshold distance of the goal). Results are averaged over 5 random seeds, and we report mean ±
+
+standard deviation. For replanning experiments, we adopt the adaptive replanning strategy proposed by CompDiffuser [ 49 ]: replanning is triggered when the agent deviates from its current subgoal beyond a threshold distance, and a receding scheme progressively reduces the number of composed segments based on how much of the current plan has been executed to encourage faster convergence toward the goal. 21 Table 10: Number of composed segments M per environment. For locomotion mazes and 
+
+antsoccer , values follow the same setting as CompDiffuser [49]. 
+
+Environment Type Size Dataset Name # Segments M
+
+pointmaze stitch Medium pointmaze-medium-stitch-v0 3
+
+Large pointmaze-large-stitch-v0 6
+
+Giant pointmaze-giant-stitch-v0 8
+
+antmaze stitch Medium antmaze-medium-stitch-v0 3
+
+Large antmaze-large-stitch-v0 6
+
+Giant antmaze-giant-stitch-v0 9
+
+humanoid maze stitch Medium humanoidmaze-medium-stitch-v0 4
+
+Large humanoidmaze-large-stitch-v0 6
+
+Giant humanoidmaze-giant-stitch-v0 11 
+
+antsoccer stitch Arena antsoccer-arena-stitch-v0 5
+
+Medium antsoccer-medium-stitch-v0 6
+
+cube play Single cube-single-play-v0 2
+
+Double cube-double-play-v0 5
+
+Triple cube-triple-play-v0 10 
+
+Quadruple cube-quadruple-play-v0 10 
+
+visual antmaze stitch Medium antmaze-medium-stitch-v0 2
+
+Large antmaze-large-stitch-v0 5
+
+F.5 Compute Resources 
+
+All experiments, including training of the local diffusion models and all evaluations are conducted on a single NVIDIA H100 GPU. 
+
+F.6 Low-Level Controllers 
+
+The diffusion planner generates state-space trajectories, and a separate low-level controller converts these into executable actions. Locomotion and AntSoccer. Following CompDiffuser [ 49 ], we train an MLP-based inverse dynamics model that takes consecutive states (st, s t+1 ) as input and predicts the action at. The same model architecture and training procedure from CompDiffuser is used. Cube Manipulation. We use a DQL-based value-learning policy [ 75 ] that takes the current state and a planned subgoal as input and outputs actions. The DQL policy is trained on the same offline dataset used for the diffusion planner. Visual AntMaze. We train an inverse dynamics model in the VAE latent space that maps consecutive latent states (zt, z t+1 ) to actions, following a similar architecture to the state-based inverse dynamics but operating on 16-dimensional latent representations. 
+
+## G Additional Results 
+
+G.1 Additional Plan Quality Visualizations 
+
+Figure 5 extends the plan quality analysis of Section 4.1 to PointMaze-Giant-Stitch , confirming that the improvement in plan feasibility observed on AntMaze generalizes across environments. CompDiffuser produces valid rates as low as 10% on the hardest task (Task 3), while CDGS shows improvement on some tasks but remains inconsistent (15–100%). RCD achieves 85–100% valid rates across all 5 tasks, consistent with the AntMaze-Giant-Stitch case presented in Section 4.1. 
+
+G.2 Additional Ablation Studies 
+
+We vary the three RCD-specific hyperparameters one at a time on PointMaze-Giant-Stitch and 
+
+AntMaze-Giant-Stitch , fixing the remaining ones at the defaults listed in Table 9. Reported numbers follow the same evaluation protocol as the main results (Appendix F.4). Success rates are 22 CompDiffuser 
+
+Task 1 
+
+> Valid (40%)
+
+Task 2 
+
+> Valid (75%)
+
+Task 3 
+
+> Valid (10%)
+
+Task 4 
+
+> Valid (55%)
+
+Task 5         
+
+> Valid (80%)
+> CDGS
+> Valid (40%) Valid (95%) Valid (15%) Valid (30%) Valid (100%)
+> RCD
+> Valid (100%) Valid (100%) Valid (95%) Valid (85%) Valid (100%)
+
+Figure 5: Plan quality comparisons on PointMaze-Giant-Stitch . Each column shows 20 sampled plans from CompDiffuser, CDGS, and RCD for 5 test-time tasks defined in OGBench. Plans that violate environment constraints (wall penetration) are shown in red; feasible plans in green. averaged over 5 random seeds, each evaluated on 5 start-goal pairs with 20 episodes per pair. The defaults ( w=0 .25 , λov =0 .5, s/T =0 .4) are highlighted with bold values. 
+
+Ablation on guidance weight w. Table 11 varies the RCD guidance weight w ∈ { 0, 0.25 , 0.5}.Setting w=0 disables RCD guidance entirely and recovers a score close to plain compositional denoising, while both non-zero weights lead to large improvements on both environments. The default w=0 .25 attains the best average success rate. Table 11: Ablation on guidance weight w.Env Type Size Baselines RCD CD CDGS w=0 w=0 .25 (default) w=0 .5
+
+pointmaze stitch Giant 69 ±3 74 ±3 59 ±5 100 ±0 100 ±0
+
+antmaze stitch Giant 67 ±3 83 ±3 56 ±4 89 ±2 87 ±3
+
+Average 68 .0 78 .5 57 .5 94 .5 93 .5
+
+Ablation on overlap consistency weight λov . Table 12 varies the overlap consistency weight 
+
+λov ∈ { 0, 0.25 , 0.5}. Even with λov =0 (reconstruction error only) the guided sampler already out-performs the compositional baseline, but adding the overlap consistency term consistently improves 
+
+AntMaze-Giant-Stitch and yields the best overall success rate at the default λov =0 .5.23 Table 12: Ablation on overlap consistency weight λov .Env Type Size Baselines RCD CD CDGS λov =0 λov =0 .25 λov =0 .5 (default) 
+
+pointmaze stitch Giant 69 ±3 74 ±3 99 ±1 92 ±3 100 ±0
+
+antmaze stitch Giant 67 ±3 83 ±3 79 ±4 85 ±3 89 ±2
+
+Average 68 .0 78 .5 89 .0 88 .5 94 .5
+
+Ablation on probe level s/T . Table 13 varies the probe level s/T ∈ { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6}.Performance is stable across a wide range of probe levels, and we adopt s/T =0 .4 as the default across all environments. Table 13: Ablation on probe level s/T .Env Type Size Baselines RCD CD CDGS s/T =0 .1 0.2 0.3 0.4 (default) 0.5 0.6
+
+pointmaze stitch Giant 69 ±3 74 ±3 98 ±2 98 ±2 98 ±2 100 ±0 98 ±2 98 ±2
+
+antmaze stitch Giant 67 ±3 83 ±3 81 ±4 86 ±3 84 ±3 89 ±2 89 ±2 83 ±3
+
+Average 68 .0 78 .5 89 .5 92 .0 91 .0 94 .5 93 .5 90 .5
+
+## H Baseline Result Sources 
+
+H.1 Locomotion 
+
+We obtain scores for GCBC, GCIVL, GCIQL, QRL, CRL, and HIQL from Table 2 in [ 58 ]. Scores for GSC is taken from Tables 1 and 2 in [ 49 ]. CDGS and RCD are from our experiments using the same pretrained models as CompDiffuser (CD). 
+
+H.2 Object Manipulation 
+
+For antsoccer , scores for GCBC through HIQL are from Table 2 in [ 58 ], and GSC from Table 3 in [49]. For cube , GCBC through HIQL are from Table 2 in [58]. 24 Figure 6: Visualization of RCD rollout execution on AntMaze-Giant-Stitch . The ant agent navigates from the starting region to the pink goal. 25 Figure 7: Visualization of RCD rollout execution on AntSoccer-Medium-Stitch . The ant agent dribbles the soccer ball toward the goal location. 26 Figure 8: Visualization of RCD rollout execution on Cube-Triple . The 6-DoF UR5e robot arm arranges three cubes into their target configuration via pick-and-place. t = 0 t = 55 t = 110 t = 165 t = 220 t = 275 t = 330 t = 385 
+
+Figure 9: Visualization of RCD rollout execution on Visual-AntMaze-Medium-Stitch . The ant agent navigates from the starting region to the goal in a long-horizon task where start and goal are at opposite ends of the maze. Frames are the env-rendered 64 ×64 pixel observations. Planning is performed in a learned 16 -dimensional VAE latent space derived from these pixel renders. 27

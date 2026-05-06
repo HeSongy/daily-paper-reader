@@ -1,0 +1,301 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-05-06T21:05:03.491370+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 5,
+    "deep_cap": 6,
+    "deep_selected": 5,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2605.01700v1",
+      "source": "arxiv",
+      "title": "TrajRAG: Retrieving Geometric-Semantic Experience for Zero-Shot Object Navigation",
+      "abstract": "Existing zero-shot Object Goal Navigation (ObjectNav) methods often exploit commonsense knowledge from large language or vision-language models to guide navigation. However, such knowledge arises from internet-scale text rather than embodied 3D experience, and episodic observations collected during navigation are typically discarded, preventing the accumulation of lifelong experience. To this end, we propose Trajectory RAG (TrajRAG), a retrieval-augmented generation framework that enhances large-model reasoning by retrieving geometric-semantic experiences. TrajRAG incrementally accumulates episodic observations from past navigation episodes. To structure these observations, we propose a topological-polar (topo-polar) trajectory representation that compactly encodes spatial layouts and semantic contexts, effectively removing redundancies in raw episodic observations. A hierarchical chunking structure further organizes similar topo-polar trajectories into unified summaries, enabling coarse-to-fine retrieval. During navigation, candidate frontiers generate multiple trajectory hypotheses that query TrajRAG for similar past trajectories, guiding large-model reasoning for waypoint selection. New experiences are continually consolidated into TrajRAG, enabling the accumulation of lifelong navigation experience. Experiments on MP3D, HM3D-v1, and HM3D-v2 show that TrajRAG effectively retrieves relevant geometric-semantic experiences and improves zero-shot ObjectNav performance.",
+      "authors": [
+        "Yiyao Wang",
+        "Sixian Zhang",
+        "Keming Zhang",
+        "Xinhang Song",
+        "Songjie Du",
+        "Shuqiang Jiang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-03T03:51:24+00:00",
+      "link": "https://arxiv.org/pdf/2605.01700v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "topological-polar trajectory representation for zero-shot navigation",
+      "llm_evidence_cn": "用于零样本导航的拓扑极坐标轨迹表示",
+      "llm_evidence": "用于零样本导航的拓扑极坐标轨迹表示",
+      "canonical_evidence": "用于零样本导航的拓扑极坐标轨迹表示",
+      "llm_tldr_en": "Proposes TrajRAG to enhance zero-shot object navigation by retrieving geometric-semantic experiences.",
+      "llm_tldr_cn": "提出 TrajRAG 框架，通过检索几何语义经验增强大模型的零样本目标导航能力。",
+      "llm_tldr": "提出 TrajRAG 框架，通过检索几何语义经验增强大模型的零样本目标导航能力。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.03821v1",
+      "source": "arxiv",
+      "title": "RoboAlign-R1: Distilled Multimodal Reward Alignment for Robot Video World Models",
+      "abstract": "Existing robot video world models are typically trained with low-level objectives such as reconstruction and perceptual similarity, which are poorly aligned with the capabilities that matter most for robot decision making, including instruction following, manipulation success, and physical plausibility. They also suffer from error accumulation in long-horizon autoregressive prediction. We present RoboAlign-R1, a framework that combines reward-aligned post-training with stabilized long-horizon inference for robot video world models. We construct RobotWorldBench, a benchmark of 10,000 annotated video-instruction pairs collected from four robot data sources, and train a multimodal teacher judge, RoboAlign-Judge, to provide fine-grained six-dimensional evaluation of generated videos. We then distill the teacher into a lightweight student reward model for efficient reinforcement-learning-based post-training. To reduce long-horizon rollout drift, we further introduce Sliding Window Re-encoding (SWR), a training-free inference strategy that periodically refreshes the generation context. Under our in-domain evaluation protocol, RoboAlign-R1 improves the aggregate six-dimension score by 10.1% over the strongest baseline, including gains of 7.5% on Manipulation Accuracy and 4.6% on Instruction Following; these ranking improvements are further supported by an external VLM-based cross-check and a blinded human study. Meanwhile, SWR improves long-horizon prediction quality with only about 1% additional latency, yielding a 2.8% gain in SSIM and a 9.8% reduction in LPIPS. Together, these results show that reward-aligned post-training and stabilized long-horizon decoding improve task consistency, physical realism, and long-horizon prediction quality in robot video world models.",
+      "authors": [
+        "Hao Wu",
+        "Yuqi Li",
+        "Yuan Gao",
+        "Fan Xu",
+        "Fan Zhang",
+        "Kun Wang",
+        "Penghao Zhao",
+        "Qiufeng Wang",
+        "Yizhou Zhao",
+        "Weiyan Wang",
+        "Yingli Tian",
+        "Xian Wu",
+        "Xiaomeng Huang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-05-05T14:49:00+00:00",
+      "link": "https://arxiv.org/pdf/2605.03821v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "reward alignment for robot video world models",
+      "llm_evidence_cn": "机器人视频世界模型的奖励对齐",
+      "llm_evidence": "机器人视频世界模型的奖励对齐",
+      "canonical_evidence": "机器人视频世界模型的奖励对齐",
+      "llm_tldr_en": "Introduces RoboAlign-R1 to align robot video world models with decision-making capabilities like manipulation.",
+      "llm_tldr_cn": "推出 RoboAlign-R1 框架，通过奖励对齐提升机器人视频世界模型的决策与操作能力。",
+      "llm_tldr": "推出 RoboAlign-R1 框架，通过奖励对齐提升机器人视频世界模型的决策与操作能力。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.03941v1",
+      "source": "arxiv",
+      "title": "A Benchmark for Interactive World Models with a Unified Action Generation Framework",
+      "abstract": "Achieving Artificial General Intelligence (AGI) requires agents that learn and interact adaptively, with interactive world models providing scalable environments for perception, reasoning, and action. Yet current research still lacks large-scale datasets and unified benchmarks to evaluate their physical interaction capabilities. To address this, we propose iWorld-Bench, a comprehensive benchmark for training and testing world models on interaction-related abilities such as distance perception and memory. We construct a diverse dataset with 330k video clips and select 2.1k high-quality samples covering varied perspectives, weather, and scenes. As existing world models differ in interaction modalities, we introduce an Action Generation Framework to unify evaluation and design six task types, generating 4.9k test samples. These tasks jointly assess model performance across visual generation, trajectory following, and memory. Evaluating 14 representative world models, we identify key limitations and provide insights for future research. The iWorld-Bench model leaderboard is publicly available at iWorld-Bench.com.",
+      "authors": [
+        "Jianjie Fang",
+        "Yingshan Lei",
+        "Qin Wan",
+        "Ziyou Wang",
+        "Yuchao Huang",
+        "Yongyan Xu",
+        "Baining Zhao",
+        "Weichen Zhang",
+        "Chen Gao",
+        "Xinlei Chen",
+        "Yong Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-05-05T16:30:03+00:00",
+      "link": "https://arxiv.org/pdf/2605.03941v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "benchmark for interactive world models",
+      "llm_evidence_cn": "交互式世界模型的基准测试",
+      "llm_evidence": "交互式世界模型的基准测试",
+      "canonical_evidence": "交互式世界模型的基准测试",
+      "llm_tldr_en": "Proposes iWorld-Bench to evaluate interactive world models on perception, memory, and action generation.",
+      "llm_tldr_cn": "提出iWorld-Bench，用于评估交互式世界模型在感知、记忆和动作生成方面的能力。",
+      "llm_tldr": "提出iWorld-Bench，用于评估交互式世界模型在感知、记忆和动作生成方面的能力。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.00271v2",
+      "source": "arxiv",
+      "title": "REALM: An RGB and Event Aligned Latent Manifold for Cross-Modal Perception",
+      "abstract": "Event cameras provide several unique advantages over standard frame-based sensors, including high temporal resolution, low latency, and robustness to extreme lighting. However, existing learning-based approaches for event processing are typically confined to narrow, task-specific silos and lack the ability to generalize across modalities. We address this gap with REALM, a cross-modal framework that learns an RGB and Event Aligned Latent Manifold by projecting event representations into the pretrained latent space of RGB foundation models. Instead of task-specific training, we leverage low-rank adaptation (LoRA) to bridge the modality gap, effectively unlocking the geometric and semantic priors of frozen RGB backbones for asynchronous event streams. We demonstrate that REALM effectively maps events into the ViT-based foundation latent space. Our method allows us to perform downstream tasks like depth estimation and semantic segmentation by simply transferring linear heads trained on the RGB teacher. Most significantly, REALM enables the direct, zero-shot application of complex, frozen image-trained decoders, such as MASt3R, to raw event data. We demonstrate state-of-the-art performance in wide-baseline feature matching, significantly outperforming specialized architectures. Code and models are available upon acceptance.",
+      "authors": [
+        "Vincenzo Polizzi",
+        "David B. Lindell",
+        "Jonathan Kelly"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.RO"
+      ],
+      "published": "2026-04-30T22:14:36+00:00",
+      "link": "https://arxiv.org/pdf/2605.00271v2",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "aligned latent manifold for cross-modal perception and environment understanding",
+      "llm_evidence_cn": "用于跨模态感知和环境理解的对齐隐式流形",
+      "llm_evidence": "用于跨模态感知和环境理解的对齐隐式流形",
+      "canonical_evidence": "用于跨模态感知和环境理解的对齐隐式流形",
+      "llm_tldr_en": "Learns a cross-modal aligned latent manifold to bridge RGB and event-based sensors for perception.",
+      "llm_tldr_cn": "学习跨模态对齐隐式流形，以连接RGB和事件传感器进行感知。",
+      "llm_tldr": "学习跨模态对齐隐式流形，以连接RGB和事件传感器进行感知。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索智能体如何利用隐空间进行导航与环境理解",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.03568v1",
+      "source": "arxiv",
+      "title": "Optimal Navigation in Stochastic and Disordered Gridworlds",
+      "abstract": "Navigation in complex and noisy environments is a key issue in diverse fields from biology to engineering. Despite extensive progress in numerical optimization methods for computing navigation policies, insights into how disorder reshapes optimal navigation remain elusive. To address this question, we investigate the navigation of a Brownian particle in a disordered energy landscape, modeled as a lattice with randomly distributed traps. Using dynamic programming, we compute the optimal navigation policies that minimize the mean first-passage time to a target site. To quantify the impact of disorder, we introduce a density of change from a Kullback-Leibler divergence, which captures how the optimal policy is reshaped by either the presence of disorder or the knowledge of its configuration. Our results reveal a non-monotonic dependence of the change of the policy on trap concentration, with a pronounced maximum. In the fluctuation-dominated regime where the navigation bias is weak, we derive an analytical expression for the density of change, and demonstrate that the maximum occurs unexpectedly at low trap concentrations.",
+      "authors": [
+        "Kévin Bilaï Biloa",
+        "Olivier Pierre-Louis"
+      ],
+      "primary_category": "cond-mat.stat-mech",
+      "categories": [
+        "cond-mat.stat-mech"
+      ],
+      "published": "2026-05-05T09:40:21+00:00",
+      "link": "https://arxiv.org/pdf/2605.03568v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "optimal navigation in stochastic and disordered gridworlds",
+      "llm_evidence_cn": "随机无序网格世界中的最优导航",
+      "llm_evidence": "随机无序网格世界中的最优导航",
+      "canonical_evidence": "随机无序网格世界中的最优导航",
+      "llm_tldr_en": "Investigates how environmental disorder reshapes optimal navigation policies using dynamic programming.",
+      "llm_tldr_cn": "研究环境无序性如何通过动态规划重塑最优导航策略。",
+      "llm_tldr": "研究环境无序性如何通过动态规划重塑最优导航策略。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2605.03075v1",
+      "source": "arxiv",
+      "title": "Refining Compositional Diffusion for Reliable Long-Horizon Planning",
+      "abstract": "Compositional diffusion planning generates long-horizon trajectories by stitching together overlapping short-horizon segments through score composition. However, when local plan distributions are multimodal, existing compositional methods suffer from mode-averaging, where averaging incompatible local modes leads to plans that are neither locally feasible nor globally coherent. We propose Refining Compositional Diffusion (RCD), a training-free guidance method that steers compositional sampling toward high-density, globally coherent plans. RCD leverages the self-reconstruction error of a pretrained diffusion model as a proxy for the log-density of composed plans, combined with an overlap consistency term that enforces consistency at segment boundaries. We show that the combined guidance concentrates sampling on high-density plans that mitigate mode-averaging. Experiments on challenging long-horizon tasks from OGBench, including locomotion, object manipulation, and pixel-based observations, demonstrate that RCD consistently outperforms existing methods.",
+      "authors": [
+        "Kyowoon Lee",
+        "Yunhao Luo",
+        "Anh Tong",
+        "Jaesik Choi"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-05-04T18:44:19+00:00",
+      "link": "https://arxiv.org/pdf/2605.03075v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Focuses on long-horizon planning and trajectory generation using diffusion models.",
+      "llm_evidence_cn": "侧重于使用扩散模型进行长程规划和轨迹生成。",
+      "llm_evidence": "侧重于使用扩散模型进行长程规划和轨迹生成。",
+      "canonical_evidence": "侧重于使用扩散模型进行长程规划和轨迹生成。",
+      "llm_tldr_en": "Proposes a guidance method for diffusion-based planning to ensure global coherence in long-horizon trajectories.",
+      "llm_tldr_cn": "提出了一种扩散规划引导方法，以确保长程轨迹的全局连贯性。",
+      "llm_tldr": "提出了一种扩散规划引导方法，以确保长程轨迹的全局连贯性。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.03625v1",
+      "source": "arxiv",
+      "title": "Self-Improvement for Fast, High-Quality Plan Generation",
+      "abstract": "Generative models trained on synthetic plan data are a promising approach to generalized planning. Recent work has focused on finding any valid plan, rather than a high-quality solution. We address the challenge of producing high-quality plans, a computationally hard problem, in sub-exponential time. First, we demonstrate that, given optimal data, a decoder-only transformer can generate high-quality plans for unseen problem instances. Second, we show how to self-improve an initial model trained on sub-optimal data. Each round of self-improvement combines multiple model calls with graph search to generate improved plans, used for model fine-tuning. An experimental study on four domains: Blocksworld, Logistics, Labyrinth, and Sokoban, shows on average a 30% reduction in plan length over the source symbolic planner, with over 80% of plans being optimal, where the optimum is known. Plan quality is further improved by inference-time search. The model's latency scales sub-exponentially in contrast to the satisficing and optimal symbolic planners to which we compare. Together, these results suggest that self-improvement with generative models offers a scalable approach for high-quality plan generation.",
+      "authors": [
+        "Robert Gieselmann",
+        "Henrike von Huelsen",
+        "Mihai Samson",
+        "Marie-Christine Meyer",
+        "Dariusz Piotrowski",
+        "Oleksandr Radomskyi",
+        "Justin Okamoto",
+        "Turan Gojayev",
+        "Michael Painter",
+        "Gavin Brown",
+        "Federico Pecora",
+        "Jeremy L. Wyatt"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-05-05T10:55:18+00:00",
+      "link": "https://arxiv.org/pdf/2605.03625v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "high-quality plan generation using graph search",
+      "llm_evidence_cn": "利用图搜索生成高质量规划",
+      "llm_evidence": "利用图搜索生成高质量规划",
+      "canonical_evidence": "利用图搜索生成高质量规划",
+      "llm_tldr_en": "Presents a self-improvement method for transformers to generate high-quality plans in complex domains.",
+      "llm_tldr_cn": "提出一种Transformer自改进方法，用于在复杂领域生成高质量的规划方案。",
+      "llm_tldr": "提出一种Transformer自改进方法，用于在复杂领域生成高质量的规划方案。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "寻找利用世界模型进行强化学习或规划的最新研究",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

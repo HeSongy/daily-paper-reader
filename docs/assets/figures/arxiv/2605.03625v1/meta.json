@@ -1,0 +1,142 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.03625v1/fig-001.webp",
+      "caption": "Table 3: Comparison of performance on the intersection of problems for which all methods found a solution. ‘Optimal plans’ gives the ratio between the number of problems for which the respective method found optimal plans, and the number of problems in the intersective set (e.g., out of 625 Blocksworld problems solved by all methods in the table).",
+      "page": 6,
+      "index": 1,
+      "width": 1054,
+      "height": 225
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03625v1/fig-002.webp",
+      "caption": "Table 2: Comparison of performance across domains. Plan length reports the mean (± standard error) for those problems which the respective method solved. N indicates the number of candidate plans generated per problem.",
+      "page": 6,
+      "index": 2,
+      "width": 1054,
+      "height": 231
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03625v1/fig-003.webp",
+      "caption": "Figure 8: Blocksworld – Plan length differences between generated plans and optimal solutions. The top row shows performance of the pretrained model, while the bottom row shows the model’s performance after 15 iterations of self-improvement. For both, we present findings for different inference parameters.",
+      "page": 15,
+      "index": 3,
+      "width": 933,
+      "height": 511
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03625v1/fig-004.webp",
+      "caption": "Figure 9: Logistics – Plan length differences between generated plans and optimal solutions. The top row shows performance of the pretrained model, while the bottom row shows the model’s performance after 15 iterations of self-improvement. For both, we present findings for different inference parameters.",
+      "page": 15,
+      "index": 4,
+      "width": 933,
+      "height": 511
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03625v1/fig-005.webp",
+      "caption": "Figure 4: Plan length metrics for Sokoban. Histograms show the distribution of plan length differences to optimal. Violin plots show the distribution of normalized plan length, i.e., the plan length as a percentage of the optimal plan.",
+      "page": 7,
+      "index": 5,
+      "width": 499,
+      "height": 570
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03625v1/fig-006.webp",
+      "caption": "Figure 3: Plan length (mean ± std. error) and completion rates over self-improvement iterations (on 1000 unseen validation instances). ‘L.’ refers to FD-LAMA-first and ’P.’ to the pretrained model.",
+      "page": 7,
+      "index": 6,
+      "width": 497,
+      "height": 531
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03625v1/fig-007.webp",
+      "caption": "Figure 7: Completion rate (%, in blue) and regret ( cost−costoptimal costoptimal ·100%, in green) by block count. Results are shown for the union of the 3 test splits, showing the full block range from 3-100 blocks.",
+      "page": 14,
+      "index": 7,
+      "width": 735,
+      "height": 352
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03625v1/fig-008.webp",
+      "caption": "Figure 1: Illustration of our tokenization scheme.",
+      "page": 3,
+      "index": 8,
+      "width": 500,
+      "height": 355
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03625v1/fig-009.webp",
+      "caption": "Figure 6: Comparison of solving times (log scale) on all four domains. For the Blocksworld comparison, we ran FD-optimal for 5 days on the 1000 test problems, resulting in 643 solved instances. For all other domains, FD-optimal ran for 48 hours, which led to 169 (Logistics), 1000 (Labyrinth), and 489 (Sokoban) solved instances, respectively.",
+      "page": 13,
+      "index": 9,
+      "width": 781,
+      "height": 1141
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03625v1/fig-010.webp",
+      "caption": "Figure 5: Runtime comparison between FD-optimal and the generative models. Green dots represent instances where the model generated a plan with same length as FD-optimal.",
+      "page": 8,
+      "index": 10,
+      "width": 474,
+      "height": 299
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03625v1/fig-011.webp",
+      "caption": "Figure 12: Distribution of plan length (left column) and normalized plan length (right column) for different methods across different domains. Normalized plan length expresses the plan length as a percentage of the optimal plan length (100% = optimal): cost+1",
+      "page": 17,
+      "index": 11,
+      "width": 947,
+      "height": 873
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03625v1/fig-012.webp",
+      "caption": "Table 7: Solving times in seconds (mean ± std. error) on the test set for each domain (based on the subset of solved problems for each method).",
+      "page": 12,
+      "index": 12,
+      "width": 1054,
+      "height": 193
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03625v1/fig-013.webp",
+      "caption": "Table 5: Pretraining hyperparameters for the transformer decoder (GPT2). Unless otherwise indicated, values are identical across domains.",
+      "page": 12,
+      "index": 13,
+      "width": 594,
+      "height": 391
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03625v1/fig-014.webp",
+      "caption": "Table 6: Finetuning hyperparameters for the transformer decoder (GPT2). Unless otherwise indicated, values are identical across domains.",
+      "page": 12,
+      "index": 14,
+      "width": 548,
+      "height": 254
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03625v1/fig-015.webp",
+      "caption": "Figure 2: Overview of SiGPlan. (a) The generative model is pretrained on plans generated by a domain-independent planner. (b) For a subset of m problem instances, we sample candidate plans from our model, construct state graphs, and compute the shortest valid plans on these graphs. A finetuning dataset is created based on the best plan found for each problem in the subset. (c) The model is finetuned on the new data. Self-improvement iterates between (b) and (c) for a fixed number of steps.",
+      "page": 5,
+      "index": 15,
+      "width": 1054,
+      "height": 373
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03625v1/fig-016.webp",
+      "caption": "Figure 11: Sokoban – Plan length differences between generated plans and optimal solutions. The top row shows performance of the pretrained model, while the bottom row shows the model’s performance after 15 iterations of self-improvement. For both, we present findings for different inference parameters.",
+      "page": 16,
+      "index": 16,
+      "width": 933,
+      "height": 511
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03625v1/fig-017.webp",
+      "caption": "Figure 10: Labyrinth – Plan length differences between generated plans and optimal solutions. The top row shows performance of the pretrained model, while the bottom row shows the model’s performance after 15 iterations of self-improvement. For both, we present findings for different inference parameters.",
+      "page": 16,
+      "index": 17,
+      "width": 930,
+      "height": 511
+    }
+  ]
+}
