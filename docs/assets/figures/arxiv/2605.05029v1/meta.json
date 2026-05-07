@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.05029v1/fig-001.webp",
+      "caption": "FIG. 1. Linear encoder fidelity across 160 deterministic configurations. The causal fidelity | cos θ∗| measures alignment with the system axis. NZ is optimal only in the 40 diagonal cases (fidelity = 1.0); all 120 configurations with nonzero offdiagonal coupling—regardless of sign—produce encoders with fidelity < 1 (75% NZ suboptimal).",
+      "page": 2,
+      "index": 1,
+      "width": 513,
+      "height": 804
+    },
+    {
+      "url": "assets/figures/arxiv/2605.05029v1/fig-002.webp",
+      "caption": "FIG. 2. Causal fidelity of the optimal NN encoder at c = −0.50, ϵ = 0.05. Colour indicates mean fidelity across 5 seeds. The 0.5 contour (black curve) separates configurations where the encoder is system-dominant from those where it is environment-dominant. The failure regime (low as, high ae) covers most of the physically relevant parameter space.",
+      "page": 3,
+      "index": 2,
+      "width": 476,
+      "height": 344
+    },
+    {
+      "url": "assets/figures/arxiv/2605.05029v1/fig-003.webp",
+      "caption": "FIG. 4. Environment-dominance fraction across (αe, γSE) parameter space. Left: unconstrained. Right: grounded. Grounding suppresses environment dominance across most of the parameter space. Cells with fewer than 3 valid seeds are blank.",
+      "page": 4,
+      "index": 3,
+      "width": 1003,
+      "height": 666
+    },
+    {
+      "url": "assets/figures/arxiv/2605.05029v1/fig-004.webp",
+      "caption": "FIG. 5. Left: aggregate environment-dominance fraction with 95% Wilson CIs. Right: OOD MSE inflation vs. env/sys correlation ratio. Unconstrained models (red) show OOD inflation concentrated near 1.8× while grounded models (green) cluster near 1.0×.",
+      "page": 5,
+      "index": 4,
+      "width": 1032,
+      "height": 835
+    }
+  ]
+}

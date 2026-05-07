@@ -6,43 +6,52 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-05-06
-- 运行时间：2026-05-06 21:06:53 UTC
+- 最新运行日期：2026-05-07
+- 运行时间：2026-05-07 20:34:19 UTC
 - 运行状态：成功
-- 本次总论文数：7
-- 精读区：5
-- 速读区：2
+- 本次总论文数：10
+- 精读区：6
+- 速读区：4
 
 ### 今日简报（AI）
-聚焦机器人感知与规划，今日精读 5 篇、速读 2 篇高分新作。  
-TrajRAG 与 RoboAlign-R1 显示几何语义检索及多模态奖励对齐正成为零样本导航与视频世界模型的关键突破口。  
-建议关注跨模态表征在实际导航与操作任务中的泛化能力测试与落地应用。
-- 详情：[/202605/06/README](/202605/06/README)
+深入研究交互式世界模型与统一地图先验编码，共精读6篇、速读4篇。  
+重点值得关注的是统一行动生成框架及高效4D感知在机器人规划中的突破。  
+建议明日继续跟进世界模型类基准测试与多模态感知融合方向。
+- 详情：[/202605/07/README](/202605/07/README)
 
 ### 精读区论文标签
-1. [TrajRAG: Retrieving Geometric-Semantic Experience for Zero-Shot Object Navigation](/202605/06/2605.01700v1-trajrag-retrieving-geometric-semantic-experience-for-zero-shot-object-navigation)  
+1. [Unified Map Prior Encoder for Mapping and Planning](/202605/07/2605.02762v1-unified-map-prior-encoder-for-mapping-and-planning)  
    标签：评分：9.0/10、query:navwm
-   evidence：用于零样本导航的拓扑极坐标轨迹表示
-2. [RoboAlign-R1: Distilled Multimodal Reward Alignment for Robot Video World Models](/202605/06/2605.03821v1-roboalign-r1-distilled-multimodal-reward-alignment-for-robot-video-world-models)  
+   evidence：用于自动驾驶规划的统一地图先验编码器
+2. [iWorld-Bench: A Benchmark for Interactive World Models with a Unified Action Generation Framework](/202605/07/2605.03941v2-iworld-bench-a-benchmark-for-interactive-world-models-with-a-unified-action-generation-framework)  
    标签：评分：9.0/10、query:navwm
-   evidence：机器人视频世界模型的奖励对齐
-3. [A Benchmark for Interactive World Models with a Unified Action Generation Framework](/202605/06/2605.03941v1-a-benchmark-for-interactive-world-models-with-a-unified-action-generation-framework)  
-   标签：评分：9.0/10、query:navwm
-   evidence：交互式世界模型的基准测试
-4. [REALM: An RGB and Event Aligned Latent Manifold for Cross-Modal Perception](/202605/06/2605.00271v2-realm-an-rgb-and-event-aligned-latent-manifold-for-cross-modal-perception)  
+   evidence：具有距离感知和记忆能力的交互式世界模型基准
+3. [Do We Really Need Immediate Resets? Rethinking Collision Handling for Efficient Robot Navigation](/202605/07/2605.02192v1-do-we-really-need-immediate-resets-rethinking-collision-handling-for-efficient-robot-navigation)  
    标签：评分：8.0/10、query:navwm
-   evidence：用于跨模态感知和环境理解的对齐隐式流形
-5. [Optimal Navigation in Stochastic and Disordered Gridworlds](/202605/06/2605.03568v1-optimal-navigation-in-stochastic-and-disordered-gridworlds)  
+   evidence：重新思考碰撞处理以实现高效的机器人导航学习
+4. [From Language to Logic: A Theoretical Architecture for VLM-Grounded Safe Navigation](/202605/07/2605.04327v1-from-language-to-logic-a-theoretical-architecture-for-vlm-grounded-safe-navigation)  
    标签：评分：8.0/10、query:navwm
-   evidence：随机无序网格世界中的最优导航
+   evidence：非结构化户外环境中基于视觉语言模型的安全导航
+5. [AI-Aided Advancements in Autonomous Underwater Vehicle Navigation](/202605/07/2605.04672v1-ai-aided-advancements-in-autonomous-underwater-vehicle-navigation)  
+   标签：评分：8.0/10、query:navwm
+   evidence：自主水下航行器在动态环境中的AI辅助导航
+6. [The Predictive-Causal Gap: An Impossibility Theorem and Large-Scale Neural Evidence](/202605/07/2605.05029v1-the-predictive-causal-gap-an-impossibility-theorem-and-large-scale-neural-evidence)  
+   标签：评分：8.0/10、query:navwm
+   evidence：环境动力学预测表示学习中的失效模式
 
 ### 速读区论文标签
-1. [Refining Compositional Diffusion for Reliable Long-Horizon Planning](/202605/06/2605.03075v1-refining-compositional-diffusion-for-reliable-long-horizon-planning)  
+1. [Code World Model Preparedness Report](/202605/07/2605.00932v1-code-world-model-preparedness-report)  
    标签：评分：7.0/10、query:navwm
-   evidence：侧重于使用扩散模型进行长程规划和轨迹生成。
-2. [Self-Improvement for Fast, High-Quality Plan Generation](/202605/06/2605.03625v1-self-improvement-for-fast-high-quality-plan-generation)  
+   evidence：对用于代码生成和推理的世界模型的评估
+2. [ConsisVLA-4D: Advancing Spatiotemporal Consistency in Efficient 3D-Perception and 4D-Reasoning for Robotic Manipulation](/202605/07/2605.05126v1-consisvla-4d-advancing-spatiotemporal-consistency-in-efficient-3d-perception-and-4d-reasoning-for-robotic-manipulation)  
    标签：评分：7.0/10、query:navwm
-   evidence：利用图搜索生成高质量规划
+   evidence：机器人操作中的3D感知与4D推理的时空一致性
+3. [Towards Visual Query Localization in the 3D World](/202605/07/2605.01498v1-towards-visual-query-localization-in-the-3d-world)  
+   标签：评分：6.0/10、query:navwm
+   evidence：3D世界中的视觉查询定位
+4. [Deep Wave Network for Modeling Multi-Scale Physical Dynamics](/202605/07/2605.04198v1-deep-wave-network-for-modeling-multi-scale-physical-dynamics)  
+   标签：评分：6.0/10、query:navwm
+   evidence：使用编码器-解码器表示建模多尺度物理动力学
 
 
 <div class="dpr-home-promo-card">

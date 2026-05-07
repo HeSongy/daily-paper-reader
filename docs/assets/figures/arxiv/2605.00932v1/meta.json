@@ -1,0 +1,70 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.00932v1/fig-001.webp",
+      "caption": "Table 7 Overview of evaluations for Chemical & Biological risks.",
+      "page": 6,
+      "index": 1,
+      "width": 968,
+      "height": 260
+    },
+    {
+      "url": "assets/figures/arxiv/2605.00932v1/fig-002.webp",
+      "caption": "Table 1 Overview of the inference settings used across evaluations. These settings are suggested by model developers to maximize capabilities. Note that text-only chemical and biology evaluations used no system prompt with CWM to elicit better capabilities (Section A.3). (*) Llama 4 Maverick temperature is set to 1.0 for agentic Cyber evaluations to enable diverse sampling, while it is 0 for the remaining evaluations following the model default inference settings.",
+      "page": 2,
+      "index": 2,
+      "width": 910,
+      "height": 215
+    },
+    {
+      "url": "assets/figures/arxiv/2605.00932v1/fig-003.webp",
+      "caption": "Figure 1 LAB-Bench accuracy and 95% confidence intervals for CWM and comparison models, with tools as noted. All models perform below expert human baselines on all evaluations except LitQA, where access to tools dramatically lifts performance. Even here though, CWM performs comparably to Qwen3-Coder.",
+      "page": 7,
+      "index": 3,
+      "width": 725,
+      "height": 235
+    },
+    {
+      "url": "assets/figures/arxiv/2605.00932v1/fig-004.webp",
+      "caption": "Table 17 Model refusal rates on non-tool MCQ evaluations.",
+      "page": 22,
+      "index": 4,
+      "width": 876,
+      "height": 356
+    },
+    {
+      "url": "assets/figures/arxiv/2605.00932v1/fig-005.webp",
+      "caption": "Figure 2 Accuracy on Virology Capabilities Test (VCT), Human Pathogens Capabilities Test (HPCT), and Molecular Biology Capabilities Test (MBCT) for CWM and comparison models. CWM performs comparably to expert human baselines but underperforms top OSS models across all three tests.",
+      "page": 10,
+      "index": 5,
+      "width": 725,
+      "height": 233
+    },
+    {
+      "url": "assets/figures/arxiv/2605.00932v1/fig-006.webp",
+      "caption": "Table 16 Model performance on CWM with different system prompts. There is a small improvement with shorter or no system prompt.",
+      "page": 18,
+      "index": 6,
+      "width": 986,
+      "height": 396
+    },
+    {
+      "url": "assets/figures/arxiv/2605.00932v1/fig-007.webp",
+      "caption": "Table 19 Summary of observations about reasoning traces pre- and post-intervention.",
+      "page": 23,
+      "index": 7,
+      "width": 972,
+      "height": 748
+    },
+    {
+      "url": "assets/figures/arxiv/2605.00932v1/fig-008.webp",
+      "caption": "Table 9 Accuracy on the Molecular Biology Capabilities Test (MBCT), where CWM performs below other models and in line with human experts.",
+      "page": 8,
+      "index": 8,
+      "width": 508,
+      "height": 291
+    }
+  ]
+}

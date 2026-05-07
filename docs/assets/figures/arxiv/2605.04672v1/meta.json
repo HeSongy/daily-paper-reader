@@ -1,0 +1,54 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.04672v1/fig-001.webp",
+      "caption": "Table 4: RMSE [◦] comparison across window sizes for Trajectories #1 and #2 using real-world sea-trial data collected with the Snapir AUV. RAN: ResAlignNet.",
+      "page": 11,
+      "index": 1,
+      "width": 736,
+      "height": 387
+    },
+    {
+      "url": "assets/figures/arxiv/2605.04672v1/fig-002.webp",
+      "caption": "Figure 1: General block diagram showing the navigation process as block as such that each block is enhanced by data-driven frameworks.",
+      "page": 3,
+      "index": 2,
+      "width": 686,
+      "height": 315
+    },
+    {
+      "url": "assets/figures/arxiv/2605.04672v1/fig-003.webp",
+      "caption": "Figure 6: Trajectories T1, T2, T3, T5, T6, T7, and T8 belong to the training set, and T10, T11, and T13 are part of the testing set.",
+      "page": 18,
+      "index": 3,
+      "width": 490,
+      "height": 477
+    },
+    {
+      "url": "assets/figures/arxiv/2605.04672v1/fig-004.webp",
+      "caption": "Figure 4: HeadingNet observation vector information flow and loss calculation during training.",
+      "page": 8,
+      "index": 4,
+      "width": 786,
+      "height": 187
+    },
+    {
+      "url": "assets/figures/arxiv/2605.04672v1/fig-005.webp",
+      "caption": "Figure 5: Illustration of the two main deep learning-based approaches to improve INS/DVL navigation performance. (a) Improving DVL velocity estimation precision. (b) Enhancing a single block within the Kalman filter to provide a full navigation solution.",
+      "page": 12,
+      "index": 5,
+      "width": 979,
+      "height": 241
+    },
+    {
+      "url": "assets/figures/arxiv/2605.04672v1/fig-006.webp",
+      "caption": "Figure 2: DCNet data-flow and training process diagram.",
+      "page": 5,
+      "index": 6,
+      "width": 786,
+      "height": 262
+    }
+  ]
+}

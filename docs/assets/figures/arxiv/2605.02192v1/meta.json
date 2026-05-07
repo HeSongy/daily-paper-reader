@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.02192v1/fig-001.webp",
+      "caption": "Fig. 5. Trajectory comparison between SCR and MCB-K2 in Env 2.",
+      "page": 5,
+      "index": 1,
+      "width": 514,
+      "height": 302
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02192v1/fig-002.webp",
+      "caption": "Fig. 3. Learning curves and navigation efficiency metrics of the compared methods on Env 1 and Env 2 in Stage. Solid lines and shaded regions represent the mean and standard deviation over ten random seeds.",
+      "page": 5,
+      "index": 2,
+      "width": 514,
+      "height": 633
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02192v1/fig-003.webp",
+      "caption": "Fig. 6. Learning curves of MCB with collision budget K ∈ {2, 3, 5, 10, 50} and the SCR baseline on Env 1 and Env 2 in Stage.",
+      "page": 6,
+      "index": 3,
+      "width": 514,
+      "height": 254
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02192v1/fig-004.webp",
+      "caption": "Fig. 1. Overview of Single-Collision Reset and Multi-Collision Budget. The conventional single-collision reset protocol stops the episode and triggers an immediate global reset after the first collision, whereas the proposed multicollision budget allows continued exploration in the same scene and performs a global reset only after the collision count reaches K.",
+      "page": 1,
+      "index": 4,
+      "width": 514,
+      "height": 519
+    }
+  ]
+}

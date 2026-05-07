@@ -1,0 +1,435 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-05-07T20:31:50.038525+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 6,
+    "deep_cap": 6,
+    "deep_selected": 6,
+    "quick_candidates": 4,
+    "quick_skim_target": 11,
+    "quick_selected": 4
+  },
+  "deep_dive": [
+    {
+      "id": "2605.02762v1",
+      "source": "arxiv",
+      "title": "Unified Map Prior Encoder for Mapping and Planning",
+      "abstract": "Online mapping and end-to-end (E2E) planning in autonomous driving remain largely sensor-centric, leaving rich map priors, including HD/SD vector maps, rasterized SD maps, and satellite imagery, underused because of heterogeneity, pose drift, and inconsistent availability at test time. We present UMPE, a Unified Map Prior Encoder that can ingest any subset of four priors and fuse them with BEV features for both mapping and planning. UMPE has two branches. The vector encoder pre-aligns HD/SD polylines with a frame-wise SE(2) correction, encodes points via multi-frequency sinusoidal features, and produces polyline tokens with confidence scores. BEV queries then apply cross-attention with confidence bias, followed by normalized channel-wise gating to avoid length imbalance and softly down-weight uncertain sources. The raster encoder shares a ResNet-18 backbone conditioned by FiLM with scaling and shift at every stage, performs SE(2) micro-alignment, and injects priors through zero-initialized residual fusion, so the network starts from a do-no-harm baseline and learns to add only useful prior evidence. A vector-then-raster fusion order reflects the inductive bias of geometry first, appearance second. On nuScenes mapping, UMPE lifts MapTRv2 from 61.5 to 67.4 mAP (+5.9) and MapQR from 66.4 to 71.7 mAP (+5.3). On Argoverse2, UMPE adds +4.1 mAP over strong baselines. UMPE is compositional: when trained with all priors, it outperforms single-prior models even when only one prior is available at test time, demonstrating powerset robustness. For E2E planning with the VAD backbone on nuScenes, UMPE reduces trajectory error from 0.72 to 0.42 m L2 on average (-0.30 m) and collision rate from 0.22% to 0.12% (-0.10%), surpassing recent prior-injection methods. These results show that a unified, alignment-aware treatment of heterogeneous map priors yields better mapping and better planning.",
+      "authors": [
+        "Zongzheng Zhang",
+        "Sizhe Zou",
+        "Guantian Zheng",
+        "Zhenxin Zhu",
+        "Yu Gao",
+        "Guoxuan Chi",
+        "Shuo Wang",
+        "Yuwen Heng",
+        "Zhigang Sun",
+        "Yiru Wang",
+        "Hao Sun",
+        "Chao Ma",
+        "Zhen Li",
+        "Anqing Jiang",
+        "Hao Zhao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-04T16:01:30+00:00",
+      "link": "https://arxiv.org/pdf/2605.02762v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "unified map prior encoder for autonomous driving planning",
+      "llm_evidence_cn": "用于自动驾驶规划的统一地图先验编码器",
+      "llm_evidence": "用于自动驾驶规划的统一地图先验编码器",
+      "canonical_evidence": "用于自动驾驶规划的统一地图先验编码器",
+      "llm_tldr_en": "UMPE fuses heterogeneous map priors with BEV features to enhance online mapping and end-to-end planning.",
+      "llm_tldr_cn": "UMPE将异构地图先验与BEV特征融合，以增强在线建图和端到端规划。",
+      "llm_tldr": "UMPE将异构地图先验与BEV特征融合，以增强在线建图和端到端规划。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.03941v2",
+      "source": "arxiv",
+      "title": "iWorld-Bench: A Benchmark for Interactive World Models with a Unified Action Generation Framework",
+      "abstract": "Achieving Artificial General Intelligence (AGI) requires agents that learn and interact adaptively, with interactive world models providing scalable environments for perception, reasoning, and action. Yet current research still lacks large-scale datasets and unified benchmarks to evaluate their physical interaction capabilities. To address this, we propose iWorld-Bench, a comprehensive benchmark for training and testing world models on interaction-related abilities such as distance perception and memory. We construct a diverse dataset with 330k video clips and select 2.1k high-quality samples covering varied perspectives, weather, and scenes. As existing world models differ in interaction modalities, we introduce an Action Generation Framework to unify evaluation and design six task types, generating 4.9k test samples. These tasks jointly assess model performance across visual generation, trajectory following, and memory. Evaluating 14 representative world models, we identify key limitations and provide insights for future research. The iWorld-Bench model leaderboard is publicly available at iWorld-Bench.com.",
+      "authors": [
+        "Jianjie Fang",
+        "Yingshan Lei",
+        "Qin Wan",
+        "Ziyou Wang",
+        "Yuchao Huang",
+        "Yongyan Xu",
+        "Baining Zhao",
+        "Weichen Zhang",
+        "Chen Gao",
+        "Xinlei Chen",
+        "Yong Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-05-05T16:30:03+00:00",
+      "link": "https://arxiv.org/pdf/2605.03941v2",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "benchmark for interactive world models with distance perception and memory",
+      "llm_evidence_cn": "具有距离感知和记忆能力的交互式世界模型基准",
+      "llm_evidence": "具有距离感知和记忆能力的交互式世界模型基准",
+      "canonical_evidence": "具有距离感知和记忆能力的交互式世界模型基准",
+      "llm_tldr_en": "Introduces iWorld-Bench to evaluate interactive world models on physical interaction and perception tasks.",
+      "llm_tldr_cn": "引入 iWorld-Bench 基准，用于评估交互式世界模型的物理交互与感知能力。",
+      "llm_tldr": "引入 iWorld-Bench 基准，用于评估交互式世界模型的物理交互与感知能力。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.02192v1",
+      "source": "arxiv",
+      "title": "Do We Really Need Immediate Resets? Rethinking Collision Handling for Efficient Robot Navigation",
+      "abstract": "Should a single collision necessarily terminate an entire navigation episode? In most deep reinforcement learning (DRL) frameworks for robot navigation, this remains the standard practice: every collision immediately triggers a global environment reset and is penalized as a complete task failure. While a collision during deployment naturally indicates task failure, applying the same treatment during training prevents the agent from exploring challenging obstacle configurations, which slows learning progress in the early training phase. In this work, we challenge this convention and propose a Multi-Collision reset Budget (MCB) framework that decouples local collision termination from global environment resets, allowing the agent to retry difficult configurations within the same episode. Experiments on multiple simulated and real-world robotic platforms show that the framework accelerates early-stage exploration and improves both success rate and navigation efficiency over conventional single-collision reset baselines, with a small collision budget producing the largest gains.",
+      "authors": [
+        "Shanze Wang",
+        "Xinming Zhang",
+        "Siwei Cheng",
+        "Xianghui Wang",
+        "Hailong Huang",
+        "Wei Zhang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-04T03:44:37+00:00",
+      "link": "https://arxiv.org/pdf/2605.02192v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Rethinking collision handling for efficient robot navigation learning",
+      "llm_evidence_cn": "重新思考碰撞处理以实现高效的机器人导航学习",
+      "llm_evidence": "重新思考碰撞处理以实现高效的机器人导航学习",
+      "canonical_evidence": "重新思考碰撞处理以实现高效的机器人导航学习",
+      "llm_tldr_en": "Proposes a multi-collision reset budget to improve reinforcement learning efficiency in robot navigation.",
+      "llm_tldr_cn": "提出多碰撞重置预算框架，以提高机器人导航中强化学习的效率。",
+      "llm_tldr": "提出多碰撞重置预算框架，以提高机器人导航中强化学习的效率。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.04327v1",
+      "source": "arxiv",
+      "title": "From Language to Logic: A Theoretical Architecture for VLM-Grounded Safe Navigation",
+      "abstract": "We propose an architecture for integrating high-level, human-provided safety rules and operator-aligned semantic preferences into autonomous robot navigation in unstructured outdoor environments. In our approach, natural-language rules are translated into Signal Temporal Logic (STL) specifications that guide planning and navigation during runtime. Persistent, environment-centric rules and terrain preferences are grounded into a 2D cost map, while temporally dynamic requirements are expressed as STL specifications to be monitored during runtime. We hypothesize the use of Vision-Language Models (VLMs) for zero-shot scene understanding, enabling mapping between human instructions, semantic features, and environmental constraints. Within this framework, we construct an illustrative navigation model that is designed to satisfy a set of STL-encoded specifications and soft operator preferences through formal satisfaction metrics embedded into environmental properties and runtime monitoring.",
+      "authors": [
+        "Kristy Sakano",
+        "Kalonji Harrington",
+        "Mumu Xu"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-05T22:16:26+00:00",
+      "link": "https://arxiv.org/pdf/2605.04327v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "VLM-grounded safe navigation in unstructured outdoor environments",
+      "llm_evidence_cn": "非结构化户外环境中基于视觉语言模型的安全导航",
+      "llm_evidence": "非结构化户外环境中基于视觉语言模型的安全导航",
+      "canonical_evidence": "非结构化户外环境中基于视觉语言模型的安全导航",
+      "llm_tldr_en": "Integrates safety rules and semantic preferences into autonomous navigation using vision-language models.",
+      "llm_tldr_cn": "利用视觉语言模型将安全规则和语义偏好整合到自主导航中。",
+      "llm_tldr": "利用视觉语言模型将安全规则和语义偏好整合到自主导航中。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.04672v1",
+      "source": "arxiv",
+      "title": "AI-Aided Advancements in Autonomous Underwater Vehicle Navigation",
+      "abstract": "Autonomous underwater vehicles (AUVs) have become indispensable for deep-sea exploration, spanning critical scientific research and commercial applications. The rapid attenuation of electromagnetic waves renders satellite radio signals unavailable, while the dynamic unpredictability of the marine environment presents formidable navigation challenges. This chapter explores recent advancements in AI-aided AUV positioning, specifically focusing on advanced sensor fusion architectures that integrate inertial navigation systems with Doppler velocity logs and cameras. Beyond traditional model-based filtering, we examine the transformative emergence of AI-driven learning approaches in enhancing inertial dead-reckoning tasks and adaptive fusion algorithms. By addressing these recent milestones, this chapter provides a comprehensive roadmap for achieving the high-precision navigation essential for autonomous underwater missions.",
+      "authors": [
+        "Guy Damari",
+        "Zeev Yampolsky",
+        "Nadav Cohen",
+        "Arup Kumar Sahoo",
+        "Jeryes Danial",
+        "Felipe O. Silva",
+        "Itzik Klein"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-06T09:22:12+00:00",
+      "link": "https://arxiv.org/pdf/2605.04672v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "AI-aided navigation for autonomous underwater vehicles in dynamic environments",
+      "llm_evidence_cn": "自主水下航行器在动态环境中的AI辅助导航",
+      "llm_evidence": "自主水下航行器在动态环境中的AI辅助导航",
+      "canonical_evidence": "自主水下航行器在动态环境中的AI辅助导航",
+      "llm_tldr_en": "Explores AI-driven sensor fusion and learning for autonomous vehicle navigation in challenging marine environments.",
+      "llm_tldr_cn": "探讨了在挑战性海洋环境中用于自主航行器导航的AI驱动传感器融合与学习方法。",
+      "llm_tldr": "探讨了在挑战性海洋环境中用于自主航行器导航的AI驱动传感器融合与学习方法。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.05029v1",
+      "source": "arxiv",
+      "title": "The Predictive-Causal Gap: An Impossibility Theorem and Large-Scale Neural Evidence",
+      "abstract": "We report a systematic failure mode in predictive representation learning. Across 2695 neural network configurations trained to predict linear-Gaussian dynamics, the optimal encoder tracks the environment rather than the system it is meant to model. The mean causal fidelity -- the fraction of encoder sensitivity allocated to system degrees of freedom -- is 0.49, and only 2.5% of configurations exceed 0.70. The failure intensifies with dimension: at N=100, the optimal encoder becomes causally blind (fidelity ~10^{-8}) while achieving 92% lower prediction error than the causal representation. We prove this is not an optimization artifact but a structural property of the predictive objective: when environment modes are slower or less noisy than system modes, every minimizer of the population risk encodes the former. The set of dynamics exhibiting this predictive-causal gap is open and of positive measure in parameter space. In a nonlinear Duffing-GRU sweep, unconstrained predictors learn environment-dominant representations in 55% of tasks (95% CI 41--68%) versus 24% under operational grounding (p=2.3e-3); the median out-of-distribution MSE inflation under environment shift is 1.82x versus 1.00x. Operational grounding -- restricting the loss to system observables -- partially suppresses the gap, but causal fidelity is never recovered without an explicit system-environment boundary. The results identify the predictive-causal gap as a structural limit of learning, with implications for self-supervised representation learning, world models, and the scaling paradigm.",
+      "authors": [
+        "Kejun Liu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-05-06T15:25:37+00:00",
+      "link": "https://arxiv.org/pdf/2605.05029v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "failure modes in predictive representation learning for environment dynamics",
+      "llm_evidence_cn": "环境动力学预测表示学习中的失效模式",
+      "llm_evidence": "环境动力学预测表示学习中的失效模式",
+      "canonical_evidence": "环境动力学预测表示学习中的失效模式",
+      "llm_tldr_en": "Analyzes the gap between predictive and causal representations in learning environment dynamics.",
+      "llm_tldr_cn": "分析了学习环境动力学时预测表示与因果表示之间的差距。",
+      "llm_tldr": "分析了学习环境动力学时预测表示与因果表示之间的差距。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索表示学习在构建世界模型与导航中的运用",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2605.00932v1",
+      "source": "arxiv",
+      "title": "Code World Model Preparedness Report",
+      "abstract": "This report documents the preparedness assessment of Code World Model (CWM), a model for code generation and reasoning about code from Meta. We conducted pre-release testing across domains identified in our Frontier AI Framework as potentially presenting catastrophic risks, and also evaluated the model's misaligned propensities. Our assessment found that CWM does not pose additional frontier risks beyond those present in the current AI ecosystem. We therefore release it as an open-weight model.",
+      "authors": [
+        "Daniel Song",
+        "Peter Ney",
+        "Cristina Menghini",
+        "Faizan Ahmad",
+        "Aidan Boyd",
+        "Nathaniel Li",
+        "Ziwen Han",
+        "Jean-Christophe Testud",
+        "Saisuke Okabayashi",
+        "Maeve Ryan",
+        "Jinpeng Miao",
+        "Hamza Kwisaba",
+        "Felix Binder",
+        "Spencer Whitman",
+        "Jim Gust",
+        "Esteban Arcaute",
+        "Dhaval Kapil",
+        "Jacob Kahn",
+        "Ayaz Minhas",
+        "Tristan Goodman",
+        "Lauren Deason",
+        "Alexander Vaughan",
+        "Shengjia Zhao",
+        "Summer Yue"
+      ],
+      "primary_category": "cs.SE",
+      "categories": [
+        "cs.SE",
+        "cs.AI"
+      ],
+      "published": "2026-05-01T00:52:41+00:00",
+      "link": "https://arxiv.org/pdf/2605.00932v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "assessment of a world model for code generation and reasoning",
+      "llm_evidence_cn": "对用于代码生成和推理的世界模型的评估",
+      "llm_evidence": "对用于代码生成和推理的世界模型的评估",
+      "canonical_evidence": "对用于代码生成和推理的世界模型的评估",
+      "llm_tldr_en": "Evaluates the safety and preparedness of a specialized world model designed for code reasoning.",
+      "llm_tldr_cn": "评估了专为代码推理设计的特定世界模型的安全性和准备情况。",
+      "llm_tldr": "评估了专为代码推理设计的特定世界模型的安全性和准备情况。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.01498v1",
+      "source": "arxiv",
+      "title": "Towards Visual Query Localization in the 3D World",
+      "abstract": "Visual query localization (VQL) aims to predict the spatio-temporal response of the most recent occurrence in a sequence given a query. Currently, most research focuses on visual query localization in 2D videos, while its counterpart in 3D space has received little attention. In this paper, we make the first attempt to address visual query localization in the 3D world by introducing a novel benchmark, dubbed 3DVQL. Specifically, 3DVQL contains 2,002 sequences with around 170,000 frames and 6.4K response track segments from 38 object categories. Each sequence in 3DVQL is provided with multiple modalities, including point clouds, RGB images, and depth images, to support flexible research. To ensure high-quality annotations, each sequence is manually annotated with multiple rounds of verification and refinement. To the best of our knowledge, 3DVQL is the first benchmark for 3D multimodal visual query localization. To facilitate comparison in subsequent research, we implement a series of representative 3D multimodal VQL baselines using point clouds and RGB images. The experimental results show that existing methods exhibit significant performance variations across different fusion modules. To encourage future research, we propose a lift-and-attention fusion algorithm named LaF, which significantly outperforms existing baseline models. Our benchmark and model will be publicly released at https://github.com/wuhengliangliang/3DVQL.",
+      "authors": [
+        "Liang Peng",
+        "Bohan Tan",
+        "Zhipeng Zhang",
+        "Haobo Li",
+        "Yifan Jiao",
+        "Xingping Dong",
+        "Libo Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-02T15:41:54+00:00",
+      "link": "https://arxiv.org/pdf/2605.01498v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "visual query localization in the 3D world",
+      "llm_evidence_cn": "3D世界中的视觉查询定位",
+      "llm_evidence": "3D世界中的视觉查询定位",
+      "canonical_evidence": "3D世界中的视觉查询定位",
+      "llm_tldr_en": "Introduces a benchmark for localizing visual queries in 3D space to support environment understanding.",
+      "llm_tldr_cn": "引入了3D空间视觉查询定位基准，以支持环境理解研究。",
+      "llm_tldr": "引入了3D空间视觉查询定位基准，以支持环境理解研究。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索智能体如何利用隐空间进行导航与环境理解",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.05126v1",
+      "source": "arxiv",
+      "title": "ConsisVLA-4D: Advancing Spatiotemporal Consistency in Efficient 3D-Perception and 4D-Reasoning for Robotic Manipulation",
+      "abstract": "Current Vision-Language-Action (VLA) models primarily focus on mapping 2D observations to actions, but exhibit notable limitations in spatiotemporal perception and reasoning: 1) spatial representations often rely on additional sensors, introducing substantial computational overhead; 2) visual reasoning is typically limited to future-frame prediction, lacking alignment with the instruction-grounded scene and thus compromising spatiotemporal consistency. To address these challenges, we propose ConsisVLA-4D, a unified and efficient framework that enhances spatiotemporal consistency in 3D perception and 4D reasoning. Specifically, we design: 1) CV-Aligner, which ensures cross-view object semantic consistency by filtering instruction-relevant regions and aligning object identities across multiple viewpoints; 2) CO-Fuser, which guarantees cross-object spatial geometric consistency by eliminating spatial relation ambiguities between objects across views using compact latent representations. Building upon these, we introduce 3) CS-Thinker to achieve cross-scene spatiotemporal consistency as actions unfold. It learns implicit knowledge of local dynamics from object-semantic tokens of CV-Aligner and global depth from geometric tokens of CO-Fuser, thereby enhancing efficient visual reasoning under scene variations. Extensive experiments demonstrate that, benefiting from its efficient spatiotemporal consistency design, ConsisVLA-4D achieves 21.6% and 41.5% performance improvements, along with 2.3-fold and 2.4-fold inference speedups compared to OpenVLA on the LIBERO benchmark and real-world platforms, respectively.ConsisVLA-4D is open-sourced and publicly available at",
+      "authors": [
+        "Wei Li",
+        "Jizhihui Liu",
+        "Li Yixing",
+        "Junwen Tong",
+        "Rui Shao",
+        "Liqiang Nie"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-06T16:55:44+00:00",
+      "link": "https://arxiv.org/pdf/2605.05126v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "spatiotemporal consistency in 3D perception and 4D reasoning for robotic manipulation",
+      "llm_evidence_cn": "机器人操作中的3D感知与4D推理的时空一致性",
+      "llm_evidence": "机器人操作中的3D感知与4D推理的时空一致性",
+      "canonical_evidence": "机器人操作中的3D感知与4D推理的时空一致性",
+      "llm_tldr_en": "Enhances spatiotemporal consistency in robotic VLA models for better 3D perception and reasoning.",
+      "llm_tldr_cn": "增强机器人VLA模型中的时空一致性，提升3D感知与推理能力。",
+      "llm_tldr": "增强机器人VLA模型中的时空一致性，提升3D感知与推理能力。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.04198v1",
+      "source": "arxiv",
+      "title": "Deep Wave Network for Modeling Multi-Scale Physical Dynamics",
+      "abstract": "Performance of deep learning models is strongly governed by architectural capacity, with width and depth as primary controls. However, in physical-science applications, models are often compared at a single fixed size or by separating accuracy and computational cost, which can be misleading since architectures exhibit different accuracy-cost scaling as width and depth vary. This issue is particularly relevant for U-Net-type encoder-decoder models, widely used for multi-scale gas, fluid, and plasma dynamics due to their ability to represent features across spatial scales. A U-Net constructs a multi-resolution representation via an encoder that progressively reduces spatial resolution, followed by a decoder that restores it for prediction. Skip connections link corresponding encoder and decoder features, preserving fine-scale information and improving optimization. In practice, U-Net width is routinely tuned, while depth is typically kept fixed (a set number of down/up-sampling stages with few convolutions per stage), limiting systematic exploration of depth for improving the accuracy-cost trade-off. We address this limitation by increasing effective depth through stacking multiple encoder-decoder \"waves\" in series, with skip connections both within and across waves to enable progressive cross-scale refinement. We call this architecture a Deep Wave Network (DW-Net). Training data, optimization, and schedules are kept identical across models. Instead of evaluating single configurations, we train multiple width variants of each architecture and compare accuracy vs. GPU time Pareto fronts. Across several 2D and 3D flow benchmarks, DW-Net models consistently improve the Pareto frontier over single-wave U-Nets, achieving higher accuracy at matched cost or similar accuracy at reduced cost, and reaching low-error regimes with up to 3x less training time under identical training settings.",
+      "authors": [
+        "Alexander I. Khrabry",
+        "Edward A. Startsev",
+        "Andrew T. Powis",
+        "Igor D. Kaganovich"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "physics.comp-ph",
+        "physics.flu-dyn",
+        "physics.plasm-ph"
+      ],
+      "published": "2026-05-05T18:40:59+00:00",
+      "link": "https://arxiv.org/pdf/2605.04198v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "modeling multi-scale physical dynamics using encoder-decoder representations",
+      "llm_evidence_cn": "使用编码器-解码器表示建模多尺度物理动力学",
+      "llm_evidence": "使用编码器-解码器表示建模多尺度物理动力学",
+      "canonical_evidence": "使用编码器-解码器表示建模多尺度物理动力学",
+      "llm_tldr_en": "Explores deep networks for modeling physical dynamics, relevant to world model structure and representation.",
+      "llm_tldr_cn": "探索用于建模物理动力学的深度网络，与世界模型的结构和表示相关。",
+      "llm_tldr": "探索用于建模物理动力学的深度网络，与世界模型的结构和表示相关。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
