@@ -1,0 +1,118 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.05586v1/fig-001.webp",
+      "caption": "Figure 14: Latent-space optimization trajectory. Two-dimensional PCA projection of the training context latents zctx, coloured by the corresponding dataset CL/CD. The dashed contour is the projection of the 95% Mahalanobis trust region used to constrain the search. Light grey curves are the SLSQP iterates of the eight random restarts; the orange curve highlights the restart selected as the global optimum. White circles mark the SLSQP starting points. The red star is the latent optimum z⋆ctx; the blue open circle is the dataset geometry retrieved as its nearest neighbour in design space, connected to z⋆ctx by the dotted segment. The green triangle marks the initial geometry of the converging restart – the real training case closest to its starting point. All restarts ascend the CL/CD field and converge inside the trust region, terminating on the data manifold.",
+      "page": 25,
+      "index": 1,
+      "width": 714,
+      "height": 583
+    },
+    {
+      "url": "assets/figures/arxiv/2605.05586v1/fig-002.webp",
+      "caption": "Figure 15: Concept-vector arithmetic in the HighLift context latent. 4 × 4 response matrix obtained by walking the train-mean latent µctx along the unit-norm linear-probe direction of one design parameter at a time. Rows: latent direction walked (IB Flap, OB Flap, IB Slat, OB Slat). Columns: design parameter read out by the corresponding linear probe. Each panel reports the sensitivity in train standard deviations per unit walk (σ/γ). Diagonal panels (red) show the intended concept response and reach near-unit slope. Off-diagonal panels (grey, dashed) quantify cross-talk between concept directions: the flap–slat off-diagonal block is essentially flat, indicating that flap and slat actuation occupy orthogonal latent subspaces, while inboard / outboard pairs of the same control surface partially co-activate – the same correlation engineers impose by deflecting IB and OB segments in tandem. The disentanglement is obtained without any design-parameter supervision during JEPA pre-training; the linear probes are fit only on the train split.",
+      "page": 26,
+      "index": 2,
+      "width": 826,
+      "height": 644
+    },
+    {
+      "url": "assets/figures/arxiv/2605.05586v1/fig-003.webp",
+      "caption": "Figure 8: Pressure-coefficient profile extracted from the decoded field on a wing section for case LHC019 at 12◦ angle of attack. The comparison shows that AeroJEPA preserves the local pressure distribution needed to recover section-level aerodynamic behavior from the decoded solution.",
+      "page": 21,
+      "index": 3,
+      "width": 598,
+      "height": 377
+    },
+    {
+      "url": "assets/figures/arxiv/2605.05586v1/fig-004.webp",
+      "caption": "Figure 9: Parity plots for CL and CD computed from the decoded predicted fields. Unlike the latent probing experiment, these coefficients are obtained by estimating aerodynamic forces directly from the reconstructed surface solution, showing that AeroJEPA yields accurate integrated force predictions from the decoded field itself.",
+      "page": 21,
+      "index": 4,
+      "width": 598,
+      "height": 350
+    },
+    {
+      "url": "assets/figures/arxiv/2605.05586v1/fig-005.webp",
+      "caption": "Figure 1: Overview of the AeroJEPA framework. The context encoder maps the geometry point cloud to context tokens Zc, while the target encoder maps the ground-truth flow point cloud to target tokens Zt. The predictor conditions Zc on the operating variables c (e.g., α, Re, Mach) and outputs predicted target tokens Ẑt. Training always includes a latent matching loss Llat and a collapse-avoidance regularizer Lsig. When a decoder is included, the predicted tokens are also decoded to the physical field and masked-supervised with a reconstruction loss Lrec. At inference, the target encoder is discarded; the decoder is used only if full-field reconstruction is required.",
+      "page": 2,
+      "index": 5,
+      "width": 790,
+      "height": 335
+    },
+    {
+      "url": "assets/figures/arxiv/2605.05586v1/fig-006.webp",
+      "caption": "Figure 10: Recovery of HiLift design variables from the context latents using ridge regression. Although the model is trained only from input mesh points and target flow fields, the context representation remains strongly aligned with the underlying geometric parameters.",
+      "page": 22,
+      "index": 6,
+      "width": 682,
+      "height": 662
+    },
+    {
+      "url": "assets/figures/arxiv/2605.05586v1/fig-007.webp",
+      "caption": "Figure 11: Latent-arithmetic analysis on HiLiftAeroML. Each trajectory traverses the context latent space along a concept vector defined by the ridge-regression weights of a target design variable. The targeted variable drives most of the variation, while the remaining variables stay comparatively stable; the main residual couplings occur between inboard and outboard flaps and between inboard and outboard slats.",
+      "page": 23,
+      "index": 7,
+      "width": 732,
+      "height": 564
+    },
+    {
+      "url": "assets/figures/arxiv/2605.05586v1/fig-008.webp",
+      "caption": "Figure 3: Main HiLift latent-space results. Top: PCA projection of the context latents comparing AeroJEPA (Top) with the VAE baseline (Bottom), showing that AeroJEPA organizes the geometry manifold more coherently. Bottom: projection of the predicted latents after conditioning on the flow state, showing that the predicted manifold arranges smoothly with aerodynamic quantities even though the model is trained only on the primitive fields (u, v, w, p).",
+      "page": 8,
+      "index": 8,
+      "width": 498,
+      "height": 370
+    },
+    {
+      "url": "assets/figures/arxiv/2605.05586v1/fig-009.webp",
+      "caption": "Figure 5: Additional qualitative pressure views for test geometry LHC013 at 18◦ angle of attack. These complementary views support the velocity-based qualitative comparison shown in the main text and confirm that AeroJEPA preserves the main surface-pressure structure on the unseen case. The relative error reported in the figure is 0.24% in MAE / max-GT-mean for the pressure field.",
+      "page": 19,
+      "index": 9,
+      "width": 664,
+      "height": 601
+    },
+    {
+      "url": "assets/figures/arxiv/2605.05586v1/fig-010.webp",
+      "caption": "Table 3: Primary architectural parameterization and optimization bounds for the AeroJEPA framework, delineated by the underlying aerodynamic environment.",
+      "page": 17,
+      "index": 10,
+      "width": 640,
+      "height": 415
+    },
+    {
+      "url": "assets/figures/arxiv/2605.05586v1/fig-011.webp",
+      "caption": "Figure 12: Representative decoded-field comparisons on SuperWing for Cf,z , Cf,τ , and Cp. The predicted surface fields remain consistent with the reference solution across the three quantities most relevant to transonic wing analysis.",
+      "page": 24,
+      "index": 11,
+      "width": 664,
+      "height": 606
+    },
+    {
+      "url": "assets/figures/arxiv/2605.05586v1/fig-012.webp",
+      "caption": "Figure 4: Proof-of-concept latent-space optimization on SuperWing. Left: in the (CD, CL) scatter of the full dataset, the surrogate optimum sits at the upper-left corner of the achievable envelope, on the high-efficiency frontier traced by the iso-L/D contours. The accompanying histogram shows the optimum landing at the right tail of the dataset L/D distribution, well separated from the initial geometry while remaining inside the calibrated regime. Right: parallel-coordinates view of the nine reliably encoded design parameters, showing that the optimized design corresponds to a recognizable high-efficiency wing recipe—large reference area and aspect ratio, high sweep, aggressive taper, and root-biased washout twist. The retrieved nearest-neighbour wing follows the same polyline up to small offsets, indicating that the optimum corresponds to a wing family already present in the dataset.",
+      "page": 9,
+      "index": 12,
+      "width": 826,
+      "height": 196
+    },
+    {
+      "url": "assets/figures/arxiv/2605.05586v1/fig-013.webp",
+      "caption": "Figure 6: Ridge linear probing from predicted latents to aerodynamic coefficients on HiLiftAeroML. Even though the model is trained only on the primitive fields (u, v, w, p), the predicted latent supports accurate recovery of CL and CD, consistent with the smooth organization of the predicted manifold shown in the main text.",
+      "page": 20,
+      "index": 13,
+      "width": 598,
+      "height": 350
+    },
+    {
+      "url": "assets/figures/arxiv/2605.05586v1/fig-014.webp",
+      "caption": "Figure 7: Latent interpolation on HiLiftAeroML between different operating conditions and geometry states. AeroJEPA yields decoded fields that remain physically meaningful across the interpolation path, with integrated coefficients that stay close to the corresponding ground-truth values.",
+      "page": 20,
+      "index": 14,
+      "width": 682,
+      "height": 314
+    }
+  ]
+}

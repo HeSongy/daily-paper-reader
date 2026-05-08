@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.06317v1/fig-001.webp",
+      "caption": "Table 2: Performance comparison with top-down map-based VLN methods on the R2R-TopDown dataset. All methods leverage global top-down maps for navigation. “–” indicates metrics not reported by the original paper. WS-MGMap, MapNav, and IPPD report results on the full R2R Val Unseen episodes; IPPD∗ denotes IPPD results on our filtered R2R-TopDown Val Unseen episodes, as the official paper only releases detailed results for the unseen split. WS-MGMap and MapNav numbers are taken directly from their original papers (full R2R Val Unseen); direct numerical comparison with NavOne (R2R-TopDown Val Unseen subset, 1003 episodes) should be interpreted with caution. Std. Attn: standard self-attention; AR-Full: Full Attention Residuals; SQ: Spatial-Aware Depth Query.",
+      "page": 7,
+      "index": 1,
+      "width": 740,
+      "height": 223
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06317v1/fig-002.webp",
+      "caption": "Table 4: The 41 semantic object categories in the Matterport3D (MP3D) dataset used for the semantic map Msem. Category ID 0 (void) denotes unannotated or background pixels; IDs 1–40 are the 40 meaningful indoor object classes. Category ID 2 (floor) is also used to derive the binary occupancy map Mocc.",
+      "page": 13,
+      "index": 2,
+      "width": 540,
+      "height": 338
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06317v1/fig-003.webp",
+      "caption": "Figure 4: Overview of our NavOne architecture. Multi-modal maps (RGB, occupancy, semantic) are concatenated and patch-embedded into visual tokens, while language instructions are encoded by BERT. Pose information (position and rotation) is injected via element-wise addition into visual tokens, which then attend to language features through stacked cross-attention layers. The resulting instruction-conditioned features are processed by a ViT encoder with Attention Residuals and decoded via progressive transposed convolutions to produce dense path and goal probability maps.",
+      "page": 4,
+      "index": 3,
+      "width": 826,
+      "height": 379
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06317v1/fig-004.webp",
+      "caption": "Figure 6: Multi-room navigation example. Figure 7: Long-corridor navigation example.",
+      "page": 17,
+      "index": 4,
+      "width": 829,
+      "height": 211
+    }
+  ]
+}

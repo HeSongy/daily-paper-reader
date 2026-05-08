@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.06470v1/fig-001.webp",
+      "caption": "Table 2: Mean normalized return ± standard deviation for offline zero-shot goal-conditioned RL. All experiments are based on eight seeds trained for a total of one million gradient steps. GC-IQL and GC-CQL results are from [24]. Rec-Mid is HILP’s planning method that recursively selects midpoint between current state and goal for three recursions. Sym-Graph stands for graph planning using symmetric Euclidean distances and Asym-Graph for graph planning using asymmetric planning.",
+      "page": 9,
+      "index": 1,
+      "width": 818,
+      "height": 195
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06470v1/fig-002.webp",
+      "caption": "Table 4: Comparison of IEL Asymmetric and Symmetric Graph Planning configurations across environments.",
+      "page": 31,
+      "index": 2,
+      "width": 822,
+      "height": 541
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06470v1/fig-003.webp",
+      "caption": "Table 3: Main configuration of IEL hyperparameters. Only hyperparameters specific to IEL or Asymmetric/Symmetric Graph Planning differ from those presented in HILP [24].",
+      "page": 31,
+      "index": 3,
+      "width": 827,
+      "height": 448
+    }
+  ]
+}

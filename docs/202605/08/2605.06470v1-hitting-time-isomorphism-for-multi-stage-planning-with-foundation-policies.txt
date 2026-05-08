@@ -1,0 +1,2633 @@
+Title: Hitting Time Isomorphism for Multi-Stage Planning with Foundation Policies
+
+URL Source: https://arxiv.org/pdf/2605.06470v1
+
+Published Time: Fri, 08 May 2026 01:30:27 GMT
+
+Number of Pages: 31
+
+Markdown Content:
+# Hitting Time Isomorphism for Multi-Stage Planning with Foundation Policies 
+
+Magnus Victor Boock Abdullah Akgül Mustafa Mert Çelikok Melih Kandemir 
+
+Department of Mathematics and Computer Science University of Southern Denmark 
+
+## Abstract 
+
+We present a new operator-theoretic representation learning framework for offline reinforcement learning that recovers the directed temporal geometry of a controlled Markov process from hitting time observations. While prior art often produces symmetric distances or fails to satisfy the triangle inequality, our framework learns a Hilbert-space displacement geometry where expected hitting times are realized as linear functionals of latent displacements. We prove that this representation exists under latent linear closure and is uniquely identifiable up to a bounded linear isomorphism. For finite-dimensional implementations, we show that global hitting-time error is bounded by one-step transition error amplified by the environ-ment’s transient spectral radius. Furthermore, we provide finite-sample guarantees accounting for approximation, statistical complexity, and trajectory-label mismatch. Derived from this theory, we curate Isomorphic Embedding Learning (IEL) as a new goal-agnostic foundation policy learning algorithm that anchors a HILP-style consistency objective with explicit hitting-time regression to ensure that the learned geometry reflects actual decision-time progress. This asymmetric and composi-tional structure enables robust graph-based multi-stage planning for long-horizon navigation. Our experiments demonstrate that IEL improves the state of the art of learning foundation policy policies from offline maze locomotion data. Our code can be found at https://github.com/MagnusBoock/IEL/ .
+
+## 1 Introduction 
+
+The increasing availability of large-scale offline trajectory data has shifted reinforcement learning toward reward-free pretraining: extracting from a data set a reusable policy that generalizes across an open set of goals [ 17 , 24 , 28 ] in a zero-shot manner. This objective, often described as foundation policy learning [24 ], has motivated a range of large-scale efforts, from unsupervised RL pretraining to Vision–Language–Action (VLA) models that train a single policy on heterogeneous trajectory data and deploy it across many previously unseen tasks [ 3, 5, 12 , 25 , 32 ]. We hypothesize that for such a policy to succeed at long-horizon tasks, the offline learned goal-agnostic representation must support the three capabilities jointly. Firstly, it should comply with unsupervised policy training , where the policy is learned without exposure to explicit goal-conditioned rewards, ensuring generalization to tasks defined only at deployment. Secondly, the state representations should be queryable with 
+
+directional distances, as most real environments are irreversible or reversible at asymmetric costs, making it possible that routes planned with symmetric distances pass through subgoals unreachable in the required direction. Thirdly, these distances should satisfy the triangle inequality so that during multi-stage planing, local distances can compose into globally consistent plans through intermediate states never specified at training time. Existing methods follow a trichotomy based on the quantity of interest used for offline state represen-tation learning: successor measures, reachability distances, and hitting times. Successor measure 
+
+> Preprint.
+> arXiv:2605.06470v1 [cs.LG] 7 May 2026
+
+Table 1: Classification of offline goal-conditional RL methods based on properties essential for foundation policies. Unsupervised policy training denotes the ability to learn a representation serving an open set of goals without retrieving explicit goal-conditioned reward labels from the dataset. No prior method satisfies the triangle inequality, directional distance, and unsupervised training simultaneously. HILP [ 24 ] is the only existing baseline qualifying for the latter. See Section C of the Appendix for a detailed discussion about policy supervision in prior art. We propose IEL as the first approach to satisfy all three. CMP stands for Controlled Markov Process, i.e. MDP without reward.                                                                     
+
+> Method Information Distilled Distance Temporal Difference Unsupervised Policy Training Quantity Directional Triangle Inequality
+> Successor measure methods
+> FB [27, 28] Successor measure Bilinear projection ✓✗✓✗
+> C-Learning [8] Reachability Classifier logits ✓✗✓✗
+> CRL [9] Density ratio Inner product ✓✗✗✗
+> PSM [1] Successor measure Bilinear projection ✓✗✓✗
+> CMD [21] Successor features Log-density ratio ✓✓✗✗
+> Reachability distance methods
+> HIQL [23] Multi-step reachability Value gap ✓✗✓✗
+> QRL [29] Q-values Implicit Q-distance ✓✓✗✗
+> TMD [22] Time-to-arrival Quasimetric feature ✓✓✓✗
+> Hitting-time methods
+> GAS [2] Hitting time Euclidean feature ✗✓✓✗
+> HILP [24] Hitting time Euclidean feature ✗✓✓✓
+> IEL (This work) Hitting time Isomorphism to CMP ✓✓✓✓
+
+methods [ 1, 21 , 27 , 28 ] decouple environment dynamics from rewards to allow zero-shot task adapta-tion. However, these methods—except CMD—fail to satisfy the triangle inequality, making them unable to compose distances across the intermediate sub-goals essential for multi-stage planning. Reachability distance methods [ 20 , 22 , 29 ] impose metric or quasimetric structures to improve compositional reasoning. Their key limitation is that they rely on goal-conditioned supervision for policy training. Hitting time methods [ 2, 24 ] are uniquely tailored for unsupervised policy training and satisfy the triangle inequality. However, their symmetric Euclidean features fail to capture the irreversible directed geometry of real-world physical transitions, limiting their stitching (hence multi-stage planning) capabilities. Furthermore, GAS [ 2] also necessitates real goal state labels for policy training, hence it does not qualify as a foundation policy learning method. Table 1 gives an overview of the prior art with respect to their properties relevant for foundation policy learning. We identify the missing primitive of the prior approaches as the directional temporal geometry measured in discrete transition steps. We propose expected hitting time as this primitive. For a policy π and goal g, V π (x, g ) represents the expected number of steps to reach g from x. This quantity is characterized by a Poisson equation where a constant cost of one is incurred at each step until reaching the goal, at which point the cost becomes zero. This formulation provides the exact object required for multi-stage planning, bypassing the need to recover the temporal structure from surrogates such as successor measures or reachability distances. We formalize this idea via an operator-theoretic framework. For processes with a Hilbert-space feature map ϕ and approximately linear latent dynamics, the hitting time satisfies the identity V π (x, g ) = ⟨ϕ(g) − ϕ(x), ω πg ⟩H, where 
+
+ωπg ∈ H identifies the task of navigating to state g. This proves that representations capturing hitting-time functionals are equivalent up to a bounded linear isomorphism, implying our learning target is the invariant directed temporal geometry of the environment rather than an arbitrary coordinate system. Theoretically, we establish that this displacement-linear representation exists under latent linear closure and an adjoint solvability condition (Theorem 2.2) and is uniquely identifiable under a separating reference policy (Theorem 2.3). For finite-dimensional implementations, we prove that global hitting-time error is bounded by one-step latent transition error amplified by a transient-spectral-radius horizon factor (Theorem 3.3). Finally, our finite-sample regression analysis (Theorem 3.5) 2decomposes total error into approximation, statistical-complexity, coverage, and trajectory-label-mismatch terms, providing a complete PAC-oracle guarantee for the resulting displacement topology. We use our theoretical framework to develop Isomorphic Embedding Learning (IEL) as the first foundation policy training algorithm tailored specifically for multi-stage planning. IEL trains ϕ from offline trajectories by relabeling intermediate states as goals and regressing observed temporal gaps onto displacement-projected scores anchored by a learned task identifier ω(g). At test time, IEL constructs a graph over offline latent states with edge costs given by the learned hitting-time score, and applies shortest-path search to convert local temporal predictions into global zero-shot navigation. As shown in Table 1, IEL is the only framework that integrates unsupervised policy training with a directional distance and the triangle inequality. We demonstrate the necessity of these qualities for learning foundation policies with multi-stage planning in experiments conducted on six offline goal-conditioned RL benchmarks. IEL’s directional distance features and the graph-based planning mechanism bring significant and complementary performance gains. 
+
+## 2 Isomorphic Embedding Learning from Hitting Time Observations 
+
+2.1 Problem statement 
+
+We consider a dynamical environment formulated as a Controlled Markov Process (CMP) defined by the tuple (X , A, P), where X and A are real-valued, potentially multidimensional state and action spaces. The transition dynamics are governed by a Borel measurable kernel P : X × A → ∆( X ),which assigns a probability measure over next states x′ given a current state-action pair (x, a ) ∈ X ×A .We assume the existence of a fixed behavior policy πB : X → ∆( A) used to provide us with an offline dataset D = {τi}ni=1 consisting of n independent and identically distributed (i.i.d.) trajectories 
+
+τi = ( x0, a 0, x 1, a 1, . . . , x Ti ) of length Ti generated by the interaction of πB with the kernel P.Let T πx→g = inf {t ≥ 0 | x0 = x, x t = g} be a random variable representing the hitting time to a goal state g ∈ X under a policy π. We assume that for any g reachable from x, there exists at least one policy in the admissible set ΠD such that the expected hitting time V π (x, g ) = E[T πx→g | x0 = x]
+
+is finite. Our objective is to identify the optimal in-distribution foundation policy π∗ 
+
+> D,g
+
+defined as 
+
+π∗ 
+
+> D,g
+
+= arg min π∈ΠD V π (x, g ) for all g ∈ X where the admissible policy set ΠD is defined by the 
+
+in-distribution criterion of absolute continuity . Formally, for a fixed state x ∈ X , let π(·| x) and 
+
+πB (·| x) be the probability measures over the Borel σ-algebra B(A). We define the in-distribution criterion of absolute continuity as ΠD = {π : X → ∆( A) | ∀ x ∈ X , π (·| x) ≪ πB (·| x)}. The notation π ≪ πB signifies that π(·| x) is absolutely continuous with respect to πB (·| x), which is symbolically defined as: ∀B ∈ B (A) with πB (B|x) = 0 implying π(B|x) = 0 . By the Radon-Nikodym Theorem , this condition is necessary and sufficient for the existence of a non-negative and measurable function w : X × A → [0 , ∞), names as the Radon-Nikodym derivative, such that for any B ∈ B (A) we have π(B|x) = R 
+
+> B
+
+w(a|x) dπ B (a|x). This criterion ensures that the optimal policy only assigns mass to actions within the support of the behavior policy. We treat the trajectories in the data set as the empirical basis for estimating the expectations of the hitting time variable and the underlying transition dynamics. We refer to π∗ 
+
+> D,g
+
+as a foundation policy due to its capability to solve a large set of policy search tasks in a zero-shot manner. We develop our solution using a Hilbert space framework because it combines high expressive power with geometric consistency. Hilbert spaces are a standard tool in control theory for the analysis of nonlinear dynamical systems, particularly through the use of Koopman and Perron-Frobenius operators [ 4 , 6, 13 , 14 ]. This framework has recently inspired new approaches in offline reinforcement learning [ 7 , 27 , 28 ] and the development of foundation policies [ 24 ] by providing a structured way to represent state-action transitions as linear operators in a latent space. We approach the foundation policy learning problem from a rigorous Hilbert space perspective. The definition below specifies the conditions under which a CMP is representable within a Hilbert space subject to a bounded approximation error ϵ.
+
+Definition 2.1 (ϵ-Sufficient CMP) . A CMP (X , A, P) is said to be ϵ-Sufficient with respect to a latent representation (H, ϕ, K) if there exists a Hilbert space H, a feature map ϕ : X → H , and a family of action-indexed bounded linear operators {K a ∈ L (H)|a ∈ A} such that for all (x, a ) ∈ X × A :
+
+Ex′∼P (·| x,a )[ϕ(x′)] − K aϕ(x) H ≤ ϵ for a given ϵ ≥ 0 where L(H) ≜ {K : H → H | ∥K∥ < ∞} 
+
+is the Banach space of linear maps with finite operator norm. 
+
+3A Sufficient CMP is simply an ϵ-Sufficient CMP where ϵ = 0 , representing the case where the transition dynamics are perfectly captured by the linear action-operators in the latent Hilbert space. This definition is the Hilbert-space analogue of the linear-feature transition condition underlying linear action models [ 18 , 30 ], with ϵ playing the role of the misspecification term familiar from approximate linear MDPs [ 31 ]. It is also closely related to conditional mean feature models of MDP transition dynamics [ 11 , 19 , 26 ], which embed the full conditional P(·| x, a ) in an RKHS rather than matching expected features under a fixed ϕ.
+
+2.2 The Methodology: Hitting Time Isomorphism 
+
+Our main methodological contribution builds on the key fact that in a sufficient CMP, it is actually possible to relate the expected hitting time to feature difference. This fact bridges the gap between temporal dynamics and the Hilbert space geometry, using the property that the features ϕ act as a system of coordinates for the latent state space. The below result states that if the feature map ϕ is rich enough to linearize the dynamics (via the transition operators {K a}) and expressive enough to represent the passage of time (via the range condition on the adjoint), then the expected hitting time is exactly a linear functional of the displacement in the feature space . Throughout, we work on the closed feature span span {ϕ(x) : x ∈ X } , so equality of inner products against all feature vectors identifies elements of H. For hitting-time identities with goal g, the relevant feature span is the closed span generated by {ϕ(x) : x̸ = g}.
+
+Theorem 2.2 (Existence of linear hitting time representation in CMPs) . Let (X , A, P) be a Sufficient CMP with latent representation (H, ϕ, K). Assume that sup x∈X ∥ϕ(x)∥H < ∞. For a fixed policy 
+
+π(a|x), let Kπ ∈ L (H) be the policy-integrated transition operator such that for all x ∈ X :
+
+Kπ ϕ(x) = Ea∼π(·| x)[Kaϕ(x)] , and let w1 ∈ H be the representer of the unit cost functional. The expected hitting time V π (x, g ) admits the linear representation V π (x, g ) = ⟨ϕ(g) − ϕ(x), ω πg ⟩H for some vector ωπg ∈ H if and only if w1 ∈ range (Kπ − I)∗ on the goal-g transient feature span. 
+
+For any policy π such that the policy-induced latent dynamics close linearly on H, i.e., there exists a bounded linear operator Kπ ∈ L (H) satisfying Kπ ϕ(x) = Ea∼π(·| x)[Kaϕ(x)] for all x ∈ X ,Theorem 2.2 shows that the expected hitting time admits a linear representation in the displacement coordinates whenever the unit-cost functional lies in the range of (Kπ − I)∗. Thus, once the range condition holds, the passage of time is encoded by the latent linear dynamics rather than by an ad hoc distance heuristic. The next result establishes the stronger identifiability statement —namely that alternative representations recovering the same hitting-time geometry must be related by a bounded linear change of coordinates—under additional assumptions. Specifically, we assume the existence of a separating policy that can reach any goal and that the mapping from latent displacements to hitting times is well-conditioned. These requirements are reasonable as they merely ensure the environment is fully explorable and that the feature space does not merge distinct temporal transitions. 
+
+Theorem 2.3 (Identifiability of Displacement Geometry) . Let (X , A, P) be a Sufficient CMP with canonical representation (H⋆, ϕ ⋆, K⋆) and alternative representation (H, ϕ, K). Fix a reference point x0 ∈ X and define 
+
+D := span {ϕ(g) − ϕ(x0) : g ∈ X } , D⋆ := span {ϕ⋆(g) − ϕ⋆(x0) : g ∈ X } .
+
+Assume there exists at least one admissible policy πsep ∈ ΠD such that: (i) Both representations satisfy the hitting-time representation of Theorem 2.2 under πsep :
+
+V πsep (x, g ) = ⟨ϕ(g) − ϕ(x), ω πsep  
+
+> g
+
+⟩H = ⟨ϕ⋆(g) − ϕ⋆(x), ω ⋆,π sep  
+
+> g
+
+⟩H⋆ , ∀x, g ∈ X ;
+
+(ii) for a common full-support probability measure ν on X , the analysis operators (Aπsep d)( h) := 
+
+⟨d, ω πsep  
+
+> h
+
+⟩H and (Bπsep d⋆)( h) := ⟨d⋆, ω ⋆,π sep  
+
+> h
+
+⟩H⋆ define bounded, bounded-below maps Aπsep :
+
+D → L2(X , ν ) and Bπsep : D⋆ → L2(X , ν ). Then there exists a unique bounded linear isomorphism 
+
+M : D → D ⋆ such that for all x, g ∈ X , M  ϕ(g) − ϕ(x) = ϕ⋆(g) − ϕ⋆(x). Additionally, for every admissible policy π′ ∈ ΠD for which the operators Kπ′ and K⋆π′ are well-defined, 
+
+M  ϕ(g) − K π′ ϕ(x) = ϕ⋆(g) − K ⋆π′ ϕ⋆(x), ∀x, g ∈ X ,
+
+and for every action a ∈ A , M  ϕ(g) − K aϕ(x) = ϕ⋆(g) − K ⋆aϕ⋆(x).
+
+This identifiability ensures the learned displacement space is a linear transformation of the envi-ronment’s true geometry, preserving the relative temporal distances between states. Because the 4isomorphism M connects these representations, any hitting-time information encoded in the canonical dynamics can be pulled back and read out from our learned features as formalized below. 
+
+Corollary 2.4 (Pullback of Canonical Hitting-time Readouts) . Let M : D → D ⋆ be the bounded linear isomorphism given by Theorem 2.3. Fix any policy π for which the canonical hitting-time representation is available, i.e., for each goal g ∈ X there exists a canonical representer ω⋆,π g ∈ H ⋆
+
+such that V π (x, g ) = ⟨ϕ⋆(g) − ϕ⋆(x), ω ⋆,π g ⟩H⋆ for all x, g ∈ X . Then for every goal g ∈ X ,there exists a unique vector ¯ωπg ∈ D such that ⟨ϕ⋆(g) − ϕ⋆(x), ω ⋆,π g ⟩H⋆ = ⟨ϕ(g) − ϕ(x), ¯ωπg ⟩H
+
+for all x ∈ X . Consequently, V π (x, g ) = ⟨ϕ(g) − ϕ(x), ¯ωπg ⟩H, ∀x, g ∈ X . Moreover, for every admissible policy π ∈ ΠD for which Kπ and K⋆π are well-defined, it holds for all x, g ∈ X that 
+
+⟨ϕ⋆(g) − K ⋆π ϕ⋆(x), ω ⋆,π g ⟩H⋆ = ⟨ϕ(g) − K π ϕ(x), ¯ωπg ⟩H.
+
+HILP [ 24 ] and GAS [ 2] rely on a symmetric L2 distance heuristic that fails in the realistic case where the environment dynamics are directed. Contrarily, our framework identifies an isomorphism between the MDP dynamics and a directed displacement geometry, which captures both the direction and the scale of time. Instead of assuming that features can be forcibly mapped to a spatial distance, our Sufficient CMP framework ensures that the latent coordinates ϕ(x) are mathematically constrained by the linear transition operator Ka. This provides a provable link between latent dynamics and hitting times, enabling reliable multi-stage planning through directed graph search—a capability fundamentally missing in symmetric feature methods. Furthermore, we establish an algebraic identifiability absent in the quasimetric representations of TMD [ 22 ], which exploits asymmetric distances to approximate hitting times. This approach lacks the operator-theoretic grounding necessary to ensure that these distances are globally consistent across the state space. In our framework, Theorem 2.2 proves that the expected hitting time is a linear function of latent displacement coordinates whenever the unit-cost functional satisfies the adjoint range condition. Theorem 2.3 provides the stronger structural guarantee: any representation satisfying this identity is related to the canonical one by a unique bounded linear isomorphism. This fact ensures that our learned geometry is a coordinate-consistent reflection of the underlying process rather than an unconstrained distance heuristic. Consequently, our framework recovers the environment’s latent displacement structure with a level of mathematical rigor that current distance-based models do not guarantee. 
+
+2.3 The Algorithm: Isomorphic Embedding Learning (IEL) 
+
+We next introduce a new foundation policy learning algorithm building on the theoretical framework developed earlier. Our algorithm, named as Isomorphic Embedding Learning (IEL) , comprises the four components explained below. The related pseudocode can be found in Appendix F. (i) Task identifier learning: We learn a mapping ωψ (·) that transforms a target state g into a task identifier ωπg , which defines the directional axis of the latent space for that specific navigation objective. This is essential for implementing the directional asymmetry in the hitting-time calculation 
+
+V π (x, g ) = ⟨ϕ(g) − ϕ(x), ω πg ⟩H established in Theorem 2.2. We adopt a contrastive learning approach to implement this step by computing an InfoNCE loss that contrasts the task identifier 
+
+ωψ (gi) against a corresponding augmented positive view ωψ (˜ gi) and a set of negative candidates within a batch. Specifically, for a batch of goals {gi}Ni=1 sampled from the replay buffer, where ˜gi
+
+denotes the augmented view paired with gi as in Algorithm 2, we minimize: 
+
+LNCE (ψ) = − 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+ ωψ (gi)⊤ωψ (˜ gi)
+
+τ − log 
+
+> N
+
+X
+
+> j=1
+
+exp 
+
+ ωψ (gi)⊤ωψ (˜ gj )
+
+τ
+
+ .
+
+The denominator contrasts the paired positive view against other batch candidates, encouraging augmented views of the same state to have similar identifiers while separating distinct states. This stage should be interpreted as learning an injective task parameterization, not as directly solving the policy-specific Poisson equation for the exact representers ωπg in Theorem 2.2. In the finite-sample analysis, the learned task encoder is treated as fixed and denoted by ¯ωψ . Any mismatch between this learned identifier and an ideal hitting-time readout is absorbed into the approximation/oracle-competitiveness terms of the regression analysis. (ii) Hitting time regression: We sample an intermediate point from a trajectory. We then learn to predict the hitting-time progress supported by the behavior data. Following the lines of IQL [ 15 ], we perform expectile regression to bias the learned geometry toward shorter in-distribution distances 5from observations. To keep the empirical hitting-time target bounded and stable, we implement discounted hitting times in line with common practice in sufficient-MDP-based approaches. (iii) Temporal difference learning. The Monte Carlo approach used in the previous component is effective for learning to predict hitting times in an unbiased manner. However, collecting long-horizon hitting-time observations is difficult: long-range data is rare, often following a power-law tail, and such targets become increasingly hard to predict accurately. Instead, we restrict the interim goal horizon and support the stitching capabilities of our approach via TD learning. The detrimental effect of the limited horizon of trajectories on stitching capabilities has been observed earlier [ 22 ]. A direct Bellman backup implementation of the hitting time machinery is susceptible to numerical instabilities. To account for them, we first establish an analytical link between our hitting time formula and HILP, noting that HILP’s L2 norm formulation appears as an upper bound to ours. We bridge these two models by grounding the latent displacement in the projection of the embedding difference onto the canonical unit vector. This projection represents the directed progress toward the goal state. By normalizing the task identifier we get 
+
+⟨ϕ(g) − ϕ(x), ω ψ (g)/∥ωψ (g)∥⟩ = ∥ϕ(g) − ϕ(x)∥ ⟨ϕ(g) − ϕ(x), ω ψ (g)⟩∥ϕ(g) − ϕ(x)∥ · ∥ ωψ (g)∥
+
+| {z } 
+
+> =cos( ξx→g,g )
+
+where ξx→g,g is the angle between the embedding vectors of s and g. We further employ a transfor-mation V π (x, g ) ≈ ∥ ϕ(g) − ϕ(x)∥ exp ( β(1 − cos( ξx→g,g ))) which penalizes both the Euclidean distance and the angular misalignment relative to the goal, introducing a directional bias that symmet-ric HILP objective lacks. The exponential factor is monotone in cos( ξx→g,g ): it equals one when 
+
+ϕ(g) − ϕ(s) is aligned with ωψ (g) and grows smoothly as alignment degrades, so it acts as a soft directional constraint that augments the underlying Euclidean term. We adopt this transformation as a smoother proxy for the directed hitting-time score. Notably, β = 0 recovers the HILP objective. (iv) Graph search for multi-stage planning. We exploit the learned asymmetric geometry by constructing a directed graph G = ( V, E ). The vertex set V ⊂ { ϕ(s)|s ∈ B} is extracted from the dataset using a greedy approximation for Determinantal Point Process inference [ 16 ], ensuring diverse coverage of the state manifold. The edge set E is initialized via a symmetrized Minimum Spanning Tree (MST) based on dsym = d(s, t, g ) + d(t, s, g ), ensuring strong connectivity. This backbone is augmented with k-Nearest-Neighbors ( k-NN) for each vertex. While the MST backbone is determined by dsym , all edge costs retain their asymmetric costs defined in 1, leveraging the learned quasimetric isomorphism of the state space; induced graph distances respect the triangle inequality: 
+
+d(s, t, g ) := ∥ϕ(t) − ϕ(s)∥2 · exp( β(1 − cos( ξs→t,g ))) . (1) Navigation is performed by computing the Single Source Shortest Path (SSSP) on the reversed graph 
+
+¯G from the goal vertex ϕ(g). This yields a global navigation function. At evaluation time, the agent identifies the nearest vertex s ∈ V and pursues the subsequent node on the optimal path toward g. See Algorithm 4 for the full pseudocode. Note that a symmetric variant of the asymmetric graph planning algorithm can be derived by using a symmetric distance function (e.g., d(s, t ) = ∥ϕ(t) − ϕ(s)∥2) and undirected edges for the graph. This reduces the computational overhead significantly, as the graph and shortest path can be precomputed before evaluation, as the distance function is goal-agnostic. 
+
+## 3 Theoretical Analysis 
+
+This two-part analysis bounds errors from d-dimensional latent compression and provides finite-sample PAC guarantees. The results establish conditions for recovering a near-oracle displacement topology—modulo a bounded linear map—while quantifying the impact of approximation, coverage, trajectory-label mismatch, and finite-sample effects. 
+
+3.1 Consistency Analysis 
+
+For the consistency analysis, let eH denote an ambient Hilbert space with feature map eϕ : X → eH.Fix a d-dimensional subspace H ⊆ eH with orthogonal projection Pd : eH → H , and define the encoder ϕ(x) := Pd eϕ(x) ∈ H . We work henceforth in the compressed space H, so dim( H) = d.6Definition 3.1 (Sufficient Capacity) . Let (X , A, P) be a CMP. For a fixed policy π, let eT π denote the policy-induced feature transition operator on the ambient feature span, defined by eT π eϕ(x) = 
+
+Ex′∼P π (·| x)[ eϕ(x′)] . We say that the compressed representation (H, ϕ ) has Sufficient Capacity ϵ
+
+under π if there exists a linear operator T π ∈ L (H) such that ∥Pd eT π eϕ(x) − T π ϕ(x)∥H ≤ ϵ for all x ∈ X . If the subspace H is fixed, we may take T π := Pd eT π
+
+> H
+
+, the compression of the ambient feature transition operator to H.
+
+The following lemma shows that the compressed operator T π correctly approximates the mean transition of the compressed features. 
+
+Lemma 3.2 (Consistency of Sufficient Capacity) . If the representation satisfies the Sufficient Capacity condition, then ∥Ex′∼P π (·| x)[ϕ(x′)] − T π ϕ(x)∥H ≤ ϵ, ∀x ∈ X .
+
+Define the out-of-subspace leakage by η(x) := ∥(I − Pd)Ex′∼P π (·| x)[ eϕ(x′)] ∥ eH. Then it holds that ∥Ex′∼P π (·| x)[ eϕ(x′)] − T π ϕ(x)∥ eH ≤ ϵ + η(x). If the ambient features are already subspace-contained, i.e. R( eϕ) ⊆ H , then η(x) = 0 . We now partition the latent space into the goal subspace 
+
+Hg := span {ϕ(g)} and the transient subspace HQ := H⊥ 
+
+> g
+
+, assume that w1 ∈ H Q, and write PQ for the orthogonal projection onto HQ. For a fixed policy π, let P π denote the policy-induced Markov operator on scalar functions, (P π f )( x) := Ex′∼P π (·| x)[f (x′)] , and let P πQ denote its restriction to the transient state space X \ { g}, which is defined as (P πQf )( x) := Ex′∼P π (·| x)
+
+f (x′)1{x′̸ = g}.Equivalently, P πQf is obtained by extending f to the goal with boundary value f (g) = 0 and then applying P π on transient states. We also define the compressed transient latent operator 
+
+T πQ := PQT π
+
+> HQ
+
+. The following theorem bounds the global error of the hitting-time predictor induced by a representation satisfying the sufficient capacity condition. 
+
+Theorem 3.3. Fix a CMP (X , A, P), a policy π, and an absorbing goal g ∈ X . Suppose that the compressed representation (H, ϕ ) has sufficient capacity ϵ under π. Assume the transient unit cost is represented by some w1 ∈ H Q, i.e. ⟨ϕ(x), w1⟩H = 1 for all x ∈ X \ { g}, that the goal subspace is invariant under T π , i.e. T π (Hg ) ⊆ H g , and let ωπg ∈ H Q satisfy (T πQ − I)∗ωπg = w1.If (I − P πQ)−1 
+
+> ∞
+
+≤ CH /(1 − ρ(T πQ )) for some CH ≥ 1, then the representer bV πg (x) := ⟨ϕ(g) −
+
+ϕ(x), ω πg ⟩H satisfies 
+
+sup 
+
+> x∈X \{ g}
+
+V π (x, g ) − bV πg (x) ≤ CH ∥ωπg ∥H ϵ
+
+1 − ρ(T πQ ) .
+
+This result shows that the approximation error is amplified by the factor (1 − ρ(T πQ )) −1, which acts as an effective-horizon term for the transient latent dynamics. Practically, this means that small one-step representation errors can accumulate more severely when the goal is difficult to reach. Thus, any admissible reference representation whose compressed latent dynamics are suffi-ciently accurate under the policy of interest induces a hitting-time predictor with controlled global error. We therefore compare the learner to the best such reference geometry available within this class. Concretely, fix x0 ∈ X , a policy πsep ∈ ΠD , and a full-support probability measure ν on 
+
+X . Let Rϵ denote the class of admissible reference tuples r = ( Hr , ϕ r , T r,π sep , {ωr,π sep  
+
+> g
+
+}g∈X )
+
+for which Theorem 3.3 applies under πsep with constants CH (r, g ), and for which the associated analysis operator (Br d)( h) := ⟨d, ω r,π sep  
+
+> h
+
+⟩Hr is bounded and bounded below, where d ∈ D r := span {ϕr (g) − ϕr (x0) : g ∈ X } . Writing the supremum constants CH (r) := sup g∈X CH (r, g ),
+
+Cω (r) := sup g∈X ∥ωr,π sep  
+
+> g
+
+∥Hr , and ρr := sup g∈X ρ(T r,π sep  
+
+> Q,g
+
+), we define the best achievable bench-mark scale as η⋆ϵ := inf r∈Rϵ (CH (r) Cω (r)ϵ)/(1 −ρr ). Thus η⋆ϵ is the smallest error level guaranteed by Theorem 3.3 over all admissible ϵ-Sufficient compressed representations. Let F be the class of predictors realizable by an algorithm in the form f (x, g ) = ⟨ϕ(g) − ϕ(x), ω g ⟩H, and suppose that this class can match the oracle benchmark up to excess ηcls , i.e. inf f ∈F ∥f − V πsep ∥L2(ν×ν) ≤ η⋆ϵ + ηcls .The next result shows that any population minimizer of the regression objective aligns with the corresponding reference displacement geometry through a bounded linear map. 
+
+Theorem 3.4. Let bV ∈ F with bV (x, g ) = ⟨ϕ(g) − ϕ(x), ¯ωg ⟩H be a population mini-mizer of the regression objective L(f ) := ∥f − V πsep ∥2
+
+> L2(ν×ν)
+
+. Define D := span {ϕ(g) −
+
+ϕ(x0) : g ∈ X } , and assume the learned analysis operator (Ad )( h) := ⟨d, ¯ωh⟩H is bounded and bounded-below. Then for every δ > 0 and every rδ ∈ Rϵ satisfying 
+
+7CH (rδ ) Cω (rδ )ϵ/ (1 − ρrδ ) ≤ η⋆ϵ + δ, there exists a bounded linear map Mδ : D → Drδ such that  R 
+
+> X
+
+R 
+
+> X
+
+∥Mδ (ϕ(g) − ϕ(x)) − (ϕrδ (g) − ϕrδ (x)) ∥2 
+
+> Hrδ
+
+dν (x) dν (g)1/2 ≤ 2
+
+> mB,δ
+
+ 2η⋆ϵ +ηcls +δ,where mB,δ > 0 is the lower-bound constant of Brδ .
+
+3.2 Finite Sample Analysis 
+
+We analyze the sample complexity of the hitting time regression part of Algorithm 1, conditioned on a fixed task encoder ¯ωψ : X → H . Theorem 3.5 bounds finite-sample recovery of the tem-poral displacement geometry associated with the policy defining the regression target. For offline control, the relevant policy is the in-distribution optimum π∗ 
+
+> D,g
+
+∈ ΠD , but trajectories from this policy are not observed. The IQL-style expectile objective therefore provides an offline approx-imation to its value geometry by emphasizing shorter behavior-supported hitting-time outcomes. The gap to the ideal in-distribution-optimal geometry can thus be viewed as the representation error controlled by Theorem 3.5 plus a separate IQL approximation error. Let Φ be the class of admissible state encoders, and define the induced predictor class for hitting time regression as FΦ,¯ωψ := {fϕ(s, u, g ) = ⟨ϕ(u) − ϕ(s), ¯ωψ (g)⟩H : ϕ ∈ Φ} . Assume ∥ϕ(x)∥H ≤ Cϕ for all 
+
+ϕ ∈ Φ, x ∈ X and ∥¯ωψ (g)∥H ≤ C¯ωψ for all g ∈ X . From N i.i.d. trajectories sampled under 
+
+πB , we extract exactly mtr tuples of the form zj,t = ( sj,t , u j,t , g j,t , H j,t ) per trajectory, where 
+
+t ∈ { 1, . . . , m tr }, uj,t is an intermediate state on the same trajectory as sj,t and gj,t , and Hj,t is the replay-buffer temporal-gap label extracted for that tuple (e.g. the number of steps from sj,t 
+
+to uj,t along the sampled trajectory segment). Assume 0 ≤ Hj,t ≤ Hmax almost surely. Let μ
+
+denote the law of a uniformly selected extracted tuple and write (S, U, G, H ) ∼ μ for a generic such tuple. Let λ be the (S, U )-marginal of μ, and define the ideal displacement target GπB (s, u, g ) := 
+
+V πB (s, g ) − V πB (u, g ). We also define the replay-buffer conditional mean mtraj (s, u, g ) := E[H |
+
+S = s, U = u, G = g]. Let bϕN ∈ arg min ϕ∈Φ bRN (ϕ) be the empirical minimizer of the tuple-level regression objective, let bGN (s, u, g ) := ⟨ bϕN (u) − bϕN (s), ¯ωψ (g)⟩H, and define the learned displacement space DN := span { bϕN (u) − bϕN (s) : ( s, u ) ∈ supp( λ)}. For each extraction slot t,define the slotwise trajectory class (FΦ,¯ωψ )(t) := {τ 7 → fϕ(st(τ ), u t(τ ), g t(τ )) : ϕ ∈ Φ} , and let 
+
+RN (Φ , ¯ωψ ) := 1
+
+> mtr
+
+Pmtr  
+
+> t=1
+
+RN
+
+ (FΦ,¯ωψ )(t) denote the average slotwise trajectory-level Rademacher complexity. The resulting statistical error term is 
+
+ΓN (δ) := 16(2 CϕC¯ωψ + Hmax ) RN (Φ , ¯ωψ ) + 2(2 CϕC¯ωψ + Hmax )2
+
+r log(1 /δ )2N .
+
+The next result lifts this statistical error into a finite-sample displacement-topology recovery guarantee. 
+
+Theorem 3.5. Under the finite-sample tuple-regression setup, assume πsep = πB and: (i) for λ-a.e. 
+
+(s, u ), the conditional goal law νs,u (·) := L(G | S = s, U = u) dominates a common full-support probability measure ν with coverage constant ccov ∈ (0 , 1] ; (ii) the analysis operator (AN d)( g) := 
+
+⟨d, ¯ωψ (g)⟩H is bounded as a map DN → L2(X , ν ); (iii) the class is oracle-competitive with the ideal displacement target: inf ϕ∈Φ ∥fϕ − GπB ∥L2(μ) ≤ 2η⋆ϵ + ηcls ; (iv) the replay-buffer temporal-gap labels are ηtraj -compatible with the ideal displacement geometry: ∥mtraj − GπB ∥L2(μ) ≤ ηtraj .
+
+Then for every δor > 0 and every reference rδor ∈ Rϵ satisfying CH (rδor ) Cω (rδor ) ϵ
+
+> 1−ρrδor
+
+≤ η⋆ϵ + δor , there exists a bounded linear map TN,δ or : DN → Drδor such that, with probability at least 1 − δ,
+
+Z
+
+> X ×X
+
+TN,δ or ( bϕN (u) − bϕN (s)) − (ϕrδor (u) − ϕrδor (s)) 2 
+
+> Hrδor
+
+dλ (s, u )
+
+≤ 4
+
+ccov m2
+
+> B,δ or
+
+h
+
+(2 η⋆ϵ + ηcls + ηtraj )2 + Γ N (δ) + η2traj + 2( η⋆ϵ + δor )2i
+
+,
+
+where mB,δ or > 0 is the lower-bound constant of the reference analysis operator Brδor .
+
+The term ηtraj quantifies the discrepancy between replay-buffer temporal gaps and ideal hitting-time targets, such that smaller values indicate better alignment between the learned displacement topology and the oracle reference topology within the established error bounds. 8Table 2: Mean normalized return ± standard deviation for offline zero-shot goal-conditioned RL. All experiments are based on eight seeds trained for a total of one million gradient steps. GC-IQL and GC-CQL results are from [ 24 ]. Rec-Mid is HILP’s planning method that recursively selects midpoint between current state and goal for three recursions. Sym-Graph stands for graph planning using symmetric Euclidean distances and Asym-Graph for graph planning using asymmetric planning.                                                                                                                                        
+
+> ZSRL Algorithms HILP [24] IEL (Ours) Dataset GC-IQL GC-CQL Rec-Mid Sym-Graph Rec-Mid Sym-Graph Asym-Graph antmaze-large-diverse 56.0 ±6.036.2 ±19 .068.0 ±6.360.5 ±18 .863.8 ±10 .855.0 ±20 .671.8 ±6.5
+> antmaze-large-play 56.0 ±25 .732.0 ±25 .854.5 ±11 .945.5 ±8.359.2 ±7.263.0 ±14 .962.8 ±5.9
+> antmaze-ultra-diverse 40.8 ±11 .114.2 ±13 .539.8 ±22 .168.8 ±23 .052.5 ±17 .362.5 ±18 .779.0 ±4.5
+> antmaze-ultra-play 41.8 ±9.016.5 ±14 .356.0 ±18 .960.2 ±10 .455.8 ±7.165.2 ±13 .573.8 ±6.2
+> kitchen-partial 56.4 ±8.431.2 ±16 .655.4 ±9.253.8 ±8.148.6 ±12 .660.4 ±5.560.4 ±3.5
+> kitchen-mixed 59.5 ±3.815.7 ±17 .653.7 ±3.549.0 ±4.652.3 ±7.857.8 ±5.157.2 ±3.8
+
+## 4 Experiments 
+
+We evaluate IEL on six offline goal-conditioned RL benchmark environments from two different suites taken from the D4RL data set [ 10 ]. HILP serves as our primary baseline, being the only prior art designed for foundation policy training and multi-stage planning. We strictly adhere to the planning experimental setup and hyperparameters reported in HILP (Table 3) to ensure a direct comparison. As practiced in HILP experiments, we do not consider approaches such as CRL, QRL, TMD, and GAS as fair baselines since their pipelines are tuned for goal-supervised training rather than foundation policy learning. We compare against GC-IQL and GC-CQL as the only representatives of zero-shot RL for which HILP reported complete results. To isolate the effect of our isomorphic embeddings, we evaluate both HILP and IEL using our graph-based planning approach. Specifically, we compare IEL under symmetric (β = 0 ) and asymmetric (β = 0 .1) distance scores. HILP+Sym is the closest GAS-equivalent baseline for our problem setting. Like GAS, it builds on HILP-style representations, but omits the hierarchical supervised subgoal-reaching objective (see Eqs. 13–14 of [ 2]). Instead, HILP+Sym isolates the graph-planning ingredient relevant to foundation policy training by applying symmetrized graph construction and shortest-path subgoal selection on top of HILP. Each algorithm navigates the shortest path extracted from the planning graph using its respective distance metric. Thus, the symmetric variant of IEL still benefits from directional identifiers during the planning process. We report our main empirical results in Table 2, which reveals two critical outcomes: (i) IEL leverages graph-based planning more effectively than HILP, with its symmetric graph performance surpassing recursive midpoint planning by a significant margin in five environments. (ii) asymmetric planning yields further significant gains for IEL in four environments and causes minor degradation in the remaining two environments. These results validate our core hypothesis: directional embedding learning is essential for effective multi-stage planning in foundation policies. IEL’s performance is mildly sensitive to its hyperparameters Hmax , β, and σ. See Appendix G for a discussion and further experiment details. IEL’s offline training-time computational cost is ignorably different from HILP. We set the coreset size to be 8192 , which is the largest size that maintains a wall-clock time proportional to the Rec-Mid evaluation period. In this setting, Asym-Graph runs at a comparable speed to Rec-Mid , while Sym-Graph is approximately three times faster due to graph reusability. 
+
+## 5 Open Questions and Scientific Impact 
+
+The theoretical framework we built to set a foundation for the IEL algorithm unfolds new open questions. The range condition defined in Theorems 2.2 and 2.3 requires rigorous verification across non-linear environments to ensure universal representability. While identifiability is established up to a linear isomorphism, the impact of state-space discretization on directed geometry in high-dimensional settings remains unquantified. Consistency analysis reveals that global hitting-time error scales by the factor 1/(1 − ρ(T πQ )) , creating high sensitivity to the transient spectral radius. The ϵ-Sufficient CMP assumption (Definition 2.1) restricts the framework to environments where expected feature transitions are sufficiently linearizable. This formulation fails to cover dynamics with high-order stochasticity or non-Markovian dependencies that exceed the latent Hilbert space span. On the practical side, the upper bound used in the TD learning part can be tightened so that the directionality of the learned embeddings can be strengthened. This work provides the mathematical 9foundation to transition VLA research from its current reliance on imitation learning toward reward-based policy learning. By replacing symmetric distance heuristics with a directed temporal geometry, our framework enables agents to navigate complex, irreversible environments with provable efficiency. The outcome could be versatile general-purpose robots with enhanced autonomy and maintained trustworthiness, supported by the rigorous operator-theoretic guarantees of our framework. 
+
+## References 
+
+[1] S. Agarwal, H. Sikchi, P. Stone, and A. Zhang. Proto successor measure: Representing the behavior space of an RL agent. In Proceedings of the International Conference on Machine Learning (ICML) , 2025. [2] S. Baek, T. Park, J. Park, S. Oh, and Y. Kim. Graph-assisted stitching for offline hierarchical reinforcement learning. In Proceedings of the International Conference on Machine Learning (ICML) , 2025. [3] K. Black, N. Brown, D. Driess, A. Esmail, M. R. Equi, C. Finn, N. Fusai, L. Groom, K. Hausman, B. Ichter, S. Jakubczak, T. Jones, L. Ke, S. Levine, A. Li-Bell, M. Mothukuri, S. Nair, K. Pertsch, L. X. Shi, L. Smith, J. Tanner, Q. Vuong, A. Walling, H. Wang, and U. Zhilinsky. π0: A vision-language-action flow model for general robot control. In Proceedings of Robotics: Science and Systems (RSS) , 2025. [4] J. Bouvrie and B. Hamzi. Kernel methods for the approximation of nonlinear systems. SIAM Journal on Control and Optimization , 55(4), 2017. [5] Anthony Brohan, Noah Brown, Justice Carbajal, Yevgen Chebotar, Joseph Dabis, Chelsea Finn, Keerthana Gopalakrishnan, Karol Hausman, Alex Herzog, Jasmine Hsu, et al. Rt-1: Robotics transformer for real-world control at scale. arXiv preprint arXiv:2212.06817 , 2022. [6] S. L. Brunton, M. Budiši´ c, E. Kaiser, and J. N. Kutz. Modern koopman theory for dynamical systems. SIAM Review , 64(2), 2022. [7] L. Da, T. P. Kutralingam, L. Xiang, and H. Wei. Latent adaptation of foundation policies for sim-to-real transfer. In International Conference on Learning Representations (ICLR) , 2026. [8] B. Eysenbach, R. Salakhutdinov, and S. Levine. C-learning: Learning to achieve goals via recursive classification. In International Conference on Learning Representations (ICLR) , 2021. [9] B. Eysenbach, T. Zhang, S. Levine, and R. R. Salakhutdinov. Contrastive learning as goal-conditioned reinforcement learning. In Advances in Neural Information Processing Systems (NeurIPS) , 2022. [10] J. Fu, A. Kumar, O. Nachum, G. Tucker, and S. Levine. D4RL: datasets for deep data-driven reinforcement learning. arXiv:2004.07219 , 2020. [11] S. Grünewälder, G. Lever, L. Baldassarre, M. Pontil, and A. Gretton. Modelling transition dynamics in MDPs with RKHS embeddings. In Proceedings of the International Conference on Machine Learning (ICML) , 2012. [12] M. J. Kim, K. Pertsch, S. Karamcheti, T. Xiao, A. Balakrishna, S. Nair, R. Rafailov, E. P. Foster, P. R. Sanketi, Q. Vuong, T. Kollar, B. Burchfiel, R. Tedrake, D. Sadigh, S. Levine, P. Liang, and C. Finn. OpenVLA: An open-source vision-language-action model. In Conference on Robot Learning (CoRL) , 2024. [13] S. Klus, I. Schuster, and K. Muandet. Eigendecompositions of transfer operators in reproducing kernel hilbert spaces. Journal of Nonlinear Science , 30(1), 2020. [14] V. R. Kostic, P. Novelli, R. Grazzi, K. Lounici, and M. Pontil. Learning invariant representations of time-homogeneous stochastic dynamical systems. In International Conference on Learning Representations (ICLR) , 2024. [15] I. Kostrikov, A. Nair, and S. Levine. Offline reinforcement learning with implicit Q-learning. In 
+
+International Conference on Learning Representations (ICLR) , 2022. 10 [16] A. Kulesza and B. Taskar. Determinantal point processes for machine learning. Foundations and Trends® in Machine Learning , 5, 2012. [17] M. Laskin, D. Yarats, H. Liu, K. Lee, A. Zhan, K. Lu, C. Cang, L. Pinto, and P. Abbeel. URLB: Unsupervised reinforcement learning benchmark. In Neural Information Processing Systems (NeurIPS) Datasets and Benchmarks Track , 2021. [18] L. Lehnert and M. L. Littman. Successor features combine elements of model-free and model-based reinforcement learning. Journal of Machine Learning Research (JMLR) , 21(196), 2020. [19] G. Lever, J. Shawe-Taylor, R. Stafford, and C. Szepesvári. Compressed conditional mean embeddings for model-based reinforcement learning. In Proceedings of the AAAI Conference on Artificial Intelligence (AAAI) , 2016. [20] Bo Liu, Yihao Feng, Qiang Liu, and Peter Stone. Metric residual network for sample efficient goal-conditioned reinforcement learning. In Proceedings of the AAAI Conference on Artificial Intelligence (AAAI) , 2023. [21] V. Myers, C. Zheng, A. Dragan, S. Levine, and B. Eysenbach. Learning temporal distances: Con-trastive successor features can provide a metric structure for decision-making. In Proceedings of the International Conference on Machine Learning (ICML) , 2024. [22] V. Myers, B. C. Zheng, B. Eysenbach, and S. Levine. Offline goal-conditioned reinforcement learning with quasimetric representations. In Advances in Neural Information Processing Systems (NeurIPS) , 2025. [23] S. Park, D. Ghosh, B. Eysenbach, and S. Levine. HIQL: Offline goal-conditioned RL with latent states as actions. In Advances in Neural Information Processing Systems (NeurIPS) , 2023. [24] S. Park, T. Kreiman, and S. Levine. Foundation policies with Hilbert representations. In 
+
+Proceedings of the International Conference on Machine Learning (ICML) , 2024. [25] S. Reed, K. Zolna, E. Parisotto, S. G. Colmenarejo, A. Novikov, G. Barth-Maron, M. Giménez, Y. Sulsky, J. Kay, J. T. Springenberg, T. Eccles, J. Bruce, A. Razavi, A. Edwards, N. Heess, Y. Chen, R. Hadsell, O. Vinyals, M. Bordbar, and N. de Freitas. A generalist agent. Transactions on Machine Learning Research (TMLR) , 2022. [26] L. Song, J. Huang, A. Smola, and K. Fukumizu. Hilbert space embeddings of conditional distributions with applications to dynamical systems. In Proceedings of the International Conference on Machine Learning (ICML) , 2009. [27] A. Touati and Y. Ollivier. Learning one representation to optimize all rewards. In Advances in Neural Information Processing Systems (NeurIPS) , 2021. [28] A. Touati, J. Rapin, and Y. Ollivier. Does zero-shot reinforcement learning exist? In Interna-tional Conference on Learning Representations (ICLR) , 2023. [29] T. Wang, A. Torralba, P. Isola, and A. Zhang. Optimal goal-reaching reinforcement learning via quasimetric learning. In Proceedings of the International Conference on Machine Learning (ICML) , 2023. [30] H. Yao and C. Szepesvári. Approximate policy iteration with linear action models. In Proceed-ings of the AAAI Conference on Artificial Intelligence (AAAI) , 2012. [31] A. Zanette, A. Lazaric, M. Kochenderfer, and E. Brunskill. Learning near optimal policies with low inherent Bellman error. In Proceedings of the International Conference on Machine Learning (ICML) , 2020. [32] B. Zitkovich, T. Yu, S. Xu, P. Xu, T. Xiao, F. Xia, J. Wu, P. Wohlhart, S. Welker, A. Wahid, Q. Vuong, V. Vanhoucke, H. Tran, R. Soricut, A. Singh, J. Singh, P. Sermanet, P. R. Sanketi, G. Salazar, M. S. Ryoo, K. Reymann, K. Rao, K. Pertsch, I. Mordatch, H. Michalewski, Y. Lu, S. Levine, L. Lee, T.-W. E. Lee, I. Leal, Y. Kuang, D. Kalashnikov, R. Julian, N. J. Joshi, A. Irpan, B. Ichter, J. Hsu, A. Herzog, K. Hausman, K. Gopalakrishnan, C. Fu, P. Florence, C. Finn, K. A. Dubey, D. Driess, T. Ding, K. M. Choromanski, X. Chen, Y. Chebotar, J. Carbajal, 11 N. Brown, A. Brohan, M. G. Arenas, and K. Han. Rt-2: Vision-language-action models transfer web knowledge to robotic control. In Proceedings of The Conference on Robot Learning (CoRL) ,2023. 12 A Basic Linear Analysis Concepts 
+
+Definition A.1 (Adjoint) . Let A : H → H be a bounded linear operator on a Hilbert space H. The 
+
+adjoint of A, denoted by A∗, is the unique linear operator that satisfies: ⟨A x, y ⟩H = ⟨x, A∗y⟩H for all vectors x, y ∈ H .
+
+Definition A.2 (Linear operator) . A linear operator L : H → H ⋆ is bounded if there exists some finite constant M ≥ 0 such that for all vectors v ∈ H : ∥Lv ∥H⋆ ≤ M ∥v∥H.
+
+Definition A.3 (Operator norm) .
+
+|| T || ≜ inf {M ≥ 0 : || T v || ≤ M || v|| , ∀v ∈ H} = sup 
+
+> || v|| =1
+
+|| T v || = sup  
+
+> v̸=0
+
+|| T v || || v|| 
+
+Definition A.4 (Linear isomorphism of displacement spaces) . Let ϕ : X → H and ϕ⋆ : X → H ⋆ be two feature maps into Hilbert spaces, and fix x0 ∈ X . Define the associated displacement spaces 
+
+D := span {ϕ(g) − ϕ(x0) : g ∈ X } , D⋆ := span {ϕ⋆(g) − ϕ⋆(x0) : g ∈ X } .
+
+We say that the two representations are linearly isomorphic on displacement spaces if there exists a bounded linear operator M : D → D⋆ with bounded inverse such that 
+
+M  ϕ(g) − ϕ(x) = ϕ⋆(g) − ϕ⋆(x), ∀x, g ∈ X .
+
+Definition A.5 (Spectrum and spectral radius) . Let T be a bounded linear operator on a Hilbert space H. The spectrum of T is 
+
+σ(T ) := {λ ∈ C : T − λI is not invertible }.
+
+The spectral radius of T is ρ(T ) := sup {| λ| : λ ∈ σ(T )}.
+
+Definition A.6 (Orthogonal projection) . Let H be a Hilbert space and U ⊆ H be a closed subspace. An orthogonal projection onto U is a bounded linear operator P : H → H satisfying: 
+
+• Idempotency (Projection): P 2 = P .
+
+• Range Constraint: R(P ) = U, where R(P ) := {P h : h ∈ H} .
+
+• Self-Adjointness (Orthogonality): ⟨P h, k ⟩ = ⟨h, P k ⟩ for all h, k ∈ H .
+
+Definition A.7 (Orthogonal complement) . For any subspace U ⊆ H , the orthogonal complement 
+
+U⊥ is defined as the set of all vectors in H that are perpendicular to every vector in U:
+
+U⊥ := {h ∈ H : ⟨h, u ⟩ = 0 ∀u ∈ U} 
+
+Definition A.8 (Restriction) . Let K : H → H be a linear operator. For any subspace U ⊆ H , the 
+
+restriction of K to U, denoted K U , is a new mapping whose domain is limited to U: K U : U → H 
+
+defined by the rule (K U )( u) = Ku ∀u ∈ U .
+
+Definition A.9 (Compression operator) . Let H be a Hilbert space and P be an orthogonal projection onto a closed subspace U ⊆ H . For any bounded linear operator K ∈ L (H), the compression of K
+
+to U is the operator KU : U → U defined by KU := P K U . Equivalently, viewing the operator on H
+
+with the property that it vanishes on U⊥, we write KU = P KP. 
+
+KQ := PQK HQ
+
+Definition A.10 (Policy-induced scalar Markov operator) . Let (X , A, P) be a controlled Markov process and let π be a policy. The policy-induced transition kernel is Pπ (B | x) := R 
+
+> A
+
+P(B |
+
+x, a )π(da | x) for measurable B ⊆ X . The associated scalar Markov operator P π is defined by 
+
+(P π f )( x) := Ex′∼P π (·| x)[f (x′)] ,
+
+for bounded measurable functions f : X → R.
+
+13 B Auxiliary Lemmata 
+
+Lemma B.1 (Orthogonality of PQ). Let Hg = span (ϕ(g)) and HQ = H⊥ 
+
+> g
+
+. Let PQ : H → H be the operator defined by the unique decomposition h = hQ + hg where hQ ∈ H Q and hg ∈ H g , such that PQh = hQ. Then PQ is an orthogonal projection onto HQ.Proof. To prove PQ is an orthogonal projection, we must verify the three conditions from the definition. For any h ∈ H , let PQh = hQ. By definition of the decomposition, hQ ∈ H Q. Since HQ
+
+is a subspace, the unique decomposition of hQ is hQ + 0 (where 0 ∈ H g ). Thus: 
+
+PQ(PQh) = PQ(hQ) = hQ = PQh
+
+This satisfies the projection property. By definition, for any h, PQh ∈ H Q, so R(PQ) ⊆ H Q. Conversely, for any v ∈ H Q, its decomposi-tion is v + 0 , implying PQv = v. Thus HQ ⊆ R (PQ). Therefore, R(PQ) = HQ.We must show ⟨PQh, k ⟩ = ⟨h, P Qk⟩ for arbitrary h, k ∈ H . Let h = hQ + hg and k = kQ + kg ,with hQ, k Q ∈ H Q and hg , k g ∈ H g . Recall that HQ = H⊥ 
+
+> g
+
+, meaning ⟨u, v ⟩ = 0 for any 
+
+u ∈ H Q, v ∈ H g . We have for the left side 
+
+⟨PQh, k ⟩ = ⟨hQ, k Q + kg ⟩ = ⟨hQ, k Q⟩ + ⟨hQ, k g ⟩
+
+Since hQ ⊥ kg , this reduces to ⟨hQ, k Q⟩. We have for the right side 
+
+⟨h, P Qk⟩ = ⟨hQ + hg , k Q⟩ = ⟨hQ, k Q⟩ + ⟨hg , k Q⟩
+
+Since hg ⊥ kQ, this reduces to ⟨hQ, k Q⟩. Since ⟨PQh, k ⟩ = ⟨h, P Qk⟩ = ⟨hQ, k Q⟩, the operator is self-adjoint. By the properties of projections in Hilbert spaces, a self-adjoint projection is an orthogonal projection. 
+
+Lemma B.2 (Poisson equation for the policy-induced chain) . Let (X , A, P) be a Controlled Markov Process, fix a policy π, and let P π denote the policy-induced transition operator on measurable functions: (P π f )( x) := Ex′∼P π (·| x)[f (x′)] . Fix a goal state g ∈ X , and define the hitting time 
+
+T πg := inf {t ≥ 0 : Xt = g}. Assume V π (x, g ) := E[T πg | X0 = x] < ∞ for all states x under consideration. Then V π (·, g ) satisfies the Poisson equation (I −P π )V π (·, g )( x) = 1 for x ∈ X \{ g}
+
+with boundary condition V π (g, g ) = 0 .Proof. Fix x̸ = g. By conditioning on the first transition under π,
+
+V π (x, g ) = E[T πg | X0 = x] = 1 + E[V π (X1, g ) | X0 = x] .
+
+By definition of P π , this is 
+
+V π (x, g ) = 1 + ( P π V π (·, g ))( x),
+
+hence 
+
+(I − P π )V π (·, g )( x) = 1 , x̸ = g. 
+
+At the boundary, if x = g then T πg = 0 by definition, so V π (g, g ) = 0 .
+
+Lemma B.3 (Trajectory-level McDiarmid Concentration) . Let τ 1, . . . , τ N be independent trajec-tories, and let G be a class of measurable real-valued functions on trajectories. Assume that there exists B < ∞ such that 0 ≤ g(τ ) ≤ B for all g ∈ G and all trajectories τ . Define 
+
+Z(τ 1, . . . , τ N ) := sup 
+
+> g∈G
+
+E[g(τ )] − 1
+
+N
+
+> N
+
+X
+
+> j=1
+
+g(τ j ) .
+
+Then, for every δ ∈ (0 , 1) , with probability at least 1 − δ,
+
+Z(τ 1, . . . , τ N ) ≤ E[Z(τ 1, . . . , τ N )] + B
+
+r log(1 /δ )2N .
+
+14 Proof. We verify the bounded-differences condition at the level of whole trajectories. Fix an index 
+
+j ∈ { 1, . . . , N }, and let τ j′ be an alternative trajectory. Define 
+
+τ = ( τ 1, . . . , τ j , . . . , τ N ), τ ′ = ( τ 1, . . . , τ j′, . . . , τ N ),
+
+so that τ and τ ′ differ only in the j-th trajectory. For any fixed g ∈ G ,
+
+1
+
+N
+
+> N
+
+X
+
+> i=1
+
+g(τ i) − 1
+
+N
+
+X
+
+> i̸=j
+
+g(τ i) + g(τ j′)
+
+ = 1
+
+N g(τ j ) − g(τ j′) ≤ BN ,
+
+because 0 ≤ g(τ ) ≤ B for all trajectories τ . Using the elementary inequality 
+
+sup 
+
+> g∈G
+
+Ag − sup 
+
+> g∈G
+
+Bg ≤ sup 
+
+> g∈G
+
+|Ag − Bg |,
+
+and applying the same bound inside the absolute value defining Z, we obtain |Z(τ ) − Z(τ ′)| ≤ BN .Thus Z satisfies the bounded-differences condition with constants cj = BN for j = 1 , . . . , N . By McDiarmid’s inequality, for every t > 0,
+
+P (Z − E[Z] ≥ t) ≤ exp − 2t2
+
+PNj=1 c2
+
+> j
+
+!
+
+.
+
+Since PNj=1 c2 
+
+> j
+
+= N   BN
+
+2 = B2 
+
+> N
+
+, we have P (Z − E[Z] ≥ t) ≤ exp 
+
+
+
+− 2N t 2
+
+> B2
+
+
+
+. Setting t =
+
+B
+
+q log(1 /δ )2N gives the desired result. 
+
+Lemma B.4 (Talagrand Contraction for Bounded Squared Losses) . Let F be a class of real-valued functions on a domain Z, and fix a sample (zi, y i)ni=1 . Assume that there exist constants B, H < ∞
+
+such that |f (zi)| ≤ B for all f ∈ F , i ∈ { 1, . . . , n }, and |yi| ≤ H for all i ∈ { 1, . . . , n }. Then 
+
+Eσ
+
+"
+
+sup  
+
+> f∈F
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+σi(f (zi) − yi)2
+
+#
+
+≤ 2( B + H) Eσ
+
+"
+
+sup  
+
+> f∈F
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+σif (zi)
+
+#
+
+,
+
+where σ1, . . . , σ n are independent Rademacher random variables. Proof. For each i ∈ { 1, . . . , n }, define ψi(u) := ( u − yi)2 − y2 
+
+> i
+
+. Then ψi(0) = 0 . Moreover, on the interval [−B, B ], it holds that |ψ′
+
+> i
+
+(u)| = 2 |u − yi| ≤ 2( B + H), because |u| ≤ B and 
+
+|yi| ≤ H. Hence each ψi is 2( B + H)-Lipschitz on the range of the functions in F. Now observe that (f (zi) − yi)2 = ψi(f (zi)) + y2 
+
+> i
+
+. Therefore, 
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+σi(f (zi) − yi)2 = 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+σiψi(f (zi)) + 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+σiy2 
+
+> i
+
+.
+
+The second term is independent of f , so 
+
+sup  
+
+> f∈F
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+σi(f (zi) − yi)2 = sup  
+
+> f∈F
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+σiψi(f (zi)) + 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+σiy2 
+
+> i
+
+.
+
+Taking expectation over the Rademacher signs, the last term vanishes: 
+
+Eσ
+
+"
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+σiy2
+
+> i
+
+#
+
+= 0 .
+
+Hence 
+
+Eσ
+
+"
+
+sup  
+
+> f∈F
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+σi(f (zi) − yi)2
+
+#
+
+= Eσ
+
+"
+
+sup  
+
+> f∈F
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+σiψi(f (zi)) 
+
+#
+
+.
+
+By the Talagrand contraction principle for Rademacher averages, since each ψi satisfies ψi(0) = 0 
+
+and is 2( B + H)-Lipschitz on the relevant range, 
+
+Eσ
+
+"
+
+sup  
+
+> f∈F
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+σiψi(f (zi)) 
+
+#
+
+≤ 2( B + H) Eσ
+
+"
+
+sup  
+
+> f∈F
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+σif (zi)
+
+#
+
+.
+
+Combining the previous displays proves the claim. 15 C On the supervision of policy training in offline goal-conditioned RL 
+
+Table 1 distinguishes between ordinary reward-free or zero-shot training and a stricter property denoted as Unsupervised Policy Training . This column should be interpreted as goal-agnostic training and not as a claim that other methods such as FB are not unsupervised RL. This distinction is important because many methods are unsupervised in the sense that they do not use externally provided reward labels during pretraining, but nevertheless train their policy or actor on conditioning variables that are constructed from dataset states treated as goals, targets, or reward/task latents. We use the following operational definition. Consider a latent-conditioned policy π(a | x, z ). We say that its training is goal-agnostic if, during policy optimization, the conditioning variable z is sampled from an exogenous distribution over abstract latent directions and is not instantiated as an embedding of a dataset state selected as a goal. We allow the representation or geometry-learning stage to use states, future states, temporal gaps, or self-supervised relabeling. Our criterion concerns the policy-training stage : whether the policy network itself is trained by seeing real goals, directly as goal inputs or indirectly through goal-derived latent variables. Under this definition, HILP satisfies goal-agnostic policy training in its core formulation. HILP first learns a temporal representation ϕ, and then trains a latent-conditioned policy over arbitrary directions 
+
+z in the learned representation space using the intrinsic reward rz (x, x ′) = ⟨ϕ(x′)−ϕ(x), z ⟩. The goal state is not used as the policy-conditioning variable during this policy-training phase. A downstream goal is converted into a direction only at test time, for example by using the direction from the current state embedding toward the goal embedding. IEL follows the same separation principle but replaces HILP’s symmetric geometry with a directed hitting-time geometry. In IEL, replay-buffer states and intermediate trajectory states are used to learn the embedding ϕ and the task identifier ωψ (g) through self-supervised temporal-gap and identifier losses. This use of goals is part of representation learning, not policy supervision. The resulting foundation policy is trained over abstract directions in the learned geometry, and concrete goals enter only at test time through prompting or graph-based planning. Thus, the policy is not trained on goal labels even though the representation is learned from self-supervised goal relabeling. This definition separates HILP and our IEL from the rest of reward-free or zero-shot methods. FB representations are reward-free and zero-shot in the usual sense. They learn from reward-free interactions and can construct policies for rewards specified after pretraining. However, the policy parameter in FB is a reward/task latent. Once a reward is specified, FB forms zR = E[r(s, a )B(s, a )] 
+
+and for a target-state reward this latent can be instantiated from the backward representation of the target state. Moreover, standard deep zero-shot FB implementations sample task vectors partly by passing replay-buffer states through the backward representation, i.e. z = B(s) for sampled states s.Thus, FB is reward-free but its policy-training distribution is at least partly anchored to reward or goal-state latents rather than purely to arbitrary directions in a learned temporal geometry. Similarly, goal-conditioned RL and reachability-learning methods train policies, critics, or classifiers on state–goal pairs sampled from the replay buffer, often using future-state or random-state relabeling. These methods may be self-supervised or reward-free, but their policy updates explicitly use dataset states as goals. Therefore they do not satisfy the stricter goal-agnostic policy criterion used in Table 1. The last column of the table identifies whether the policy is trained as a reusable foundation policy whose conditioning variables are not real goals or goal-derived task latents. This is the property needed for our multi-stage planning setting, where concrete goals should be introduced only at test time and composed through the learned temporal geometry. 
+
+## D Problem span 
+
+We next clarify when the learned representation can be reused beyond the specific hitting-time regression problem used to train it. A suitable Hilbert representation supports goal-conditioned hitting-time geometry through displacement readouts of the form V π (x, g ) = ⟨ϕ(g) − ϕ(x), ω πg ⟩H.A natural question is therefore: which other control tasks can be solved using the same representation, rather than relearning the geometry? We refer to this family of compatible tasks as the problem span of the representation. We aim to identify sufficient conditions under which the same latent geometry can support additional rewards and value functions. We distinguish three notions: (i) reward representability : whether the immediate reward can be read out from the learned latent geometry; (ii) 16 policy-evaluation closure : whether the value function of a fixed policy remains in the latent linear span; (iii) optimal-control closure : whether the Bellman optimality operator preserves the latent value class. The first two follow from natural linear-operator assumptions. The third depends on whether maximization over actions preserves linearity. 
+
+D.1 Latent reward span 
+
+We first define the class of immediate rewards that are directly represented by the learned geometry. 
+
+Definition D.1 (Latent bilinear reward span) . Given a representation (H, ϕ, {K a}a∈A ), a goal-conditioned reward r : X × A × X → R belongs to the latent bilinear reward span if, for every action 
+
+a ∈ A , there exists a bounded linear operator Ra ∈ L (H) such that r(x, a, g ) = ⟨ϕ(x), Raϕ(g)⟩H.
+
+This definition says that the reward can be computed from an interaction between the state embedding 
+
+ϕ(x) and the goal embedding ϕ(g), possibly transformed by an action-dependent task operator Ra.It is a representability condition on the one-step reward only. By itself it does not yet imply that the corresponding optimal value function is bilinear. Several common goal-conditioned reward families fit this template. 
+
+Kernel goal similarity. If Ra = αaI for scalars αa, then r(x, a, g ) = αa⟨ϕ(x), ϕ (g)⟩H. This is a smooth goal-similarity reward. It should be interpreted as a soft similarity objective, not as an exact hitting-time objective. Exact hitting-time objectives are governed by the Poisson/range-condition results in the main paper. 
+
+Weighted or anisotropic goal similarity. If Ra is positive semidefinite or low rank, then the reward compares x and g only along selected latent directions: r(x, a, g ) = ⟨ϕ(x), Raϕ(g)⟩H. This covers tasks where different actions or task modes emphasize different aspects of the goal, such as position, object identity, safety-relevant features, or other latent factors. 
+
+Region and fuzzy goals. A goal need not be a single state. Let ρg be a distribution over acceptable goal states and define its latent mean embedding μg := EY ∼ρg [ϕ(Y )] . Then rewards of the form 
+
+r(x, a, g ) = ⟨ϕ(x), Raμg ⟩H are also in the problem span. This covers fuzzy goals, goal regions, and safety corridors, provided that the relevant region can be summarized by its latent mean embedding. 
+
+Compositional goals. If a downstream task is described by a finite combination of goals g1, . . . , g m,one can define μ := Pmj=1 αj ϕ(gj ) and use r(x, a, μ ) = ⟨ϕ(x), Raμ⟩H. Thus the representation supports linear composition of goal specifications in latent space. 
+
+D.2 Fixed-policy evaluation span 
+
+We next show that latent reward representability becomes a value-function representation result for fixed-policy evaluation, provided that the transition dynamics close linearly in the same representation. 
+
+Proposition D.2 (Fixed-policy evaluation span) . Let (X , A, P) be a sufficient CMP with repre-sentation (H, ϕ, {K a}a∈A ), and assume sup x∈X ∥ϕ(x)∥H < ∞. Fix a policy π and a discount factor γ ∈ (0 , 1) . Assume that the policy-induced latent transition operator Kπ is bounded and satisfies Ex′∼P π (·| x)[ϕ(x′)] = Kπ ϕ(x). Assume also that the policy-induced reward is latent-linear: there exists a bounded linear operator Rπ ∈ L (H) such that rπ (x, g ) := Ea∼π(·| x)[r(x, a, g )] = 
+
+⟨ϕ(x), Rπ ϕ(g)⟩H. If I − γK∗ 
+
+> π
+
+is invertible with bounded inverse, then the discounted value function of π admits the bilinear representation V π (x, g ) = ⟨ϕ(x), Sπ ϕ(g)⟩H, where Sπ := ( I − γK∗ 
+
+> π
+
+)−1Rπ .Proof. Fix a goal g and define ωπg := ( I − γK∗ 
+
+> π
+
+)−1Rπ ϕ(g). Let eV π (x, g ) := ⟨ϕ(x), ω πg ⟩H. By definition we get ωπg = Rπ ϕ(g) + γK∗ 
+
+> π
+
+ωπg . Therefore, for every x ∈ X ,
+
+eV π (x, g ) = ⟨ϕ(x), Rπ ϕ(g)⟩H + γ⟨ϕ(x), K∗ 
+
+> π
+
+ωπg ⟩H
+
+= rπ (x, g ) + γ⟨K π ϕ(x), ω πg ⟩H
+
+= rπ (x, g ) + γEx′∼P π (·| x)[⟨ϕ(x′), ω πg ⟩H]= rπ (x, g ) + γEx′∼P π (·| x)[ eV π (x′, g )] .
+
+Thus eV π (·, g ) satisfies the discounted Bellman equation for policy evaluation. Since ϕ is bounded and Rπ and (I − γK∗ 
+
+> π
+
+)−1 are bounded, eV π (·, g ) is bounded. The discounted Bellman operator 17 is a γ-contraction on bounded measurable functions, so its bounded fixed point is unique. Hence 
+
+eV π (x, g ) = V π (x, g ). Defining Sπ := ( I − γK∗ 
+
+> π
+
+)−1Rπ gives V π (x, g ) = ⟨ϕ(x), Sπ ϕ(g)⟩H.The assumption that rπ is represented by a single operator Rπ is structurally guaranteed in some simple cases, for example when the policy uses a state-independent mixture over action-specific reward operators. In general, however, action probabilities may depend on x, so this assumption should be understood as a policy-level reward closure condition. 
+
+Proposition D.3 (Action-value span) . Under the assumptions of Proposition D.2, assume addi-tionally that the action-specific rewards and transitions satisfy r(x, a, g ) = ⟨ϕ(x), Raϕ(g)⟩H and 
+
+Ex′∼P (·| x,a )[ϕ(x′)] = Kaϕ(x). Then the action-value function of π admits the representation 
+
+Qπ (x, a, g ) = ⟨ϕ(x), (Ra + γK∗
+
+> a
+
+Sπ ) ϕ(g)⟩H .
+
+Proof. By definition, Qπ (x, a, g ) = r(x, a, g ) + γEx′∼P (·| x,a )[V π (x′, g )] . Using Proposition D.2, we get V π (x′, g ) = ⟨ϕ(x′), Sπ ϕ(g)⟩H. Therefore 
+
+Qπ (x, a, g ) = ⟨ϕ(x), Raϕ(g)⟩H + γEx′∼P (·| x,a )[⟨ϕ(x′), Sπ ϕ(g)⟩H]= ⟨ϕ(x), Raϕ(g)⟩H + γ⟨K aϕ(x), Sπ ϕ(g)⟩H
+
+= ⟨ϕ(x), (Ra + γK∗
+
+> a
+
+Sπ ) ϕ(g)⟩H .
+
+D.3 Optimal-control span 
+
+The previous propositions concern policy evaluation. Optimal control requires additional care. Even when each action-value candidate is bilinear, the optimal value is obtained by a pointwise maximization: V ∗(x, g ) = max a∈A Q∗(x, a, g ). A maximum of linear or bilinear functions is not generally linear. Therefore, latent bilinear rewards and latent transition closure do not by themselves imply that V ∗ is bilinear. We can nevertheless define the additional closure condition under which optimal control remains inside the problem span. 
+
+Definition D.4 (Latent optimal Bellman closure) . Let 
+
+Vϕ := {VS : X × X → R : VS (x, g ) = ⟨ϕ(x), Sϕ (g)⟩H, S ∈ L (H)} .
+
+A discounted goal-conditioned control problem is said to be optimally closed in the representation ϕ
+
+if its optimal Bellman operator B∗ maps Vϕ into itself: B∗Vϕ ⊆ V ϕ.
+
+Proposition D.5 (Optimal-control span under Bellman closure) . Assume that the discounted goal-conditioned control problem is optimally closed in Vϕ, i.e., B∗Vϕ ⊆ V ϕ. Assume further that B∗
+
+is a γ-contraction on bounded measurable functions, that Vϕ is closed in the sup norm, and that 
+
+0 ∈ V ϕ. Then the optimal value function belongs to Vϕ. That is, there exists S∗ ∈ L (H) such that 
+
+V ∗(x, g ) = ⟨ϕ(x), S ∗ϕ(g)⟩H. If, in addition, action-specific rewards and transitions are represented by operators Ra and Ka, then Q∗(x, a, g ) = ⟨ϕ(x), (Ra + γK∗
+
+> a
+
+S∗) ϕ(g)⟩H.Proof. Let V0 = 0 . Since 0 ∈ V ϕ and B∗Vϕ ⊆ V ϕ, the iterates Vk+1 := B∗Vk satisfy Vk ∈ V ϕ for all k ≥ 0. Since B∗ is a γ-contraction on bounded measurable functions, Vk converges in supremum norm to the unique optimal value function V ∗. Because Vϕ is closed in the sup norm, V ∗ ∈ V ϕ.Hence there exists S∗ ∈ L (H) such that V ∗(x, g ) = ⟨ϕ(x), S ∗ϕ(g)⟩H. The expression for Q∗
+
+follows from the one-step optimal action-value identity: 
+
+Q∗(x, a, g ) = r(x, a, g ) + γEx′∼P (·| x,a )[V ∗(x′, g )] .
+
+Substituting the representations of r, P, and V ∗ gives 
+
+Q∗(x, a, g ) = ⟨ϕ(x), (Ra + γK∗
+
+> a
+
+S∗) ϕ(g)⟩H .
+
+We adopt optimal closure as an assumption, because the condition B∗Vϕ ⊆ V ϕ is not guaranteed by construction. It rules out cases where the maximization over actions creates a piecewise-linear or otherwise nonlinear envelope outside the latent bilinear class. Thus the representation supports optimal control for tasks whose Bellman updates are closed in the learned span, but latent bilinear rewards alone do not guarantee this closure. 18 D.4 Relation to hitting-time geometry 
+
+The hitting-time objectives studied in the main paper are not merely discounted latent-bilinear reward problems. They are undiscounted stopping-time objectives with boundary condition V π (g, g ) = 0 
+
+and unit cost before hitting the goal. Their linear representation is governed by a Poisson equation and the range condition w1 ∈ range(( Kπ − I)∗), as established in Theorem 2.2. The approximation theory in Theorem 3.3 then shows that compressed latent transition consistency yields controlled error in the corresponding hitting-time predictor. Thus the paper contains two complementary notions of problem span: (i) a hitting-time span , controlled by the Poisson/range-condition theory and used directly by IEL; and (ii) a discounted reward span , where additional latent-bilinear rewards can be evaluated or optimized when the relevant Bellman closure conditions hold. 
+
+D.5 When should the representation work? 
+
+IEL-style representations are useful under the following conditions: (i) Predictive latent closure. 
+
+The representation should make one-step latent prediction approximately linear: E[ϕ(X′) | x, a ] ≈Kaϕ(x). If important transition-relevant information is absent from ϕ(x), then no linear readout can recover it downstream. (ii) Goal information is represented in the latent space. The downstream task should depend on goals through features present in ϕ(g), or through simple combinations such as mean embeddings or finite linear mixtures of goal embeddings. If the task depends on goal attributes that are not encoded by ϕ, it lies outside the problem span. (iii) Rewards or costs admit latent readouts. 
+
+For discounted reward tasks, the immediate reward should be expressible, at least approximately, as 
+
+r(x, a, g ) ≈ ⟨ ϕ(x), Raϕ(g)⟩H. For hitting-time tasks, the unit-cost representer and Poisson/range condition play the analogous role. (iv) The effective horizon is controlled. Local representation errors accumulate through the relevant resolvent. Long horizons, nearly noncontractive transient dynamics, or poor goal reachability can amplify small one-step errors into large value errors. (v) Optimal control may require additional closure. For policy evaluation, latent transition and reward closure are enough. For optimal control, the maximization over actions must also preserve the latent value class, or one should interpret the representation as supporting approximate rather than exact optimal planning. All in all, the learned IEL geometry provides a shared displacement and transition structure rather than a universal reward solver. It enables reuse across goal-conditioned tasks where rewards, boundary conditions, and Bellman updates remain compatible with this established geometry. 
+
+## E Main Results 
+
+E.1 Proof of Theorem 2.2 
+
+Proof. Fix a goal g and a policy π. Let P π denote the scalar Markov operator (P π f )( x) := 
+
+Ex′∼P π (·| x)[f (x′)] . We prove both directions. 
+
+Necessity. Assume that there exists ωπg ∈ H such that V π (x, g ) = ⟨ϕ(g) − ϕ(x), ω πg ⟩H. On the transient set X \{ g}, the hitting-time function satisfies the Poisson equation (I −P π )V π (·, g )( x) = 1 .Substituting the linear representation gives, for x̸ = g,
+
+1 = ( I − P π ) ⟨ϕ(g), ω πg ⟩H − ⟨ ϕ(·), ω πg ⟩H
+
+(x) = −⟨ ϕ(x), ω πg ⟩H + Ex′∼P π (·| x)
+
+⟨ϕ(x′), ω πg ⟩H
+
+.
+
+By sufficiency of the CMP, Ex′∼P π (·| x)[ϕ(x′)] = Kπ ϕ(x). Therefore 1 = ⟨(Kπ − I)ϕ(x), ω πg ⟩H =
+
+⟨ϕ(x), (Kπ − I)∗ωπg ⟩H. Since w1 is the unit-cost representer, ⟨ϕ(x), w1⟩H = 1 for x̸ = g. Hence 
+
+⟨ϕ(x), (Kπ − I)∗ωπg ⟩H = ⟨ϕ(x), w1⟩H for x̸ = g. By the closed-feature-span convention for hitting-time identities, equality against all ϕ(x) with x̸ = g identifies elements on the relevant transient feature span. Thus (Kπ − I)∗ωπg = w1 on the relevant transient feature span. Consequently, 
+
+w1 ∈ range(( Kπ − I)∗) in the sense of this transient-span convention. 
+
+Sufficiency. Assume now that w1 ∈ range(( Kπ − I)∗) where the range condition is understood on the relevant transient feature span for goal g. Then there exists ωπg ∈ H such that (Kπ − I)∗ωπg = w1
+
+on this span. Define the candidate hitting-time function eV π (x, g ) := ⟨ϕ(g) − ϕ(x), ω πg ⟩H. For x̸ = g
+
+19 we have 
+
+(I − P π ) eV π (·, g )( x) = −⟨ ϕ(x), ω πg ⟩H + Ex′∼P π (·| x)
+
+⟨ϕ(x′), ω πg ⟩H
+
+
+
+= ⟨(Kπ − I)ϕ(x), ω πg ⟩H = ⟨ϕ(x), (Kπ − I)∗ωπg ⟩H = ⟨ϕ(x), w1⟩H = 1 .
+
+Moreover, eV π (g, g ) = 0 . Let T πg be the hitting time of g and define the stopping times τn := T πg ∧ n.Consider Mn := eV π (Xτn , g ) + τn. Because eV π satisfies the Poisson equation on X \ { g} and satisfies the boundary condition eV π (g, g ) = 0 , the stopped process (Mn)n≥0 is a martingale. Hence 
+
+eV π (x, g ) = Ex[Mn] = Ex[τn] + Ex[ eV π (Xτn , g )] .
+
+Since ϕ is bounded, there exists Cϕ < ∞ such that sup x∈X ∥ϕ(x)∥H ≤ Cϕ. Therefore the candidate is bounded: 
+
+| eV π (x, g )| ≤ ∥ ϕ(g) − ϕ(x)∥H∥ωπg ∥H ≤ 2Cϕ∥ωπg ∥H.
+
+Let Cg := 2 Cϕ∥ωπg ∥H then eV π (Xτn , g ) ≤ Cg , and the martingale identity implies 
+
+Ex[τn] = eV π (x, g ) − Ex[ eV π (Xτn , g )] ≤ | eV π (x, g )| + Cg ≤ 2Cg .
+
+Thus sup n Ex[T πg ∧ n] < ∞. By monotone convergence we get Ex[T πg ] = lim n→∞ Ex[T πg ∧
+
+n] ≤ 2Cg < ∞.In particular, T πg < ∞ almost surely under the trajectory law induced by π
+
+from initial state x. Hence I[T πg > n ] → 0 almost surely under this same law. Furthermore, 
+
+eV π (Xτn , g ) = eV π (Xn, g )I[T πg > n ], because if T πg ≤ n, then τn = T πg and Xτn = g, so the boundary condition gives eV π (Xτn , g ) = 0 . Since eV π is bounded, dominated convergence yields 
+
+Ex[ eV π (Xτn , g )] → 0. Also, τn ↑ T πg , so by monotone convergence, Ex[τn] → Ex[T πg ] = V π (x, g ).Letting n → ∞ in eV π (x, g ) = Ex[τn] + Ex[ eV π (Xτn , g )] gives eV π (x, g ) = V π (x, g ). Therefore 
+
+V π (x, g ) = ⟨ϕ(g) − ϕ(x), ω πg ⟩H.
+
+E.2 Proof of Theorem 2.3 
+
+Proof. Let dg := ϕ(g) − ϕ(x0) ∈ D and d⋆g := ϕ⋆(g) − ϕ⋆(x0) ∈ D ⋆. We use the separating policy 
+
+πsep from the assumptions. First, fix g, h ∈ X . By definition of the analysis operators, 
+
+(Aπsep dg )( h) = ⟨ϕ(g) − ϕ(x0), ω πsep  
+
+> h
+
+⟩H.
+
+Using the hitting-time representation for the alternative representation, 
+
+⟨ϕ(g) − ϕ(x0), ω πsep  
+
+> h
+
+⟩H = V πsep (x0, h ) − V πsep (g, h ).
+
+Applying the same identity in the canonical representation yields 
+
+V πsep (x0, h ) − V πsep (g, h ) = ⟨ϕ⋆(g) − ϕ⋆(x0), ω ⋆,π sep  
+
+> h
+
+⟩H⋆ = ( Bπsep d⋆g )( h).
+
+Hence Aπsep dg = Bπsep d⋆g for all g ∈ X . Since D = span {dg : g ∈ X } and D⋆ = span {d⋆g : g ∈X } , and both Aπsep and Bπsep are bounded, their images are the closures of the spans of the images of these generators: Aπsep (D) = span {A πsep dg : g ∈ X } and Bπsep (D⋆) = span {B πsep d⋆g : g ∈ X } .As the generator images coincide, the ranges coincide we get Aπsep (D) = Bπsep (D⋆). Now define 
+
+M := B−1 
+
+> πsep
+
+Aπsep : D → D ⋆. This is well-defined because the ranges coincide. Since Aπsep 
+
+and Bπsep are bounded and bounded-below, each is injective and has bounded inverse on its range. Therefore M is a bounded linear isomorphism, with inverse M −1 = A−1 
+
+> πsep
+
+Bπsep . Moreover, for every g ∈ X , we have M d g = B−1 
+
+> πsep
+
+Aπsep dg = B−1 
+
+> πsep
+
+Bπsep d⋆g = d⋆g . Thus M (ϕ(g) − ϕ(x0)) = 
+
+ϕ⋆(g) − ϕ⋆(x0) for all g ∈ X . Now let x, g ∈ X be arbitrary. Since 
+
+ϕ(g) − ϕ(x) = ( ϕ(g) − ϕ(x0)) − (ϕ(x) − ϕ(x0)) ,
+
+linearity of M gives 
+
+M (ϕ(g) − ϕ(x)) = ( ϕ⋆(g) − ϕ⋆(x0)) − (ϕ⋆(x) − ϕ⋆(x0)) = ϕ⋆(g) − ϕ⋆(x).
+
+This proves the displacement-geometry identity. To show uniqueness, suppose fM : D → D ⋆ is another bounded linear map such that fM (ϕ(g) − ϕ(x0)) = ϕ⋆(g) − ϕ⋆(x0) for all g ∈ X . Then M
+
+20 and fM agree on the dense generating set span {ϕ(g) − ϕ(x0) : g ∈ X } , and hence, by continuity, on all of D. Therefore M is unique. Next, fix any admissible policy π ∈ ΠD for which Kπ and K⋆π are well-defined. Since (X , A, P)
+
+is a Sufficient CMP, for every x ∈ X and a ∈ A , we have Kaϕ(x) = Ex′∼P (·| x,a )[ϕ(x′)] and 
+
+K⋆aϕ⋆(x) = Ex′∼P (·| x,a )[ϕ⋆(x′)] . Averaging over a ∼ π(· | x) gives Kπ ϕ(x) = Ex′∼P π (·| x)[ϕ(x′)] 
+
+and K⋆π ϕ⋆(x) = Ex′∼P π (·| x)[ϕ⋆(x′)] . Hence Kπ ϕ(x) − ϕ(x0) = Ex′∼P π (·| x)[ϕ(x′) − ϕ(x0)] .Applying the bounded linear map M and passing through the Bochner expectation, 
+
+M  Kπ ϕ(x) − ϕ(x0) = Ex′∼P π (·| x)
+
+M (ϕ(x′) − ϕ(x0)) .
+
+Using the displacement identity already proved, M (ϕ(x′) − ϕ(x0)) = ϕ⋆(x′) − ϕ⋆(x0), we obtain 
+
+M  Kπ ϕ(x) − ϕ(x0) = Ex′∼P π (·| x)[ϕ⋆(x′) − ϕ⋆(x0)] = K⋆π ϕ⋆(x) − ϕ⋆(x0).
+
+Subtracting this identity from M (ϕ(g) − ϕ(x0)) = ϕ⋆(g) − ϕ⋆(x0) yields 
+
+M  ϕ(g) − K π ϕ(x) = ϕ⋆(g) − K ⋆π ϕ⋆(x), ∀x, g ∈ X .
+
+Finally, fix any action a ∈ A . By exact sufficiency again, 
+
+Kaϕ(x) − ϕ(x0) = Ex′∼P (·| x,a )[ϕ(x′) − ϕ(x0)] .
+
+Applying M and using the displacement identity inside the expectation, 
+
+M  Kaϕ(x) − ϕ(x0) = Ex′∼P (·| x,a )[ϕ⋆(x′) − ϕ⋆(x0)] = K⋆aϕ⋆(x) − ϕ⋆(x0).
+
+Subtracting from M (ϕ(g) − ϕ(x0)) = ϕ⋆(g) − ϕ⋆(x0) gives 
+
+M  ϕ(g) − K aϕ(x) = ϕ⋆(g) − K ⋆aϕ⋆(x), ∀x, g ∈ X , ∀a ∈ A .
+
+This completes the proof. 
+
+E.3 Proof of Corollary 2.4 
+
+Proof. Fix a policy π admitting canonical representers ω⋆,π g , and fix g ∈ X . Let PD⋆ : H⋆ → D ⋆
+
+denote the orthogonal projection onto D⋆. Define ℓπg (d) := ⟨M d, P D⋆ ω⋆,π g ⟩H⋆ for d ∈ D . Since M
+
+and PD⋆ are bounded, ℓπg is a bounded linear functional on D. By the Riesz representation theorem, there exists a unique ¯ωπg ∈ D such that ℓπg (d) = ⟨d, ¯ωπg ⟩H for all d ∈ D . Now fix x ∈ X . By Theorem 2.3, we get M (ϕ(g) − ϕ(x)) = ϕ⋆(g) − ϕ⋆(x). Since ϕ⋆(g) − ϕ⋆(x) ∈ D ⋆, projection does not change the inner product: ⟨ϕ⋆(g) − ϕ⋆(x), ω ⋆,π g ⟩H⋆ = ⟨ϕ⋆(g) − ϕ⋆(x), P D⋆ ω⋆,π g ⟩H⋆ . Therefore 
+
+⟨ϕ⋆(g) − ϕ⋆(x), ω ⋆,π g ⟩H⋆ = ⟨M (ϕ(g) − ϕ(x)) , P D⋆ ω⋆,π g ⟩H⋆ = ℓπg (ϕ(g) − ϕ(x)) = ⟨ϕ(g) − ϕ(x), ¯ωπg ⟩H.
+
+Since the left-hand side equals V π (x, g ) by assumption, we obtain 
+
+V π (x, g ) = ⟨ϕ(g) − ϕ(x), ¯ωπg ⟩H, ∀x, g ∈ X .
+
+Now suppose π ∈ ΠD is admissible and that Kπ , K⋆π are well-defined. By Theorem 2.3, 
+
+M (ϕ(g) − K π ϕ(x)) = ϕ⋆(g) − K ⋆π ϕ⋆(x).
+
+Since ϕ⋆(g) − K ⋆π ϕ⋆(x) ∈ D ⋆,
+
+⟨ϕ⋆(g) − K ⋆π ϕ⋆(x), ω ⋆,π g ⟩H⋆ = ⟨ϕ⋆(g) − K ⋆π ϕ⋆(x), P D⋆ ω⋆,π g ⟩H⋆ = ℓπg (ϕ(g) − K π ϕ(x)) = ⟨ϕ(g) − K π ϕ(x), ¯ωπg ⟩H.
+
+Finally, for any action a ∈ A , Theorem 2.3 gives 
+
+M (ϕ(g) − K aϕ(x)) = ϕ⋆(g) − K ⋆aϕ⋆(x).
+
+Again using that ϕ⋆(g) − K ⋆aϕ⋆(x) ∈ D ⋆,
+
+⟨ϕ⋆(g) − K ⋆aϕ⋆(x), ω ⋆,π g ⟩H⋆ = ⟨ϕ⋆(g) − K ⋆aϕ⋆(x), P D⋆ ω⋆,π g ⟩H⋆ = ℓπg (ϕ(g) − K aϕ(x)) = ⟨ϕ(g) − K aϕ(x), ¯ωπg ⟩H.
+
+This proves the result. 21 E.4 Proof of Lemma 3.2 
+
+Proof. Fix x ∈ X . Since the compressed encoder is defined by ϕ(x′) = Pd eϕ(x′), we have, by linearity and boundedness of the orthogonal projection Pd,
+
+Ex′∼P π (·| x)[ϕ(x′)] = Ex′∼P π (·| x)[Pd eϕ(x′)] = PdEx′∼P π (·| x)[ eϕ(x′)] .
+
+By definition of the ambient feature transition operator, Ex′∼P π (·| x)[ eϕ(x′)] = eT π eϕ(x). There-fore Ex′∼P π (·| x)[ϕ(x′)] = Pd eT π eϕ(x). The sufficient capacity condition states Pd eT π eϕ(x) −T π ϕ(x) H ≤ ϵ. Combining the previous identity with this bound gives 
+
+Ex′∼P π (·| x)[ϕ(x′)] − T π ϕ(x) H ≤ ϵ. 
+
+Since x ∈ X was arbitrary, the claim follows. 
+
+E.5 Proof of Theorem 3.3 
+
+Proof. Fix g and define the projected feature z(x) := PQϕ(x) ∈ H Q. Since ωπg ∈ H Q, we have 
+
+bV πg (x) = ⟨ϕ(g) − ϕ(x), ω πg ⟩H = −⟨ z(x), ω πg ⟩H,
+
+because ϕ(g) ∈ H g and ωπg ⊥ H g . On the transient set X \ { g}, the true hitting time satisfies the scalar Bellman equation V π (·, g ) = 1 + P πQV π (·, g ), where P πQ is the killed scalar transition operator and the boundary value at the goal is V π (g, g ) = 0 .Define the prediction error eg (x) := bV πg (x) − V π (x, g ) and the scalar Bellman residual rg (x) := 
+
+bV πg (x) −  1 + P πQ bV πg (x). Then (I − P πQ)eg = rg . We now bound rg . Since bV πg (g) = 0 , applying the killed operator to bV πg is equivalent to taking the usual one-step expectation with the zero boundary at g. Thus, for x ∈ X \ { g},
+
+rg (x) = −⟨ z(x), ω πg ⟩H − 1 + Ex′∼P π (·| x)
+
+⟨z(x′), ω πg ⟩H
+
+
+
+= −⟨ z(x), ω πg ⟩H − 1 + Ex′∼P π (·| x)[z(x′)] , ω πg H .
+
+Here the equality is consistent with the killed operator because z(g) = PQϕ(g) = 0 .By Lemma 3.2, for each x ∈ X there exists ξ(x) ∈ H with ∥ξ(x)∥H ≤ ϵ such that 
+
+Ex′∼P π (·| x)[ϕ(x′)] = T π ϕ(x) + ξ(x). Projecting onto HQ gives 
+
+Ex′∼P π (·| x)[z(x′)] = PQT π ϕ(x) + PQξ(x).
+
+Now decompose ϕ(x) = PQϕ(x)+ Pg ϕ(x) = z(x)+ Pg ϕ(x), where Pg := I −PQ is the orthogonal projection onto Hg . Since the goal subspace is invariant under T π , we have T π (Hg ) ⊆ H g . Hence 
+
+PQT π Pg ϕ(x) = 0 . Therefore PQT π ϕ(x) = PQT π z(x) = T πQ z(x). Thus Ex′∼P π (·| x)[z(x′)] = 
+
+T πQ z(x) + PQξ(x). Substituting this identity into the residual gives 
+
+rg (x) = −⟨ z(x), ω πg ⟩H − 1 + ⟨T πQ z(x) + PQξ(x), ω πg ⟩H
+
+= ⟨(T πQ − I)z(x), ω πg ⟩H + ⟨PQξ(x), ω πg ⟩H − 1.
+
+Using the adjoint equation (T πQ −I)∗ωπg = w1, we obtain rg (x) = ⟨z(x), w1⟩H+⟨PQξ(x), ω πg ⟩H−1.Because w1 ∈ H Q, we have ⟨z(x), w1⟩H = ⟨PQϕ(x), w1⟩H = ⟨ϕ(x), w1⟩H = 1 . Therefore 
+
+rg (x) = ⟨PQξ(x), ω πg ⟩H. Hence |rg (x)| ≤ ∥ PQξ(x)∥H∥ωπg ∥H ≤ ∥ ξ(x)∥H∥ωπg ∥H ≤ ϵ∥ωπg ∥H.Taking the supremum over x ∈ X \ { g} yields ∥rg ∥∞ ≤ ϵ∥ωπg ∥H. Since (I − P πQ)eg = rg , we have 
+
+eg = ( I − P πQ)−1rg . Therefore, by the assumed resolvent bound, 
+
+∥eg ∥∞ ≤ (I − P πQ)−1
+
+> ∞
+
+∥rg ∥∞ ≤ CH
+
+1 − ρ(T πQ ) ϵ∥ωπg ∥H.
+
+Since eg (x) = bV πg (x) − V π (x, g ) we conclude that 
+
+sup 
+
+> x∈X \{ g}
+
+V π (x, g ) − bV πg (x) ≤ CH ∥ωπg ∥H ϵ
+
+1 − ρ(T πQ ) .
+
+22 E.6 Proof of Theorem 3.4 
+
+Proof. Fix δ > 0 and choose any rδ ∈ Rϵ satisfying 
+
+CH (rδ ) Cω (rδ )ϵ
+
+1 − ρrδ
+
+≤ η⋆ϵ + δ. 
+
+For this reference tuple, define the reference hitting-time predictor 
+
+Vrδ (x, g ) := ϕrδ (g) − ϕrδ (x), ω rδ ,π sep   
+
+> gHrδ
+
+.
+
+By Theorem 3.3, for each fixed goal g,
+
+sup 
+
+> x∈X \{ g}
+
+|Vrδ (x, g ) − V πsep (x, g )| ≤ CH (rδ , g )∥ωrδ ,π sep  
+
+> g
+
+∥Hrδ ϵ
+
+1 − ρ(T rδ ,π sep  
+
+> Q,g
+
+) .
+
+Since both sides vanish at x = g, the same bound holds for all x ∈ X . Taking suprema over g gives 
+
+sup 
+
+> x,g ∈X
+
+|Vrδ (x, g ) − V πsep (x, g )| ≤ CH (rδ )Cω (rδ )ϵ
+
+1 − ρrδ
+
+≤ η⋆ϵ + δ. 
+
+Because ν is a probability measure, this implies ∥Vrδ − V πsep ∥L2(ν×ν) ≤ η⋆ϵ + δ. Since bV minimizes 
+
+L over F, and since inf f ∈F ∥f −V πsep ∥L2(ν×ν) ≤ η⋆ϵ +ηcls we have ∥ bV −V πsep ∥L2(ν×ν) ≤ η⋆ϵ +ηcls .Define ∆( x, g ) := bV (x, g ) − Vrδ (x, g ). By the triangle inequality, 
+
+∥∆∥L2(ν×ν) ≤ ∥ bV − V πsep ∥L2(ν×ν) + ∥Vrδ − V πsep ∥L2(ν×ν) ≤ 2η⋆ϵ + ηcls + δ. 
+
+For each (x, g ) ∈ X × X , define dx,g := ϕ(g) − ϕ(x) ∈ D and drδ 
+
+> x,g
+
+:= ϕrδ (g) − ϕrδ (x) ∈ Drδ . For any h ∈ X , by definition of the learned and reference analysis operators, (Ad x,g )( h) = bV (x, h ) −
+
+bV (g, h ) and (Brδ drδ 
+
+> x,g
+
+)( h) = Vrδ (x, h ) − Vrδ (g, h ). Therefore (Ad x,g )( h) − (Brδ drδ 
+
+> x,g
+
+)( h) = ∆( x, h ) − ∆( g, h ). Hence 
+
+Z
+
+> X
+
+Z
+
+> X
+
+∥Ad x,g − Brδ drδ 
+
+> x,g
+
+∥2 
+
+> L2(ν)
+
+dν (x) dν (g) = 
+
+Z
+
+> X
+
+Z
+
+> X
+
+Z
+
+> X
+
+|∆( x, h ) − ∆( g, h )|2 dν (h) dν (x) dν (g).
+
+Using |∆( x, h ) − ∆( g, h )|2 ≤ 2|∆( x, h )|2 + 2 |∆( g, h )|2and the fact that ν is a probability measure, we obtain Z
+
+> X
+
+Z
+
+> X
+
+∥Ad x,g − Brδ drδ 
+
+> x,g
+
+∥2 
+
+> L2(ν)
+
+dν (x) dν (g) ≤ 4∥∆∥2
+
+> L2(ν×ν)
+
+.
+
+Therefore Z 
+
+> X
+
+Z
+
+> X
+
+∥Ad x,g − Brδ drδ 
+
+> x,g
+
+∥2 
+
+> L2(ν)
+
+dν (x) dν (g)
+
+1/2
+
+≤ 2 2η⋆ϵ + ηcls + δ.
+
+Since Brδ is bounded below, it is injective, has closed range, and its inverse on R(Brδ ) satisfies 
+
+∥B−1 
+
+> rδ
+
+f ∥Hrδ ≤ 1
+
+mB,δ 
+
+∥f ∥L2(ν), f ∈ R (Brδ ).
+
+Let PR(Brδ ) denote the orthogonal projection in L2(ν) onto R(Brδ ), and define Mδ := 
+
+B−1 
+
+> rδ
+
+PR(Brδ )A. Then Mδ : D → Drδ is a bounded linear map. Moreover, since PR(Brδ ) is contractive, 
+
+∥Mδ dx,g − drδ 
+
+> x,g
+
+∥Hrδ = B−1 
+
+> rδ
+
+PR(Brδ )
+
+ Ad x,g − Brδ drδ
+
+> x,g
+
+
+
+> Hrδ
+
+≤ 1
+
+mB,δ 
+
+∥Ad x,g − Brδ drδ 
+
+> x,g
+
+∥L2(ν).
+
+Squaring, integrating over (x, g ), and taking square roots yields 
+
+Z 
+
+> X
+
+Z
+
+> X
+
+∥Mδ dx,g − drδ 
+
+> x,g
+
+∥2 
+
+> Hrδ
+
+dν (x) dν (g)
+
+1/2
+
+≤ 2
+
+mB,δ 
+
+ 2η⋆ϵ + ηcls + δ.
+
+Substituting dx,g = ϕ(g) − ϕ(x) and drδ 
+
+> x,g
+
+= ϕrδ (g) − ϕrδ (x) gives the claimed bound. 23 E.7 Proof of Theorem 3.5 
+
+This subsection proves Theorem 3.5. The proof has two steps. We first establish a finite-sample excess-risk bound for the phase-2 tuple-regression problem induced by the hitting-time channel of Algorithm 1, conditional on a fixed frozen task encoder ¯ωψ . We then lift this statistical control to a displacement-topology recovery statement by comparing the learned predictor to a near-oracle reference representation from Rϵ, using the coverage assumption on the conditional goal law and the bounded-below property of the reference analysis operator. 
+
+Lemma E.1 (Trajectory-level finite-sample control for replay-buffer phase-2 regression) . Assume 
+
+πsep = πB , and let DN = {τ 1, . . . , τ N } be N i.i.d. trajectories generated by πB . Fix a task encoder 
+
+¯ωψ : X → H satisfying ∥¯ωψ (g)∥H ≤ C¯ωψ for all g ∈ X and let Φ be a class of state encoders satisfying ∥ϕ(x)∥H ≤ Cϕ for all ϕ ∈ Φ, x ∈ X . Let Ext( τ ) =  z1(τ ), . . . , z mtr (τ ) and zt(τ ) =  st(τ ), u t(τ ), g t(τ ), H t(τ ) be a measurable tuple-extraction rule that returns exactly mtr tuples from each trajectory. Let μ denote the law of a uniformly selected extracted tuple, i.e. the law obtained by first sampling τ ∼ πB , then T ∼ Unif {1, . . . , m tr } independently, and setting (S, U, G, H ) := 
+
+zT (τ ). Define the replay-buffer conditional mean mtraj (s, u, g ) := E[H | S = s, U = u, G = g]
+
+and the phase-2 predictor class FΦ,¯ωψ := {fϕ(s, u, g ) = ⟨ϕ(u) − ϕ(s), ¯ωψ (g)⟩H : ϕ ∈ Φ}. For each extraction slot t ∈ { 1, . . . , m tr }, define the slotwise trajectory class 
+
+(FΦ,¯ωψ )(t) := {τ 7 → fϕ(st(τ ), u t(τ ), g t(τ )) : ϕ ∈ Φ} ,
+
+and write 
+
+RN (Φ , ¯ωψ ) := 1
+
+mtr 
+
+> mtr
+
+X
+
+> t=1
+
+RN
+
+ (FΦ,¯ωψ )(t),
+
+where for any class G of real-valued functions on trajectories, 
+
+RN (G) := Eτ1: N ,σ 
+
+sup 
+
+> q∈G
+
+1
+
+N
+
+> N
+
+X
+
+> j=1
+
+σj q(τ j )
+
+ .
+
+Define the population and empirical risks by 
+
+R(ϕ) := Eμ
+
+(fϕ(S, U, G) − H)2,
+
+bRN (ϕ) := 1
+
+N m tr 
+
+> N
+
+X
+
+> j=1
+> mtr
+
+X
+
+> t=1
+
+ fϕ(st(τ j ), u t(τ j ), g t(τ j )) − Ht(τ j )2,
+
+and let bϕN ∈ arg min ϕ∈Φ bRN (ϕ). Furthermore define 
+
+ΓN (δ) := 16(2 CϕC¯ωψ + Hmax ) RN (Φ , ¯ωψ ) + 2(2 CϕC¯ωψ + Hmax )2
+
+r log(1 /δ )2N .
+
+Then, with probability at least 1 − δ,
+
+∥fbϕN − mtraj ∥2 
+
+> L2(μ)
+
+≤ inf  
+
+> ϕ∈Φ
+
+∥fϕ − mtraj ∥2 
+
+> L2(μ)
+
++ Γ N (δ).
+
+Proof. For each ϕ ∈ Φ, define the trajectory-level block loss 
+
+Ψϕ(τ ) := 1
+
+mtr 
+
+> mtr
+
+X
+
+> t=1
+
+ fϕ(st(τ ), u t(τ ), g t(τ )) − Ht(τ )2.
+
+Then bRN (ϕ) = 1
+
+> N
+
+PNj=1 Ψϕ(τ j ) and R(ϕ) = Eτ [Ψ ϕ(τ )] . We proceed in four steps. Firstly, we show uniform boundedness. For any tuple (s, u, g, H ) and any ϕ ∈ Φ,
+
+|fϕ(s, u, g )| = |⟨ ϕ(u) − ϕ(s), ¯ωψ (g)⟩H| ≤ ∥ ϕ(u) − ϕ(s)∥H ∥¯ωψ (g)∥H ≤ 2CϕC¯ωψ .
+
+Hence |fϕ(s, u, g ) − H| ≤ 2CϕC¯ωψ + Hmax , and therefore 0 ≤ (fϕ(s, u, g ) − H)2 ≤ Mloss and 
+
+Mloss := (2 CϕC¯ωψ + Hmax )2. Averaging over t gives 0 ≤ Ψϕ(τ ) ≤ Mloss for all ϕ ∈ Φ, τ .24 Secondly, we establish symmetrization and slotwise contraction. Let LΦ,¯ωψ := {Ψϕ : ϕ ∈ Φ}
+
+be the induced block-loss class. Since the independent objects are the trajectories τ 1, . . . , τ N ,symmetrization gives 
+
+E
+
+"
+
+sup 
+
+> ϕ∈Φ
+
+|R(ϕ) − bRN (ϕ)|
+
+#
+
+≤ 4 RN (LΦ,¯ωψ ).
+
+The additional factor of two comes from controlling both one-sided deviations R(ϕ) − bRN (ϕ) and 
+
+bRN (ϕ) − R(ϕ) using the one-sided Rademacher complexity. Expanding the block loss and using subadditivity of the supremum, 
+
+RN (LΦ,¯ωψ ) = Eτ1: N ,σ 
+
+"
+
+sup 
+
+> ϕ∈Φ
+
+1
+
+N
+
+> N
+
+X
+
+> j=1
+
+σj Ψϕ(τ j )
+
+#
+
+≤ 1
+
+mtr 
+
+> mtr
+
+X
+
+> t=1
+
+Eτ1: N ,σ 
+
+"
+
+sup 
+
+> ϕ∈Φ
+
+1
+
+N
+
+> N
+
+X
+
+> j=1
+
+σj
+
+ fϕ(st(τ j ), u t(τ j ), g t(τ j )) − Ht(τ j )2
+
+#
+
+.
+
+For fixed t and j, define φj,t (y) := ( y − Ht(τ j )) 2 − Ht(τ j )2. Then φj,t (0) = 0 , and because 
+
+|y| ≤ 2CϕC¯ωψ and |Ht(τ j )| ≤ Hmax , we have |φ′
+
+> j,t
+
+(y)| = |2( y − Ht(τ j )) | ≤ 2(2 CϕC¯ωψ + Hmax ).Moreover, the constant shift −Ht(τ j )2 vanishes under the Rademacher average, so By Lemma B.4, 
+
+RN (LΦ,¯ωψ ) ≤ 2(2 CϕC¯ωψ + Hmax )
+
+mtr 
+
+> mtr
+
+X
+
+> t=1
+
+RN
+
+ (FΦ,¯ωψ )(t) = 2(2 CϕC¯ωψ + Hmax ) RN (Φ , ¯ωψ ).
+
+Therefore 
+
+E
+
+h
+
+sup 
+
+> ϕ∈Φ
+
+|R(ϕ) − bRN (ϕ)|
+
+i
+
+≤ 8(2 CϕC¯ωψ + Hmax ) RN (Φ , ¯ωψ ).
+
+Thirdly, we establish trajectory-level concentration. Define 
+
+ΦN (τ 1, . . . , τ N ) := sup 
+
+> ϕ∈Φ
+
+|R(ϕ) − bRN (ϕ)|.
+
+If one trajectory τ j is replaced by another trajectory τ j′, then for every ϕ ∈ Φ,
+
+bRN (ϕ; τ 1, . . . , τ N ) − bRN (ϕ; τ 1, . . . , τ j′, . . . , τ N ) ≤ Mloss 
+
+N ,
+
+because only one block-loss term changes and every block loss lies in [0 , M loss ]. Hence 
+
+|ΦN (τ 1, . . . , τ N ) − ΦN (τ 1, . . . , τ j′, . . . , τ N )| ≤ Mloss 
+
+N .
+
+By Lemma B.3, applied to the trajectory-level block-loss class LΦ,¯ωψ with B = Mloss , with proba-bility at least 1 − δ,
+
+sup 
+
+> ϕ∈Φ
+
+|R(ϕ) − bRN (ϕ)| ≤ 8(2 CϕC¯ωψ + Hmax ) RN (Φ , ¯ωψ ) + (2 CϕC¯ωψ + Hmax )2
+
+r log(1 /δ )2N .
+
+In the last step, we perform ERM comparison and target identification. On the event above, for every 
+
+ϕ ∈ Φ,
+
+R( bϕN ) ≤ bRN ( bϕN ) + sup 
+
+> ψ∈Φ
+
+|R(ψ) − bRN (ψ)| ≤ bRN (ϕ) + sup 
+
+> ψ∈Φ
+
+|R(ψ) − bRN (ψ)|.
+
+Applying the same deviation bound once more to bRN (ϕ) gives 
+
+R( bϕN ) ≤ R(ϕ) + 2 sup 
+
+> ψ∈Φ
+
+|R(ψ) − bRN (ψ)|.
+
+Therefore, with probability at least 1 − δ,
+
+R( bϕN ) ≤ R(ϕ) + 16(2 CϕC¯ωψ + Hmax ) RN (Φ , ¯ωψ ) + 2(2 CϕC¯ωψ + Hmax )2
+
+r log(1 /δ )2N .
+
+25 Taking the infimum over ϕ ∈ Φ proves R( bϕN ) ≤ inf ϕ∈Φ R(ϕ) + Γ N (δ). It remains to identify the regression target induced by the square loss. By definition we have mtraj (S, U, G) = E[H | S, U, G].Fixing any ϕ ∈ Φ and expanding the square yields R(ϕ) = Eμ
+
+(fϕ − mtraj + mtraj − H)2. Hence 
+
+R(ϕ) = Eμ
+
+(fϕ − mtraj )2 + Eμ
+
+(mtraj − H)2 + 2 Eμ
+
+(fϕ − mtraj )( mtraj − H).
+
+The cross term vanishes because 
+
+E[mtraj − H | S, U, G] = mtraj (S, U, G) − E[H | S, U, G] = 0 .
+
+Therefore, R(ϕ) = ∥fϕ − mtraj ∥2 
+
+> L2(μ)
+
++ Eμ
+
+(mtraj − H)2. The second term is independent of ϕ,so subtracting it from both sides of R( bϕN ) ≤ inf ϕ∈Φ R(ϕ) + Γ N (δ) yields 
+
+∥fbϕN − mtraj ∥2 
+
+> L2(μ)
+
+≤ inf  
+
+> ϕ∈Φ
+
+∥fϕ − mtraj ∥2 
+
+> L2(μ)
+
++ Γ N (δ),
+
+proving the claim. 
+
+Proof of Theorem 3.5. By Lemma E.1, with probability at least 1 − δ,
+
+∥fbϕN − mtraj ∥2 
+
+> L2(μ)
+
+≤ inf  
+
+> ϕ∈Φ
+
+∥fϕ − mtraj ∥2 
+
+> L2(μ)
+
++ Γ N (δ).
+
+Using the trajectory-compatibility assumption and the triangle inequality, 
+
+inf  
+
+> ϕ∈Φ
+
+∥fϕ − mtraj ∥L2(μ) ≤ inf  
+
+> ϕ∈Φ
+
+∥fϕ − GπB ∥L2(μ) + ∥GπB − mtraj ∥L2(μ) ≤ 2η⋆ϵ + ηcls + ηtraj .
+
+Hence, it holds with probability at least 1−δ that ∥fbϕN −mtraj ∥2 
+
+> L2(μ)
+
+≤ (2 η⋆ϵ +ηcls +ηtraj )2 +Γ N (δ).Now compare the learned predictor to the ideal displacement target: 
+
+∥fbϕN − GπB ∥2 
+
+> L2(μ)
+
+≤ 2∥fbϕN − mtraj ∥2 
+
+> L2(μ)
+
++ 2 ∥mtraj − GπB ∥2
+
+> L2(μ)
+
+.
+
+Therefore, again with probability at least 1 − δ,
+
+∥fbϕN − GπB ∥2 
+
+> L2(μ)
+
+≤ 2(2 η⋆ϵ + ηcls + ηtraj )2 + 2Γ N (δ) + 2 η2traj .
+
+Now fix δor > 0 and choose rδor ∈ Rϵ such that 
+
+CH (rδor )Cω (rδor )ϵ
+
+1 − ρrδor 
+
+≤ η⋆ϵ + δor .
+
+Define the reference tuple predictor Grδor (s, u, g ) := ϕrδor (u) − ϕrδor (s), ω rδor ,π B  
+
+> gHrδor
+
+. By Theorem 3.3, exactly as in the previous proof, ∥Grδor − GπB ∥2 
+
+> L2(μ)
+
+≤ 4( η⋆ϵ + δor )2. Defining 
+
+∆N := fbϕN − Grδor we get Then ∥∆N ∥2 
+
+> L2(μ)
+
+≤ 2∥fbϕN − GπB ∥2 
+
+> L2(μ)
+
++ 2 ∥Grδor − GπB ∥2
+
+> L2(μ)
+
+.Substituting the two previous bounds yields, with probability at least 1 − δ,
+
+∥∆N ∥2 
+
+> L2(μ)
+
+≤ 4(2 η⋆ϵ + ηcls + ηtraj )2 + 4Γ N (δ) + 4 η2traj + 8( η⋆ϵ + δor )2.
+
+For each (s, u ) ∈ supp( λ), define dNs,u := bϕN (u)− bϕN (s) ∈ DN and drδor  
+
+> s,u
+
+:= ϕrδor (u)−ϕrδor (s) ∈
+
+Drδor . By construction we get (AN dNs,u )( g) = fbϕN (s, u, g ) and (Brδor drδor  
+
+> s,u
+
+)( g) = Grδor (s, u, g ).Hence (AN dNs,u )( g) − (Brδor drδor  
+
+> s,u
+
+)( g) = ∆ N (s, u, g ). Integrating against first ν and then λ gives 
+
+Z
+
+> X ×X
+
+∥AN dNs,u − Brδor drδor  
+
+> s,u
+
+∥2  
+
+> L2(X,ν )
+
+dλ (s, u ) = 
+
+Z
+
+> X ×X
+
+Z
+
+> X
+
+|∆N (s, u, g )|2 dν (g) dλ (s, u ).
+
+By the coverage assumption we get νs,u (B) ≥ ccov ν(B) for λ-a.e. (s, u ), and every measurable 
+
+B ⊆ X . Therefore 
+
+ccov 
+
+Z
+
+> X ×X
+
+Z
+
+> X
+
+|∆N (s, u, g )|2 dν (g) dλ (s, u )
+
+≤
+
+Z
+
+> X ×X
+
+Z
+
+> X
+
+|∆N (s, u, g )|2 dν s,u (g) dλ (s, u ) = ∥∆N ∥2
+
+> L2(μ)
+
+.
+
+26 Thus R
+
+X ×X ∥AN dNs,u − Brδor drδor 
+
+s,u ∥2
+
+L2(X ,ν ) dλ (s, u ) ≤ 1
+
+ccov ∥∆N ∥2
+
+L2(μ). Since Brδor is bounded below, it is injective, has closed range, and has a bounded inverse on its range. Let mB,δ or > 0
+
+denote its lower-bound constant, so that ∥Brδor d∥L2(X ,ν ) ≥ mB,δ or ∥d∥Hrδor with d ∈ Drδor .Equivalently, ∥B−1
+
+rδor f ∥Hrδor ≤ 1
+
+mB,δ or 
+
+∥f ∥L2(X ,ν ) with f ∈ R (Brδor ). Let PR(Brδor ) denote the orthogonal projection in L2(X , ν ) onto R(Brδor ), and define TN,δ or := B−1
+
+rδor PR(Brδor )AN .Then TN,δ or : DN → Drδor is a bounded linear map. Since Brδor drδor 
+
+s,u ∈ R (Brδor ), we have 
+
+PR(Brδor )Brδor drδor 
+
+s,u = Brδor drδor 
+
+s,u . Therefore, 
+
+TN,δ or dNs,u − drδor 
+
+s,u Hrδor = B−1
+
+rδor PR(Brδor )
+
+ AN dNs,u − Brδor drδor 
+
+s,u 
+
+
+
+Hrδor 
+
+≤ 1
+
+mB,δ or 
+
+AN dNs,u − Brδor drδor 
+
+s,u L2(X ,ν ) .
+
+Squaring and integrating over (s, u ) ∼ λ gives 
+
+Z
+
+X ×X 
+
+TN,δ or dNs,u − drδor 
+
+s,u 
+
+2
+
+Hrδor dλ (s, u ) ≤ 1
+
+m2
+
+B,δ or 
+
+Z
+
+X ×X 
+
+AN dNs,u − Brδor drδor 
+
+s,u 
+
+2
+
+L2(X ,ν ) dλ (s, u ).
+
+Using the preceding bound on the analysis-operator discrepancy, we obtain 
+
+Z
+
+X ×X 
+
+TN,δ or dNs,u − drδor 
+
+s,u 
+
+2
+
+Hrδor dλ (s, u )
+
+≤ 4
+
+ccov m2
+
+B,δ or 
+
+h
+
+(2 η⋆ϵ + ηcls + ηtraj )2 + Γ N (δ) + η2traj + 2( η⋆ϵ + δor )2i
+
+.
+
+Finally, substituting dNs,u = bϕN (u) − bϕN (s) and drδor 
+
+s,u = ϕrδor (u) − ϕrδor (s) yields 
+
+Z
+
+X ×X 
+
+TN,δ or ( bϕN (u) − bϕN (s)) − (ϕrδor (u) − ϕrδor (s)) 2
+
+Hrδor dλ (s, u )
+
+≤ 4
+
+ccov m2
+
+B,δ or 
+
+h
+
+(2 η⋆ϵ + ηcls + ηtraj )2 + Γ N (δ) + η2traj + 2( η⋆ϵ + δor )2i
+
+,
+
+27 F Algorithm Pseudocode 
+
+Algorithm 1 Isomorphic Embedding Learning  
+
+> 1:
+
+Input: Replay buffer B, value expectile τ , hitting time expectile τ ′, topological consistency temperature β, topological consistency coefficient κ, discount factor γ 
+
+> 2:
+
+Initialize: Encoder ϕθ with parameters ¯θ ← θ 
+
+> 3:
+
+for each training iteration do  
+
+> 4:
+
+Sample batch (xi, u i, H (ui), x ′
+
+> i
+
+, g i) ∼ B ▷ u i: intermediate state with hitting time H(ui)
+
+Temporal Difference Learning  
+
+> 5:
+
+∆′ 
+
+> gi
+
+← ϕθ (gi) − ϕθ (x′
+
+> i
+
+) 
+
+> 6:
+
+cos( ξ′
+
+> i
+
+) = ⟨∆′ 
+
+> gi
+
+, ω ψ (gi)⟩/(∥∆′ 
+
+> gi
+
+∥ · ∥ ωψ (gi)∥) 
+
+> 7:
+
+∆gi ← ϕθ (gi) − ϕθ (xi) 
+
+> 8:
+
+cos( ξi) = ⟨∆gi , ω ψ (gi)⟩/(∥∆gi ∥ · ∥ ωψ (gi)∥) 
+
+> 9:
+
+Ti ← I(xi = gi) · 0 + I(xi̸ = gi) · (1 + γ∥∆′ 
+
+> gi
+
+∥ · exp( β(1 − cos( ξ′
+
+> i
+
+)))) ▷ Bellman target  
+
+> 10:
+
+δi ← ⌊T i⌋sg − ∥ ∆gi ∥ · exp( β(1 − cos( ξi))) ▷ Bellman residual  
+
+> 11:
+
+wi ← | τ − I(δi < 0) | ▷ Expectile weights for value learning 
+
+Hitting Time Regression  
+
+> 12:
+
+∆ui ← ϕθ (ui) − ϕθ (xi) 
+
+> 13:
+
+ℓi ← 1−γH(ui) 
+
+> 1−γ
+
+− ⟨ ∆ui , ω ψ (gi)/∥ωψ (gi)∥⟩ ▷ Discounted hitting time residual  
+
+> 14:
+
+w′ 
+
+> i
+
+← | τ ′ − I(ℓi < 0) |
+
+Optimization  
+
+> 15:
+
+Lemb ← 1
+
+> N
+
+PNi=1 
+
+ wiδ2 
+
+> i
+
++ κw ′
+
+> i
+
+ℓ2
+
+> i
+
+ 
+
+> 16:
+
+θ ← θ − α∇θ Lemb ▷ Gradient update  
+
+> 17:
+
+end for Algorithm 2 Continuous Contrastive Task Learning (InfoNCE like)  
+
+> 1:
+
+Input: Replay buffer B, task encoder ωψ , temperature τ , augmentation scale σ 
+
+> 2:
+
+Initialize: Encoder parameters ψ 
+
+> 3:
+
+for each training iteration do  
+
+> 4:
+
+Sample batch (gi, u i, x i) ∼ B ▷ g i: goals, ui: intermediate, xi: states  
+
+> 5:
+
+x ← [gi; ui; xi] ▷ Concatenate all target states into a single batch  
+
+> 6:
+
+x′ ← x + ϵ, ϵ ∼ N (0 , σ 2I) ▷ Apply Gaussian noise augmentation  
+
+> 7:
+
+z ← ωψ (x) ▷ Embed original states  
+
+> 8:
+
+z′ ← ωψ (x′) ▷ Embed augmented states  
+
+> 9:
+
+ˆz ← z/ ∥z∥, ˆz′ ← z′/∥z′∥ ▷ L2 normalization to the unit hypersphere  
+
+> 10:
+
+S ← ⟨ ˆz, (ˆ z′)⊤⟩/τ ▷ Compute N × N similarity matrix  
+
+> 11:
+
+L ← 1
+
+> N
+
+PNi=1 − log 
+
+ exp( Si,i )  
+
+> PNj=1 exp( Si,j )
+
+
+
+▷ Compute InfoNCE / NT-Xent loss  
+
+> 12:
+
+Update ωψ by minimizing L 
+
+> 13:
+
+end for 
+
+28 Algorithm 3 Three phase training  
+
+> 1:
+
+Input: Replay buffer B, task encoder ωψ , state encoder ϕθ , policy π(a|x, z ) 
+
+> 2:
+
+Initialize: Encoder parameters θ, ψ, π  
+
+> 3:
+
+while not converged do ▷ Phase 1: Task encoder  
+
+> 4:
+
+train ωψ using algorithm 2  
+
+> 5:
+
+end while  
+
+> 6:
+
+Freeze task encoder parameters ψ 
+
+> 7:
+
+while not converged do ▷ Phase 2: State encoder  
+
+> 8:
+
+train ϕθ (x) using algorithm 1  
+
+> 9:
+
+end while  
+
+> 10:
+
+Freeze state encoder parameters θ 
+
+> 11:
+
+while not converged do ▷ Phase 3: Policy learning  
+
+> 12:
+
+train π(a|x, z ) using any off-the-shelf offline RL algo with uniformly random unit-length z 
+
+> 13:
+
+end while Algorithm 4 Asymmetric Graph Planning  
+
+> 1:
+
+Input: Coreset Xc, Goal g, Value Function V , Encoder ϕ, Neighbors k
+
+Graph Construction  
+
+> 2:
+
+function CONSTRUCT GRAPH (Xc, g, k ) 
+
+> 3:
+
+Ci,j ← d(xi, x j , g ) ∀xi, x j ∈ X c ▷ Asymmetric cost matrix  
+
+> 4:
+
+Csym ← (C + C⊤)/2 ▷ Symmetrize for connectivity backbone  
+
+> 5:
+
+T ← MinimumSpanningTree (Csym ) 
+
+> 6:
+
+A ← KeepTopKPerRow (C, k ) ▷ Initial sparse directed adjacency  
+
+> 7:
+
+for each edge (i, j ) ∈ T do ▷ Force MST edges to ensure global connectivity  
+
+> 8:
+
+Ai,j ← Ci,j  
+
+> 9:
+
+Aj,i ← Cj,i  
+
+> 10:
+
+end for  
+
+> 11:
+
+return A⊤ ▷ Return reversed graph for SSSP from goal  
+
+> 12:
+
+end function 
+
+Online Planning Policy  
+
+> 13:
+
+function PLAN STEP (Xc, x, g, Arev ) 
+
+> 14:
+
+vgoal ← arg min i d(xi, g, g ) ▷ Match coreset node to goal  
+
+> 15:
+
+P ← ShortestPathPredecessors (Arev , source = vgoal ) 
+
+> 16:
+
+vcurr ← arg min i d(x, x i, g ) ∀xi ∈ X c ▷ Localize current state  
+
+> 17:
+
+vnext ← P [vcurr ] 
+
+> 18:
+
+if vnext ̸ = null and vcurr ̸ = vgoal then  
+
+> 19:
+
+ϕtarget ← ϕ(vnext ) 
+
+> 20:
+
+else  
+
+> 21:
+
+ϕtarget ← ϕ(g) ▷ Direct pursuit if no path exists  
+
+> 22:
+
+end if  
+
+> 23:
+
+z ← (ϕtarget − ϕ(x)) /∥ϕtarget − ϕ(x)∥ ▷ Task identifier  
+
+> 24:
+
+return π(x, z ) 
+
+> 25:
+
+end function 
+
+29 G Experiment details and additional results 
+
+Hyperparameter configuration. See Table 3 for the hyperparameter configurations used to generate the results in Table 2. Several parameters specific to Isomorphic Embedding Learning (IEL) can be tuned to optimize performance based on the environment’s structural characteristics and the quality of the offline dataset. 
+
+Hyperparameter sensitivity. As shown in Table 4, almost all evaluated configurations yield per-formance within two standard deviations with respect to the best-performing configuration. This proximity suggests a failure to reject the null hypothesis—that there is no statistically significant difference between these configurations—under standard significance testing. We therefore conclude that IEL is robust and not overly sensitive to the hyperparameter ranges. 
+
+Tuning rules of thumb. Firstly, β determines the sharpness of the enforced topology in the embedding space, defining the perceived distance between nearby points. For datasets with high noise or low structure, a low β (< 0.1) is recommended for training stability. In contrast, datasets with high-quality, expert trajectories can be better resolved with β ∈ [0 .3, 1.0] . Secondly, Hmax defines the prediction horizon for hitting times. While low values ( Hmax ≤ 5) ensure stability, they limit the agent’s ability to differentiate between long-range goals. Conversely, excessively large values (Hmax ≥ 30 ) can introduce variance that leads to chaotic predictions. For general use, Hmax is relatively easy to tune by observing the distribution of trajectory lengths; it should be set high enough to capture meaningful progress but low enough to avoid the noise of unstructured exploration. Thirdly, 
+
+τ ′ denotes the expectile for hitting time regression. Decreasing τ ′ encourages the exploitation of shorter paths, which is effective when the hitting time range H(u) is narrow (e.g., in expert datasets). When dataset quality is unknown, the unbiased τ ′ = 0 .5 provides the most robust results. 
+
+Coreset selection and computational efficiency. Regarding evaluation, the coreset selection param-eter σ determines the similarity threshold between points. This parameter is heavily dependent on the embedding scale set by Hmax . We find that σ ∈ [0 .3μ, 0.75 μ], where μ is the mean pairwise distance in the coreset, provides a reliable heuristic for tuning. Coreset selection primarily serves two distinct purposes: it limits the number of vertices in the planning graph to control computational complexity, and it removes distribution bias from the dataset. By reflecting the spatial coverage rather than the density of the original data, the coreset enables unbiased, coarse-grained long-horizon planning. Increasing the size of the coreset beyond the point of sufficient spatial coverage yields diminishing returns and can potentially degrade planning performance. This occurs when the graph becomes too fine-grained, presenting short-distance targets that fall below the resolution of the hitting-time predictions the agent was trained on. Consequently, an ideal coreset is one where the mean distance to k-nearest neighbor ( k-NN) vertices is approximately constant across the state space and remains proportional to the hitting times seen during training. We configured the coreset size to ensure 
+
+Asym-Graph evaluation remains proportional to Rec-Mid wall-clock time. Specifically, Rec-Mid with 50,000 samples requires 400–600 seconds, while Asym-Graph with a coreset size of 213 = 8192 
+
+takes approximately 700 seconds. For reference‚ Sym-Graph requires only 150 seconds. These timings vary with the specific graph topology and complexity. All experiments were conducted on a system equipped with an NVIDIA GeForce RTX 4090 (24 GB VRAM) and an Intel Core i7-14700K (96 GB RAM). A full experimental cycle, including model training and final evaluation, requires approximately one hour. 30 Table 3: Main configuration of IEL hyperparameters. Only hyperparameters specific to IEL or Asymmetric/Symmetric Graph Planning differ from those presented in HILP [24]. 
+
+Hyperparameter Value # total gradient steps 10 6
+
+# phase 0 steps (task learning) 0.2 · 10 5
+
+# phase 1 steps (embedding learning) 4.8 · 10 5
+
+# phase 2 steps (policy learning) 5 · 10 5
+
+Learning rate 3 · 10 −4
+
+Optimizer Adam Minibatch-size 1024 Actor and value MLP hidden layer dimensions (512 , 512 , 512) 
+
+Discount factor γ 0.99 
+
+Latent embedding ( ϕ) dimension 32 Value learning expectile τ 0.95 
+
+Hitting time regression expectile τ ′ 0.5
+
+Topological consistency temperature β 0.1
+
+Maximum in-trajectory intermediate state hitting time Hmax 10 
+
+Target smoothing coefficient 0.005 
+
+Actor temperature 10 
+
+Evaluation coreset size 8192 
+
+Evaluation coreset selection σ 20 
+
+Evaluation graph neighbor count ( k for k-NN) 10 
+
+Table 4: Comparison of IEL Asymmetric and Symmetric Graph Planning configurations across environments. 
+
+Configuration antmaze-large-diverse antmaze-large-play antmaze-ultra-diverse antmaze-ultra-play kitchen-partial kitchen-mixed 
+
+Asymmetric Planning Performance 
+
+Hmax = 10 .0., σ = 0 .25 58.0 ± 18 .8 51.5 ± 16 .5 36.5 ± 32 .9 45.5 ± 23 .9 53.2 ± 4.0 50.4 ± 6.3
+
+Hmax = 20 .0., σ = 0 .25 73.7 ± 13 .4 53.8 ± 16 .1 35.0 ± 24 .8 28.5 ± 23 .2 61.4 ± 5.7 54.7 ± 5.2
+
+Hmax = 10 .0., σ = 5 .0 57.0 ± 10 .3 52.2 ± 16 .4 61.2 ± 15 .7 61.0 ± 14 .1 54.8 ± 3.7 53.4 ± 6.2
+
+Hmax = 20 .0., σ = 5 .0 67.4 ± 8.2 40.5 ± 16 .9 68.8 ± 15 .6 55.0 ± 16 .5 59.9 ± 5.2 51.5 ± 9.4
+
+Hmax = 10 .0., σ = 10 .0 61.8 ± 9.3 58.0 ± 10 .9 66.8 ± 8.7 70.0 ± 10 .6 56.0 ± 5.9 50.6 ± 7.2
+
+Hmax = 20 .0., σ = 10 .0 65.4 ± 9.0 45.8 ± 17 .0 59.0 ± 10 .8 66.0 ± 16 .8 58.8 ± 8.6 51.4 ± 8.6
+
+Hmax = 10 .0., σ = 20 .0 71.8 ± 6.5 62.8 ± 5.9 79.0 ± 4.5 73.8 ± 6.2 60.4 ± 3.5 57.2 ± 3.8
+
+Hmax = 20 .0., σ = 20 .0 73.2 ± 6.7 55.8 ± 12 .1 74.2 ± 6.0 75.2 ± 3.2 59.0 ± 2.3 58.0 ± 3.9
+
+Hmax = 10 .0., σ = 50 .0 44.5 ± 21 .6 51.8 ± 20 .2 51.8 ± 21 .7 71.2 ± 3.2 61.1 ± 2.6 57.3 ± 3.9
+
+Hmax = 20 .0., σ = 50 .0 53.1 ± 24 .3 46.0 ± 24 .8 61.5 ± 7.2 63.5 ± 10 .5 60.4 ± 1.8 57.2 ± 2.0
+
+Symmetric Planning Performance 
+
+Hmax = 10 .0., σ = 0 .25 59.0 ± 14 .2 60.5 ± 6.2 69.5 ± 17 .4 57.5 ± 32 .0 55.8 ± 7.0 51.3 ± 6.6
+
+Hmax = 20 .0., σ = 0 .25 73.4 ± 12 .2 53.2 ± 22 .4 74.8 ± 9.4 65.0 ± 28 .0 59.3 ± 4.0 54.1 ± 5.0
+
+Hmax = 10 .0., σ = 5 .0 61.5 ± 20 .0 55.5 ± 10 .5 63.0 ± 12 .9 62.8 ± 12 .5 57.8 ± 5.0 50.5 ± 6.9
+
+Hmax = 20 .0., σ = 5 .0 66.3 ± 10 .3 41.5 ± 20 .6 65.5 ± 12 .7 58.8 ± 20 .6 60.4 ± 4.1 52.2 ± 9.5
+
+Hmax = 10 .0., σ = 10 .0 57.0 ± 18 .9 55.0 ± 8.3 59.0 ± 19 .5 64.5 ± 11 .3 56.7 ± 6.8 52.1 ± 7.2
+
+Hmax = 20 .0., σ = 10 .0 63.1 ± 7.6 40.0 ± 21 .9 64.2 ± 10 .9 65.2 ± 23 .8 61.0 ± 3.5 53.4 ± 8.2
+
+Hmax = 10 .0., σ = 20 .0 55.0 ± 20 .6 63.0 ± 14 .9 62.5 ± 18 .7 65.2 ± 13 .5 60.4 ± 5.5 57.8 ± 5.1
+
+Hmax = 20 .0., σ = 20 .0 72.5 ± 10 .0 46.5 ± 11 .4 58.8 ± 11 .6 60.0 ± 19 .2 58.2 ± 7.0 58.5 ± 3.8
+
+Hmax = 10 .0., σ = 50 .0 57.2 ± 12 .0 52.8 ± 10 .7 47.8 ± 18 .2 56.8 ± 24 .7 60.9 ± 4.5 54.1 ± 4.4
+
+Hmax = 20 .0., σ = 50 .0 55.4 ± 23 .0 38.2 ± 26 .0 62.5 ± 10 .5 52.5 ± 16 .7 61.2 ± 3.9 56.4 ± 3.2
+
+31

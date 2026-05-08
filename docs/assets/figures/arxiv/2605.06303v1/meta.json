@@ -1,0 +1,174 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.06303v1/fig-001.webp",
+      "caption": "Figure 9: Additional monotonic latent traversals from Section 4.5. BertzCT and HeavyAtomCount both show broadly increasing median trends across the latent direction, with shaded regions indicating the interquartile range over 50 molecules.",
+      "page": 25,
+      "index": 1,
+      "width": 802,
+      "height": 263
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06303v1/fig-002.webp",
+      "caption": "Figure 10: Inter-property structure in descriptor space and latent-direction space. Left: empirical Pearson correlation matrix between molecular properties. Right: cosine-similarity matrix between the corresponding linear-probe directions. The broad agreement between the two matrices indicates that the latent geometry preserves meaningful chemical relationships between properties, while discrepancies reveal higher-order organization not fully captured by marginal property correlations.",
+      "page": 26,
+      "index": 2,
+      "width": 826,
+      "height": 388
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06303v1/fig-003.webp",
+      "caption": "Table 11: Linear-probe and residualization settings.",
+      "page": 15,
+      "index": 3,
+      "width": 636,
+      "height": 277
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06303v1/fig-004.webp",
+      "caption": "Table 12: Canonical MLP probe settings.",
+      "page": 15,
+      "index": 4,
+      "width": 614,
+      "height": 312
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06303v1/fig-005.webp",
+      "caption": "Figure 5: Bootstrap stability of probe directions. Bars report the median cosine similarity between the reference direction and the directions obtained by refitting on bootstrap resamples of the training data, for raw and residual targets.",
+      "page": 21,
+      "index": 5,
+      "width": 829,
+      "height": 359
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06303v1/fig-006.webp",
+      "caption": "Figure 12: Raw-axis latent traversals for the simple-attention model. The simple-attention baseline produces clearer property responses than the linear-attention model, but the trajectories show saturation, non-monotonicity, and dependence on traversal scale.",
+      "page": 30,
+      "index": 6,
+      "width": 414,
+      "height": 588
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06303v1/fig-007.webp",
+      "caption": "Figure 11: Raw, confound, residual, and random-axis latent traversals for the linear-attention model. The decoded properties are mostly flat near the seed and exhibit abrupt, saturated, or non-monotonic changes rather than stable directional control.",
+      "page": 29,
+      "index": 7,
+      "width": 414,
+      "height": 588
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06303v1/fig-008.webp",
+      "caption": "Figure 6: Control analyses. Left: permutation control, showing that test-set R2 becomes approximately null when the training labels are permuted. Right: random-direction control, comparing the observed maximum absolute cosine similarity to confound directions against a null distribution from random latent directions.",
+      "page": 22,
+      "index": 8,
+      "width": 829,
+      "height": 298
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06303v1/fig-009.webp",
+      "caption": "Table 10: Autoregressive training settings.",
+      "page": 14,
+      "index": 9,
+      "width": 590,
+      "height": 416
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06303v1/fig-010.webp",
+      "caption": "Figure 1: Overview of the proposed framework. A. SMILES are converted to SELFIES, tokenized, and used to train an autoregressive Transformer-VAE. B. The encoder is frozen and the latent space is probed for molecular properties Y and SELFIES-level confounds C; residualization removes the component predictable from the confounds. C. Raw and residual R2 values, together with decodedmolecule traversals, separate linearly steerable properties from confounded or nonlinear ones.",
+      "page": 3,
+      "index": 10,
+      "width": 664,
+      "height": 448
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06303v1/fig-011.webp",
+      "caption": "Figure 7: Correlation between molecular properties and SELFIES-derived confounds. Pearson and Spearman correlations show highly consistent structure, indicating robust monotonic associations between several properties and simple sequence-level statistics.",
+      "page": 23,
+      "index": 11,
+      "width": 744,
+      "height": 379
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06303v1/fig-012.webp",
+      "caption": "Table 17: Ridge-probe comparison across the three latent models. Raw and residual R2 are reported for the same descriptor panel used in the previous main-text analysis. Best values within each target setting are bolded.",
+      "page": 28,
+      "index": 12,
+      "width": 822,
+      "height": 285
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06303v1/fig-013.webp",
+      "caption": "Figure 3: Interpolation continuity for the current model. The curve reports the median adjacentstep Tanimoto similarity over N = 200 interpolation paths. The shaded region marks the central interpolation window, where structural transitions are largest.",
+      "page": 19,
+      "index": 13,
+      "width": 682,
+      "height": 513
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06303v1/fig-014.webp",
+      "caption": "Table 14: Molecular descriptors used in the property panel, grouped according to the tier system used in the analysis.",
+      "page": 17,
+      "index": 14,
+      "width": 627,
+      "height": 380
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06303v1/fig-015.webp",
+      "caption": "Table 16: Ridge versus ordinary Linear Regression for the autoregressive MultiSlotting model. Both raw and residual R2 are reported. ∆ denotes ridge minus Linear Regression.",
+      "page": 27,
+      "index": 15,
+      "width": 818,
+      "height": 369
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06303v1/fig-016.webp",
+      "caption": "Figure 8: Cosine similarity between property directions and confound directions in latent space. Left: raw-property directions. Right: residual-property directions. Residualization reduces, but does not entirely eliminate, directional overlap with the confound subspace.",
+      "page": 24,
+      "index": 16,
+      "width": 829,
+      "height": 477
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06303v1/fig-017.webp",
+      "caption": "Figure 2: Latent traversals for cLogP, FractionCSP3, TPSA, and HBA reporting the median trajectory over N = 50 randomly sampled seed molecules, with the interquartile interval across seeds.",
+      "page": 9,
+      "index": 17,
+      "width": 706,
+      "height": 448
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06303v1/fig-018.webp",
+      "caption": "Table 18: Delta-R2 analysis on the expanded property set. Low ∆R2 indicates that the linear probe already captures most of the available signal; high ∆R2 indicates substantial nonlinear structure.",
+      "page": 31,
+      "index": 18,
+      "width": 822,
+      "height": 298
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06303v1/fig-019.webp",
+      "caption": "Table 15: Functional-family definitions used for family-conditioned interpolation. Families are assigned by SMARTS matching on decoded molecules.",
+      "page": 20,
+      "index": 19,
+      "width": 836,
+      "height": 299
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06303v1/fig-020.webp",
+      "caption": "Figure 4: Functional-family retention along family-conditioned interpolation paths. Bars report the average fraction of decoded interpolation steps that remain within the endpoint functional family. All paths have valid fraction 1.0; the variation shown here therefore reflects semantic motif retention rather than decoding validity.",
+      "page": 20,
+      "index": 20,
+      "width": 682,
+      "height": 300
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06303v1/fig-021.webp",
+      "caption": "Table 13: Latent traversal settings used in the source traversal notebook.",
+      "page": 16,
+      "index": 21,
+      "width": 672,
+      "height": 266
+    }
+  ]
+}

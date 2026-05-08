@@ -1,0 +1,592 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-05-08T20:22:39.040140+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 9,
+    "deep_cap": 6,
+    "deep_selected": 6,
+    "quick_candidates": 9,
+    "quick_skim_target": 11,
+    "quick_selected": 9
+  },
+  "deep_dive": [
+    {
+      "id": "2605.05951v1",
+      "source": "arxiv",
+      "title": "HaM-World: Soft-Hamiltonian World Models with Selective Memory for Planning",
+      "abstract": "World models enable model-based planning through learned latent dynamics, but imagined rollouts become unstable as the planning horizon grows or the dynamics distribution shifts. We argue that this instability reflects two missing structures in planner-facing latents: history-conditioned memory for approximate Markov completeness, and geometric organization that separates configuration, momentum, and task semantics. We propose HaM-World (HMW), a structured world model that decomposes the latent state into a canonical (q, p) subspace and a context subspace c, while using Mamba selective state-space memory as the history-conditioned input to the same latent dynamics. Within this interface, (q, p) evolves through an energy-derived Hamiltonian vector field plus learnable residual/control dynamics, while c captures semantic, dissipative, and non-conservative factors. This gives the planner a single latent state shared by dynamics prediction, reward/value estimation, imagined rollouts, and CEM action search. On four DeepMind Control Suite tasks, HaM-World reaches the highest Avg. AUC (117.9, +9.5%), reduces long-horizon rollout error to 45% of a strong baseline model, and wins 11/12 k in {3,5,7} MSE cells. Under 12 OOD perturbations spanning dynamics shifts, action delay, and observation masking, HaM-World achieves the highest return in every condition, with average OOD-return gains of 10.2% on Finger Spin and 13.6% on Reacher Easy. Mechanism diagnostics further show bounded action-free Hamiltonian-energy drift, structured energy variation under policy rollouts, and coherent control-induced energy transfer, supporting the intended Soft-Hamiltonian dynamics design.",
+      "authors": [
+        "Haoyun Tang",
+        "Haodong Cui",
+        "Keyao Xu",
+        "Kun Wang",
+        "Zhandong Mei"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-05-07T09:58:18+00:00",
+      "link": "https://arxiv.org/pdf/2605.05951v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Structured world model using latent dynamics and Hamiltonian subspaces for planning.",
+      "llm_evidence_cn": "利用隐空间动力学和哈密顿子空间进行规划的结构化世界模型。",
+      "llm_evidence": "利用隐空间动力学和哈密顿子空间进行规划的结构化世界模型。",
+      "canonical_evidence": "利用隐空间动力学和哈密顿子空间进行规划的结构化世界模型。",
+      "llm_tldr_en": "Introduces HaM-World, a structured world model that improves planning stability via latent state decomposition.",
+      "llm_tldr_cn": "引入HaM-World，一种通过隐空间状态分解提升规划稳定性的结构化世界模型。",
+      "llm_tldr": "引入HaM-World，一种通过隐空间状态分解提升规划稳定性的结构化世界模型。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.06388v1",
+      "source": "arxiv",
+      "title": "Reconstruction or Semantics? What Makes a Latent Space Useful for Robotic World Models",
+      "abstract": "World model-based policy evaluation is a practical proxy for testing real-world robot control by rolling out candidate actions in action-conditioned video diffusion models. As these models increasingly adopt latent diffusion modeling (LDM), choosing the right latent space becomes critical. While the status quo uses autoencoding latent spaces like VAEs that are primarily trained for pixel reconstruction, recent work suggests benefits from pretrained encoders with representation-aligned semantic latent spaces. We systematically evaluate these latent spaces for action-conditioned LDM by comparing six reconstruction and semantic encoders to train world model variants under a fixed protocol on BridgeV2 dataset, and show effective world model training in high-dimensional representation spaces with and without dimension compression. We then propose three axes to assess robotic world model performance: visual fidelity, planning and downstream policy performance, and latent representation quality. Our results show visual fidelity alone is insufficient for world model selection. While reconstruction encoders like VAE and Cosmos achieve strong pixel-level scores, semantic encoders such as V-JEPA 2.1 (strongest overall on policy), Web-DINO, and SigLIP 2 generally excel across the other two axes at all model scales. Our study advocates semantic latent space as stronger foundation for policy-relevant robotics diffusion world models.",
+      "authors": [
+        "Nilaksh",
+        "Saurav Jha",
+        "Artem Zholus",
+        "Sarath Chandar"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG",
+        "cs.RO"
+      ],
+      "published": "2026-05-07T15:05:26+00:00",
+      "link": "https://arxiv.org/pdf/2605.06388v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "latent space utility for robotic world models",
+      "llm_evidence_cn": "机器人世界模型的隐空间效用",
+      "llm_evidence": "机器人世界模型的隐空间效用",
+      "canonical_evidence": "机器人世界模型的隐空间效用",
+      "llm_tldr_en": "Systematically evaluates reconstruction vs semantic latent spaces for action-conditioned robotic world models.",
+      "llm_tldr_cn": "系统评估了重建与语义隐空间在动作条件机器人世界模型中的效用。",
+      "llm_tldr": "系统评估了重建与语义隐空间在动作条件机器人世界模型中的效用。",
+      "llm_tags": [
+        "query:navwm:composite"
+      ],
+      "matched_query_tag": "query:navwm:composite",
+      "matched_query_text": "Papers central to 隐空间、导航与世界模型相关论文检索, especially work that connects or combines: 研究隐空间表示及其在智能系统中的作用; 智能体在复杂环境中的导航策略与学习方法; 世界模型的结构与在自主系统中的应用; 探索表示学习在构建世界模型与导航中的运用; 基于隐空间表示的规划与决策模型; 空间表示与认知映射的算法及模型; 检索关于隐空间表示在世界模型和导航中的研究论文; 寻找利用世界模型进行强化学习或规划的最新研究; 探索智能体如何利用隐空间进行导航与环境理解.",
+      "matched_requirement_id": "req-composite-navwm",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.02809v1",
+      "source": "arxiv",
+      "title": "LiDAR Teach, Radar Repeat: Robust Cross-Modal Navigation in Degenerate and Varying Environments",
+      "abstract": "Long-term autonomy requires robust navigation in environments subject to dynamic and static changes, as well as adverse weather conditions. Teach-and-Repeat (T\\&R) navigation offers a reliable and cost-effective solution by avoiding the need for consistent global mapping; however, existing T\\&R systems lack a systematic solution to tackle various environmental variations such as weather degradation, ephemeral dynamics, and structural changes. This work proposes LTR$^2$, the first cross-modal, cross-platform LiDAR-Teach-and-Radar-Repeat system that systematically addresses these challenges. LTR$^2$ leverages LiDAR during the teaching phase to capture precise structural information under normal conditions and utilizes 4D millimeter-wave radar during the repeating phase for robust operation under environmental degradations. To align sparse and noisy forward-looking 4D radar with dense and accurate omnidirectional 3D LiDAR data, we introduce a Cross-Modal Registration (CMR) network that jointly exploits Doppler-based motion priors and the physical laws governing LiDAR intensity and radar power density. Furthermore, we propose an adaptive fine-tuning strategy that incrementally updates the CMR network based on localization errors, enabling long-term adaptability to static environmental changes without ground-truth labels. We demonstrate that the proposed CMR network achieves state-of-the-art cross-modal registration performance on the open-access dataset. Then we validate LTR$^2$ across three robot platforms over a large-scale, long-term deployment (40+ km over 6 months), including challenging conditions such as nighttime smoke. Experimental results and ablation studies demonstrate centimeter-level accuracy and strong robustness against diverse environmental disturbances, significantly outperforming existing approaches.",
+      "authors": [
+        "Renxiang Xiao",
+        "Yichen Chen",
+        "Yuanfan Zhang",
+        "Qianyi Shao",
+        "Yushuai Chen",
+        "Yuxuan Han",
+        "Yunjiang Lou",
+        "Liang Hu"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-04T16:46:54+00:00",
+      "link": "https://arxiv.org/pdf/2605.02809v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "robust navigation in degenerate and varying environments using cross-modal teach-and-repeat",
+      "llm_evidence_cn": "在退化和多变环境中使用跨模态教导与重复进行鲁棒导航",
+      "llm_evidence": "在退化和多变环境中使用跨模态教导与重复进行鲁棒导航",
+      "canonical_evidence": "在退化和多变环境中使用跨模态教导与重复进行鲁棒导航",
+      "llm_tldr_en": "Presents LTR2, a cross-modal system for robust robot navigation in changing environmental conditions.",
+      "llm_tldr_cn": "提出LTR2，一种用于在多变环境条件下实现鲁棒机器人导航的跨模态系统。",
+      "llm_tldr": "提出LTR2，一种用于在多变环境条件下实现鲁棒机器人导航的跨模态系统。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.05138v1",
+      "source": "arxiv",
+      "title": "Executable World Models for ARC-AGI-3 in the Era of Coding Agents",
+      "abstract": "We evaluate an initial coding-agent system for ARC-AGI-3 in which the agent maintains an executable Python world model, verifies it against previous observations, refactors it toward simpler abstractions as a practical proxy for an MDL-like simplicity bias, and plans through the model before acting. The system is intentionally direct: it uses a scripted controller, predefined world-model interfaces, verifier programs, and a plan executor, but no hand-coded game-specific logic. We report results on the 25 public ARC-AGI-3 games. Each recorded playthrough uses a fresh agent instance with no access to previous playthrough-specific files or conversation state. Most games have a single recorded playthrough; for a few games, we report multiple independent fresh-agent playthroughs to expose run-to-run variability. The agent fully solved 7 games, achieved a Relative Human Action Efficiency greater than 75%, on 6 games, and obtained a mean per-game RHAE of 32.58%. Because the system uses no game-specific code, it can serve as a game-general baseline for ARC-AGI-3. Performance on the private validation set remains to be tested. Overall, the results provide preliminary evidence that verifier-driven executable world models are a promising approach for ARC-AGI-3 agents.",
+      "authors": [
+        "Sergey Rodionov"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-05-06T17:12:36+00:00",
+      "link": "https://arxiv.org/pdf/2605.05138v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "executable Python world model for planning",
+      "llm_evidence_cn": "用于规划的可执行Python世界模型",
+      "llm_evidence": "用于规划的可执行Python世界模型",
+      "canonical_evidence": "用于规划的可执行Python世界模型",
+      "llm_tldr_en": "Evaluates coding agents that maintain and plan through executable world models for reasoning tasks.",
+      "llm_tldr_cn": "评估了通过维护和利用可执行世界模型进行规划的编程智能体。",
+      "llm_tldr": "评估了通过维护和利用可执行世界模型进行规划的编程智能体。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.06317v1",
+      "source": "arxiv",
+      "title": "NavOne: One-Step Global Planning for Vision-Language Navigation on Top-Down Maps",
+      "abstract": "Existing Vision-Language Navigation (VLN) methods typically adopt an egocentric, step-by-step paradigm, which struggles with error accumulation and limits efficiency. While recent approaches attempt to leverage pre-built environment maps, they often rely on incrementally updating memory graphs or scoring discrete path proposals, which restricts continuous spatial reasoning and creates discrete bottlenecks. We propose Top-Down VLN (TD-VLN), reformulating navigation as a one-step global path planning problem on pre-built top-down maps, supported by our newly constructed R2R-TopDown dataset. To solve this, we introduce NavOne, a unified framework that directly predicts dense path probabilities over multi-modal maps in a single end-to-end forward pass. NavOne features a Top-Down Map Fuser for joint multi-modal map representation, and extends Attention Residuals for spatial-aware depth mixing. Extensive experiments on R2R-TopDown show that NavOne achieves state-of-the-art performance among map-based VLN methods, with a planning-stage speedup of 8x over existing map-based baselines and 80x over egocentric methods, enabling highly efficient global navigation.",
+      "authors": [
+        "Dijia Zhan",
+        "Jinyi Li",
+        "Chenxi Zheng",
+        "Shaoyu Huang",
+        "Yong Li",
+        "Jie Tang",
+        "Xuemiao Xu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-05-07T14:16:58+00:00",
+      "link": "https://arxiv.org/pdf/2605.06317v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "global planning for vision-language navigation on maps",
+      "llm_evidence_cn": "基于地图的视觉语言导航全局规划",
+      "llm_evidence": "基于地图的视觉语言导航全局规划",
+      "canonical_evidence": "基于地图的视觉语言导航全局规划",
+      "llm_tldr_en": "NavOne reformulates vision-language navigation as a one-step global path planning problem on top-down maps.",
+      "llm_tldr_cn": "NavOne 将视觉语言导航重新定义为顶视地图上的单步全局路径规划问题。",
+      "llm_tldr": "NavOne 将视觉语言导航重新定义为顶视地图上的单步全局路径规划问题。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.06595v1",
+      "source": "arxiv",
+      "title": "Cross-Modal Navigation with Multi-Agent Reinforcement Learning",
+      "abstract": "Robust embodied navigation relies on complementary sensory cues. However, high-quality and well-aligned multi-modal data is often difficult to obtain in practice. Training a monolithic model is also challenging as rich multi-modal inputs induce complex representations and substantially enlarge the policy space. Cross-modal collaboration among lightweight modality-specialized agents offers a scalable paradigm. It enables flexible deployment and parallel execution, while preserving the strength of each modality. In this paper, we propose \\textbf{CRONA}, a Multi-Agent Reinforcement Learning (MARL) framework for \\textbf{Cro}ss-Modal \\textbf{Na}vigation. CRONA improves collaboration by leveraging control-relevant auxiliary beliefs and a centralized multi-modal critic with global state. Experiments on visual-acoustic navigation tasks show that multi-agent methods significantly improve performance and efficiency over single-agent baselines. We find that homogeneous collaboration with limited modalities is sufficient for short-range navigation under salient cues; heterogeneous collaboration among agents with complementary modalities is generally efficient and effective; and navigation in large, complex environments requires both richer multi-modal perception and increased model capacity.",
+      "authors": [
+        "Shuo Liu",
+        "Xinzichen Li",
+        "Christopher Amato"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI",
+        "cs.LG",
+        "cs.MA"
+      ],
+      "published": "2026-05-07T17:20:34+00:00",
+      "link": "https://arxiv.org/pdf/2605.06595v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Multi-agent reinforcement learning for embodied navigation in complex environments",
+      "llm_evidence_cn": "复杂环境下的具身导航多智能体强化学习",
+      "llm_evidence": "复杂环境下的具身导航多智能体强化学习",
+      "canonical_evidence": "复杂环境下的具身导航多智能体强化学习",
+      "llm_tldr_en": "Proposes CRONA, a MARL framework for cross-modal navigation using auxiliary beliefs and centralized critics.",
+      "llm_tldr_cn": "提出CRONA框架，利用辅助信念和中心化评论家实现多智能体跨模态导航。",
+      "llm_tldr": "提出CRONA框架，利用辅助信念和中心化评论家实现多智能体跨模态导航。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2605.06223v1",
+      "source": "arxiv",
+      "title": "Proactive Instance Navigation with Comparative Judgment for Ambiguous User Queries",
+      "abstract": "Natural-language instance navigation becomes challenging when the initial user request does not uniquely specify the target instance. A practical agent should reduce the user's burden by actively asking only the information needed to distinguish the target from similar distractors, rather than requiring a detailed description upfront. Existing approaches often fall short of this goal: they may stop at the first plausible candidate before sufficiently exploring alternatives, or, even after collecting multiple candidates, ask about the target's attributes derived from individual candidates rather than questions selected to distinguish candidates in the pool. As a result, despite the dialogue, the agent may still fail to distinguish the target from distractors, leading to premature decisions and lengthy user responses. We propose Proactive Instance Navigation with Comparative Judgment (ProCompNav), a two-stage framework that first constructs a candidate pool and then identifies the target through comparative judgment. At each round, ProCompNav extracts an attribute-value pair that splits the current pool, asks a binary yes/no question, and prunes all inconsistent candidates at once. This reframes disambiguation from open-ended target description to pool-level discriminative questioning, where each question is chosen to narrow the candidate set. On CoIN-Bench, ProCompNav improves Success Rate over interactive baselines with the same minimal input and non-interactive baselines with detailed descriptions, while substantially reducing Response Length. ProCompNav also achieves state-of-the-art Success Rate on TextNav, suggesting that comparative judgment is broadly useful for instance-level navigation among similar distractors.",
+      "authors": [
+        "Junhyuk Kwon",
+        "Seungjoon Lee",
+        "Hyejin Park",
+        "Kyle Min",
+        "Jungseul Ok"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.RO"
+      ],
+      "published": "2026-05-07T13:19:03+00:00",
+      "link": "https://arxiv.org/pdf/2605.06223v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "navigation strategies in complex environments with ambiguous queries",
+      "llm_evidence_cn": "复杂环境下针对模糊查询的导航策略",
+      "llm_evidence": "复杂环境下针对模糊查询的导航策略",
+      "canonical_evidence": "复杂环境下针对模糊查询的导航策略",
+      "llm_tldr_en": "Proposes a proactive navigation agent that asks clarifying questions to distinguish target instances in complex scenes.",
+      "llm_tldr_cn": "提出一种主动式导航智能体，通过提问消除歧义以在复杂场景中精准定位目标。",
+      "llm_tldr": "提出一种主动式导航智能体，通过提问消除歧义以在复杂场景中精准定位目标。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2605.05586v1",
+      "source": "arxiv",
+      "title": "AeroJEPA: Learning Semantic Latent Representations for Scalable 3D Aerodynamic Field Modeling",
+      "abstract": "Aerodynamic surrogate models are increasingly used to replace repeated high-fidelity CFD evaluations in many-query design settings, but current approaches still face two important limitations: they often scale poorly to the very large fields arising in realistic 3D aerodynamics, and they rarely produce latent representations that are directly useful for analysis and design. We introduce AeroJEPA, a Joint-Embedding Predictive Architecture for aerodynamic field modeling that addresses both issues. Rather than predicting the full flow field directly from geometry, AeroJEPA predicts a target latent representation of the flow from a context latent representation of the geometry and operating conditions, and optionally reconstructs the field through a continuous implicit decoder. This formulation decouples latent prediction from field resolution while encouraging the latent space to organize semantically. We evaluate AeroJEPA on two complementary datasets: HiLiftAeroML, which stresses the method in a high-fidelity regime with extremely large boundary-layer fields, and SuperWing, which tests large-scale generalization and latent-space optimization over a broad family of transonic wings. Across these benchmarks, AeroJEPA is competitive as a continuous surrogate for aerodynamic fields, scales naturally to high-resolution outputs, and learns context and predicted latents that encode geometry and aerodynamic quantities not used directly as supervision. We further show that the resulting latent space supports controlled interpolation, linear probing, concept-vector arithmetic, and a constrained design latent-optimization experiment. These results suggest that predictive latent learning is a promising direction for scalable and design-meaningful aerodynamic surrogate modeling.",
+      "authors": [
+        "Francisco Giral",
+        "Abhijeet Vishwasrao",
+        "Andrea Arroyo Ramo",
+        "Mahmoud Golestanian",
+        "Federica Tonti",
+        "Adrian Lozano-Duran",
+        "Steven L. Brunton",
+        "Sergio Hoyas",
+        "Hector Gomez",
+        "Soledad Le Clainche",
+        "Ricardo Vinuesa"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-05-07T02:11:26+00:00",
+      "link": "https://arxiv.org/pdf/2605.05586v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "learning semantic latent representations for field modeling",
+      "llm_evidence_cn": "学习用于场建模的语义隐空间表示",
+      "llm_evidence": "学习用于场建模的语义隐空间表示",
+      "canonical_evidence": "学习用于场建模的语义隐空间表示",
+      "llm_tldr_en": "Introduces AeroJEPA to learn semantic latent representations for scalable 3D aerodynamic field modeling.",
+      "llm_tldr_cn": "引入 AeroJEPA 学习语义隐空间表示，用于可扩展的 3D 空气动力学场建模。",
+      "llm_tldr": "引入 AeroJEPA 学习语义隐空间表示，用于可扩展的 3D 空气动力学场建模。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.27206v1",
+      "source": "arxiv",
+      "title": "HQ-UNet: A Hybrid Quantum-Classical U-Net with a Quantum Bottleneck for Remote Sensing Image Segmentation",
+      "abstract": "Semantic segmentation in remote sensing is commonly addressed using classical deep learning architectures such as U-Net, which require a large number of parameters to model complex spatial relationships. Quantum machine learning (QML) provides an alternative representation paradigm by mapping classical features into quantum states, but its direct application to high-dimensional images remains challenging under near-term quantum hardware constraints. In this work, we propose HQ-UNet, a hybrid quantum-classical U-Net architecture that integrates a compact parameterized quantum circuit at the bottleneck of a classical U-Net. The proposed design uses a non-pooling quantum convolutional module to enrich highly compressed encoder features before decoding, while keeping the quantum component shallow and parameter-efficient. Experiments on the LandCover.ai dataset show that HQ-UNet achieves a mean IoU of 0.8050 and an overall accuracy of 94.76%, outperforming the classical U-Net baseline. These results suggest that compact quantum bottlenecks can enhance feature representation for remote sensing image segmentation under near-term quantum constraints. This highlights the potential of hybrid quantum-classical designs as a promising direction for parameter-efficient dense prediction in Earth observation.",
+      "authors": [
+        "Md Aminur Hossain",
+        "Ayush V. Patel",
+        "Ikshwaku Vanani",
+        "Biplab Banerjee"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-04-29T21:24:22+00:00",
+      "link": "https://arxiv.org/pdf/2604.27206v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "quantum bottleneck for compressed representation",
+      "llm_evidence_cn": "用于压缩表示的量子瓶颈结构",
+      "llm_evidence": "用于压缩表示的量子瓶颈结构",
+      "canonical_evidence": "用于压缩表示的量子瓶颈结构",
+      "llm_tldr_en": "Proposes a hybrid quantum-classical U-Net using a quantum bottleneck for image feature representation.",
+      "llm_tldr_cn": "提出一种混合量子-经典 U-Net，利用量子瓶颈进行图像特征表示。",
+      "llm_tldr": "提出一种混合量子-经典 U-Net，利用量子瓶颈进行图像特征表示。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.06285v1",
+      "source": "arxiv",
+      "title": "LatentRAG: Latent Reasoning and Retrieval for Efficient Agentic RAG",
+      "abstract": "Single-step retrieval-augmented generation (RAG) provides an efficient way to incorporate external information for simple question answering tasks but struggles with complex questions. Agentic RAG extends this paradigm by replacing single-step retrieval with a multi-step process, in which the large language model (LLM) acts as a search agent that generates intermediate thoughts and subqueries to iteratively interact with the retrieval system. This iterative process incurs substantial latency due to the autoregressive generation of lengthy thoughts and subqueries. To address this limitation, we propose LatentRAG, a novel framework that shifts both reasoning and retrieval from discrete language space to continuous latent space. Unlike existing explicit methods that generate natural language thoughts or subqueries token-by-token, LatentRAG produces latent tokens for thoughts and subqueries directly from the hidden states in a single forward pass. We align LLMs with dense retrieval models in the latent space, enabling retrieval over latent subquery tokens and supporting end-to-end joint optimization. To improve transparency and encourage semantically meaningful latent representations, we incorporate a parallel latent decoding mechanism that translates latent tokens back into natural language. Extensive experiments on seven benchmark datasets show that LatentRAG achieves performance comparable to explicit agentic RAG methods while reducing inference latency by approximately 90%, substantially narrowing the latency gap with traditional single-step RAG.",
+      "authors": [
+        "Yijia Zheng",
+        "Marcel Worring"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.LG"
+      ],
+      "published": "2026-05-07T13:56:13+00:00",
+      "link": "https://arxiv.org/pdf/2605.06285v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "shifts reasoning and retrieval from discrete space to continuous latent space for agents",
+      "llm_evidence_cn": "将智能体的推理与检索从离散空间转移到连续隐空间",
+      "llm_evidence": "将智能体的推理与检索从离散空间转移到连续隐空间",
+      "canonical_evidence": "将智能体的推理与检索从离散空间转移到连续隐空间",
+      "llm_tldr_en": "LatentRAG enables agentic reasoning and retrieval in continuous latent space to reduce latency.",
+      "llm_tldr_cn": "LatentRAG通过在连续隐空间中进行智能体推理和检索来降低延迟。",
+      "llm_tldr": "LatentRAG通过在连续隐空间中进行智能体推理和检索来降低延迟。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索智能体如何利用隐空间进行导航与环境理解",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2605.06303v1",
+      "source": "arxiv",
+      "title": "Molecules Meet Language: Confound-Aware Representation Learning and Chemical Property Steering in Transformer-VAE Latent Spaces",
+      "abstract": "Molecular generative models often assume meaningful latent geometry, but apparent property predictability can reflect sequence-level shortcuts rather than chemical organization. We study this issue in an unsupervised autoregressive Transformer-VAE trained on SELFIES. After training, we freeze the model, fit linear probes to RDKit descriptors, and use the probe weights as candidate global steering directions. To separate chemical signal from SELFIES artifacts, we introduce a confound-aware evaluation based on residualization, confound-direction alignment analysis, and decoded-molecule traversal. This is necessary because SELFIES length, branch tokens, ring tokens, and token entropy are strongly encoded in the latent space. Under this confound-aware evaluation, we find robust monotonic steering for cLogP, FractionCSP3, HeavyAtomCount, TPSA, BertzCT, and HBA. Nonlinear probes further show that some properties admit stable global directions, while others are better described by local latent gradients. Overall, our results show that chemically meaningful steering can emerge in entangled molecular latent spaces, but only when validated through decoded molecules and controlled for representation-level confounds.",
+      "authors": [
+        "Zakaria Elabid",
+        "Jan Andrzejewski",
+        "Bartosz Brzoza",
+        "Attila Cangi"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-05-07T14:07:10+00:00",
+      "link": "https://arxiv.org/pdf/2605.06303v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Representation learning and latent space geometry in Transformer-VAE",
+      "llm_evidence_cn": "Transformer-VAE 中的表示学习与隐空间几何",
+      "llm_evidence": "Transformer-VAE 中的表示学习与隐空间几何",
+      "canonical_evidence": "Transformer-VAE 中的表示学习与隐空间几何",
+      "llm_tldr_en": "Studies latent space organization and steering in molecular generative models using Transformer-VAEs.",
+      "llm_tldr_cn": "研究了使用 Transformer-VAE 的分子生成模型中的隐空间组织与引导。",
+      "llm_tldr": "研究了使用 Transformer-VAE 的分子生成模型中的隐空间组织与引导。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.03964v1",
+      "source": "arxiv",
+      "title": "Pretrained Model Representations as Acquisition Signals for Active Learning of MLIPs",
+      "abstract": "Training machine learning interatomic potentials (MLIPs) for reactive chemistry is often bottlenecked by the high cost of quantum chemical labels and the scarcity of transition state configurations in candidate pools. Active learning (AL) can mitigate these costs, but its effectiveness hinges on the acquisition rule. We investigate whether the latent space of a pretrained MLIP already contains the information necessary for effective acquisition, eliminating the need for auxiliary uncertainty heads, Bayesian training and fine-tuning, or committee ensembles. We introduce two acquisition signals derived directly from a pretrained MACE potential: a finite-width neural tangent kernel (NTK) and an activation kernel built from hidden latent space features. On reactive-chemistry benchmarks, both kernels consistently outperform fixed-descriptor baselines, committee disagreement, and random acquisition, reducing the data required to reach performance targets by an average of 38% for energy error and 28% for force error. We further show that the pretrained model induces similarity spaces that preserve chemically meaningful structure and provide more reliable residual uncertainty estimates than randomly initialised or fixed-descriptor-based kernels. Our results suggest that pretraining aligns latent-space geometry with model error, yielding a practical and sufficient acquisition signal for reactive MLIP fine-tuning.",
+      "authors": [
+        "Eszter Varga-Umbrich",
+        "Shikha Surana",
+        "Paul Duckworth",
+        "Jules Tilly",
+        "Olivier Peltre",
+        "Zachary Weller-Davies"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "physics.chem-ph"
+      ],
+      "published": "2026-05-05T16:48:23+00:00",
+      "link": "https://arxiv.org/pdf/2605.03964v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "investigates latent space of pretrained models for acquisition signals",
+      "llm_evidence_cn": "研究预训练模型的隐空间表示作为采集信号",
+      "llm_evidence": "研究预训练模型的隐空间表示作为采集信号",
+      "canonical_evidence": "研究预训练模型的隐空间表示作为采集信号",
+      "llm_tldr_en": "Explores using latent space representations from pretrained models to improve active learning efficiency.",
+      "llm_tldr_cn": "探索利用预训练模型的隐空间表示来提高主动学习的效率。",
+      "llm_tldr": "探索利用预训练模型的隐空间表示来提高主动学习的效率。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.06470v1",
+      "source": "arxiv",
+      "title": "Hitting Time Isomorphism for Multi-Stage Planning with Foundation Policies",
+      "abstract": "We present a new operator-theoretic representation learning framework for offline reinforcement learning that recovers the directed temporal geometry of a controlled Markov process from hitting time observations. While prior art often produces symmetric distances or fails to satisfy the triangle inequality, our framework learns a Hilbert-space displacement geometry where expected hitting times are realized as linear functionals of latent displacements. We prove that this representation exists under latent linear closure and is uniquely identifiable up to a bounded linear isomorphism. For finite-dimensional implementations, we show that global hitting-time error is bounded by one-step transition error amplified by the environment's transient spectral radius. Furthermore, we provide finite-sample guarantees accounting for approximation, statistical complexity, and trajectory-label mismatch. Derived from this theory, we curate Isomorphic Embedding Learning (IEL) as a new goal-agnostic foundation policy learning algorithm that anchors a HILP-style consistency objective with explicit hitting-time regression to ensure that the learned geometry reflects actual decision-time progress. This asymmetric and compositional structure enables robust graph-based multi-stage planning for long-horizon navigation. Our experiments demonstrate that IEL improves the state of the art of learning foundation policy policies from offline maze locomotion data. Our code can be found on https://github.com/MagnusBoock/IEL",
+      "authors": [
+        "Magnus Victor Boock",
+        "Abdullah Akgül",
+        "Mustafa Mert Çelikok",
+        "Melih Kandemir"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-05-07T15:56:43+00:00",
+      "link": "https://arxiv.org/pdf/2605.06470v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "representation learning for planning in latent displacements",
+      "llm_evidence_cn": "隐空间位移规划的表示学习框架",
+      "llm_evidence": "隐空间位移规划的表示学习框架",
+      "canonical_evidence": "隐空间位移规划的表示学习框架",
+      "llm_tldr_en": "This paper introduces an operator-theoretic representation learning framework for planning in offline RL.",
+      "llm_tldr_cn": "本文介绍了一种用于离线强化学习规划的算子理论表示学习框架。",
+      "llm_tldr": "本文介绍了一种用于离线强化学习规划的算子理论表示学习框架。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2605.06487v1",
+      "source": "arxiv",
+      "title": "3D MRI Image Pretraining via Controllable 2D Slice Navigation Task",
+      "abstract": "Self-supervised pretraining has become the mainstream approach for learning MRI representations from unlabeled scans. However, most existing objectives still treat each scan primarily as static aggregations of slices, patches or volumes. We ask whether there exists an intrinsic form of self-supervision signal that is different from reconstructing the masked patches, through transforming the 3D volumes into controllable 2D rendered sequences: by rendering slices at continuous positions, orientations, and scales, a 3D volume can be converted into dense video-action sequences whose controls are the action trajectories. We study this formulation with an action-conditioned pretraining objective, where a tokenizer encodes slice observations and a latent dynamics model predicts the evolution of latent features. Across representative anatomical and spatial downstream tasks, the proposed pretraining is evaluated against standard static-volume baselines, tokenizer-only pretraining, and dynamics variants without aligned actions. These results suggest that controllable MRI slice navigation provides a useful complementary pretraining interface for learning anatomical and spatial representations from large unlabeled MRI collections.",
+      "authors": [
+        "Yu Wang",
+        "Qingchao Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-05-07T16:08:22+00:00",
+      "link": "https://arxiv.org/pdf/2605.06487v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Action-conditioned pretraining with latent dynamics for representation learning",
+      "llm_evidence_cn": "基于动作条件预训练和隐空间动力学的表示学习",
+      "llm_evidence": "基于动作条件预训练和隐空间动力学的表示学习",
+      "canonical_evidence": "基于动作条件预训练和隐空间动力学的表示学习",
+      "llm_tldr_en": "Uses a controllable navigation task to learn latent dynamics and representations for 3D MRI volumes.",
+      "llm_tldr_cn": "通过可控导航任务学习3D MRI的隐空间动力学与表示，用于自监督预训练。",
+      "llm_tldr": "通过可控导航任务学习3D MRI的隐空间动力学与表示，用于自监督预训练。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索表示学习在构建世界模型与导航中的运用",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.06264v1",
+      "source": "arxiv",
+      "title": "Can Attribution Predict Risk? From Multi-View Attribution to Planning Risk Signals in End-to-End Autonomous Driving",
+      "abstract": "End-to-end autonomous driving models generate future trajectories from multi-view inputs, improving system integration but introducing opaque decisions and hard-to-localize risks. Existing methods either rely on auxiliary monitoring models or generate textual explanations, but are decoupled from the planning process and fail to reveal the visual evidence underlying trajectory generation. While attribution offers a direct alternative, planning differs from image classification by taking six-view camera images as input and predicting continuous multi-step trajectories, requiring attribution to capture both critical views and regions and their influence on outputs. Moreover, whether attribution maps can support risk identification remains underexplored. To address this, we propose a hierarchical attribution framework for end-to-end planning. Specifically, using L2 consistency with the original trajectory as the objective, we design a coarse-to-fine region attribution strategy that searches candidate regions across the full six-view input and refines attribution within them. We further extract three attribution statistics as predictive signals for planning risk, including attribution entropy to measure how concentrated the planner's reliance is over the joint visual space, within-camera spatial variance to characterize how spread out the attribution is within each view, and cross-camera Gini coefficient to quantify how unevenly attribution is distributed across the six cameras. Experiments on BridgeAD, UniAD, and GenAD show that these statistics correlate with planning risk, achieving Spearman correlations of $0.30 \\pm 0.07$ with trajectory error and AUROC of $0.77 \\pm 0.04$ for collision detection. The signal generalizes to held-out scenes with negligible degradation and remains stable under an alternative attribution baseline.",
+      "authors": [
+        "Le Yang",
+        "Ruoyu Chen",
+        "Haijun Liu",
+        "Jiawei Liang",
+        "ShangQuan Sun",
+        "Xiaochun Cao"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-05-07T13:38:18+00:00",
+      "link": "https://arxiv.org/pdf/2605.06264v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "planning risk signals in end-to-end autonomous driving",
+      "llm_evidence_cn": "端到端自动驾驶中的规划风险信号",
+      "llm_evidence": "端到端自动驾驶中的规划风险信号",
+      "canonical_evidence": "端到端自动驾驶中的规划风险信号",
+      "llm_tldr_en": "This paper investigates how attribution maps can reveal visual evidence and risk in autonomous driving planning.",
+      "llm_tldr_cn": "本文研究了归因图如何揭示自动驾驶规划中的视觉证据和风险。",
+      "llm_tldr": "本文研究了归因图如何揭示自动驾驶规划中的视觉证据和风险。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

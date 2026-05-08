@@ -1,0 +1,166 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.02809v1/fig-001.webp",
+      "caption": "Fig. 1: Demonstration trajectories of the LTR2 system. (a) The repeat trajectory is covered by an unexpected smoke, which was not seen during trajectory teaching. (b) A navigation demonstration with a color-coded error map visualizing deviations between teach-and-repeat paths, achieving centimeter-level accuracy on average over multi-kilometer trajectories.",
+      "page": 1,
+      "index": 1,
+      "width": 527,
+      "height": 621
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02809v1/fig-002.webp",
+      "caption": "Fig. 3: Iterative node selection. (a) Initial node selection based on successful cross-modal registration between radar and LiDAR frames and LiDAR co-collected in the teaching phase. (b) Iterative node addition, where successive cubic Hermite curves refine the trajectory and new nodes are inserted in regions requiring higher spatial fidelity. The magnified view indicates the need for high-fidelity path interpolation in the narrow scenario.",
+      "page": 6,
+      "index": 2,
+      "width": 527,
+      "height": 576
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02809v1/fig-003.webp",
+      "caption": "Fig. 10: The experimental platform.",
+      "page": 11,
+      "index": 3,
+      "width": 529,
+      "height": 352
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02809v1/fig-004.webp",
+      "caption": "TABLE VIII: YAE of Closed-Loop Performance Comparison Across Trajectories B-G [YAE (◦)↓, YAE STD (◦)↓]",
+      "page": 15,
+      "index": 4,
+      "width": 1070,
+      "height": 229
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02809v1/fig-005.webp",
+      "caption": "TABLE VI: Navigation Performance Comparison in Trajectory A [ATE (m)↓, YAE (◦)↓, ATE STD (m)↓, YAE STD (◦)↓]",
+      "page": 15,
+      "index": 5,
+      "width": 1070,
+      "height": 297
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02809v1/fig-006.webp",
+      "caption": "Fig. 4: Target Node selection during the repeating phase. Green triangles represent radar frames during repeat. Blue triangles denote LiDAR-based nodes obtained during the teaching phase via LiDAR odometry. Target node change indicates a switch to the subsequent teach node for the latter radar frame. The black line denotes the fine estimate after CMR between the radar frame and the LiDAR frame in the target node, while the yellow line represents the coarse estimate before CMR.",
+      "page": 7,
+      "index": 6,
+      "width": 1076,
+      "height": 271
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02809v1/fig-007.webp",
+      "caption": "Fig. 5: Gaussian distribution of ATE under different environment changes. The black line is the linear decision boundary that isolates the error distribution due to static changes (red) from the other three clusters. Representative scene images for every class are shown on the right.",
+      "page": 7,
+      "index": 7,
+      "width": 529,
+      "height": 294
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02809v1/fig-008.webp",
+      "caption": "Fig. 9: Overall structure of the CMR network. Preprocessed geometry and intensity images are fed into separate branches, and features are extracted by a Swin Transformer. The Doppler-guided association module exploits the coarse estimate to generate cross-modal correspondences. Then the cross-modal attention and progressive optimization refine alignment, and the final registration is achieved through the pose fusion block.",
+      "page": 10,
+      "index": 8,
+      "width": 1050,
+      "height": 602
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02809v1/fig-009.webp",
+      "caption": "Fig. 12: Display of the real-world experimental trajectory on satellite map, which illustrates multiple teach-and-repeat trajectories across diverse environments within a university campus.",
+      "page": 14,
+      "index": 9,
+      "width": 529,
+      "height": 299
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02809v1/fig-010.webp",
+      "caption": "Fig. 11: The point cloud overlay via registration in the VoD dataset. Grey and color points are LiDAR and radar point cloud, respectively. Zoomed color overlays highlight CMR network’s superior alignment accuracy over baseline methods and robustness to inaccurate pose priors.",
+      "page": 14,
+      "index": 10,
+      "width": 1076,
+      "height": 529
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02809v1/fig-011.webp",
+      "caption": "TABLE I: Sensor Comparison.",
+      "page": 3,
+      "index": 11,
+      "width": 529,
+      "height": 282
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02809v1/fig-012.webp",
+      "caption": "Fig. 18: Trajectory evaluation of fine-tuning. Larger localization errors occur against static environmental changes, and are mitigated after the fine-tuning. The red and blue shadowed regions denote where negative and positive samples are collected, respectively.",
+      "page": 18,
+      "index": 12,
+      "width": 527,
+      "height": 829
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02809v1/fig-013.webp",
+      "caption": "Fig. 17: Visualization of static environmental changes. The top rows in (a) and (b) illustrate repeat trajectories before and after fine-tuning. Structures marked by green boxes denote newly constructed elements, red boxes indicate demolished elements, and yellow boxes represent persistent, unchanged structures. Bottom rows display distribution shifts of attention mechanisms corresponding to environmental changes.",
+      "page": 18,
+      "index": 13,
+      "width": 527,
+      "height": 842
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02809v1/fig-014.webp",
+      "caption": "TABLE III: RTE of Open-loop Performance Comparison in VoD datasets [RTE (m)↓, RTE STD (m)↓]",
+      "page": 13,
+      "index": 14,
+      "width": 1068,
+      "height": 452
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02809v1/fig-015.webp",
+      "caption": "TABLE IV: RYE of Open-loop Performance Comparison in VoD datasets [RYE (◦)↓, RYE STD (◦)↓]",
+      "page": 13,
+      "index": 15,
+      "width": 1068,
+      "height": 463
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02809v1/fig-016.webp",
+      "caption": "Fig. 2: System overview of the LTR2 pipeline. The system operates in four phases. In the pre-training phase, a Cross-Modal Registration (CMR) network is trained using synchronized LiDAR and 4D Radar frames. Then the trained CMR network is frozen and used in the teaching and repeating phases. In the teaching phase, the teach graph is constructed, whose nodes contain LiDAR-frame observations and edges store relative transformations. In the repeating phase, the live 4D radar frame is registered to LiDAR frames stored in the nodes of the teach graph via the CMR network, based on which the repeat graph is constructed with pose estimates stored in the edges to guide trajectory tracking. In the finetuning phase, the teach and repeat graphs are jointly evaluated to select candidate samples for updating the CMR network parameters. Snowflake and flame icons indicate frozen and training CMR network, respectively.",
+      "page": 4,
+      "index": 16,
+      "width": 968,
+      "height": 788
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02809v1/fig-017.webp",
+      "caption": "Fig. 19: Visualization of cross-platform navigation.",
+      "page": 19,
+      "index": 17,
+      "width": 527,
+      "height": 402
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02809v1/fig-018.webp",
+      "caption": "TABLE II: Parameters of the LTR2 system",
+      "page": 12,
+      "index": 18,
+      "width": 522,
+      "height": 388
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02809v1/fig-019.webp",
+      "caption": "Fig. 7: Data preprocessing for 4D radar and LiDAR. (a) Raw radar with power is aligned with the intensity of LiDAR and followed by two separate cylindrical projections in the intensity and geometry. (b) Raw LiDAR is cropped using the 4D radar FOV mask and then transformed into the cylindrical projection.",
+      "page": 9,
+      "index": 19,
+      "width": 1075,
+      "height": 465
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02809v1/fig-020.webp",
+      "caption": "Fig. 14: Screenshots of different navigation methods in four representative and challenging scenarios. The white trajectory indicates the teach path, while the colored arrows represent projections of run-time positions onto the currentview image. Compared to representative baselines ADPGICP (Radar T&R), LIO-SAM (SLAM-based), CT-ICP (Cross-modal T&R), Regformer (LiDAR T&R), and our LTR2 system avoids trajectory repeat failures.",
+      "page": 16,
+      "index": 20,
+      "width": 1104,
+      "height": 387
+    }
+  ]
+}
