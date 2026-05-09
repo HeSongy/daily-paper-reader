@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.00972v1/fig-001.webp",
+      "caption": "Figure 3: Scalability of out-of-core embedding retrieval. (a) As the index grows, process RSS scales sublinearly and remains far below the workstation’s memory capacity. (b) Recall@10 stays above 92% and mean latency remains under 100 ms.",
+      "page": 4,
+      "index": 1,
+      "width": 504,
+      "height": 410
+    }
+  ]
+}

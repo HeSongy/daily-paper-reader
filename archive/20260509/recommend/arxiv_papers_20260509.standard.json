@@ -1,0 +1,258 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-05-09T20:42:11.215176+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 2,
+    "deep_cap": 6,
+    "deep_selected": 2,
+    "quick_candidates": 4,
+    "quick_skim_target": 11,
+    "quick_selected": 4
+  },
+  "deep_dive": [
+    {
+      "id": "2605.06192v1",
+      "source": "arxiv",
+      "title": "EA-WM: Event-Aware Generative World Model with Structured Kinematic-to-Visual Action Fields",
+      "abstract": "Pretrained video diffusion models provide powerful spatiotemporal generative priors, making them a natural foundation for robotic world models. While recent world-action models jointly optimize future videos and actions, they predominantly treat video generation as an auxiliary representation for policy learning. Consequently, they insufficiently explore the inverse problem: leveraging action signals to guide video synthesis, thereby often failing to preserve precise robot spatial geometry and fine-grained robot-object interaction dynamics in the generated rollouts. To bridge this gap, we present EA-WM, an Event-Aware Generative World Model that effectively closes the loop between kinematic control and visual perception. Rather than injecting joint or end-effector actions as abstract, low-dimensional tokens, EA-WM projects actions and kinematic states directly into the target camera view as Structured Kinematic-to-Visual Action Fields. To fully exploit this geometrically grounded representation, we introduce event-aware bidirectional fusion blocks that modulate cross-branch attention, capturing object state changes and interaction dynamics. Evaluated on the comprehensive WorldArena benchmark, EA-WM achieves state-of-the-art performance, outperforming existing baselines by a significant margin.",
+      "authors": [
+        "Zhaoyang Yang",
+        "Yurun Jin",
+        "Lizhe Qi",
+        "Cong Huang",
+        "Kai Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.RO"
+      ],
+      "published": "2026-05-07T13:06:19+00:00",
+      "link": "https://arxiv.org/pdf/2605.06192v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "generative world model closing the loop between control and perception",
+      "llm_evidence_cn": "闭环控制与感知的生成式世界模型",
+      "llm_evidence": "闭环控制与感知的生成式世界模型",
+      "canonical_evidence": "闭环控制与感知的生成式世界模型",
+      "llm_tldr_en": "Introduces EA-WM, a world model that uses action signals to guide video synthesis for robotic interaction.",
+      "llm_tldr_cn": "引入了EA-WM，一种利用动作信号指导视频合成以进行机器人交互的世界模型。",
+      "llm_tldr": "引入了EA-WM，一种利用动作信号指导视频合成以进行机器人交互的世界模型。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.06388v1",
+      "source": "arxiv",
+      "title": "Reconstruction or Semantics? What Makes a Latent Space Useful for Robotic World Models",
+      "abstract": "World model-based policy evaluation is a practical proxy for testing real-world robot control by rolling out candidate actions in action-conditioned video diffusion models. As these models increasingly adopt latent diffusion modeling (LDM), choosing the right latent space becomes critical. While the status quo uses autoencoding latent spaces like VAEs that are primarily trained for pixel reconstruction, recent work suggests benefits from pretrained encoders with representation-aligned semantic latent spaces. We systematically evaluate these latent spaces for action-conditioned LDM by comparing six reconstruction and semantic encoders to train world model variants under a fixed protocol on BridgeV2 dataset, and show effective world model training in high-dimensional representation spaces with and without dimension compression. We then propose three axes to assess robotic world model performance: visual fidelity, planning and downstream policy performance, and latent representation quality. Our results show visual fidelity alone is insufficient for world model selection. While reconstruction encoders like VAE and Cosmos achieve strong pixel-level scores, semantic encoders such as V-JEPA 2.1 (strongest overall on policy), Web-DINO, and SigLIP 2 generally excel across the other two axes at all model scales. Our study advocates semantic latent space as stronger foundation for policy-relevant robotics diffusion world models.",
+      "authors": [
+        "Nilaksh",
+        "Saurav Jha",
+        "Artem Zholus",
+        "Sarath Chandar"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG",
+        "cs.RO"
+      ],
+      "published": "2026-05-07T15:05:26+00:00",
+      "link": "https://arxiv.org/pdf/2605.06388v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "evaluates latent spaces for robotic world models",
+      "llm_evidence_cn": "评估机器人世界模型的隐空间",
+      "llm_evidence": "评估机器人世界模型的隐空间",
+      "canonical_evidence": "评估机器人世界模型的隐空间",
+      "llm_tldr_en": "Systematically evaluates reconstruction vs semantic latent spaces for action-conditioned video world models.",
+      "llm_tldr_cn": "系统评估了动作条件视频世界模型中重建与语义隐空间的优劣。",
+      "llm_tldr": "系统评估了动作条件视频世界模型中重建与语义隐空间的优劣。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2605.00972v1",
+      "source": "arxiv",
+      "title": "Toward a Scientific Discovery Engine for Weather and Climate Data: A Visual Analytics Workbench for Embedding-Based Exploration",
+      "abstract": "Earth system science is producing increasingly large, high-dimensional datasets from physics based Earth system models to AI-based weather and climate models. Embedding-based representations can make these data searchable through similarity search and analog retrieval, but nearest neighbors in latent space are not automatically scientifically meaningful: it may reflect real weather structure, or preprocessing, geography, or model bias. Researchers therefore need ways to inspect how embeddings organize meteorological data, compare representation models, develop retrieval strategies, and verify results against physical evidence.   We present an open-source visual analytics workbench for each of these steps. The system links embedding experiments to source data, metadata, spatial context, and model configurations, so latent-space results can be traced back to the physics. Users can explore latent spaces for different models, issue global or localized queries, and inspect analogs through familiar meteorological views. This enables a discovery workflow in which scientists characterize a phenomenon of interest in a well-understood dataset, identifying its signature in latent space, and then use that signature to probe larger, less-labeled archives or ensembles for similar events. We demonstrate the workbench through tropical-cyclone retrieval using ERA5-derived embeddings and IBTrACS metadata, and evaluate its out-of-core retrieval backend to show that large embedding collections can be searched beyond in-memory limits on commodity workstation hardware.",
+      "authors": [
+        "Nihanth W. Cherukuru",
+        "Matt Rehme",
+        "Kirsten J. Mayer",
+        "David John Gagne",
+        "John Schreck",
+        "John Clyne",
+        "Charlie Becker"
+      ],
+      "primary_category": "physics.data-an",
+      "categories": [
+        "physics.data-an",
+        "cs.AI",
+        "cs.CV",
+        "cs.IR"
+      ],
+      "published": "2026-05-01T17:03:33+00:00",
+      "link": "https://arxiv.org/pdf/2605.00972v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "inspecting how embeddings organize data in latent space",
+      "llm_evidence_cn": "检查嵌入如何在隐空间中组织数据",
+      "llm_evidence": "检查嵌入如何在隐空间中组织数据",
+      "canonical_evidence": "检查嵌入如何在隐空间中组织数据",
+      "llm_tldr_en": "A visual analytics workbench for exploring embedding-based representations in weather and climate data.",
+      "llm_tldr_cn": "一个用于探索天气和气候数据中基于嵌入的表示的视觉分析工作台。",
+      "llm_tldr": "一个用于探索天气和气候数据中基于嵌入的表示的视觉分析工作台。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.02575v1",
+      "source": "arxiv",
+      "title": "Self-Supervised Spatial And Zero-Shot Angular Super-Resolution by Spatial-Angular Implicit Representation For Rotating-View SNR-Efficient Diffusion MRI",
+      "abstract": "Rotating-view thick-slice acquisition is highly SNR-efficient for mesoscale diffusion MRI (dMRI) but requires numerous rotating views to satisfy Nyquist sampling, resulting in long scan time. We propose a self-supervised Spatial-Angular Implicit Neural Representation (SA-INR) that reconstructs high-resolution dMRI from a single view per diffusion direction, representing a massive acceleration. Our model, an MLP conditioned on a b=0 structural prior and the b-direction via FiLM, is trained end-to-end on the anisotropic input. The framework not only accurately reconstructs the trained b-directions (spatial SR) but also learns a continuous q-space representation, enabling high-fidelity \"zero-shot\" synthesis of unseen b-directions (angular SR). On simulated data, our method achieved high fidelity for both trained (34.82 dB) and unseen (33.08 dB) directions. Most importantly, the synthesized angular data also improved the quantitative accuracy of downstream DTI model fitting. Our SA-INR framework breaks the classical sampling limits, paving the way for fast, quantitative high-resolution dMRI.",
+      "authors": [
+        "Yinzhe Wu",
+        "Hongyu Rui",
+        "Fanwen Wang",
+        "Jiahao Huang",
+        "Zi Wang",
+        "Guang Yang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "eess.SP"
+      ],
+      "published": "2026-05-04T13:30:29+00:00",
+      "link": "https://arxiv.org/pdf/2605.02575v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "implicit neural representation for spatial data",
+      "llm_evidence_cn": "空间数据的隐式神经表示",
+      "llm_evidence": "空间数据的隐式神经表示",
+      "canonical_evidence": "空间数据的隐式神经表示",
+      "llm_tldr_en": "Uses spatial-angular implicit representations to reconstruct high-resolution diffusion MRI data.",
+      "llm_tldr_cn": "利用空间-角度隐式表示来重建高分辨率扩散磁共振成像数据。",
+      "llm_tldr": "利用空间-角度隐式表示来重建高分辨率扩散磁共振成像数据。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.05405v1",
+      "source": "arxiv",
+      "title": "Zero-Shot Satellite Image Retrieval through Joint Embeddings: Application to Crisis Response",
+      "abstract": "Semantic search of Earth observation archives remains challenging. Visual foundation models such as CLAY produce rich embeddings of satellite imagery but lack the natural-language grounding needed for intuitive query, and full contrastive training of a remote-sensing CLIP-style model requires paired data and compute that are unavailable at global scale. We present GeoQuery, a zero-shot retrieval system that sidesteps this constraint through prompt-aligned text proxies. Rather than training a joint encoder, we generate language descriptions for a 100k proxy subset of global Sentinel-2 tiles and optimise the description-generation prompt so that distances in the resulting text-embedding space correlate with distances in the frozen CLAY visual-embedding space. Queries are resolved in two stages, with a text-similarity search over the proxy subset followed by a visual nearest-neighbour search over worldwide CLAY embeddings. On 76 disaster-location queries covering UK floods, US wildfires, and US droughts, GeoQuery achieves 31.6% accuracy within 50 km, with the strongest performance on floods (50% within 50 km) where terrain features are well captured by RGB embeddings. Deployed within ECHO, a crisis response system using Agentic Action Graphs, GeoQuery identified vulnerable areas during Brisbane's 2025 Cyclone Alfred, with downstream flood simulations reproducing historical patterns. Prompt-aligned proxies offer a practical bridge between EO foundation models and operational retrieval when full contrastive training is out of reach.",
+      "authors": [
+        "James Walsh",
+        "William Fawcett",
+        "Grace Colvard",
+        "Raúl Ramos-Pollán"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-06T19:43:44+00:00",
+      "link": "https://arxiv.org/pdf/2605.05405v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Zero-shot retrieval through joint embeddings and latent space distances",
+      "llm_evidence_cn": "通过联合嵌入与隐空间距离进行零样本检索",
+      "llm_evidence": "通过联合嵌入与隐空间距离进行零样本检索",
+      "canonical_evidence": "通过联合嵌入与隐空间距离进行零样本检索",
+      "llm_tldr_en": "A zero-shot satellite image retrieval system using prompt-aligned text proxies in embedding space.",
+      "llm_tldr_cn": "一种利用嵌入空间中提示对齐的文本代理进行零样本卫星图像检索的系统。",
+      "llm_tldr": "一种利用嵌入空间中提示对齐的文本代理进行零样本卫星图像检索的系统。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "检索关于隐空间表示在世界模型和导航中的研究论文",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.06203v1",
+      "source": "arxiv",
+      "title": "Adaptive Coordinate Transforms for Neural Operators",
+      "abstract": "Neural operators have achieved promising performance on partial differential equations (PDEs), but most existing models are built on fixed Eulerian coordinates. This mismatch between evolving physical structures and static coordinates creates spatial misalignment, leading to unnecessarily non-local operator mappings and reinforcing a smoothness preference near sharp transitions. Inspired by adaptive coordinate transformations in classical PDE analysis, we propose the Adaptive Coordinate Transform (ACT) block, a plug-and-play module for data-driven geometric adaptation in neural operators. ACT blocks resolve this structural limitation by learning adaptive coordinate systems within the operator learning pipeline. Specifically, given an input feature, the ACT block learns a coordinate transformation and represents the same feature under the transformed coordinates via differentiable sampling. This operation preserves the underlying signal while changing its spatial representation, equivalent to expressing the same physical quantity in different coordinate systems. By adapting the coordinate system to the data, ACT allows the network to better track evolving structures, reduce operator complexity, and dynamically focus on critical features to improve learning. We evaluate the proposed approach across diverse PDE benchmarks and multiple neural operator architectures. Experimental results demonstrate consistent and significant improvements in predictive accuracy, indicating that learning coordinate systems provides a powerful mechanism for enhancing operator learning.",
+      "authors": [
+        "Chaoyu Liu",
+        "Zhonghao Li",
+        "Gaohang Chen",
+        "Zakhar Shumaylov",
+        "Zhongying Deng",
+        "Qian Zhang",
+        "Zhonghua Qiao",
+        "Carola-Bibiane Schönlieb"
+      ],
+      "primary_category": "cs.CE",
+      "categories": [
+        "cs.CE"
+      ],
+      "published": "2026-05-07T13:10:56+00:00",
+      "link": "https://arxiv.org/pdf/2605.06203v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "adaptive coordinate transforms for spatial misalignment",
+      "llm_evidence_cn": "用于解决空间失配的自适应坐标变换",
+      "llm_evidence": "用于解决空间失配的自适应坐标变换",
+      "canonical_evidence": "用于解决空间失配的自适应坐标变换",
+      "llm_tldr_en": "Proposes adaptive coordinate transforms to improve spatial representation in neural operators.",
+      "llm_tldr_cn": "提出了自适应坐标变换，以改进神经算子中的空间表示。",
+      "llm_tldr": "提出了自适应坐标变换，以改进神经算子中的空间表示。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
