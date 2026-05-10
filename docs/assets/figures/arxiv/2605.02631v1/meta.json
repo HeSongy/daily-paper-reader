@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.02631v1/fig-001.webp",
+      "caption": "Fig. 4. Normalised localisation error versus BER by scenario. Bootstrap mean (points) with 95% confidence interval (ribbon) and bootstrap standard deviation (error bars), 10000 draws.",
+      "page": 4,
+      "index": 1,
+      "width": 524,
+      "height": 384
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02631v1/fig-002.webp",
+      "caption": "Fig. 3. Average pose correction latency by term in (1) across all trajectories, by scenario and frame structure. τBS not visualized due to being small compared to other terms. Error bars indicate standard deviation, while crosses represent the worst case latency.",
+      "page": 4,
+      "index": 2,
+      "width": 517,
+      "height": 384
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02631v1/fig-003.webp",
+      "caption": "Fig. 1. Overall offloaded XR diagram. Vision SLAM components are simplified for illustrative purposes, and are only an example of the specific tasks and partitioning between device and offloaded.",
+      "page": 2,
+      "index": 3,
+      "width": 1000,
+      "height": 446
+    },
+    {
+      "url": "assets/figures/arxiv/2605.02631v1/fig-004.webp",
+      "caption": "Fig. 5. Average uncoded BER of Massive MIMO channel with 10 users versus post-equalisation SNR. Received signals are equalised with zero-forcing.",
+      "page": 5,
+      "index": 4,
+      "width": 412,
+      "height": 317
+    }
+  ]
+}

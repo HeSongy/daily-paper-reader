@@ -1,0 +1,69 @@
+{
+  "label": "2026-05-10",
+  "date": "2026-05-10",
+  "generated_at": "2026-05-10T20:41:17",
+  "count": 4,
+  "papers": [
+    {
+      "paper_id": "202605/10/2605.02631v1-multi-user-xr-offloading-via-massive-mimo-a-system-level-analysis-using-a-real-life-dataset",
+      "section": "quick",
+      "title_en": "Multi-User XR Offloading via Massive MIMO: A System-Level Analysis using a Real-Life Dataset",
+      "authors": "Love Bárány, Ilayda Yaman, Ove Edfors, Amir Aminifar, Liang Liu",
+      "date": "2026-05-04",
+      "pdf": "https://arxiv.org/pdf/2605.02631v1",
+      "score": "7.0",
+      "evidence": "XR系统中的SLAM与定位误差",
+      "tldr": "本文研究了利用Massive MIMO技术实现多用户XR设备的SLAM任务远程卸载，针对延迟、定位误差和功耗等问题进行了系统级分析。结果表明该技术可降低延迟和传输功率，具有良好稳定性，但仍需评估整体设备能耗。",
+      "tags": "query:navwm",
+      "abstract_en": "SLAM is one of the biggest bottlenecks of XR devices, which have strict requirements for latency, power consumption, and user satisfaction. A solution that has been proposed and studied to meet the requirements is to offload SLAM to a remote server, which leverages computational hardware but may suffer due to incurred delays and transmission power. In this work, we propose offloading SLAM using Massive MIMO, which is attractive due to lower latencies, transmission power, and a more reliable link for multiple users. A framework for system-level analysis of latency and localisation error in multi-user offloaded XR with Massive MIMO has been proposed, and a case study with varying system-level parameters has been performed with it. The case study showed that there are important trade-offs between latency, localisation error, and device transmission power. We find that Massive MIMO is a promising technology for XR offloading, but that further evaluations including complete device power consumption are needed to get the full picture.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202605/10/2605.06225v1-memory-inception-latent-space-kv-cache-manipulation-for-steering-llms",
+      "section": "quick",
+      "title_en": "Memory Inception: Latent-Space KV Cache Manipulation for Steering LLMs",
+      "authors": "Andy Zeyi Liu, Michael Zhang, Ilana Greenberg, Adam Alnasser, Lucas Baker, John Sous",
+      "date": "2026-05-07",
+      "pdf": "https://arxiv.org/pdf/2605.06225v1",
+      "score": "7.0",
+      "evidence": "在潜注意力空间中通过 KV 缓存操作引导大语言模型",
+      "tldr": "本文提出“记忆注入”方法，通过在语言模型的潜在注意力空间中选择性插入文本生成的键值缓存，实现训练免控制。相比提示和激活引导，MI在个性化引导、行为切换及结构化推理任务中表现更佳，兼具强控制性与高效率。",
+      "tags": "query:navwm",
+      "abstract_en": "Steering large language models (LLMs) is usually done by either instruction prompting or activation steering. Prompting often gives strong control, but caches guidance tokens at every layer and can clutter long interactions; activation steering is compact but typically weaker and does not support large structured reminders. We introduce memory inception (MI), a training-free method that steers in latent attention space by inserting text-derived key-value (KV) banks only at selected layers. Rather than materializing reminder content throughout the prompt cache, MI treats steering as selective KV allocation, injecting latent slots only where the model routes to them. On matched personality-steering tasks, MI gives the best overall control--drift trade-off, remaining competitive with prompting while consistently outperforming CAA. On updateable guidance, MI supports mid-conversation behavior shifts without rewriting the visible transcript, achieving the highest post-shift alignment on Qwen3. On structured reasoning, MI outperforms visible prompting on HARDMath and PHYSICS (10/12 subject$\\times$mode cells), serving as proxies for structured reasoning in verifiable domains, while cutting content-matched KV storage by up to 118$\\times$. These results position MI as a powerful steering method when guidance is persistent, structured, or expensive to keep in the visible transcript.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202605/10/2605.05459v1-privacy-without-losing-place-a-paradigm-for-private-retrieval-in-spatial-rags",
+      "section": "quick",
+      "title_en": "Privacy Without Losing Place: A Paradigm for Private Retrieval in Spatial RAGs",
+      "authors": "Kennedy Edemacu, Mohammad Mahdi Shokri, Vinay M. Shashidhar, Jong Wook Kim",
+      "date": "2026-05-06",
+      "pdf": "https://arxiv.org/pdf/2605.05459v1",
+      "score": "6.0",
+      "evidence": "RAG中的空间检索与位置编码",
+      "tldr": "本文提出了PAS隐私锚替换机制，用于在空间RAG系统中实现用户位置隐私保护。该方法通过锚点、方向和距离的离散编码替代真实地理位置，避免直接扰动坐标。实验表明PAS能在保持超过一半检索性能的同时实现约370–400米的隐私误差，且语言模型的生成结果依然稳健，验证了结构化空间表示在隐私与实用性间的平衡潜力。",
+      "tags": "query:navwm",
+      "abstract_en": "This work introduces PAS -- Privacy Anchor Substitution, a structured mechanism for enabling user location privacy in spatial retrieval-augmented generation (RAG) systems. Unlike conventional differential privacy methods that directly perturb user locations, PAS represents location with relative anchor encoding consisting of an anchor, direction bin, and distance bin, allowing seamless integration with modern RAG pipelines. We evaluate PAS on a synthetic urban dataset and show that it achieves impressive coarse privacy guarantees, with approximately 370-400m adversarial location error, while retaining more than half of the baseline retrieval performance. Despite the slight drop in retrieval performance, the downstream generation quality under PAS remains comparatively robust, indicating that large language models can compensate for imperfect spatial retrieval. Furthermore, we provide empirical analysis showing that PAS exhibits non-monotonic privacy-utility relationship with respect to privacy parameters. We attribute this to geometric bias induced by anchor discretization, making it different from continuous noise mechanisms such as geo-indistinguishability. Our results show that structured spatial representations offer a practical approach to privacy in location based reasoning in RAG systems.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202605/10/2605.05806v1-retrieval-from-within-an-intrinsic-capability-of-attention-based-models",
+      "section": "quick",
+      "title_en": "Retrieval from Within: An Intrinsic Capability of Attention-Based Models",
+      "authors": "Elad Hoffer, Yochai Blau, Ron Banner, Daniel Soudry, Boris Ginsburg",
+      "date": "2026-05-07",
+      "pdf": "https://arxiv.org/pdf/2605.05806v1",
+      "score": "6.0",
+      "evidence": "直接从内部表示中检索",
+      "tldr": "本研究探讨注意力模型是否能内在实现检索功能，提出INTRA框架用解码器注意力直接从自身表示中检索证据以统一检索与生成，减少模块不匹配与计算冗余，并在问答任务上优于传统RAG系统，验证模型内部即具强大检索能力。",
+      "tags": "query:navwm",
+      "abstract_en": "Retrieval-augmented generation (RAG) typically treats retrieval and generation as separate systems. We ask whether an attention-based encoder-decoder can instead retrieve directly from its own internal representations. We introduce INTRA (INTrinsic Retrieval via Attention), a framework where decoder attention queries score pre-encoded evidence chunks that are then directly reused as context for generation. By construction, INTRA unifies retrieval and generation, eliminating the retriever-generator mismatch typical of RAG pipelines. This design also amortizes context encoding by reusing precomputed encoder states across queries. On question-answering benchmarks, INTRA outperforms strong engineered retrieval pipelines on both evidence recall and end-to-end answer quality. Our results demonstrate that attention-based models already possess a retrieval mechanism that can be elicited, rather than added as an external module.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,198 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-001.webp",
+      "caption": "Table 9: Big Five questionnaire self-evaluation on Qwen3-30B-A3B. Columns report target-trait score, target shift from the plain model, non-target drift, and drift-adjusted score, where DAS = ∆target − Dnon-target. Bold indicates the highest DAS among steering methods within each trait.",
+      "page": 25,
+      "index": 1,
+      "width": 606,
+      "height": 564
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-002.webp",
+      "caption": "Table 10: Big Five contrastive generation judged by an LLM judge on MetaLlama-3.1-8B-Instruct. Columns report target-trait score, target-score shift from the plain model, non-target drift, contrastive margin, and generation-adjusted score, where GAS = ∆target − Dnon-target. Contrastive margin is a separate auxiliary diagnostic.",
+      "page": 26,
+      "index": 2,
+      "width": 672,
+      "height": 566
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-003.webp",
+      "caption": "Figure 5: Architectural placement of memory-bank attention steering. The same intervention concept applies to both dense Llama-style decoders and Qwen3-MoE decoders: reminder spans are encoded into latent memory-bank slots, an automatic selector chooses a small set of layers and attention sites, and the selected sites attend over those slots during decoding. In dense attention the selectable unit is an attention head; in Qwen3 groupedquery attention the selectable unit can be a KV group that expands to its associated query heads before the downstream MoE block. The diagram is a conceptual cache schematic; backend-specific implementations may realize the appended memory as a selected-site side bank rather than by directly modifying the native paged KV cache.",
+      "page": 15,
+      "index": 3,
+      "width": 826,
+      "height": 469
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-004.webp",
+      "caption": "Table 5: Representative subject-specific heuristic cards in the PHYSICS heuristiccompletion banks (part I). The memory-bank condition stores cards like these as latent KV slots; the prompt baseline exposes the same card text visibly. Each row is a process reminder, not a solved example.",
+      "page": 21,
+      "index": 4,
+      "width": 821,
+      "height": 715
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-005.webp",
+      "caption": "Table 18: Full HARDMath category breakdown on Qwen3-30B-A3B with chain of thought. Values are category partial-credit total / maximum partial-credit total, with the normalized percentage in parentheses.",
+      "page": 30,
+      "index": 5,
+      "width": 821,
+      "height": 275
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-006.webp",
+      "caption": "Table 19: Qwen3 GSM8K and MMLU capability checks. These appendix results are intended as coarse capability-preservation checks rather than main steering results.",
+      "page": 30,
+      "index": 6,
+      "width": 677,
+      "height": 307
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-007.webp",
+      "caption": "Table 17: Full PHYSICS subject×mode matrix on Qwen3-30B-A3B. Values are mean 0–5 partial-credit judge scores, normalized to percent and averaged over three grading passes. Chain of thought (CoT) denotes Qwen3 thinking mode; no-CoT disables it.",
+      "page": 30,
+      "index": 7,
+      "width": 822,
+      "height": 298
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-008.webp",
+      "caption": "Figure 1: Memory inception (MI). Concise and compact reminder text is encoded into latent KV memory-bank slots and appended only at automatically chosen layers, heads, or KV groups during decoding. Unlike prompt steering, the reminder stays outside the visible transcript at inference time and need not be stored at every layer; unlike CAA-style activation steering, the intervention acts through query-dependent attention over latent reminder slots rather than a global residual-vector offset.",
+      "page": 2,
+      "index": 8,
+      "width": 826,
+      "height": 466
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-009.webp",
+      "caption": "Table 1: Main results. MI is competitive with prompting, often stronger than CAA, and extends naturally to structured reasoning with the least KV memory burden. Steering rows report DAS or GAS, dialogue rows report post-shift alignment / judged quality, and reasoning rows report benchmark score or win count. Method columns are block-specific; for structured reasoning we compare against Plain and Prompt because CAA does not provide a comparable interface for long heuristic banks. Detailed breakdowns are moved to the appendix.",
+      "page": 7,
+      "index": 9,
+      "width": 823,
+      "height": 373
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-010.webp",
+      "caption": "Figure 2: KV-cache footprint of steering content. Gray bars show the visible prompt actually used; orange bars show the budget-equivalent latent footprint of MI inferred from the full content-matched accounting. Savings badges report the corresponding content-to-bank compression ratio. The y-axis is log-scaled KV memory in MiB.",
+      "page": 7,
+      "index": 10,
+      "width": 800,
+      "height": 292
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-011.webp",
+      "caption": "Table 16: Meta-Llama-3.1-8B-Instruct halfway-shift dialogue summary. Each breakdown is split into two metric rows: post-shift alignment Align and judged turn quality Qturn. Bold marks the best method in each metric row. CAA is the frozen layer-14, scale-2 post-attention residual baseline; Ours is memory-bank summary update.",
+      "page": 29,
+      "index": 11,
+      "width": 702,
+      "height": 510
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-012.webp",
+      "caption": "Table 15: Qwen3 dialogue-shift post-shift turn quality by transition and dialogue length. Entries report Qturn on post-shift turns. Bold marks the best matched-budget method in each row among Plain, Prompt-init, CAA, and Ours. Prompt-repl. is shown only as an audit because it adds visible steering text at the shift point.",
+      "page": 29,
+      "index": 12,
+      "width": 772,
+      "height": 503
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-013.webp",
+      "caption": "Table 6: Representative subject-specific heuristic cards in the PHYSICS heuristiccompletion banks (part II).",
+      "page": 22,
+      "index": 13,
+      "width": 821,
+      "height": 756
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-014.webp",
+      "caption": "Table 2: Model details. Public model-card facts for the two experimental backbones.",
+      "page": 14,
+      "index": 14,
+      "width": 822,
+      "height": 233
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-015.webp",
+      "caption": "Table 3: Representative dialogue cases. Examples are shortened user turns; full cases are stored as ordered turn lists.",
+      "page": 18,
+      "index": 15,
+      "width": 802,
+      "height": 428
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-016.webp",
+      "caption": "Table 7: Representative HARDMath heuristic cards. The prompt baseline exposes the same process cards as visible text, while the memory-bank condition stores them as latent slots. These cards are distilled from held-out construction examples but do not contain solved examples or answer fragments.",
+      "page": 23,
+      "index": 16,
+      "width": 821,
+      "height": 833
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-017.webp",
+      "caption": "Table 13: Meta-Llama-3.1-8B-Instruct long-context dialogue persistence by trait and prefill length. Each cell reports P/T/Q: conversation-level target persistence, mean turn-level target style score, and conversation-level overall quality. The main text reports only the model-level averages; this table gives the full trait×budget breakdown. Plain is the opposite-prefill baseline. Prompt adds one visible target-style system instruction before the same opposite-prefill context. CAA is the frozen post-attention residual baseline (layer 14, scale 2), and Ours reports the frozen memory-bank configuration used in the final judged audit.",
+      "page": 28,
+      "index": 17,
+      "width": 820,
+      "height": 469
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-018.webp",
+      "caption": "Table 14: Qwen3 dialogue-shift post-shift alignment by transition and dialogue length. Entries report Align on post-shift turns. Bold marks the best matched-budget method in each row among Plain, Prompt-init, CAA, and Ours. Prompt-repl. is shown only as an audit because it adds visible steering text at the shift point.",
+      "page": 28,
+      "index": 18,
+      "width": 786,
+      "height": 500
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-019.webp",
+      "caption": "Figure 3: Qwen3 layer-selection ablation. Panels A and B report GAS for an easier trait (agreeableness) and a harder trait (neuroticism) as the number of selected layers increases. Panel C shows the corresponding budget-equivalent KV footprint relative to prompting.",
+      "page": 8,
+      "index": 19,
+      "width": 829,
+      "height": 225
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-020.webp",
+      "caption": "Table 11: Big Five contrastive generation judged by an LLM judge on Qwen3-30BA3B. Columns report target-trait score, target-score shift from the plain model, non-target drift, contrastive margin, and generation-adjusted score, where GAS = ∆target − Dnon-target. This is the detailed version of the matched-task summary in Table 1.",
+      "page": 27,
+      "index": 20,
+      "width": 668,
+      "height": 567
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-021.webp",
+      "caption": "Table 12: Qwen3 long-context dialogue persistence by trait and prefill length. Each method cell reports P/T/Q: conversation-level target persistence, mean turn-level target style score, and conversation-level overall quality. Prefill is non-task assistant-history context inserted before the dialogue. Prompt is the once-initialized visible-instruction baseline; Ours is memory-bank steering. Missing cells indicate no valid judged run after judge-completion filtering.",
+      "page": 27,
+      "index": 21,
+      "width": 820,
+      "height": 483
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-022.webp",
+      "caption": "Table 8: Big Five questionnaire self-evaluation on Meta-Llama-3.1-8B-Instruct. Columns report target-trait score, target shift from the plain model, non-target drift, and drift-adjusted score, where DAS = ∆target − Dnon-target. Bold indicates the highest DAS among steering methods within each trait.",
+      "page": 24,
+      "index": 22,
+      "width": 606,
+      "height": 565
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-023.webp",
+      "caption": "Table 20: Representative mechanistic routing examples. Bank masses are averaged over selected attention units in selector diagnostic traces. Target/ref slots are latent KV slots. Selected units are heads for standard attention, or grouped-query KV units expanded to the corresponding query heads.",
+      "page": 31,
+      "index": 23,
+      "width": 830,
+      "height": 193
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06225v1/fig-024.webp",
+      "caption": "Table 4: Representative memory-bank construction recipes. Banks are frozen before evaluation. Structured-reasoning construction examples are excluded from the reported test pool, and the final cards retain only general process guidance.",
+      "page": 20,
+      "index": 24,
+      "width": 821,
+      "height": 963
+    }
+  ]
+}
