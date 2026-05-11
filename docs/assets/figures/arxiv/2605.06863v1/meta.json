@@ -1,0 +1,62 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.06863v1/fig-001.webp",
+      "caption": "Fig. 6: Human motion statistics between our dataset and several others (bars indicate means and errors are standard deviations).",
+      "page": 6,
+      "index": 1,
+      "width": 512,
+      "height": 385
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06863v1/fig-002.webp",
+      "caption": "Fig. 7: Robot motion statistics by controller and site (bars are means and errors are standard deviations). Dark orange refers to UM and light orange to LAAS.",
+      "page": 6,
+      "index": 2,
+      "width": 512,
+      "height": 383
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06863v1/fig-003.webp",
+      "caption": "TABLE I: Comparison between our dataset and other HMP and SRN datasets. Blank columns are not applicable to that dataset row.",
+      "page": 2,
+      "index": 3,
+      "width": 1044,
+      "height": 373
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06863v1/fig-004.webp",
+      "caption": "TABLE II: RoSAS scale responses by algorithm (mean and standard deviation). The top row for each attribute refers to UM and the bottom row to LAAS. Discomfort is a mean of the first six rows, whereas Competence is a mean of the bottom six.",
+      "page": 7,
+      "index": 4,
+      "width": 504,
+      "height": 512
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06863v1/fig-005.webp",
+      "caption": "Fig. 4: Experimental setup. Subjects begin and end in front of the assembly stations while the robot begins in the center of the workspace. The blocks labeled (1) are assembled by subjects followed by those labeled (2), while the robot traverses between the goals along the path in gray.",
+      "page": 4,
+      "index": 5,
+      "width": 512,
+      "height": 287
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06863v1/fig-006.webp",
+      "caption": "Fig. 3: Human and robot paths over a single trial for all five controllers. Despite the humans and robot having the same sequence of workspace goals for all five, the resulting paths are substantially different.",
+      "page": 4,
+      "index": 6,
+      "width": 964,
+      "height": 202
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06863v1/fig-007.webp",
+      "caption": "Fig. 5: Hardware used for the data collection.",
+      "page": 5,
+      "index": 7,
+      "width": 462,
+      "height": 348
+    }
+  ]
+}

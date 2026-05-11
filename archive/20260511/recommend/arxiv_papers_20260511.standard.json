@@ -1,0 +1,579 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-05-11T21:17:55.100484+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 8,
+    "deep_cap": 6,
+    "deep_selected": 8,
+    "quick_candidates": 6,
+    "quick_skim_target": 11,
+    "quick_selected": 6
+  },
+  "deep_dive": [
+    {
+      "id": "2605.06841v1",
+      "source": "arxiv",
+      "title": "AGWM: Affordance-Grounded World Models for Environments with Compositional Prerequisites",
+      "abstract": "In model-based learning, the agent learns behaviors by simulating trajectories based on world model predictions. Standard world models typically learn a stationary transition function that maps states and actions to next states, when an action and an outcome frequently co-occur in training data, the model tends to internalize this correlation as a general causal rule while ignoring action preconditions. In interactive environments, however, agent actions can reshape the future affordance space. At each timestep, an action may becomes executable only after its prerequisites are met, or non-executable when they are destroyed. We term such events structure-changing events (SC events). As a result, a conventional world model often fails to determine whether a given action is executable in the current state, especially in multi-step predictions. Each imagined step is conditioned on an incorrect affordance state, and therefore the prediction error compounds over the rollout horizon. In this paper, we propose AGWM (Affordance-Grounded World Model), which learns an abstract affordance structure represented as a DAG of prerequisite dependencies to explicitly track the dynamic executability of actions. Experiments on game-based simulated environments demonstrate the effectiveness of our method by achieving lower multi-step prediction error, better generalization to novel configurations, and improved interpretability.",
+      "authors": [
+        "Qinshi Zhang",
+        "Weipeng Deng",
+        "Zhihan Jiang",
+        "Jiaming Qu",
+        "Qianren Li",
+        "Weitao Xu",
+        "Ray LC"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-05-07T18:46:44+00:00",
+      "link": "https://arxiv.org/pdf/2605.06841v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Affordance-Grounded World Models for model-based learning",
+      "llm_evidence_cn": "用于基于模型学习的可负担性基础世界模型",
+      "llm_evidence": "用于基于模型学习的可负担性基础世界模型",
+      "canonical_evidence": "用于基于模型学习的可负担性基础世界模型",
+      "llm_tldr_en": "Proposes a world model that accounts for action prerequisites and structure-changing events in environments.",
+      "llm_tldr_cn": "提出了一种考虑动作前提条件和环境结构变化事件的世界模型。",
+      "llm_tldr": "提出了一种考虑动作前提条件和环境结构变化事件的世界模型。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.07079v1",
+      "source": "arxiv",
+      "title": "Learning Visual Feature-Based World Models via Residual Latent Action",
+      "abstract": "World models predict future transitions from observations and actions. Existing works predominantly focus on image generation only. Visual feature-based world models, on the other hand, predict future visual features instead of raw video pixels, offering a promising alternative that is more efficient and less prone to hallucination. However, current feature-based approaches rely on direct regression, which leads to blurry or collapsed predictions in complex interactions, while generative modeling in high-dimensional feature spaces still remains challenging. In this work, we discover that a new type of latent action representation, which we refer to as *Residual Latent Action* (RLA), can be easily learned from DINO residuals. We also show that RLA is predictive, generalizable, and encodes temporal progression. Building on RLA, we propose *RLA World Model* (RLA-WM), which predicts RLA values via flow matching. RLA-WM outperforms both state-of-the-art feature-based and video-diffusion world models on simulation and real-world datasets, while being orders of magnitude faster than video diffusion. Furthermore, we develop two robot learning techniques that use RLA-WM to improve policy learning. The first one is a minimalist world action model with RLA that learns from actionless demonstration videos. The second one is the first visual RL framework trained entirely inside a world model learned from offline videos only, using a video-aligned reward and no online interactions or handcrafted rewards. Project page: https://mlzxy.github.io/rla-wm",
+      "authors": [
+        "Xinyu Zhang",
+        "Zhengtong Xu",
+        "Yutian Tao",
+        "Yeping Wang",
+        "Yu She",
+        "Abdeslam Boularias"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG",
+        "cs.RO"
+      ],
+      "published": "2026-05-08T00:58:16+00:00",
+      "link": "https://arxiv.org/pdf/2605.07079v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Learning visual feature-based world models via latent action representations",
+      "llm_evidence_cn": "通过隐动作表示学习基于视觉特征的世界模型",
+      "llm_evidence": "通过隐动作表示学习基于视觉特征的世界模型",
+      "canonical_evidence": "通过隐动作表示学习基于视觉特征的世界模型",
+      "llm_tldr_en": "Introduces Residual Latent Action to improve feature-based world models for complex interactions.",
+      "llm_tldr_cn": "引入残差隐动作（RLA）以改进基于特征的世界模型，提升复杂交互下的预测效果。",
+      "llm_tldr": "引入残差隐动作（RLA）以改进基于特征的世界模型，提升复杂交互下的预测效果。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索表示学习在构建世界模型与导航中的运用",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.07278v1",
+      "source": "arxiv",
+      "title": "Predictive but Not Plannable: RC-aux for Latent World Models",
+      "abstract": "A latent world model may achieve accurate short-horizon prediction while still inducing a latent space that is poorly aligned with planning. A key issue is spatiotemporal mismatch: these models are often trained with local predictive supervision, but deployed for long-horizon goal-directed search in latent spaces where Euclidean distance may not reflect what is reachable within a finite action budget. We present the Reachability-Correction auxiliary objective (RC-aux), a lightweight correction for this mismatch in reconstruction-free latent world models. RC-aux keeps the world-model backbone unchanged and adds planning-aligned supervision along two axes. Along the time axis, multi-horizon open-loop prediction trains the model beyond one-step consistency. Along the space axis, budget-conditioned reachability supervision, together with temporal hard negatives, encourages the latent space to distinguish states that are eventually reachable from those reachable within the current planning horizon. At test time, the learned reachability signal can also be used by a reachability-aware planner to favor trajectories that are both goal-directed and attainable under the available budget. We instantiate RC-aux on LeWorldModel and evaluate it under both continuation-training and matched-from-scratch settings. Across goal-conditioned pixel-control tasks and a LIBERO-Goal extension, RC-aux improves LeWM-style planning with modest additional cost. These results suggest that planning with latent world models depends not only on predictive accuracy, but also on whether the learned representation encodes the temporal and geometric structure required by downstream search. The code is available at https://github.com/Guang000/RC-aux.",
+      "authors": [
+        "Wenyuan Li",
+        "Guang Li",
+        "Keisuke Maeda",
+        "Takahiro Ogawa",
+        "Miki Haseyama"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.CV"
+      ],
+      "published": "2026-05-08T05:43:33+00:00",
+      "link": "https://arxiv.org/pdf/2605.07278v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "latent world models and planning-aligned latent spaces",
+      "llm_evidence_cn": "隐世界模型与规划对齐的隐空间",
+      "llm_evidence": "隐世界模型与规划对齐的隐空间",
+      "canonical_evidence": "隐世界模型与规划对齐的隐空间",
+      "llm_tldr_en": "Introduces RC-aux to align latent world model representations with long-horizon planning and reachability.",
+      "llm_tldr_cn": "引入RC-aux辅助目标，使隐世界模型的表示与长程规划和可达性保持一致。",
+      "llm_tldr": "引入RC-aux辅助目标，使隐世界模型的表示与长程规划和可达性保持一致。",
+      "llm_tags": [
+        "query:navwm:composite"
+      ],
+      "matched_query_tag": "query:navwm:composite",
+      "matched_query_text": "Papers central to 隐空间、导航与世界模型相关论文检索, especially work that connects or combines: 研究隐空间表示及其在智能系统中的作用; 智能体在复杂环境中的导航策略与学习方法; 世界模型的结构与在自主系统中的应用; 探索表示学习在构建世界模型与导航中的运用; 基于隐空间表示的规划与决策模型; 空间表示与认知映射的算法及模型; 检索关于隐空间表示在世界模型和导航中的研究论文; 寻找利用世界模型进行强化学习或规划的最新研究; 探索智能体如何利用隐空间进行导航与环境理解.",
+      "matched_requirement_id": "req-composite-navwm",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.07288v1",
+      "source": "arxiv",
+      "title": "Sword: Style-Robust World Models as Simulators via Dynamic Latent Bootstrapping for VLA Policy Post-Training",
+      "abstract": "The integration of Vision-Language-Action (VLA) models with World Models has gained increasing attention. One representative approach treats learned World Models as generative simulators, enabling policy optimization entirely within \"imagination.\" However, when deployed as simulators for specific environments such as the LIBERO benchmark, existing World Models often suffer from poor generalization and long-horizon error accumulation. During closed-loop rollouts, these models are highly sensitive to initial-state perturbations; minor changes in color, illumination, and other visual factors can trigger cascading hallucinations, leading to severe blurriness or overexposure. Moreover, long-horizon error accumulation further degrades the quality and fidelity of predicted future states. These issues limit the reliability of World Models as simulators. To mitigate these problems, we propose Sword, a robust World Model framework. Our method introduces Structure-Guided Style Augmentation to disentangle the visual textures of interactive environments from task-relevant dynamics, thereby improving generalization. We further propose Dynamic Latent Bootstrapping, which maintains consistency between training and inference while keeping memory consumption low. Extensive experiments on the LIBERO benchmark show that our method significantly outperforms the baseline WoVR in terms of generalization, generation quality, robustness, fidelity, and the success rate of reinforcement-learning post-training for VLA models.",
+      "authors": [
+        "Jiaxuan Gao",
+        "Yongjian Guo",
+        "Zhong Guan",
+        "Wen Huang",
+        "Wanlun Ma",
+        "Xi Xiao",
+        "Junwu Xiong",
+        "Sheng Wen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-05-08T05:54:33+00:00",
+      "link": "https://arxiv.org/pdf/2605.07288v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "world models as simulators for policy optimization",
+      "llm_evidence_cn": "世界模型作为策略优化的模拟器",
+      "llm_evidence": "世界模型作为策略优化的模拟器",
+      "canonical_evidence": "世界模型作为策略优化的模拟器",
+      "llm_tldr_en": "Proposes style-robust world models to address generalization and error accumulation in VLA policy training.",
+      "llm_tldr_cn": "提出了风格鲁棒的世界模型，以解决VLA策略训练中的泛化和长期误差累积问题。",
+      "llm_tldr": "提出了风格鲁棒的世界模型，以解决VLA策略训练中的泛化和长期误差累积问题。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.07326v1",
+      "source": "arxiv",
+      "title": "GEM: Generating LiDAR World Model via Deformable Mamba",
+      "abstract": "World models, which simulate environmental dynamics and generate sensor observations, are gaining increasing attention in autonomous driving. However, progress in LiDAR-based world models has lagged behind those built on camera videos or occupancy data, primarily due to two core challenges: the inherent disorder of LiDAR point clouds and the difficulty of distinguishing dynamic objects from static structures. To address these issues, we propose GEM: a Generative LiDAR world model that leverages deformable mamba architecture, significantly improving fidelity and imaginative capability. Specifically, leveraging the structural similarity between sequential laser scanning and Mamba's processing mechanism, we first tokenize LiDAR sweeps into compact representations via a custom LiDAR scene tokenizer. After unsupervised disentanglement of tokenized features via a dynamic-static separator, a tri-path deformable Mamba is introduced to perform selective scanning and adaptive gating fusion over the disentangled features, leading to enhanced spatial-temporal understanding of the world evolution. Optionally, a planner and a BEV layout controller can be integrated to explore the model's capability for autonomous rollout and its potential to generate ``what-if\" scenarios. Extensive experiments show that GEM achieves state-of-the-art performances across diverse benchmarks and evaluation settings, demonstrating its superiority and effectiveness. Project page: https://github.com/wuyang98/GEM.",
+      "authors": [
+        "Yang Wu",
+        "Zhaojiang Liu",
+        "Qiang Meng",
+        "Youquan Liu",
+        "Renliang Weng",
+        "Jianjun Qian",
+        "Jian Yang",
+        "Jin Xie"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-08T06:32:12+00:00",
+      "link": "https://arxiv.org/pdf/2605.07326v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Generative LiDAR world model for autonomous driving simulating environmental dynamics",
+      "llm_evidence_cn": "用于自动驾驶的生成式LiDAR世界模型，模拟环境动力学",
+      "llm_evidence": "用于自动驾驶的生成式LiDAR世界模型，模拟环境动力学",
+      "canonical_evidence": "用于自动驾驶的生成式LiDAR世界模型，模拟环境动力学",
+      "llm_tldr_en": "GEM uses Deformable Mamba to build a LiDAR-based world model for autonomous driving simulation.",
+      "llm_tldr_cn": "GEM利用可变形Mamba架构构建了用于自动驾驶模拟的LiDAR世界模型。",
+      "llm_tldr": "GEM利用可变形Mamba架构构建了用于自动驾驶模拟的LiDAR世界模型。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.06223v2",
+      "source": "arxiv",
+      "title": "Proactive Instance Navigation with Comparative Judgment for Ambiguous User Queries",
+      "abstract": "Natural-language instance navigation becomes challenging when the initial user request does not uniquely specify the target instance. A practical agent should reduce the user's burden by actively asking only the information needed to distinguish the target from similar distractors, rather than requiring a detailed description upfront. Existing approaches often fall short of this goal: they may stop at the first plausible candidate before sufficiently exploring alternatives, or, even after collecting multiple candidates, ask about the target's attributes derived from individual candidates rather than questions selected to distinguish candidates in the pool. As a result, despite the dialogue, the agent may still fail to distinguish the target from distractors, leading to premature decisions and lengthy user responses. We propose Proactive Instance Navigation with Comparative Judgment (ProCompNav), a two-stage framework that first constructs a candidate pool and then identifies the target through comparative judgment. At each round, ProCompNav extracts an attribute-value pair that splits the current pool, asks a binary yes/no question, and prunes all inconsistent candidates at once. This reframes disambiguation from open-ended target description to pool-level discriminative questioning, where each question is chosen to narrow the candidate set. On CoIN-Bench, ProCompNav improves Success Rate over interactive baselines with the same minimal input and non-interactive baselines with detailed descriptions, while substantially reducing Response Length. ProCompNav also achieves state-of-the-art Success Rate on TextNav, suggesting that comparative judgment is broadly useful for instance-level navigation among similar distractors.",
+      "authors": [
+        "Junhyuk Kwon",
+        "Seungjoon Lee",
+        "Hyejin Park",
+        "Kyle Min",
+        "Jungseul Ok"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.RO"
+      ],
+      "published": "2026-05-07T13:19:03+00:00",
+      "link": "https://arxiv.org/pdf/2605.06223v2",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "instance navigation strategies for agents",
+      "llm_evidence_cn": "智能体的实例导航策略",
+      "llm_evidence": "智能体的实例导航策略",
+      "canonical_evidence": "智能体的实例导航策略",
+      "llm_tldr_en": "Proposes a proactive navigation agent that uses comparative judgment to resolve ambiguous user queries.",
+      "llm_tldr_cn": "提出了一种主动导航智能体，通过比较判断来解决模糊的用户查询。",
+      "llm_tldr": "提出了一种主动导航智能体，通过比较判断来解决模糊的用户查询。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.06317v2",
+      "source": "arxiv",
+      "title": "NavOne: One-Step Global Planning for Vision-Language Navigation on Top-Down Maps",
+      "abstract": "Existing Vision-Language Navigation (VLN) methods typically adopt an egocentric, step-by-step paradigm, which struggles with error accumulation and limits efficiency. While recent approaches attempt to leverage pre-built environment maps, they often rely on incrementally updating memory graphs or scoring discrete path proposals, which restricts continuous spatial reasoning and creates discrete bottlenecks. We propose Top-Down VLN (TD-VLN), reformulating navigation as a one-step global path planning problem on pre-built top-down maps, supported by our newly constructed R2R-TopDown dataset. To solve this, we introduce NavOne, a unified framework that directly predicts dense path probabilities over multi-modal maps in a single end-to-end forward pass. NavOne features a Top-Down Map Fuser for joint multi-modal map representation, and extends Attention Residuals for spatial-aware depth mixing. Extensive experiments on R2R-TopDown show that NavOne achieves state-of-the-art performance among map-based VLN methods, with a planning-stage speedup of 8x over existing map-based baselines and 80x over egocentric methods, enabling highly efficient global navigation.",
+      "authors": [
+        "Dijia Zhan",
+        "Jinyi Li",
+        "Chenxi Zheng",
+        "Shaoyu Huang",
+        "Yong Li",
+        "Jie Tang",
+        "Xuemiao Xu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-05-07T14:16:58+00:00",
+      "link": "https://arxiv.org/pdf/2605.06317v2",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "global path planning for vision-language navigation",
+      "llm_evidence_cn": "视觉语言导航的全局路径规划",
+      "llm_evidence": "视觉语言导航的全局路径规划",
+      "canonical_evidence": "视觉语言导航的全局路径规划",
+      "llm_tldr_en": "NavOne reformulates VLN as a one-step global path planning problem on top-down maps for better efficiency.",
+      "llm_tldr_cn": "NavOne将视觉语言导航重新表述为俯视图上的单步全局路径规划问题，提高了效率。",
+      "llm_tldr": "NavOne将视觉语言导航重新表述为俯视图上的单步全局路径规划问题，提高了效率。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.07496v1",
+      "source": "arxiv",
+      "title": "PathPainter: Transferring the Generalization Ability of Image Generation Models to Embodied Navigation",
+      "abstract": "Bird's-eye-view (BEV) images have been widely demonstrated to provide valuable prior information for navigation. Given the global information provided by such views, two key challenges remain: how to fully exploit this information and how to reliably use it during execution. In this paper, we propose a navigation system that uses BEV images as global priors and is designed for ground and near-ground robotic platforms. The system employs an image generation model to interpret human intent from natural language, identify the target destination, and generate traversability masks. During execution, we introduce cross-view localization to align the robot's odometry with the BEV map and mitigate long-term drift in conventional odometry. We conduct extensive benchmark experiments to evaluate the proposed method and further validate it on a UAV platform. Using only a conventional local motion planner, the UAV successfully completes a 160-meter outdoor long-range navigation task. This work demonstrates how the world-understanding capabilities of foundation models can be transferred to embodied navigation, enabling robots to benefit from the strong generalization ability of existing image generation models.",
+      "authors": [
+        "Yijin Wang",
+        "Yuru Tian",
+        "Xijie Huang",
+        "Weiqi Gai",
+        "Mo Zhu",
+        "Xin Zhou",
+        "Yuze Wu",
+        "Fei Gao"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-08T09:33:19+00:00",
+      "link": "https://arxiv.org/pdf/2605.07496v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "BEV images as global priors for embodied navigation",
+      "llm_evidence_cn": "BEV图像作为具身导航的全局先验",
+      "llm_evidence": "BEV图像作为具身导航的全局先验",
+      "canonical_evidence": "BEV图像作为具身导航的全局先验",
+      "llm_tldr_en": "Uses image generation models and BEV priors to improve robot navigation and intent interpretation.",
+      "llm_tldr_cn": "利用图像生成模型和BEV先验来改进机器人导航和意图理解。",
+      "llm_tldr": "利用图像生成模型和BEV先验来改进机器人导航和意图理解。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2605.06758v1",
+      "source": "arxiv",
+      "title": "R$^3$L: Reasoning 3D Layouts from Relative Spatial Relations",
+      "abstract": "Relative spatial relations provide a compact representation of spatial structure and are fundamental to relative spatial reasoning in 3D layout generation. Recent works leverage Multimodal Large Language Models (MLLMs) to infer such relations, but the inferred relations are often unreliable and are typically handled with post-hoc heuristics. In this paper, we propose R$^3$L, a general framework that improves the reliability and consistency of relative spatial reasoning for 3D layout generation. Our key motivation is that multi-hop reasoning requires repeated reference-frame transformations, which accumulate errors in inferred relations and lead to semantic and metric drift. To mitigate this, we propose invariant spatial decomposition to break coupled relation chains, and consistent spatial imagination to promote self-consistency through an imagine-and-revise loop. We further introduce supportive spatial optimization to ease pose optimization via global-to-local coordinate re-parameterization. Extensive experiments across diverse scene types and instructions demonstrate that R$^3$L produces more physically feasible and semantically consistent layouts. Notably, our analysis shows that resolving frame-induced inconsistencies is crucial for reliable multi-hop relative spatial reasoning. The code is available at https://github.com/Neal2020GitHub/R3L.",
+      "authors": [
+        "Zhifeng Gu",
+        "Yuqi Wang",
+        "Bing Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG",
+        "cs.RO"
+      ],
+      "published": "2026-05-07T16:50:12+00:00",
+      "link": "https://arxiv.org/pdf/2605.06758v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "spatial relations and reasoning for 3D layout generation",
+      "llm_evidence_cn": "3D布局生成的空间关系与推理",
+      "llm_evidence": "3D布局生成的空间关系与推理",
+      "canonical_evidence": "3D布局生成的空间关系与推理",
+      "llm_tldr_en": "R3L improves 3D layout generation by enhancing the reliability of relative spatial reasoning using MLLMs.",
+      "llm_tldr_cn": "R3L通过增强多模态大模型在相对空间推理中的可靠性，改进了3D布局生成。",
+      "llm_tldr": "R3L通过增强多模态大模型在相对空间推理中的可靠性，改进了3D布局生成。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.05806v2",
+      "source": "arxiv",
+      "title": "Retrieval from Within: An Intrinsic Capability of Attention-Based Models",
+      "abstract": "Retrieval-augmented generation (RAG) typically treats retrieval and generation as separate systems. We ask whether an attention-based encoder-decoder can instead retrieve directly from its own internal representations. We introduce INTRA (INTrinsic Retrieval via Attention), a framework where decoder attention queries score pre-encoded evidence chunks that are then directly reused as context for generation. By construction, INTRA unifies retrieval and generation, eliminating the retriever-generator mismatch typical of RAG pipelines. This design also amortizes context encoding by reusing precomputed encoder states across queries. On question-answering benchmarks, INTRA outperforms strong engineered retrieval pipelines on both evidence recall and end-to-end answer quality. Our results demonstrate that attention-based models already possess a retrieval mechanism that can be elicited, rather than added as an external module.",
+      "authors": [
+        "Elad Hoffer",
+        "Yochai Blau",
+        "Edan Kinderman",
+        "Ron Banner",
+        "Daniel Soudry",
+        "Boris Ginsburg"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-05-07T07:42:28+00:00",
+      "link": "https://arxiv.org/pdf/2605.05806v2",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "retrieve directly from internal representations",
+      "llm_evidence_cn": "直接从内部表示中检索",
+      "llm_evidence": "直接从内部表示中检索",
+      "canonical_evidence": "直接从内部表示中检索",
+      "llm_tldr_en": "Introduces a framework for attention-based models to retrieve information directly from internal latent states.",
+      "llm_tldr_cn": "介绍了一种让基于注意力的模型直接从内部隐状态检索信息的框架。",
+      "llm_tldr": "介绍了一种让基于注意力的模型直接从内部隐状态检索信息的框架。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.06863v1",
+      "source": "arxiv",
+      "title": "Bi3: A Biplatform, Bicultural, Biperson Dataset for Social Robot Navigation",
+      "abstract": "We contribute Bi3, a dataset of social robot navigation among groups of people in a constrained lab space. Compared to prior data collection efforts for social robot navigation, our dataset is unique in that it features: an original experiment design giving rise to close navigation encounters between two humans and a robot; five different navigation algorithms; two different robot platforms; a diverse participant pool of 74 people recruited from two sites in the USA and France; multimodal data streams including 10.5 hours of human and robot ground-truth motion tracks, RGB video, and user impressions over robot performance. Our analysis of the collected dataset through metrics like interaction density and human velocity suggests that Bi3 represents a benchmark of unique diversity and modeling complexity. Bi3 contributes towards understanding how humans and robots can productively mesh their activities in constrained environments, and can be a resource for training models of human motion prediction and robot control policies for navigation in densely crowded spaces.",
+      "authors": [
+        "Andrew Stratton",
+        "Phani Teja Singamaneni",
+        "Pranav Goyal",
+        "Rachid Alami",
+        "Christoforos Mavrogiannis"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.HC"
+      ],
+      "published": "2026-05-07T19:05:37+00:00",
+      "link": "https://arxiv.org/pdf/2605.06863v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "dataset of social robot navigation among groups of people",
+      "llm_evidence_cn": "人群中社交机器人导航的数据集",
+      "llm_evidence": "人群中社交机器人导航的数据集",
+      "canonical_evidence": "人群中社交机器人导航的数据集",
+      "llm_tldr_en": "Provides a multi-platform dataset for studying social robot navigation in constrained human environments.",
+      "llm_tldr_cn": "提供了一个多平台数据集，用于研究受限人类环境中的社交机器人导航。",
+      "llm_tldr": "提供了一个多平台数据集，用于研究受限人类环境中的社交机器人导航。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.06699v1",
+      "source": "arxiv",
+      "title": "Multimodal synthesis of MRI and tabular data with diffusion in a joint latent space via cross-attention",
+      "abstract": "We propose a multimodal latent diffusion model that jointly synthesizes volumetric magnetic resonance imaging (MRI) and tabular clinical data within a shared latent space via cross-attention. This approach enables coherent joint representation learning of MRI and tabular modalities for generative modeling. Our model utilizes a variational autoencoder to fuse the two modalities before diffusion-based synthesis, allowing modality-appropriate reconstruction with separate decoders for MRI and tabular data. We evaluated the framework on data from the German National Cohort (NAKO Gesundheitsstudie), comprising over 10,000 participants with MRI scans and clinical tabular features such as age, sex, body measurements, and ethnicity. The generated MRI volumes exhibited anatomical plausibility and body composition consistent with the synthesized tabular attributes. Quantitative evaluation using Fréchet distance and precision-recall metrics confirmed high-fidelity image generation. In the tabular modality, our model outperformed CTGAN across standard evaluation metrics and achieved results comparable to TVAE, demonstrating competitive performance relative to established unimodal baselines. This work is, to our knowledge, the first to demonstrate the feasibility of jointly modeling MRI and mixed-type tabular data in a single latent diffusion framework, offering a proof-of-concept for generating coherent synthetic multimodal patient data and aligning with the broader goal of developing digital twins in healthcare.",
+      "authors": [
+        "Daniel Mensing",
+        "Jan Kapar",
+        "Jochen G. Hirsch",
+        "Matthias Günther",
+        "Horst Hahn",
+        "Marvin N. Wright"
+      ],
+      "primary_category": "eess.IV",
+      "categories": [
+        "eess.IV",
+        "cs.AI",
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-05-05T08:30:20+00:00",
+      "link": "https://arxiv.org/pdf/2605.06699v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "joint latent space for multimodal representation learning",
+      "llm_evidence_cn": "用于多模态表示学习的联合隐空间",
+      "llm_evidence": "用于多模态表示学习的联合隐空间",
+      "canonical_evidence": "用于多模态表示学习的联合隐空间",
+      "llm_tldr_en": "A multimodal latent diffusion model that synthesizes MRI and tabular data within a shared latent space.",
+      "llm_tldr_cn": "一种在共享隐空间内合成MRI和表格数据的多模态隐扩散模型。",
+      "llm_tldr": "一种在共享隐空间内合成MRI和表格数据的多模态隐扩散模型。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.06980v1",
+      "source": "arxiv",
+      "title": "Accelerating the Simulation of Ordinary Differential Equations Through Physics-Preserving Neural Networks",
+      "abstract": "Numerical simulation of ordinary differential equations (ODEs) can be challenging when the system exhibits high accelerations and rapidly changing dynamics. Under these conditions the ODE solver often needs to take very small time steps in order to resolve the solution accurately, resulting in increased computational cost. In order to accelerate the simulation of these ODEs we present a novel methodology that uses a pseudo-invertible neural network to map system states into a high-dimensional latent-space. The network is then trained so that the dynamics in this learned latent space are slow, and can be simulated with relatively few function calls. Unlike existing neural methods, the latent dynamic equations are not learned from trajectory data, but derived from the original system equations and the chain rule. This allows the method to generalize better than existing approaches because the derived equations are correct by construction. In this work, we derive latent state equations of motion for any general ODE, and describe the loss function used to enforce slow time evolution of the latent states. We then apply this technique to multiple example ODEs and show that these problems can be solved with $3$x to $20$x fewer function calls for the same accuracy when simulating in the learned latent space. This reduction in cost could decrease computational demands for scientific simulations across engineering and physics applications.",
+      "authors": [
+        "Andrew Tagg",
+        "Andrew Frandsen",
+        "Andrew Ning"
+      ],
+      "primary_category": "math.NA",
+      "categories": [
+        "math.NA"
+      ],
+      "published": "2026-05-07T21:58:47+00:00",
+      "link": "https://arxiv.org/pdf/2605.06980v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Mapping system states into a high-dimensional latent-space to simulate dynamics",
+      "llm_evidence_cn": "将系统状态映射到高维隐空间以模拟动力学",
+      "llm_evidence": "将系统状态映射到高维隐空间以模拟动力学",
+      "canonical_evidence": "将系统状态映射到高维隐空间以模拟动力学",
+      "llm_tldr_en": "A neural network maps ODE states to a latent space where dynamics are slower and easier to simulate.",
+      "llm_tldr_cn": "神经网络将ODE状态映射到隐空间，使动力学更平滑且易于模拟加速。",
+      "llm_tldr": "神经网络将ODE状态映射到隐空间，使动力学更平滑且易于模拟加速。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.07510v1",
+      "source": "arxiv",
+      "title": "InterLV-Search: Benchmarking Interleaved Multimodal Agentic Search",
+      "abstract": "Existing benchmarks for multimodal agentic search evaluate multimodal search and visual browsing, but visual evidence is either confined to the input or treated as an answer endpoint rather than part of an interleaved search trajectory. We introduce \\textbf{InterLV-Search}, a benchmark for Interleaved Language-Vision Agentic Search, in which textual and visual evidence is repeatedly used to condition later search. It contains 2,061 examples across three levels: active visual evidence seeking, controlled offline interleaved multimodal search, and open-web interleaved multimodal search. Beyond existing benchmarks, it also includes multimodal multi-branch samples that involve comparison between multiple entities during the evidence search. We construct Level 1 and Level 2 with automated pipelines and Level 3 with a machine-led, human-supervised open-web pipeline. We further provide InterLV-Agent for standardized tool use, trajectory logging, and evaluation. Experiments on proprietary and open-source multimodal agents show that current systems remain far from solving interleaved multimodal search, with the best model below 50% overall accuracy, highlighting challenges in visual evidence seeking, search control, and multimodal evidence integration. We release the benchmark data and evaluation code at https://github.com/hbhalpha/InterLV-Search-Bench",
+      "authors": [
+        "Bohan Hou",
+        "Jiuning Gu",
+        "Jiayan Guo",
+        "Ronghao Dang",
+        "Sicong Leng",
+        "Xin Li",
+        "Xuemeng Song",
+        "Jianfei Yang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL",
+        "cs.IR"
+      ],
+      "published": "2026-05-08T09:41:07+00:00",
+      "link": "https://arxiv.org/pdf/2605.07510v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal agentic search and navigation",
+      "llm_evidence_cn": "多模态智能体搜索与导航",
+      "llm_evidence": "多模态智能体搜索与导航",
+      "canonical_evidence": "多模态智能体搜索与导航",
+      "llm_tldr_en": "Introduces a benchmark for interleaved language-vision agentic search across complex trajectories.",
+      "llm_tldr_cn": "引入了一个用于评估交替语言视觉智能体搜索和复杂轨迹导航的基准。",
+      "llm_tldr": "引入了一个用于评估交替语言视觉智能体搜索和复杂轨迹导航的基准。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

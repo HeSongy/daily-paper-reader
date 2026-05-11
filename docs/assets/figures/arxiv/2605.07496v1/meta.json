@@ -1,0 +1,54 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.07496v1/fig-001.webp",
+      "caption": "Table 1: Visible-road segmentation benchmark. All methods segment only the road category.",
+      "page": 6,
+      "index": 1,
+      "width": 448,
+      "height": 273
+    },
+    {
+      "url": "assets/figures/arxiv/2605.07496v1/fig-002.webp",
+      "caption": "Figure 1: Overview of the Navigation System. Left: Cross-view localization extracts embeddings from local ground features reconstructed from RGB-D observations and matches them with feature embeddings from the BEV map to estimate the robot’s global odometry. Right: Given the destination prompt and the BEV map, the image generation model marks the target region with a generated star marker and produces a traversability mask. The red path is obtained by running A∗ on the mask.",
+      "page": 2,
+      "index": 2,
+      "width": 826,
+      "height": 394
+    },
+    {
+      "url": "assets/figures/arxiv/2605.07496v1/fig-003.webp",
+      "caption": "Figure 6: Experiment 1. Navigation in a park. The initial global pose estimate contains relatively large errors, making FAST-LIO2 alone insufficient for long-range navigation.",
+      "page": 7,
+      "index": 3,
+      "width": 826,
+      "height": 579
+    },
+    {
+      "url": "assets/figures/arxiv/2605.07496v1/fig-004.webp",
+      "caption": "Figure 2: Pipeline of our navigation system.",
+      "page": 3,
+      "index": 4,
+      "width": 829,
+      "height": 427
+    },
+    {
+      "url": "assets/figures/arxiv/2605.07496v1/fig-005.webp",
+      "caption": "Figure 7: Experiment 2: Navigation in a park. Even with an accurate initial pose, unacceptable drift occurs during long-range navigation. Experiment 3: Navigation in structurally complex buildings.",
+      "page": 8,
+      "index": 5,
+      "width": 829,
+      "height": 654
+    },
+    {
+      "url": "assets/figures/arxiv/2605.07496v1/fig-006.webp",
+      "caption": "Figure 3: Workflow of PathPainter. Column 1: natural-language destination query. Column 2: original map with the current robot position. Column 3: Traversability mask. Column 4: final planning result, where the generated traversability mask, predicted goal position, and planned path are overlaid on the original map.",
+      "page": 4,
+      "index": 6,
+      "width": 826,
+      "height": 825
+    }
+  ]
+}
