@@ -1,0 +1,46 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.10154v1/fig-001.webp",
+      "caption": "Table 2: Temporal extrapolation results on the Shallow–Water benchmark. Errors are computed only over rollout steps 51–90, which lie beyond the supervised training horizon. Best results are in bold, and second-best results are underlined.",
+      "page": 8,
+      "index": 1,
+      "width": 710,
+      "height": 235
+    },
+    {
+      "url": "assets/figures/arxiv/2605.10154v1/fig-002.webp",
+      "caption": "Table 1: Quantitative comparison on long-horizon PDE benchmarks. Best results are in bold, and second-best results are underlined. - indicates that the corresponding model failed to train under this setting.",
+      "page": 7,
+      "index": 2,
+      "width": 820,
+      "height": 492
+    },
+    {
+      "url": "assets/figures/arxiv/2605.10154v1/fig-003.webp",
+      "caption": "Figure 2: Ground-truth states and absolute-error maps on the Shallow–Water benchmark at rollout steps t = 40 and t = 90. Leftmost column: ground truth. Remaining columns: pointwise absolute-error maps for different methods.",
+      "page": 7,
+      "index": 3,
+      "width": 833,
+      "height": 321
+    },
+    {
+      "url": "assets/figures/arxiv/2605.10154v1/fig-004.webp",
+      "caption": "Table 3: Ablation study on Navier–Stokes, Shallow–Water, and Reaction–Diffusion. w/o denotes removing the corresponding component from the full model. Best results are in bold, and second-best results are underlined.",
+      "page": 9,
+      "index": 4,
+      "width": 822,
+      "height": 212
+    },
+    {
+      "url": "assets/figures/arxiv/2605.10154v1/fig-005.webp",
+      "caption": "Figure 1: Overview of the proposed SSP framework. (i) Spectral intuition: a suitable spatial basis exposes organized modal evolution in the spectral domain. (ii) Propagation mechanism: the structured propagator combines a frequency-conditioned linear backbone Kθ for mode-wise temporal updates with a nonlinear closure Gψ for local cross-mode interactions within the retained spectral band. (iii) Overall architecture: SSP follows an analysis– propagation–synthesis pipeline, encoding physical states into a shared spatial representation, projecting them to compact propagation states, performing structured spectral propagation, and decoding the lifted representations into future physical fields.",
+      "page": 3,
+      "index": 5,
+      "width": 812,
+      "height": 387
+    }
+  ]
+}

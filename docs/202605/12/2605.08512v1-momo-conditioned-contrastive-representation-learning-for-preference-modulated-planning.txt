@@ -1,0 +1,1066 @@
+Title: MoMo: Conditioned Contrastive Representation Learning for Preference-Modulated Planning
+
+URL Source: https://arxiv.org/pdf/2605.08512v1
+
+Published Time: Tue, 12 May 2026 00:22:04 GMT
+
+Number of Pages: 21
+
+Markdown Content:
+# MoMo: Conditioned Contrastive Representation Learning for Preference-Modulated Planning 
+
+Yusuf Syed, Viraj Parimi, Brian Williams 
+
+Massachusetts Institute of Technology Cambridge, MA 02139 
+
+{yusufs,vparimi,williams}@mit.edu 
+
+## Abstract 
+
+Temporally contrastive representation learning induces a latent structure capable of reducing long-horizon planning to inference in a low-dimensional linear system. However, existing contrastive planning work learns a single latent geometry which cannot distinguish multiple valid behaviors trading task efficiency against risk expo-sure for the same start-goal query. We introduce M OMO, a preference-conditioned 
+
+contrastive planner allowing a scalar user preference to continuously modulate plan conservativeness at inference time, without retraining. M OMO learns a joint conditioning of the representation geometry and latent prediction operator via Feature-Wise Linear Modulation and low-rank neural modulation, respectively. We show that our formulation preserves the probability density ratio encoded in the representation space that is required for inference-driven contrastive planning, further retaining its inference-time efficiency. Across six environments, M OMO
+
+smoothly adapts plan safety according to user preferences, yielding improved temporal and preferential consistency over state augmentation baselines. 
+
+## 1 Introduction 
+
+Robotic systems are increasingly deployed in safety-critical domains such as healthcare and disaster response, where behaving either too aggressively or too conservatively can be costly [ 1– 3]. For instance, a surgical robot may maintain a larger clearance during a delicate phase of an operation, but favor a more direct maneuver when rapid intervention is required. In these settings, the same start and goal can admit multiple viable trajectories that trade task efficiency against exposure to risk, as illustrated in Figure 1. This balance is not fixed a priori , but varies with mission context, ultimately reflecting a specified safety-efficiency tradeoff for planning behavior. This creates a need for preference-conditioned planning, in which a planner flexibly reshapes its behavior at inference time, without retraining, in response to a scalar safety preference encoding the user’s risk tolerance. Existing approaches to risk-aware planning span model-based methods that depend on known dynamics [ 4– 9], learning-based methods with fixed risk specifications [ 10 , 11 ], and recent risk-conditioned policies that allow inference-time adaptation [ 12 – 15 ]. Despite this progress, the inter-section of inference-time preference control, planning under unknown dynamics, and scalability to high-dimensional or long-horizon settings remains underexplored. Contrastive Representation Learning for Planning (CRLP) offers a promising foundation for ad-dressing this gap [ 16 , 17 ]. By learning representations from trajectory data whose geometry reflects temporal reachability, CRLP induces a latent structure reducing long-horizon planning to low-dimensional linear inference [ 17 ], and has shown practical viability in robotic settings [ 18 , 19 ]. This makes CRLP attractive when dynamics are unknown and efficient inference-time planning is re-quired. Existing contrastive planning methods, however, are preference-agnostic, encoding temporal similarity alone and recovering only a single mode of behavior for a given task. Extending CRLP      
+
+> 40th Conference on Neural Information Processing Systems (NeurIPS 2026).
+> arXiv:2605.08512v1 [cs.LG] 8 May 2026 Cost = 1.66
+> IvI (Eysenbach et al., 2025)
+> Cost = 0.07
+> ∆ = 0 .01
+> Cost = 0.37
+> ∆ = 0 .34
+> Cost = 1.53
+> ∆ = 0 .67
+> Cost = 1.64
+> ∆ = 0 .99
+> 0.00.51.01.52.0
+> Environment risk
+> Conservative MoMo (Ours) Aggressive
+> Waypoint path Waypoint Start Goal
+
+Figure 1: Preference-conditioned planning in a risk-structured environment with four obstacles and a cost function reflecting obstacle proximity. Different scalar safety preferences ( ∆) modulate waypoint plans, ranging from low-risk detours to more direct, riskier routes. to support preference-conditioning is nontrivial as a preference-conditioned variant must preserve this structure while allowing it to vary meaningfully with a user-specified preference. We approach this challenge by considering behavioral differences arising at two levels: the organization of states in the representation space, and the transitions between them. Conditioning representations yields a preference-aware geometry, while conditioning the transition operator reshapes how trajectories evolve under varying preferences. To unify these components, we introduce M OMO, a preference-conditioned contrastive planning framework that jointly conditions the representation geometry and the transition operator, enabling inference-time behavioral modulation while preserving the planning structure of CRLP. Training MOMO requires trajectory data with diverse behavioral coverage. Therefore, we curate training datasets offering richer coverage of the joint state-preference space, for this purpose. In summary, our contributions are: 1. Problem formulation. We contextualize preference-conditioned planning within the CRLP framework and identify a conditioning scheme that preserves its inference-driven structure. 2. Architecture. We introduce M OMO, which modulates planning behaviors by jointly conditioning the encoder and the latent transition operator. 3. Empirical results. We show that M OMO enables behavioral modulation of plans in response to user preference across six environments spanning a diverse set of tasks, while retaining the inference-time planning efficiency. 
+
+## 2 Related Work 
+
+Model-Based Risk-Aware Planning. Classical model-based methods provide explicit safety mech-anisms but rely on known dynamics. Chance-constrained trajectory optimization enforces user-specified bounds on failure probability, allocating risk across the planning horizon [ 4 –9 ]. Risk-aware control bounds tail risk through conditional value-at-risk (CVaR) constraints [ 20 ], while control barrier functions filter control inputs to maintain safety invariants [ 21 ]. These approaches enable principled safety guarantees but assume known, often linearized dynamics and become expensive in high-dimensional or long-horizon settings, motivating learning-based alternatives that remove the dependence on explicit dynamics models. 
+
+Adaptive Safe Policy Learning. Learning-based methods relax dependence on known dynamics by extracting behaviors directly from trajectory data. Feng et al. [10] combine graph-based waypoint planning with safe goal-conditioned RL policies for multi-agent navigation, but enforce safety through graph pruning, which can disconnect goals beyond high-risk regions [ 22 ]. Huang et al. [12] and Yoo et al. [13] introduce risk-conditioned policies that allow inference-time adaptation across a continuous risk spectrum, but rely on direct policy conditioning, with limited scalability over longer horizons. In the offline setting, decision-transformer approaches such as Liu et al. [23] condition on desired return and constraint thresholds for zero-shot adaptation across cost budgets, with extensions to safety verification [ 14 ], signal temporal logic specifications [ 24 ], and constraint-conditioned actor-critic learning [ 25 ]. Benchmark suites such as DSRL [ 26 ] have accelerated progress in this area, but center on safety-constrained control rather than granular preference modulation. Mao et al. [15] follow 2a different approach, learning preference-conditioned terrain costmaps for downstream planning. Across these methods, preference or risk adaptability operates at the level of policies or costmaps, not through a learned representation whose structure supports planning by inference. 
+
+Preference-Conditioned and Multi-Objective RL. Multi-objective RL (MORL) addresses trade-offs by learning policies or value functions conditioned on preferences over vector-valued re-turns [ 27 , 28 ]. Offline variants such as PEDA, together with the D4MORL benchmark, extend this to preference-conditioned decision transformers trained on annotated demonstrations [ 29 ], while recent work emphasizes comprehensive coverage of the Pareto front for unseen preference adapta-tion [ 30 ]. These methods cast the problem as optimization over vector-valued returns, whereas our setting studies how different safety preferences reshape plans for a fixed start-goal pair. 
+
+Latent Planning. Beyond policy-level adaptation, learned representations offer a route to tractable planning in high-dimensional settings. Early work learns latent dynamics from observations for control and online planning [ 31 , 32 ], with subsequent methods studying planning directly in latent spaces [ 33 –35 ]. Reeves and Williams [36] extend this to stochastic, risk-aware planning by learning linear dynamics in latent space and propagating uncertainty through probabilistic flow tubes [ 37 ]sampled from a variational autoencoder [ 38 ]. These approaches highlight the value of learned representations for planning under unknown dynamics yet do not condition them on user preferences. 
+
+Contrastive Planning and Conditional Representation Learning. Our work builds on contrastive representations for planning. Time-contrastive networks and successor representations demonstrate how temporal structure in trajectory data can be captured in learned representations [ 39 – 41 ]. Ey-senbach et al. [16] show that contrastive learning can be interpreted as goal-conditioned RL, with subsequent work improving performance from offline data [ 18 , 19 ]. Eysenbach et al. [17] show that temporally contrastive representations induce a Gauss-Markov latent structure in which long-horizon planning reduces to efficient inference over intermediate waypoints in a lower-dimensional linear system. Separately, conditional representation learning offers tools for reshaping embeddings as a function of auxiliary variables. Examples include masked subspaces [ 42 ], kernel-based objective reweighting [ 43 – 45 ], Feature-wise Linear Modulation (FiLM) [ 46 ] for controlling intermediate activations, and HyperNetworks [ 47 ] for generating network parameters from auxiliary inputs. These conditioning methods must be applied carefully so as not to disrupt the latent structure enabling inference-based planning, as analyzed in Section 3.3. 
+
+## 3 Problem Setup and Preliminaries 
+
+3.1 Preference-Conditioned Planning from Trajectory Data 
+
+Consider a system with state space S ⊆ Rd and per-step cost δt ∈ R≥0 penalizing proximity to constraints such as obstacles. Preference-conditioned planning seeks a learned mapping P that, given a query q = ( s0, s g , ∆) with s0, s g ∈ S and preference ∆ ∈ [0 , 1] , returns a sequence of n
+
+waypoints s1: n = P(q) from s0 to sg . ∆ specifies the desired safety behavior, which we quantify using a CVaR-based measure in Section 4.1. The planner is trained from an offline dataset 
+
+D = (τi, ∆i) Ni=1 , τi =  sit, δ it
+
+Ti−1 
+
+> t=0
+
+, (1) where each trajectory is collected under an unknown behavioral policy and annotated with the scalar preference label ∆i ∈ [0 , 1] summarizing the trajectory’s safety. We require the preference-conditioned planner P to satisfy three properties: 1. Temporal consistency. Waypoints correspond to dynamically feasible short-horizon transitions. 2. Preference alignment. For a fixed (s0, s g ), varying ∆ should modulate behavior such that lower values of ∆ yield plans whose induced trajectory exhibits lower risk. 3. Efficient inference. P produces preference-conditioned plans s1: n at test time without retraining, and the computational cost of producing that plan scales gracefully in n.These requirements motivate a planning-oriented latent representation learned directly from trajectory data, whose geometry captures temporal reachability and can be queried efficiently at inference time. 3Cost = 13.20      
+
+> IvI
+> (Eysenbach et al., 2025)
+> Cost = 5.90
+> ∆ = 0 .01
+> Cost = 8.53
+> ∆ = 0 .34
+> Cost = 9.86
+> ∆ = 0 .67
+> Cost = 15.21
+> ∆ = 0 .99
+> Conservative MoMo (Ours) Aggressive
+> Waypoint path Waypoint Start Goal
+
+Figure 2: Preference-conditioned planning on the 29-dimensional Ant agent in an AI Habitat envi-ronment. Risk is defined as a linear function of obstacle proximity within an influence radius. For a fixed start and goal, increasing ∆ reduces the planned obstacle clearance for a more efficient path. 
+
+3.2 Contrastive Planning from Trajectory Data 
+
+Our method builds on CRLP [ 16 , 17 ], which learns a latent space whose geometry reflects temporal reachability. Given an anchor state s, a positive future s+ is sampled from the discounted state-occupancy distribution pγ (s+|s) [ 16 ], using a discounting factor γ ∈ (0 , 1) which controls the effective temporal horizon of the sampling distribution. Negative pairs are formed from an anchor and negative future s− by sampling independently from the product of marginal distributions p(s)p(s−).Let ψ : S → Rdz and ϕ : S → Rdz denote future and anchor encoders, respectively, with representa-tion dimension dz . For a batch of B positive pairs {(si, s i
+
+> +
+
+)}Bi=1 , we define the logits 
+
+Sij = exp 
+
+
+
+− 12 ϕ(si) − ψ(sj
+
+> +
+
+) 22
+
+
+
+, (2) with diagonal matrix entries scoring positive pairs and off-diagonal entries scoring bootstrapped negative pairs [ 17 ]. The symmetrized InfoNCE objective [ 48 , 17 ] trains the encoders to distinguish the positive from negative pairs in the sampled batch: 
+
+LNCE = −
+
+> B
+
+X
+
+> i=1
+
+"
+
+log Sii 
+
+PBj=1 , j ̸ =i Sij 
+
+!
+
++ log Sii 
+
+PBj=1 , j ̸ =i Sji 
+
+!# 
+
+. (3) Optimizing (3) pulls temporally related states together and pushes unrelated states apart, so that latent distance reflects temporal reachability. While standard contrastive learning constrains representations to the unit hypersphere [ 16 ], following Eysenbach et al. [17] we instead bound the expected norm  
+
+> 1
+> dz
+
+Es∼p(s)
+
+∥ψ(s)∥22
+
+ ≤ c, enforced via a regularization term and dual gradient descent, where c
+
+is the constraint target [ 17 ]. The anchor encoder is parameterized as a linear transformation of the future encoder, such that ϕ(s) = Aψ (s), where A ∈ Rdz ×dz acts as a latent predictor mapping representations to their γ-discounted future. Crucially, the optimal logits learned under (3) encode the density ratio 
+
+S∗ 
+
+> ij
+
+∝ pγ (sj 
+
+> +
+
+| si)
+
+p(sj
+
+> +
+
+) . (4) The representation space learned in [ 17 ] therefore encodes how likely it is to see a certain future state given a starting state. Combined with the assumption that the marginal distribution of representations is isotropic Gaussian and the linear parameterization of ϕ(s) in terms of ψ(s), this property induces a Gauss-Markov latent structure that supports tractable planning. Eysenbach et al. [17] derive that the resultant latent dynamics from z = ψ(s) to its γ-discounted future representation z′ become 
+
+p(z′ | z) = N
+
+ cc+1 Az, cc+1 I
+
+
+
+. (5) A planning query between start and goal representations z0, z g is solved by inferring intermediate latent waypoints z1: n from the Markov chain-factorized Gaussian posterior p(z1: n | z0, z g ). Under (5) ,this posterior has mean μ = Λ −1η and covariance Σ = Λ −1, where Λ is a block-tridiagonal matrix defined by A and c, and η encodes start and goal embeddings [ 17 ], defined in Appendix A.3. Long-horizon planning therefore reduces to solving a sparse nd z -dimensional linear system in O(nd 3 
+
+> z
+
+)
+
+time rather than optimizing trajectories in the original observation space. Following [ 17 ], the inferred latent waypoints z1: n are decoded to the observation space plan s1: n by nearest-neighbor lookup in a held-out set Dheld ⊂ D , mapping each latent waypoint to the observation s ∈ D held whose representation ψ(s) is closest. 43.3 Preference Conditioning in Contrastive Planners 
+
+Extending contrastive planning to support preference conditioning requires care. The Gauss-Markov planning structure depends on the density-ratio property of learned logits in (4) , and any preference-conditioned extension must preserve this property. Consider a conditioned logit mirroring (2) with preference-dependent encoders ϕ∆ and ψ∆,
+
+S∆ 
+
+> ij
+
+= exp 
+
+
+
+− 12 ϕ∆(si) − ψ∆(sj
+
+> +
+
+) 22
+
+
+
+. (6) If the anchor encoder is parameterized as ϕ∆(s) = A∆ψ∆(s), then conditioning can act through two distinct mechanisms. It can deform the representation geometry via ψ∆, and it can modify how trajectories evolve through that space via the latent transition matrix A∆. We show in Appendix A.1 that this preference conditioning at the level of the logits preserves the density-ratio property, justifying the joint-conditioning architecture designed for M OMO.
+
+## 4 MOMO: Preference-Conditioned Contrastive Planning 
+
+We now introduce M OMO, a preference-conditioned contrastive planning framework built on CRLP. Given an offline trajectory dataset, M OMO learns a conditioned encoder and prediction matrix that jointly reshape the planning geometry using the queried safety preference, while preserving the density-ratio structure required for planning by inference. The remainder of this section defines the trajectory-level preference statistic (Section 4.1), the conditioning mechanisms (Sections 4.2, 4.3), and the training objective (Section 4.4). Algorithm 1 summarizes the training and inference pipeline. 
+
+4.1 Safety Preference from Trajectory Costs 
+
+For preference-conditioned planning, we summarize each trajectory’s safety behavior with a scalar statistic. Given a trajectory τi, let (δit)Ti−1 
+
+> t=0
+
+denote the sequence of per-step costs, where δit ∈
+
+R≥0 penalizes constraint exposure such as obstacle proximity. Zero-cost segments arise in both conservative and risk-tolerant behavior whenever the agent follows an efficient path through safe regions, so averaged costs fail as a faithful summary by diluting the preference signal. We therefore use the empirical cost distribution upper-tail, following prior work in risk-conditioned planning that treats tail-risk metrics as a natural conditioning signal [ 11 , 12 ]. Letting qα(τi) denote the empirical 
+
+α-quantile of (δit)Ti−1 
+
+> t=0
+
+, and Tα(τi) = t ∈ { 0, . . . , T i − 1} : δit ≥ qα(τi) index the upper-tail steps, we define the raw tail-risk statistic as the empirical CVaR [49] of the per-step costs, 
+
+e∆i = CVaR α(τi) = 1
+
+|T α(τi)|
+
+X
+
+> t∈T α(τi)
+
+δit, (7) This averages over the highest cost portions of the trajectory, isolating behaviorally meaningful interactions with risk while excluding the zero-cost segments common to both conservative and risk-tolerant behaviors. We wrap these raw values { e∆i} to lie in [0 , 1] across the training dataset, so that ∆i = 0 corresponds to the most risk-averse trajectory and ∆i = 1 to the most risk-tolerant. Each trajectory thus carries a single preference label, shared across all states in the trajectory, which sets the preference context for every contrastive pair sampled from it. We assume that D comprises trajectories that do not take on additional risk without commensurate efficiency benefit. This makes the cost-computed ∆ a meaningful conditioning variable for behavioral modulation. 
+
+4.2 Preference-Conditioned Latent Geometry 
+
+In CRLP, the encoder organizes states according to temporal reachability alone. Under preference-conditioning, the same state may play different roles depending on the desired safety level. A state near an obstacle, for example, may be a plausible waypoint under a risk-tolerant preference but an unlikely one under a conservative preference. The encoder must therefore jointly capture temporal reachability and preferential similarity. Schemes that apply a condition-dependent mask to a shared embedding [ 42 ] leave the intermediate features unchanged, limiting the expressivity with which preference can reshape the representation. 5IvI (Eysenbach et al ., 2025) ∆ = 0 .01 ∆ = 0 .34 ∆ = 0 .67 ∆ = 0 .99  
+
+> MoMo (Ours) Lift over divider Through slot
+
+Figure 3: Preference-conditioned planning on a pick-and-place Manipulation task, where the UR5 robot must move a cube between start and goal regions over a gate divider. M OMO shows behavioral gradation between safely lifting above and efficiently sliding through the gate as ∆ increases. We instead modulate intermediate representations using Feature-Wise Linear Modulation (FiLM) [ 46 ], which applies ∆-dependent affine transformations to the encoder’s hidden layer activations, allowing the preference to reshape features hierarchically through the network. Let h(l) denote the pre-activation at layer l, before the nonlinearity. A FiLM generator Fξ with parameters ξ takes input ∆
+
+and produces scale and shift vectors {(λ(l)∆ , β (l)∆ )} for each encoder layer l, modulating the activation 
+
+a(l)∆ = swish 
+
+
+
+λ(l)∆ ⊙ h(l) + β(l)∆
+
+
+
+, (8) where ⊙ denotes an elementwise product. We use the Swish nonlinearity [ 50 ] following Eysenbach et al. [17] . The scale λ(l)∆ controls the strength of each feature channel under the queried preference, while the shift β(l)∆ adjusts each feature’s bias, effectively gating its contribution to downstream layers. Applying this modulation across all encoder layers defines the preference-conditioned future-state encoder ψ∆(s) with FiLM parameters generated by Fξ (∆) .
+
+4.3 Preference-Conditioned Latent Predictions 
+
+To support varying latent transition dynamics, we parameterize a preference-dependent prediction matrix A∆ as a shared base matrix with a low-rank preference-dependent perturbation. This reflects the inductive bias that dominant temporal structure is shared across preferences, while conditioning shifts which transitions are locally favored. Let A0 ∈ Rdz ×dz denote the shared matrix, and 
+
+U, V : [0 , 1] → Rdz ×r with r < d z be networks mapping the ∆ to rank-r matrices. We define 
+
+A∆ = A0 + U (∆) V (∆) ⊤. (9) 
+
+V (∆) defines a preference-dependent r-dimensional subspace of the representation space, and U (∆) 
+
+specifies how this subspace contributes to the predicted future representation. Conceptually, the perturbation reads r preference-relevant directions out of the current representation and writes r
+
+corrections into the predicted future. Sharing A0 across preferences grounds the learned dynamics to a common baseline, preventing the transition structure from drifting unpredictably as ∆ varies. The parameterization also reduces the number of preference-dependent outputs from d2 
+
+> z
+
+to 2rd z ,which aids scalability to higher-dimensional representations and mitigates overfitting when the preference axis is sparsely sampled. Combined with ψ∆, this defines the conditioned anchor encoder 
+
+ϕ∆(s) = A∆ψ∆(s), completing the conditioned logit S∆ 
+
+> ij
+
+in (6) . In practice, Fξ , U , and V all operate on a shared Fourier feature embedding of ∆ [51]. Full architectural details appear in Appendix E. 
+
+4.4 Preference-Conditioned Contrastive Objective 
+
+For planning, the representation structure must encode the likelihood of observing future states from an anchor state, given its preference context. Therefore, anchor-future pairs are scored under the pref-erence label of the anchor, such that for a batch of preference-labeled positive pairs {(si, s i
+
+> +
+
+, ∆i)}Bi=1 ,the conditioned logit is defined as S∆i 
+
+> ij
+
+using (6) . Positive pairs are sampled following Eysenbach et al. [17] , with each pair inheriting ∆i of its source trajectory. This ensures that positive pairs 
+
+(si, s i
+
+> +
+
+) are pulled together under their shared preference, while negative pairs are pushed apart under the anchor preference. Extending the symmetrized InfoNCE loss with preference conditioning yields 
+
+LMOMO = −
+
+> B
+
+X
+
+> i=1
+
+(
+
+log S∆i
+
+> ii
+
+PBj=1 , j ̸ =i S∆i
+
+> ij
+
+!
+
++ log S∆i
+
+> ii
+
+PBj=1 , j ̸ =i S∆j
+
+> ji
+
+!) 
+
+. (10) 6Algorithm 1 MOMO: Preference-Conditioned Contrastive Planning. Color denotes conditioning of the representation geometry and latent prediction matrix; black follows Eysenbach et al. [17]  
+
+> 1:
+
+TRAINING  
+
+> 2:
+
+Input: offline trajectories D = {(τi, ∆i)}Ni=1  
+
+> 3:
+
+for each minibatch do  
+
+> 4:
+
+Sample preference-labeled positive pairs {(si, s i
+
+> +
+
+, ∆i)}Bi=1 from discounted state-occupancy  
+
+> 5:
+
+Encode anchors and candidate futures with ψ∆i 
+
+> 6:
+
+Compute conditioned prediction matrix A∆i via (9)  
+
+> 7:
+
+Form similarities S∆i 
+
+> ij
+
+and update parameters by minimizing (10) under the norm constraint  
+
+> 8:
+
+end for  
+
+> 9: 10:
+
+INFERENCE  
+
+> 11:
+
+Input: query q = ( s0, s g , ∆) , waypoint count n 
+
+> 12:
+
+Encode endpoints z0 = ψ∆(s0), z g = ψ∆(sg ) 
+
+> 13:
+
+Generate conditioned prediction matrix A∆ via (9)  
+
+> 14:
+
+Solve z1: n = Λ −1∆ η∆, where Λ∆, η ∆ follow [17] with ψ∆, A ∆ replacing ψ, A  
+
+> 15:
+
+Decode z1: n to s1: n via nearest-neighbor retrieval under ψ∆ in Dheld  
+
+> 16:
+
+return Preference-conditioned plan s1: n
+
+Minimizing LMOMO jointly optimizes the encoder parameters, FiLM generator, low-rank modulation networks, and shared matrix A0, which together define the planner P from Section 3.1. Under the same assumptions made by Eysenbach et al. [17] , for any sampled pair (si, s j
+
+> +
+
+) and preference 
+
+∆ ∈ [0 , 1] , the optimal conditioned similarity satisfies 
+
+ S∆
+
+> ij
+
+⋆ ∝ pγ (sj 
+
+> +
+
+| si, ∆) 
+
+p(sj
+
+> +
+
+) , (11) as shown in Appendix A.1. This is the conditioned analogue of (4) , preserving the density-ratio property of the base contrastive planner. The representation space now encodes how likely it is to observe a given future state from a starting state, under the user-preference set at runtime. This distinction from (4) enables behavioral modulation while keeping inference-driven planning tractable under M OMO. Eysenbach et al. [17] further assume that the marginal distribution over representations is isotropic Gaussian, which we argue remains consistent with our approach in Appendix A.2. At inference, a query q = ( s0, s g , ∆) is resolved by computing A∆ and the conditioned endpoints, solv-ing the Gauss-Markov posterior for z1: n, and nearest-neighbor decoding as outlined in Algorithm 1. In practice, standard goal-reaching policies trained over short horizons can then be used to track these conditioned waypoints for a complete trajectory. 
+
+## 5 Experiments 
+
+We evaluate M OMO across a range of environments to address the following questions: 
+
+Q1. Does M OMO produce temporally consistent plans by preserving the representation structure required for inference-driven planning? 
+
+Q2. Does M OMO produce plans that respond meaningfully to the user preference, or does condi-tioning collapse to a single behavior mode? 
+
+Q3. Does M OMO maintain effective preference-conditioned planning across diverse task settings, including higher-dimensional and longer-horizon tasks? 
+
+Environments and Baselines. We evaluate M OMO on six environments spanning four agents, summarized in Table 2, including three navigation tasks for a 2D Point agent (an obstacle field, a Gaussian cost contour, and an indoor scene from AI Habitat [ 52 – 55 ]), a quadcopter Drone performing an exploration orbit around a central safe column, a quadruped Ant navigating an AI Habitat scene, and a UR5 Manipulator performing table-top pick-and-place with obstacle clearance. For each environment, we generate offline trajectory datasets at multiple discrete agent risk levels and annotate them with preference labels following Section 4.1. Dataset construction adapts D4RL [ 56 ] and 70 0.5 136912 Waypoint cost 
+
+Preference Modulation  
+
+> 020
+> MoMo (Ours) IvI IvI-SA PCA-SA VIP-SA
+> 28.8x
+
+Waypoint MSE   
+
+> 00.5 124
+
+Preference Modulation  
+
+> 020
+> MoMo (Ours) IvI IvI-SA PCA-SA VIP-SA
+> 25.5x
+
+Waypoint MSE   
+
+> 00.5 1816 24 Waypoint cost
+
+Preference Modulation  
+
+> 05
+> MoMo (Ours) IvI IvI-SA PCA-SA VIP-SA
+
+Waypoint MSE    
+
+> 00.5 136912
+
+Preference Modulation  
+
+> 05
+> MoMo (Ours) IvI IvI-SA PCA-SA VIP-SA
+
+Waypoint MSE   
+
+> 00.5 1∆612 18 24 Waypoint cost
+
+Preference Modulation  
+
+> 020 IvI-normalized MSE
+> MoMo (Ours) IvI IvI-SA PCA-SA VIP-SA
+> 38.6x 239.9x
+
+Waypoint MSE   
+
+> 00.5 1∆012
+
+Preference Modulation  
+
+> 02IvI-normalized MSE
+> MoMo (Ours) IvI IvI-SA PCA-SA VIP-SA
+
+Waypoint MSE 
+
+Point Four Obstacles Point Contour Point Habitat Drone Ant Habitat UR5     
+
+> MoMo (Ours) IvI IvI-SA PCA-SA VIP-SA
+
+Figure 4: Preference modulation and planning fidelity across six environments. For each environment, the left panel plots waypoint cost as a function of preference ∆; the right panel reports waypoint reconstruction MSE normalized by IvI’s MSE (vertical reference line at 1.0), where bars beyond 1.0
+
+indicate baselines that fit the dataset’s waypoints worse than the preference-agnostic IvI. Dashed lines in the left panels show each method’s modulation trend. Bars labeled with multipliers (e.g., 28 .8×)extend beyond the displayed axis range. M OMO produces a near-monotonic trend between ∆ and waypoint cost while maintaining MSE comparable to IvI; IvI is preference-agnostic and produces a flat trend; the SA baselines show inconsistent or non-monotonic responses with higher MSE. FSRL [ 26 ]. Details about the datasets can be found in the Appendix D. We compare M OMO against four baselines. IvI [ 17 ] is the preference-agnostic baseline producing a single plan per start-goal query. The remaining baselines apply a state augmentation (SA) approach appending preference ∆i as an additional observation dimension over three representation backbones: IvI-SA uses IvI’s contrastive representations [ 17 ], PCA-SA uses linear principal-component projections of raw observations, and VIP-SA uses representations from VIP [ 57 ] which encode temporal distances. Together, these isolate whether preference conditioning can be achieved via SA across various representation types. 
+
+Demonstrating Consistent Preference Modulation. To evaluate Q1 and Q2 , we train M OMO
+
+across environments and query across a continuum of ∆ values using Algorithm 1. For Q1 , we measure waypoint reconstruction MSE relative to IvI as an inference-driven planning reference. As shown in the right panel of Figure 4, M OMO is able to achieve MSE comparable to IvI across most environments, while the SA baselines reach up to 28 .8× and 38 .6× higher on Point Four Obstacles and Ant Habitat, respectively. This indicates that joint conditioning preserves the representation structure required for planning by inference, whereas SA over alternative backbones disrupts it. For Q2 , we query start-goal pairs across multiple preferences and plot the sum of waypoint costs in the left panel of Figure 4, observing a near-monotonic relationship between ∆ and realized cost across all environments. M OMO’s per-query variance is comparable to IvI’s, indicating that modulation occurs at the individual query level rather than as a weak global average. Different SA backbones fail in qualitatively different ways. PCA-SA mostly collapses toward flat responses, indicating that 8linear projections lack sufficient structure to encode preference at all. IvI-SA produces noisy but correlated responses, showing that contrastive representations can encode preference under SA but yield unstable plans, which we examine further in Appendix B.2. Finally, VIP-SA produces erratic responses with high MSE, suggesting that the temporal-distance representations are not preserved by SA-based conditioning. Figure 1 illustrates the modulation of risk exposure for a given start-goal query, retrieving viable conditioned waypoint sequences which can be tracked by a standard goal-reaching policy to generate complete trajectories. Increasing ∆ corresponds to more direct efficient routes, traded for greater realized risk. We further analyze how our conditioning method is able to achieve this modulation via deformation of the latent manifold in Appendix B.1. M OMO is also able to demonstrate a mode-switching behavior in the left panel of Figure 1 by recovering a different, safer approach for the same start and goal. 
+
+Robustness across Tasks and Modalities. To evaluate Q3 , we test M OMO along four robustness axes, with quantitative metrics for all six environments reported in Table 1. To test whether M OMO
+
+works across different environment risk structures, we evaluate the Point agent in two longer-horizon settings, Point Contour with dense Gaussian cost-field contours and Point Habitat with an indoor scene rendered through AI Habitat. As shown in Figure 4, M OMO maintains a Spearman correlation 
+
+ρ ≥ 0.91 between ∆ and cost on both, with the smoothest modulation curves of any baseline. To test the inference-driven advantage of learning latent dynamics from a reduced feature set, we train the 
+
+Drone task on a 6-dimensional subset of the 18-dimensional observation space (translational positions and velocities only). Here, M OMO continues to modulate plans monotonically ( ρ = 0 .87 ), while PCA-SA’s curve in Figure 4 collapses toward a single behavioral mode. This result highlights the performance of M OMO’s joint conditioning approach in maintaining both temporal and preferential consistency on a reduced feature set where SA-based methods cannot. To test representational capacity in high dimensions, we evaluate the 29-dimensional Ant quadruped navigating an AI Habitat scene. Figure 2 shows the resulting plans transitioning from cautious detours around obstacles at low ∆ to direct routes at high ∆. While VIP-SA achieves a marginally higher correlation ( ρ = 0 .87 vs. 0.82 ), its waypoint MSE is significantly higher than IvI’s, indicating that the plans themselves are not temporally consistent, whereas M OMO achieves the smoothest modulation curve across all baselines. While M OMO’s correlation drops from ρ = 0 .99 on the 2-D Point environment to ρ = 0 .82 here, the modulation remains monotonic and the waypoint MSE remains comparable to IvI. This graceful degradation across an order of magnitude in observation dimensionality suggests the approach is amenable to scaling. Finally, to test that M OMO does not depend on the specific choice of preference variable, we replace the CVaR-based preference on the UR5 Manipulator with maximum end-effector height as a clearance proxy over a gate obstacle. As Figure 3 illustrates, M OMO recovers safe trajectories that maintain clearance above the divider, transitioning to aggressive plans passing directly through the gate as ∆ increases, achieving the highest correlation as shown in Table 1. These analyses demonstrate that M OMO effectively performs preference-conditioned planning in complex settings, and is robust across a range of modalities. 
+
+## 6 Conclusion 
+
+We introduced M OMO, a preference-conditioned contrastive planning framework that jointly condi-tions the representation geometry and latent transition matrix, enabling inference-time control over user preferences while preserving the planning structure of CRLP. By conditioning at the logit level using a preference context statistic that summarizes behavioral tendencies within each trajectory, we preserve the density-ratio encoding in the latent structure required by CRLP. Across six environments and four agent embodiments, FiLM-based encoder modulation combined with low-rank modulation of the transition matrix produces temporally consistent plans with strong preference-cost correlation across diverse task settings including effective scaling to high-dimensional and longer-horizon tasks. More broadly, our work shows that representation-level conditioning, as opposed to policy- or cost-level conditioning, can support preference-conditioned planning at scale. Despite these encouraging results, there is further space for improvement upon the limitations outlined in Appendix C. One direction is to develop dual risk-and-goal-conditioned RL policies to track the conditioned waypoints, potentially mapping representations directly to actions to avoid noisy decoding. Another is to con-struct a general preference context embedding rather than a single scalar metric, to capture richer trajectory-level information. A third is to analyze the effects of network architecture on conditioned representation quality for planning. 9References 
+
+[1] Roberto Bolli and H. Harry Asada. Elderly bodily assistance robot (e-bar): A robot system for body-weight support, ambulation assistance, and fall catching, without the use of a harness. In 2025 IEEE International Conference on Robotics and Automation (ICRA) , pages 713–719, 2025. doi: 10.1109/ICRA55743.2025.11127403. [2] Jorgen Cani, Panagiotis Koletsis, Konstantinos Foteinos, Ioannis Kefaloukos, Lampros Argyriou, Manolis Falelakis, Iván Del Pino, Angel Santamaria-Navarro, Martin ˇ Cech, Ondˇ rej Severa, Alessandro Umbrico, Francesca Fracasso, AndreA Orlandini, Dimitrios Drakoulis, Evangelos Markakis, Iraklis Varlamis, and Georgios Th. Papadopoulos. Triffid: Autonomous robotic aid for increasing first responders efficiency, 2025. URL https://arxiv.org/abs/2502.09379 .[3] Simon Leonard, Kyle L. Wu, Yonjae Kim, Axel Krieger, and Peter C.W. Kim. Smart tissue anastomosis robot (star): A vision-guided robotics system for laparoscopic suturing. IEEE Transactions on Biomedical Engineering , 61(4):1305–1317, 2014. doi: 10.1109/TBME.2014. 2302385. [4] Lars Blackmore and Masahiro Ono. Convex Chance Constrained Predictive Control Without Sampling . doi: 10.2514/6.2009-5876. URL https://arc.aiaa.org/doi/abs/10.2514/6. 2009-5876 .[5] Masahiro Ono and Brian C. Williams. Iterative risk allocation: A new approach to robust model predictive control with a joint chance constraint. In 2008 47th IEEE Conference on Decision and Control , pages 3427–3432, 2008. doi: 10.1109/CDC.2008.4739221. [6] Charles Dawson, Ashkan Jasour, Andreas G. Hofmann, and Brian C. Williams. Provably safe trajectory optimization in the presence of uncertain convex obstacles. CoRR , 2020. URL 
+
+https://arxiv.org/abs/2003.07811 .[7] Oscar de Groot, Laura Ferranti, Dariu M. Gavrila, and Javier Alonso-Mora. Scenario-based motion planning with bounded probability of collision. The International Journal of Robotics Research , 44(9):1507–1525, 2025. doi: 10.1177/02783649251315203. URL https://doi. org/10.1177/02783649251315203 .[8] Xin Huang, Sungkweon Hong, Andreas Hofmann, and Brian C. Williams. Online risk-bounded motion planning for autonomous vehicles in dynamic environments. Proceedings of the Interna-tional Conference on Automated Planning and Scheduling , 29(1):214–222, Jul. 2019. doi: 10.1609/icaps.v29i1.3479. URL https://ojs.aaai.org/index.php/ICAPS/article/ view/3479 .[9] Siyu Dai, Shawn Schaffert, Ashkan Jasour, Andreas Hofmann, and Brian Williams. Chance constrained motion planning for high-dimensional robots. In 2019 International Conference on Robotics and Automation (ICRA) , pages 8805–8811, 2019. doi: 10.1109/ICRA.2019.8793660. [10] Meng Feng, Viraj Parimi, and Brian Williams. Safe multi-agent navigation guided by goal-conditioned safe reinforcement learning. In 2025 IEEE International Conference on Robotics and Automation (ICRA) , page 16869–16875. IEEE, May 2025. doi: 10.1109/icra55743.2025. 11127461. URL http://dx.doi.org/10.1109/ICRA55743.2025.11127461 .[11] Anirban Santara, Abhishek Naik, Balaraman Ravindran, Dipankar Das, Dheevatsa Mudigere, Sasikanth Avancha, and Bharat Kaul. Rail: Risk-averse imitation learning, 2017. URL 
+
+https://arxiv.org/abs/1707.06658 .[12] Xin Huang, Meng Feng, Ashkan M. Jasour, Guy Rosman, and Brian Charles Williams. Risk conditioned neural motion planning. 2021 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) , pages 9057–9063, 2021. URL https://api.semanticscholar. org/CorpusID:236912881 .[13] Gwangpyo Yoo, Jinwoo Park, and Honguk Woo. Risk-conditioned reinforcement learning: A generalized approach for adapting to varying risk measures. Proceedings of the AAAI Conference on Artificial Intelligence , 38(15):16513–16521, Mar. 2024. doi: 10.1609/aaai.v38i15.29589. URL https://ojs.aaai.org/index.php/AAAI/article/view/29589 .10 [14] Qin Zhang, Linrui Zhang, Haoran Xu, Li Shen, Bowen Wang, Yongzhe Chang, Xueqian Wang, Bo Yuan, and Dacheng Tao. Saformer: A conditional sequence modeling approach to offline safe reinforcement learning, 2023. URL https://arxiv.org/abs/2301.12203 .[15] Luisa Mao, Garrett Warnell, Peter Stone, and Joydeep Biswas. Pacer: Preference-conditioned all-terrain costmap generation. arXiv preprint arXiv:2410.23488 , 2024. URL https://arxiv. org/abs/2410.23488 .[16] Benjamin Eysenbach, Tianjun Zhang, Ruslan Salakhutdinov, and Sergey Levine. Contrastive learning as goal-conditioned reinforcement learning, 2023. URL https://arxiv.org/abs/ 2206.07568 .[17] Benjamin Eysenbach, Vivek Myers, Ruslan Salakhutdinov, and Sergey Levine. Inference via interpolation: Contrastive representations provably enable planning and inference, 2025. URL 
+
+https://arxiv.org/abs/2403.04082 .[18] Chongyi Zheng, Ruslan Salakhutdinov, and Benjamin Eysenbach. Contrastive difference predictive coding, 2025. URL https://arxiv.org/abs/2310.20141 .[19] Chongyi Zheng, Benjamin Eysenbach, Homer Walke, Patrick Yin, Kuan Fang, Ruslan Salakhut-dinov, and Sergey Levine. Stabilizing contrastive rl: Techniques for robotic goal reaching from offline data, 2025. URL https://arxiv.org/abs/2306.03346 .[20] Astghik Hakobyan, Gyeong Chan Kim, and Insoon Yang. Risk-aware motion planning and control using cvar-constrained optimization. IEEE Robotics and Automation Letters , 4(4): 3924–3931, 2019. doi: 10.1109/LRA.2019.2929980. [21] Matti Vahs, Christian Pek, and Jana Tumova. Belief control barrier functions for risk-aware control, 2023. URL https://arxiv.org/abs/2309.06499 .[22] Viraj Parimi and Brian C. Williams. Risk-bounded multi-agent visual navigation via iterative risk allocation, 2026. URL https://arxiv.org/abs/2509.08157 .[23] Zuxin Liu, Zijian Guo, Yihang Yao, Zhepeng Cen, Wenhao Yu, Tingnan Zhang, and Ding Zhao. Constrained decision transformer for offline safe reinforcement learning. In Proceedings of the 40th International Conference on Machine Learning , volume 202 of Proceedings of Machine Learning Research , pages 21611–21630. PMLR, 2023. URL https://proceedings.mlr. press/v202/liu23m.html .[24] Zijian Guo, Weichao Zhou, and Wenchao Li. Temporal logic specification-conditioned deci-sion transformer for offline safe reinforcement learning. In Proceedings of the 41st Interna-tional Conference on Machine Learning , volume 235 of Proceedings of Machine Learning Research , pages 17003–17019. PMLR, 2024. URL https://proceedings.mlr.press/ v235/guo24j.html .[25] Zijian Guo, Weichao Zhou, Shengao Wang, and Wenchao Li. Constraint-conditioned actor-critic for offline safe reinforcement learning. In International Conference on Learning Representa-tions , 2025. URL https://openreview.net/forum?id=nrRkAAAufl .[26] Zuxin Liu, Zijian Guo, Haohong Lin, Yihang Yao, Jiacheng Zhu, Zhepeng Cen, Hanjiang Hu, Wenhao Yu, Tingnan Zhang, Jie Tan, and Ding Zhao. Datasets and benchmarks for offline safe reinforcement learning. Journal of Data-centric Machine Learning Research , 2024. [27] Runzhe Yang, Xingyuan Sun, and Karthik Narasimhan. A generalized algorithm for multi-objective reinforcement learning and policy adaptation. In Advances in Neural Information Processing Systems , 2019. URL https://openreview.net/forum?id=B1lR3HBeUB .[28] Xin-Qiang Cai, Pushi Zhang, Li Zhao, Jiang Bian, Masashi Sugiyama, and Ashley Juan Llorens. Distributional pareto-optimal multi-objective reinforcement learning. In Advances in Neural Information Processing Systems , 2023. URL https://openreview.net/forum?id= prIwYTU9PV .11 [29] Baiting Zhu, Meihua Dang, and Aditya Grover. Scaling pareto-efficient decision making via offline multi-objective rl. ICLR 2023 Poster, 2023. URL https://openreview.net/forum? id=Ki4ocDm364 .[30] Ruohong Liu, Yuxin Pan, Linjie Xu, Lei Song, Pengcheng You, Yize Chen, and Jiang Bian. Efficient discovery of pareto front for multi-objective reinforcement learning. In International Conference on Learning Representations , 2025. URL https://openreview.net/forum? id=fDGPIuCdGi .[31] Manuel Watter, Jost Tobias Springenberg, Joschka Boedecker, and Martin Riedmiller. Embed to control: A locally linear latent dynamics model for control from raw images, 2015. URL 
+
+https://arxiv.org/abs/1506.07365 .[32] Danijar Hafner, Timothy Lillicrap, Ian Fischer, Ruben Villegas, David Ha, Honglak Lee, and James Davidson. Learning latent dynamics for planning from pixels, 2019. URL https: //arxiv.org/abs/1811.04551 .[33] Brian Ichter and Marco Pavone. Robot motion planning in learned latent spaces, 2018. URL 
+
+https://arxiv.org/abs/1807.10366 .[34] Suhan Park, Suhyun Jeon, and Jaeheung Park. A constrained motion planning method exploiting learned latent space for high-dimensional state and constraint spaces. IEEE/ASME Transactions on Mechatronics , 29(4):3001–3009, 2024. doi: 10.1109/TMECH.2024.3399594. [35] Jiawei Zhang, Chengchao Bai, Wei Pan, Tianhang Liu, and Jifeng Guo. Local path opti-mization in the latent space using learned distance gradient. In 2025 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) , page 15940–15946. IEEE, 2025. doi: 10.1109/iros60139.2025.11247535. URL http://dx.doi.org/10.1109/IROS60139.2025. 11247535 .[36] Marlyse Reeves and Brian C. Williams. Laplass: Latent space planning for stochastic systems, 2024. URL https://arxiv.org/abs/2404.07063 .[37] Shuonan Dong and Brian Williams. Learning and recognition of hybrid manipulation motions in variable environments using probabilistic flow tubes. International Journal of Social Robotics ,4(4):357–368, 2012. doi: 10.1007/s12369-012-0155-x. URL https://doi.org/10.1007/ s12369-012-0155-x .[38] Diederik P. Kingma and Max Welling. An introduction to variational autoencoders. Foundations and Trends® in Machine Learning , 12(4):307–392, November 2019. ISSN 1935-8245. doi: 10.1561/2200000056. URL http://dx.doi.org/10.1561/2200000056 .[39] Pierre Sermanet, Corey Lynch, Yevgen Chebotar, Jasmine Hsu, Eric Jang, Stefan Schaal, and Sergey Levine. Time-contrastive networks: Self-supervised learning from video. In 2018 IEEE International Conference on Robotics and Automation (ICRA) , pages 1134–1141, 2018. doi: 10.1109/ICRA.2018.8462891. URL https://doi.org/10.1109/ICRA.2018.8462891 .[40] Peter Dayan. Improving generalization for temporal difference learning: The successor repre-sentation. Neural Computation , 5(4):613–624, 1993. doi: 10.1162/neco.1993.5.4.613. URL 
+
+https://doi.org/10.1162/neco.1993.5.4.613 .[41] André Barreto, Will Dabney, Rémi Munos, Jonathan J. Hunt, Tom Schaul, Hado P. van Hasselt, and David Silver. Successor features for transfer in reinforce-ment learning. In Advances in Neural Information Processing Systems 30 , pages 4058–4068, 2017. URL https://papers.nips.cc/paper_files/paper/2017/hash/ 350db081a661525235354dd3e19b8c05-Abstract.html .[42] Andreas Veit, Serge Belongie, and Theofanis Karaletsos. Conditional similarity networks, 2017. URL https://arxiv.org/abs/1603.07810 .[43] Martin Q. Ma, Yao-Hung Hubert Tsai, Paul Pu Liang, Han Zhao, Kun Zhang, Ruslan Salakhut-dinov, and Louis-Philippe Morency. Conditional contrastive learning for improving fairness in self-supervised learning, 2022. URL https://arxiv.org/abs/2106.02866 .12 [44] Yao-Hung Hubert Tsai, Tianqin Li, Martin Q. Ma, Han Zhao, Kun Zhang, Louis-Philippe Morency, and Ruslan Salakhutdinov. Conditional contrastive learning with kernel, 2022. URL 
+
+https://arxiv.org/abs/2202.05458 .[45] Emily Mu and John Guttag. Conditional contrastive networks, 2022. URL https: //table-representation-learning.github.io/assets/papers/conditional_ contrastive_networ.pdf .[46] Ethan Perez, Florian Strub, Harm de Vries, Vincent Dumoulin, and Aaron Courville. Film: Visual reasoning with a general conditioning layer, 2017. URL https://arxiv.org/abs/ 1709.07871 .[47] David Ha, Andrew Dai, and Quoc V. Le. Hypernetworks, 2016. URL https://arxiv.org/ abs/1609.09106 .[48] Aaron van den Oord, Yazhe Li, and Oriol Vinyals. Representation learning with contrastive predictive coding, 2019. URL https://arxiv.org/abs/1807.03748 .[49] R. Tyrrell Rockafellar and Stanislav Uryasev. Optimization of conditional value-at risk. Journal of Risk , 3:21–41, 2000. URL https://api.semanticscholar.org/CorpusID:854622 .[50] Prajit Ramachandran, Barret Zoph, and Quoc V. Le. Searching for activation functions, 2017. URL https://arxiv.org/abs/1710.05941 .[51] Matthew Tancik, Pratul P. Srinivasan, Ben Mildenhall, Sara Fridovich-Keil, Nithin Raghavan, Utkarsh Singhal, Ravi Ramamoorthi, Jonathan T. Barron, and Ren Ng. Fourier features let networks learn high frequency functions in low dimensional domains, 2020. URL https: //arxiv.org/abs/2006.10739 .[52] Julian Straub, Thomas Whelan, Lingni Ma, Yufan Chen, Erik Wijmans, Simon Green, Jakob J. Engel, Raul Mur-Artal, Carl Ren, Shobhit Verma, Anton Clarkson, Mingfei Yan, Brian Budge, Yajie Yan, Xiaqing Pan, June Yon, Yuyang Zou, Kimberly Leon, Nigel Carter, Jesus Briales, Tyler Gillingham, Elias Mueggler, Luis Pesqueira, Manolis Savva, Dhruv Batra, Hauke M. Strasdat, Renzo De Nardi, Michael Goesele, Steven Lovegrove, and Richard Newcombe. The Replica dataset: A digital replica of indoor spaces. arXiv preprint arXiv:1906.05797 , 2019. [53] Manolis Savva, Abhishek Kadian, Oleksandr Maksymets, Yili Zhao, Erik Wijmans, Bhavana Jain, Julian Straub, Jia Liu, Vladlen Koltun, Jitendra Malik, Devi Parikh, and Dhruv Batra. Habitat: A Platform for Embodied AI Research. In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) , 2019. [54] Andrew Szot, Alex Clegg, Eric Undersander, Erik Wijmans, Yili Zhao, John Turner, Noah Maestre, Mustafa Mukadam, Devendra Chaplot, Oleksandr Maksymets, Aaron Gokaslan, Vladimir Vondrus, Sameer Dharur, Franziska Meier, Wojciech Galuba, Angel Chang, Zsolt Kira, Vladlen Koltun, Jitendra Malik, Manolis Savva, and Dhruv Batra. Habitat 2.0: Training home assistants to rearrange their habitat. In Advances in Neural Information Processing Systems (NeurIPS) , 2021. [55] Xavi Puig, Eric Undersander, Andrew Szot, Mikael Dallaire Cote, Ruslan Partsey, Jimmy Yang, Ruta Desai, Alexander William Clegg, Michal Hlavac, Tiffany Min, Theo Gervet, Vladimir Vondrus, Vincent-Pierre Berges, John Turner, Oleksandr Maksymets, Zsolt Kira, Mrinal Kalakr-ishnan, Jitendra Malik, Devendra Singh Chaplot, Unnat Jain, Dhruv Batra, Akshara Rai, and Roozbeh Mottaghi. Habitat 3.0: A co-habitat for humans, avatars and robots, 2023. [56] Justin Fu, Aviral Kumar, Ofir Nachum, George Tucker, and Sergey Levine. D4rl: Datasets for deep data-driven reinforcement learning, 2021. URL https://arxiv.org/abs/2004. 07219 .[57] Yecheng Jason Ma, Shagun Sodhani, Dinesh Jayaraman, Osbert Bastani, Vikash Kumar, and Amy Zhang. Vip: Towards universal visual reward and representation via value-implicit pre-training, 2023. URL https://arxiv.org/abs/2210.00030 .13 [58] E. W. Hobson. On the fundamental lemma of the calculus of variations, and on some related theorems. Proceedings of the London Mathematical Society , s2-11(1):17–28, 1913. doi: https: //doi.org/10.1112/plms/s2-11.1.17. URL https://londmathsoc.onlinelibrary.wiley. com/doi/abs/10.1112/plms/s2-11.1.17 .[59] Yiwei Lu, Guojun Zhang, Sun Sun, Hongyu Guo, and Yaoliang Yu. f-micl: Understanding and generalizing infonce-based contrastive learning, 2024. URL https://arxiv.org/abs/2402. 10150 .[60] Zhuang Ma and Michael Collins. Noise contrastive estimation and negative sampling for conditional models: Consistency and statistical efficiency, 2018. URL https://arxiv.org/ abs/1809.01812 .[61] J.J. Kuffner and S.M. LaValle. Rrt-connect: An efficient approach to single-query path planning. In Proceedings 2000 ICRA. Millennium Conference. IEEE International Conference on Robotics and Automation. Symposia Proceedings (Cat. No.00CH37065) , volume 2, pages 995–1001 vol.2, 2000. doi: 10.1109/ROBOT.2000.844730. [62] Nasim Rahaman, Aristide Baratin, Devansh Arpit, Felix Draxler, Min Lin, Fred A. Hamprecht, Yoshua Bengio, and Aaron Courville. On the spectral bias of neural networks, 2019. URL 
+
+https://arxiv.org/abs/1806.08734 .[63] Roy Betser, Eyal Gofer, Meir Yossef Levi, and Guy Gilboa. Infonce induces gaussian distribu-tion, 2026. URL https://arxiv.org/abs/2602.24012 .14 A Conditioned Contrastive Theory 
+
+A.1 Density Encoding in Learned Logits 
+
+The Gauss-Markov inference-driven planning method outlined in Section 3.2 requires learned logits to encode the probability ratio expressed in (4) . This property must be preserved across the conditioning method. To prove that our training framework supports this, we begin by proving (4) holds for the non-conditioned InfoNCE objective as done in [ 17 ]. We define the logits function g(s, s +) such that g(si, s j
+
+> +
+
+) = Sij . Start by considering the optimization problem which yields the optimal logits function, 
+
+max  
+
+> g(s,s +)
+
+lim  
+
+> B→∞
+
+E 
+
+> {(si,s i
+> +)}Bi=1 ∼p(s,s +)
+
+"
+
+1
+
+B
+
+> B
+
+X
+
+> i=1
+
+(
+
+log g(si, s i
+
+> +
+
+)
+
+PBj=1 ,j ̸ =i g(si, s j
+
+> +
+
+)
+
+!
+
++ log g(si, s i
+
+> +
+
+)
+
+PBj=1 ,j ̸ =i g(sj , s i
+
+> +
+
+)
+
+! )# 
+
+.
+
+(12) Now consider the first term in the objective, 
+
+J1(g) = lim  
+
+> B→∞
+
+E 
+
+> {(si,s i
+> +)}Bi=1 ∼p(s,s +)
+
+"
+
+1
+
+B
+
+> B
+
+X
+
+> i=1
+
+log g(si, s i
+
+> +
+
+)
+
+PBj=1 ,j ̸ =i g(si, s j
+
+> +
+
+)
+
+!# 
+
+. (13) Taking the functional variation, the solution to the optimization problem can be extracted as follows. 
+
+δJ 1(g) = lim  
+
+> B→∞
+
+E
+
+> {(si,s i
+> +)}Bi=1 ∼p(s,s +)
+
+"
+
+1
+
+B
+
+> B
+
+X
+
+> i=1
+
+δg (si, s i
+
+> +
+
+)
+
+g(si, s i
+
+> +
+
+) − δ PBj=1 ,j ̸ =i g(si, s j
+
+> +
+
+)
+
+PBj=1 ,j ̸ =i g(si, s j
+
+> +
+
+)
+
+!# 
+
+= lim 
+
+> B→∞
+
+1
+
+B
+
+> B
+
+X
+
+> i=1
+
+E
+
+> si∼p(s)
+
+Z  δg (si, s +)
+
+g(si, s +) p(s+|si) − k(si)δg (si, s +)p(s+)
+
+
+
+ds +
+
+
+
+=
+
+Z Z 
+
+δg (s, s +)
+
+ p(s+|s)
+
+g(s, s +) − k(s)p(s+)
+
+
+
+p(s)dsds + (14) Note that in the second line, the expectation is rewritten over sampled anchors and integrated over futures, leaving a term 
+
+k(si) = lim  
+
+> B→∞
+
+E
+
+"
+
+B − 1
+
+PBj=1 ,j ̸ =i g(si, s j
+
+> +
+
+)
+
+#
+
+=
+
+Z 
+
+g(si, s +)p(s+) ds +
+
+−1
+
+, (15) which is independent of the future realizations in the infinite batch sampling limit. The first order condition of optimality requires the final integral to vanish in a pointwise manner for all arbitrary variations δg (s, s +). From the fundamental lemma of the calculus of variations [ 58 ], the bracketed term must therefore vanish for all anchor and future states. Absorbing k(s) as a free normalization of logits [17], we obtain the following optimal solution. 
+
+g∗(s, s +) ∝ p(s+|s)
+
+p(s+) (16) Repeating this procedure for the second term in the original optimization problem J2(g) and noting that p(s+|s)p(s) = p(s|s+)p(s+) allows us to recover the same solution, ensuring consistency of the symmetrized objective. Using the function approximator g(s, s +) ≈ exp {− 12 || Aψ (s) − ψ(s+)|| 2},this proves the statement in (4) [17, 59, 60]. Extending this to conditioned contrastive learning, define the conditioned logits function as 
+
+ˆg(s, s +; ∆) . This leads to the following problem according to the form in (12), 
+
+max  
+
+> ˆg(s,s +;∆)
+
+lim  
+
+> B→∞
+
+E 
+
+> {(si,s i
+> +,∆i)}Bi=1 ∼p(s,s +,∆)
+
+"
+
+1
+
+B
+
+> B
+
+X
+
+> i=1
+
+(
+
+log ˆg(si, s i
+
+> +
+
+; ∆ i)
+
+PBj=1 ,j ̸ =i ˆg(si, s j
+
+> +
+
+; ∆ i)
+
+!
+
++ log ˆg(si, s i
+
+> +
+
+; ∆ i)
+
+PBj=1 ,j ̸ =i ˆg(sj , s i
+
+> +
+
+; ∆ j )
+
+! )# 
+
+.
+
+15 If we interpret anchor sampling as selecting an index at random from the concatenated tuple of all observed states in the dataset, we see that this implies both si and ∆i. In other words, since the anchor state and preference context of each positive pair are sampled together, we can rewrite the anchor variable as ˆs = [ s⊤ ∆] ⊤ and accordingly an amended logit function ˆˆg(ˆ s, s +). Note that this is not an augmentation of state since s+ is unchanged, it is only for notational convenience. This yields the first component, built in the same manner as (13), 
+
+J1(ˆ ˆg) = lim  
+
+> B→∞
+
+E 
+
+> {(ˆ si,s i
+> +)}Bi=1 ∼p(ˆ s,s +)
+
+"
+
+1
+
+B
+
+> B
+
+X
+
+> i=1
+
+log ˆˆg(ˆ si, s i
+
+> +
+
+)
+
+PBj=1 ,j ̸ =i ˆˆg(ˆ si, s j
+
+> +
+
+)
+
+!# 
+
+.
+
+Note that sampling from p(s, s +, ∆) as done in the original optimization problem is equivalent to sampling from p(ˆ s, s +) following the reasoning outlined above. This translates to a functional variation, analogous to (14), 
+
+δJ 1(ˆ ˆg) = 
+
+Z Z 
+
+δˆˆg(ˆ s, s +)
+
+ p(s+|ˆs)ˆˆg(ˆ s, s +) − ˆˆk(ˆ s)p(s+)
+
+
+
+p(ˆ s)dˆsds +,
+
+where ˆˆk(ˆ s) follows the definition corresponding to the formulation in (15) . Once again, from variational calculus [ 58 ], the bracketed term must vanish pointwise, yielding the proportionality of equivalent form to (16), 
+
+(ˆ ˆg)∗(ˆ s, s +) ∝ p(s+|ˆs)
+
+p(s+)
+
+Reverting back to the original conditioned logit definition, we have 
+
+(ˆ g)∗(s, s +; ∆) ∝ p(s+|s, ∆) 
+
+p(s+) , (17) under the assumption that the sampling process is unchanged with the addition of a preference context variable. This is precisely the conditional probability ratio we intend to encode in the representation space, capturing the probability of observing a future state given both the anchor state and preference context. Repeating this procedure for J2(ˆ ˆg) using the same vector augmentation of the anchor yields 
+
+(ˆ g)∗(s, s +; ∆) ∝ p(s, ∆|s+)
+
+p(s, ∆) , (18) which is equivalent to the first proportionality result by Bayes’ theorem. As such, we preserve the required latent dynamics for inference-driven planning, while reflecting a preference directly within the representation space geometry as intended. 
+
+A.2 Gaussianity of Representations 
+
+A second key assumption underlying CRLP is that the marginal distribution over representations is isotropic Gaussian [ 17 ]. In our formulation, we require this assumption to hold for all conditioned latent spaces. In other words, whilst Eysenbach et al. [17] assumes ψ ∼ N (ψ ; μ = 0 , Σ = c · I), we take the point-wise version ψ∆ ∼ N (ψ∆ ; μ = 0 , Σ = c · I), ∀ ∆. Using the representation norm constraint enforces this in expectation, implying that the variance of the distribution could fluctuate over the preference continuum. We recognize that under conditioning, the density-ratio encoding and isotropic Gaussian assumptions face larger logit function approximation error as well as sampling error from the sparser joint state-preference space. However, we find empirically that planning performance remains consistent with [ 17 ], generating representations that keep inference-driven planning tractable, as evidenced in Section 5. 
+
+A.3 Planning Using Contrastive Representations 
+
+The distribution over intermediate latent waypoints z1: n from start and goal representations z0, z g ,can be derived from the posterior 
+
+p(z1: n | z0, z g ) ∝ p(zg | zn)
+
+> n
+
+Y
+
+> k=1
+
+p(zk | zk−1), (19) 16 0.0 0.3 0.7 1.0       
+
+> ∆j
+> 0.0 0.3 0.7 1.0
+> ∆i
+> Local Topology
+> 0.0 0.3 0.7 1.0
+> ∆j
+> 0.0 0.3 0.7 1.0
+> ∆i
+> Global Topology
+> 0.0 0.3 0.7 1.0
+> ∆j
+> 0.0 0.3 0.7 1.0
+> ∆i
+> Non-Rigid Residual
+> 0.40.50.60.70.80.91.0
+> kNN Overlap
+> 0.20.30.40.50.60.70.80.91.0
+> Spearman
+> 01234567
+> Latent Distance
+
+Figure 5: Matrix summaries of representation space manifold deformation for Point Four Obstacle environment under preference-conditioning. Plots characterize local changes via kNN overlap (left), global changes via Spearman coefficients (middle), and non-rigid transformation effects using residual latent distances (right). in combination with (5) [ 17 ]. This yields the Gaussian distribution z1: n ∼ N (z1: n ; μ = Λ −1η, Σ = Λ−1), where 
+
+Λ = tridiag 
+
+
+
+−A, cc + 1 A⊤A + c + 1 
+
+c I, −A⊤
+
+
+
+, (20) 
+
+η = z⊤ 
+
+> 0
+
+A⊤ 0 . . . 0 z⊤ 
+
+> g
+
+A⊤ . (21) Conditioned waypoints are resolved by redefining all representations as z(.) = ψ∆(s(.)) and using 
+
+A∆ in place of A.
+
+## B Further Studies 
+
+B.1 Representation Space Deformation 
+
+This section presents some further analysis of how conditioning affects the representation space structure. To characterize the deformation of the latent manifold, we embed a random collection of states across a range of preference contexts and consider different relation metrics between these conditioned representations. To understand how the local topology of the latent space changes, we apply k-nearest-neighbors (kNN) in the representation space to a subset of states for a range of ∆ values. For every (∆ i, ∆j )
+
+pair, we then compute the local overlap, defined as the average proportion of the k neighbors which are shared between the two ∆ values. Values closer to one indicate that local neighborhoods are highly similar, whilst a value of zero implies the local topology has changed completely. An example of the resultant matrix for the four obstacle environment is provided in the left panel of Figure 5, where we observe strong local overlap for similar preference values, which then smoothly decreases as the difference between ∆i and ∆j widens. Importantly, the lowest overlap level, occurring at the extremities of zero and one, is non-negligible at approximately 40%. This captures temporal relations in regions of the representation space shared across all preference contexts. For measuring global changes in the latent space, we compute the distance of randomly sampled state pairs for a range of ∆ values and take the Spearman correlation between these distances, as shown in the middle panel of Figure 5. Values closer to one indicate that the global distance ranking is preserved. We again observe the dissipation of this similarity further from the diagonal entries and the strongest global deformation of the space for highly mismatched preferences. To motivate the source of these deformations, we further embed a set of states at each preference value. For every (∆ i, ∆j ) pair, the two representation sets are centered, the best orthogonal alignment is then identified, and then the remaining RMS mismatch is reported in the right panel of Figure 5. A value of zero indicates that the deformation is a pure translation and rotation, so could be learned as a linear transformation. We observe that as the preferences differ, the residual rises and this rigid transformation is insufficient to describe the deformation. Instead, non-linear sources of preference-dependent warping are introduced. This further validates the choice of intermediate 17 0.0 0.3 0.7 1.0             
+
+> ∆j
+> 0.0 0.3 0.7 1.0
+> ∆i
+> FiLM Distance Matrix
+> 0.0 0.3 0.7 1.0
+> ∆j
+> 0.0 0.3 0.7 1.0
+> ∆i
+> A∆Distance Matrix
+> −6−4−202
+> PC1 (57%)
+> −4
+> −2
+> 0
+> 2
+> PC2 (31%)
+> FiLM PCA Path
+> −2−101
+> PC1 (67%)
+> −1.0
+> −0.5
+> 0.0
+> 0.5
+> PC2 (29%)
+> A∆PCA Path
+> 0.00.51.0
+> Normalized distance
+> 0.00.20.40.60.81.0
+> ∆
+
+Ant Habitat Conditioning Geometry Figure 6: Summary of FiLM and transition matrix conditioning mechanism parameters for Ant Habitat environment. Across the preference spectrum, panels show the ∥.∥2 distance between FiLM generator outputs (top left), Frobenius norm ∥.∥F of the conditioned transition matrix (top right), path of FiLM generator outputs across the first two principal components (bottom left), and the path of the flattened transition matrix elements across the first two principal components (bottom right). feature modulation in the conditioned encoder architecture. Together, these metrics point towards a healthy pattern in continuous preference modulation via deformation of the latent manifold. We also analyze the FiLM and low rank modulated transition matrix which produce these effective deformations. Top panels of Figure 6 demonstrate how the FiLM generator’s output parameters and perturbed matrix elements remain similar for close ∆ values, and gradually separate with changing preferences. We visualize the path of these conditioning parameters in the PCA-projected space. This yields a continuous path consistent across the two conditioning mechanisms and points to the overall stability of the joint conditioning mechanism employed in M OMO.
+
+B.2 State Augmentation Comparison 
+
+A candidate conditioning mechanism for preference modulation of planning behavior is state augmen-tation, which is used as a comparison baseline. In this approach, we define a new state ˜s = [ s⊤ ∆] ⊤
+
+such that ˜s+ = [ s⊤ 
+
+> +
+
+∆+]⊤. Note that this is not equivalent to the rewriting of only the anchor as ˆs = [ s⊤ ∆] ⊤ which is done to perform a single marginalization step in the proof provided in Appendix A.1. For the IvI-SA baseline, simply substituting the augmented state pair (˜ s, ˜s+), into the sequence of steps provided from (12) to (16) , then unpacking the augmentation in the final step, we arrive at the density ratio 
+
+(˜ g)∗(˜ s, ˜s+) ∝ p(s+, ∆+ | s, ∆) 
+
+p(s+, ∆+) .
+
+This ratio captures the odds of seeing a future in its own distinct preference context given a starting state in another preference context. Note that s+ represents any possible future following marginal-ization in (14), not strictly a positive one. Since positive pairs are sampled from the same trajectory, this would imply that (˜ g)∗ is only non-zero when ∆ = ∆ +. This risks collapsing the representation space since the appended preference context can now be used independently as a way of distinguish-ing positive and negative pairs, offering a degenerate solution to the optimization problem if the contrastive signal from remaining states is weak. The learned Guass-Markov distribution therefore admits intermediate waypoints which share the same preference context as the augmented start and goal. The key distinction here is that a single unified representation space has been learned as opposed to a conditioned deformation. 18 Table 1: Preference modulation profile metrics comparing M OMO to state augmentation baselines. 
+
+∆C measures endpoint contrast as the difference in total plan cost between ∆ = 1 and ∆ = 0 queries. 
+
+ρ is Spearman correlation between ∆ and mean cost curve. Rnorm is cost-curve roughness defined as the sum of second-order finite differences in cost normalized by |∆C|.                                                                                             
+
+> Environment ∆C↑ρ↑Rnorm ↓
+> Ours IvI ∗PCA ∗VIP ∗Ours IvI ∗PCA ∗VIP ∗Ours IvI ∗PCA ∗VIP ∗
+> Point Four Obstacles 9.37 4.94 -0.01 -0.34 0.99 0.77 -0.95 -0.32 1.32 7.75 2.70 13.35 Point Contour 2.36 1.34 0.00 -0.28 0.99 0.85 -0.81 -0.57 0.78 10.14 2.78 5.56 Point Habitat 7.29 15.71 0.01 -3.00 0.91 0.96 0.67 -0.98 1.42 2.23 10.64 0.88 Drone 3.42 7.21 0.03 3.07 0.87 0.60 0.28 0.80 3.08 5.72 15.04 1.27
+> Ant Habitat 3.82 3.49 -0.01 2.19 0.82 0.63 -0.65 0.87 1.64 20.16 22.08 4.76 UR5 0.92 1.36 1.90 0.00 1.00 0.57 0.97 0.72 0.29 4.63 0.67 225.90
+> Notes. Ours = MoMo; ∗denotes the corresponding state-augmentation baseline. Plain IvI is omitted because it is non-responsive ( ∆C= 0 ). All environments use 12 waypoints apart from UR5 which uses 6.
+
+It is critical that with this formulation, state augmentation is able to encode precise temporal relations in the latent space. By inspection of Figure 4, we observe large waypoint MSE using state augmen-tation. This is obtained alongside weaker or unstable trends between user preference and realized plan costs, indicated by lower Spearman correlations as well as considerably higher roughness in Table 1. If able to span a wider range of plan costs, it does not do so smoothly across the preference continuum. Therefore, across the metrics outlined in Table 1, M OMO demonstrates a consistent modulation of behaviors offering greater robustness across environments than the profiled baselines. Under the injection of trajectory-level information into the augmented state, such that two identical original states can now lie on separate planes, state augmentation also becomes more susceptible to coverage issues in the held-out set for decoding, since every candidate state must be seen in the desired preference context. 
+
+## C Limitations 
+
+In this section, we outline key limitations of our approach, both originating from preference condi-tioning and inherited from the inference-driven planning framework we build upon [17]. Firstly, conditioning representations on ∆ increases the computational complexity of a single training step from O(B) in (3) to O(B2) in (10) . This arises from the need to embed states under each anchor’s preference context, however this is not found to be computationally prohibitive. Furthermore, at inference time, nearest-neighbor retrieval mandates that the representations of observations in Dheld 
+
+be computed for the queried preference. Since we address preferences on a continuous scale, these embeddings cannot be pre-computed and cached. Whilst this reduces the runtime efficiency of the contrastive planner, a fast batched forward pass through the architecture is also not found to be prohibitive. The safety of the decoded waypoint sequence is further reliant on a good coverage of the state space in the held-out set. It is also implicitly dependent on sufficient coverage of the joint preference and state space in the training set, since this is required to learn a generalizable conditioning mechanism. At inference time, if coverage in Dheld is sparse, under the preference-dependent deformation of the latent space, nearest-neighbor retrieval could decode a safe latent waypoint back to an unsafe state. This limitation motivates an exploration of alternative decoding methods. We also inherit assumptions from Eysenbach et al. [17] , including that the learned logits encode the required density-ratio and that representations follow an isotropic Gaussian distribution. We justify these assumptions in Appendix A; however, as in Eysenbach et al. [17] , it remains open how function approximation and sparse sampling errors introduced by conditioning affect M OMO’s planning performance. Finally, data-driven planning is exposed to the quality of existing datasets, which are difficult to acquire with dense coverage of the joint state-preference space. Furthermore, CRLP assumes all 19 Table 2: Summary of training datasets with sufficient state-preference space coverage.                                  
+
+> Environment Collection framework Risk levels Observation dimension Trajectories Transitions
+> Point Four Obstacle D4RL 3416,557 3.31M Point Contour D4RL 4451,626 12.00M Point Habitat D4RL & Habitat 3429,488 7.50M Ant Habitat D4RL & Habitat 329 20,186 7.50M Drone FSRL 418 7,200 2.04M UR5 PyBullet 457 63,000 1.73M
+
+exploration of approaches to solving tasks has been performed, since no new temporal transitions external to the dataset can be extracted. 
+
+## D Dataset Generation 
+
+We construct trajectory datasets that provide coverage of the joint state-preference space required to learn preference-conditioned planning representations. For each of the six tasks, we collect rollouts at multiple discrete risk levels and annotate each trajectory with the CVaR-based preference statistic from Section 4.1 except for the UR5 environment. For the Point and Ant agents, we adapt the D4RL collection framework [ 56 ] to generate trajectories between randomized start and goal positions. The environment is discretized into a binary occupancy grid on which we perform Q-iteration to generate discrete waypoint sequences. Continuous trajecto-ries between consecutive waypoints are then produced by a short-horizon goal-reaching policy. We use a stochastic PD-controller for the Point agent, and a pre-trained SAC policy for the Ant agent. Q-iteration uses discrete state s corresponding to the position grid index, actions a in the cardinal and intercardinal directions, deterministic transitions to the next state s′, goal g, and the reward 
+
+R(s, a, g ; w∆) = −
+
+
+
+1 + max  0, d b(s′, g ) − db(s, g ) + w∆
+
+
+
+1 − do(s)
+
+θ
+
+
+
+1 do(s) < θ 
+
+. (22) In the above, db represents the shortest path distance between two cells (pre-computed via breadth-first search for all state pairs) and do gives the distance to the nearest obstacle, for which a penalty is incurred within an influence radius θ. By varying w∆, the degree of risk-aversion baked into the Q-iteration waypoints is controlled. Rollouts are generated across discrete risk levels defined by distinct w∆ values. We use a four obstacle map, open map with a dense Gaussian cost contour, and extract a map from Replica Dataset FRL Apartment 5 loaded from AI Habitat to model realistic environments. For annotation of the continuous trajectories, we use a risk cost function which increases linearly with obstacle proximity inside the influence radius. The dataset for the Drone agent is produced using the data collection method and TRPO-Lagrangian policy for the OfflineDroneCircle-v0 environment from FSRL [ 26 ], trained at different target orbit radii. Preference annotation uses a risk cost which increases linearly with radial distance from a safe central column of radius θ.The Manipulator environment consists of a tabletop pick-and-place task, requiring the robot to retrieve a cube from a start bowl and move it to the goal bowl. Between the bowls, there is a divider obstacle with a slot such that safer trajectories correspond to high clearance above the obstacle whilst more efficient, riskier motions slide through the divider. Trajectories are generated by simulation in PyBullet using a UR5 robot. To obtain the diverse set of preference behaviors, we apply varying obstacle inflation levels with Bi-directional Rapidly-exploring Random Trees [ 61 ] for planning. Cost is computed from a margin-adjusted sigmoid function of vertical clearance between the end-effector and divider, weighted by the end-effector’s xy -position, and wrapped to the unit interval. 
+
+## E Model Training 
+
+We build off of the unconditioned model presented in [ 17 ], with key parameters summarized in Table 3. Since all conditioning modules, including the FiLM generator and two low rank modulation 20 Table 3: Model parameters used for M OMO.
+
+Component Value 
+
+Encoder, predictor, and conditioning models 
+
+Representation dimension dz = 4 for Point and Manipulator ; dz = 6 for Drone ;
+
+dz = 24 for Ant 
+
+Encoder network Residual MLP with 5 residual blocks; width 64; Swish activations FiLM generator network MLP with 5 hidden layers; width 128; Swish activations Condition embedding input features [∆ , sin(2 π∆) , cos(2 π∆) , sin(4 π∆) , cos(4 π∆)] 
+
+Condition embedding network MLP with 2 hidden layers; width 16; Swish activations; 16-dimensional output linear embedding. Low-rank A∆ network Separate U∆ and V∆ MLPs each with 2 hidden layers; width 64; ReLU activations Low-rank A∆ rank r = 2 
+
+CVaR level α = 0 .9
+
+Optimization 
+
+Batch size 256 Optimizer Adam Learning rate 3 × 10 −4
+
+Global norm gradient clipping 1.0 Future sampling discount factor γ = 0 .9 for Point, Ant, Manipulator ; γ = 0 .8 for Drone 
+
+Maximum future horizon 200 steps Training step updates 500,000 Representation norm constraint target c = 10 
+
+Dual descent initialization 0.001 networks, would generate an intermediate representation of the preference context, we introduce a separate condition embedding network which feeds these three modules. This allows for an efficient shared condition embedding to inform the modulation mechanisms. Direct conditioning on the raw scalar ∆ value may bottleneck performance due to the spectral bias of neural networks towards low frequency functions. This means that networks struggle to produce local fluctuations without affecting global behavior [ 62 ], an important phenomenon for producing generalizable representations from sparse coverage of the joint state-preference space. This merits a richer representation of the conditioning variable, which we address using Fourier features [ 51 ]. Exact implementation details are contained in our codebase, to be released following reviews. Whilst our derived results and those in [ 17 ] exclude the positive pair from the denominator of the InfoNCE objective, standard empirical implementations sum over all indices to yield a softmax distribution and bound loss. In line with prior work we also adopt this convention [17, 63]. We train our models on an Ubuntu 22.04 machine using a GeForce RTX 4080 GPU and Intel Core i9-14900K CPU, giving a training time of approximately 2 hours for M OMO.21

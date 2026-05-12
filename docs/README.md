@@ -6,64 +6,79 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-05-11
-- 运行时间：2026-05-11 21:55:50 UTC
+- 最新运行日期：2026-05-12
+- 运行时间：2026-05-12 20:59:49 UTC
 - 运行状态：成功
-- 本次总论文数：14
-- 精读区：8
-- 速读区：6
+- 本次总论文数：19
+- 精读区：11
+- 速读区：8
 
 ### 今日简报（AI）
-深入精读世界模型与视觉特征学习，共完成 14 篇论文的整理。  
-AGWM 与 Residual Latent Action 模型展示了感知与行动的强耦合潜力，值得重点关注。  
-建议继续跟进世界模型在多模态与实际环境中的泛化表现。
-- 详情：[/202605/11/README](/202605/11/README)
+聚焦世界模型可预测性与规划能力，今日共完成 19 篇论文阅读。  
+重点探索潜变量几何与规划的结合，以及语言模型推理中“短视规划”的结构化特征。  
+建议下步关注可视化潜变量空间及改进长程规划能力的建模方法。
+- 详情：[/202605/12/README](/202605/12/README)
 
 ### 精读区论文标签
-1. [AGWM: Affordance-Grounded World Models for Environments with Compositional Prerequisites](/202605/11/2605.06841v1-agwm-affordance-grounded-world-models-for-environments-with-compositional-prerequisites)  
+1. [Predictive but Not Plannable: RC-aux for Latent World Models](/202605/12/2605.07278v1-predictive-but-not-plannable-rc-aux-for-latent-world-models)  
    标签：评分：10.0/10、query:navwm
-   evidence：用于基于模型学习的可负担性基础世界模型
-2. [Learning Visual Feature-Based World Models via Residual Latent Action](/202605/11/2605.07079v1-learning-visual-feature-based-world-models-via-residual-latent-action)  
+   evidence：隐世界模型与对齐规划的隐空间监督
+2. [Latent Geometry Beyond Search: Amortizing Planning in World Models](/202605/12/2605.08732v1-latent-geometry-beyond-search-amortizing-planning-in-world-models)  
    标签：评分：10.0/10、query:navwm
-   evidence：通过隐动作表示学习基于视觉特征的世界模型
-3. [Predictive but Not Plannable: RC-aux for Latent World Models](/202605/11/2605.07278v1-predictive-but-not-plannable-rc-aux-for-latent-world-models)  
+   evidence：利用隐空间几何在世界模型中摊销规划
+3. [SpaceMind++: Toward Allocentric Cognitive Maps for Spatially Grounded Video MLLMs](/202605/12/2605.09449v1-spacemind-toward-allocentric-cognitive-maps-for-spatially-grounded-video-mllms)  
    标签：评分：10.0/10、query:navwm
-   evidence：隐世界模型与规划对齐的隐空间
-4. [Sword: Style-Robust World Models as Simulators via Dynamic Latent Bootstrapping for VLA Policy Post-Training](/202605/11/2605.07288v1-sword-style-robust-world-models-as-simulators-via-dynamic-latent-bootstrapping-for-vla-policy-post-training)  
+   evidence：离体认知地图与体素化3D度量表示
+4. [DriveFuture: Future-Aware Latent World Models for Autonomous Driving](/202605/12/2605.09701v1-drivefuture-future-aware-latent-world-models-for-autonomous-driving)  
    标签：评分：10.0/10、query:navwm
-   evidence：世界模型作为策略优化的模拟器
-5. [GEM: Generating LiDAR World Model via Deformable Mamba](/202605/11/2605.07326v1-gem-generating-lidar-world-model-via-deformable-mamba)  
+   evidence：自动驾驶的未来感知隐世界模型
+5. [Plan in Sandbox, Navigate in Open Worlds: Learning Physics-Grounded Abstracted Experience for Embodied Navigation](/202605/12/2605.10118v1-plan-in-sandbox-navigate-in-open-worlds-learning-physics-grounded-abstracted-experience-for-embodied-navigation)  
    标签：评分：10.0/10、query:navwm
-   evidence：用于自动驾驶的生成式LiDAR世界模型，模拟环境动力学
-6. [Proactive Instance Navigation with Comparative Judgment for Ambiguous User Queries](/202605/11/2605.06223v2-proactive-instance-navigation-with-comparative-judgment-for-ambiguous-user-queries)  
+   evidence：具身导航与心理模拟的物理语义抽象
+6. [How Mobile World Model Guides GUI Agents?](/202605/12/2605.10347v1-how-mobile-world-model-guides-gui-agents)  
+   标签：评分：10.0/10、query:navwm
+   evidence：世界模型结构及其在GUI智能体动作预测中的应用
+7. [LaWM: Least Action World Models for Long-Horizon Physical Consistency from Visual Observations](/202605/12/2605.08279v1-lawm-least-action-world-models-for-long-horizon-physical-consistency-from-visual-observations)  
    标签：评分：9.0/10、query:navwm
-   evidence：智能体的实例导航策略
-7. [NavOne: One-Step Global Planning for Vision-Language Navigation on Top-Down Maps](/202605/11/2605.06317v2-navone-one-step-global-planning-for-vision-language-navigation-on-top-down-maps)  
+   evidence：用于机器人规划的隐空间世界模型
+8. [Neurally-plausible radial basis kernels using distributed Fourier embeddings](/202605/12/2605.08458v1-neurally-plausible-radial-basis-kernels-using-distributed-fourier-embeddings)  
    标签：评分：9.0/10、query:navwm
-   evidence：视觉语言导航的全局路径规划
-8. [PathPainter: Transferring the Generalization Ability of Image Generation Models to Embodied Navigation](/202605/11/2605.07496v1-pathpainter-transferring-the-generalization-ability-of-image-generation-models-to-embodied-navigation)  
+   evidence：用于认知映射的连续空间表示和类网格细胞模型
+9. [MoMo: Conditioned Contrastive Representation Learning for Preference-Modulated Planning](/202605/12/2605.08512v1-momo-conditioned-contrastive-representation-learning-for-preference-modulated-planning)  
    标签：评分：9.0/10、query:navwm
-   evidence：BEV图像作为具身导航的全局先验
+   evidence：用于长程规划的隐空间结构与偏好调节表示
+10. [MCP-Cosmos: World Model-Augmented Agents for Complex Task Execution in MCP Environments](/202605/12/2605.09131v1-mcp-cosmos-world-model-augmented-agents-for-complex-task-execution-in-mcp-environments)  
+   标签：评分：9.0/10、query:navwm
+   evidence：利用世界模型在隐空间模拟状态转移并优化规划
+11. [HarmoWAM: Harmonizing Generalizable and Precise Manipulation via Adaptive World Action Models](/202605/12/2605.10942v1-harmowam-harmonizing-generalizable-and-precise-manipulation-via-adaptive-world-action-models)  
+   标签：评分：9.0/10、query:navwm
+   evidence：用于机器人控制与规划的世界动作模型
 
 ### 速读区论文标签
-1. [R$^3$L: Reasoning 3D Layouts from Relative Spatial Relations](/202605/11/2605.06758v1-r3l-reasoning-3d-layouts-from-relative-spatial-relations)  
+1. [SEMASIA: A Large-Scale Dataset of Semantically Structured Latent Representations](/202605/12/2605.09485v1-semasia-a-large-scale-dataset-of-semantically-structured-latent-representations)  
+   标签：评分：8.0/10、query:navwm
+   evidence：语义结构化的隐空间表示与隐空间对齐
+2. [Extracting Search Trees from LLM Reasoning Traces Reveals Myopic Planning](/202605/12/2605.06840v1-extracting-search-trees-from-llm-reasoning-traces-reveals-myopic-planning)  
    标签：评分：7.0/10、query:navwm
-   evidence：3D布局生成的空间关系与推理
-2. [Bi3: A Biplatform, Bicultural, Biperson Dataset for Social Robot Navigation](/202605/11/2605.06863v1-bi3-a-biplatform-bicultural-biperson-dataset-for-social-robot-navigation)  
+   evidence：提取搜索树以分析规划与决策
+3. [Extracting Search Trees from LLM Reasoning Traces Reveals Myopic Planning](/202605/12/2605.06840v2-extracting-search-trees-from-llm-reasoning-traces-reveals-myopic-planning)  
    标签：评分：7.0/10、query:navwm
-   evidence：人群中社交机器人导航的数据集
-3. [Retrieval from Within: An Intrinsic Capability of Attention-Based Models](/202605/11/2605.05806v2-retrieval-from-within-an-intrinsic-capability-of-attention-based-models)  
+   evidence：表征规划结构与移动决策
+4. [Why Do DiT Editors Drift? Plug-and-Play Low Frequency Alignment in VAE Latent Space](/202605/12/2605.08250v1-why-do-dit-editors-drift-plug-and-play-low-frequency-alignment-in-vae-latent-space)  
+   标签：评分：7.0/10、query:navwm
+   evidence：用于语义对齐的隐空间表示与频率分析
+5. [Visibility Queries in Simple Polygons](/202605/12/2605.03334v1-visibility-queries-in-simple-polygons)  
    标签：评分：6.0/10、query:navwm
-   evidence：直接从内部表示中检索
-4. [Multimodal synthesis of MRI and tabular data with diffusion in a joint latent space via cross-attention](/202605/11/2605.06699v1-multimodal-synthesis-of-mri-and-tabular-data-with-diffusion-in-a-joint-latent-space-via-cross-attention)  
+   evidence：多边形中的可见性查询与空间表示
+6. [Revisiting General Map Search via Generative Point-of-Interest Retrieval](/202605/12/2605.03397v1-revisiting-general-map-search-via-generative-point-of-interest-retrieval)  
    标签：评分：6.0/10、query:navwm
-   evidence：用于多模态表示学习的联合隐空间
-5. [Accelerating the Simulation of Ordinary Differential Equations Through Physics-Preserving Neural Networks](/202605/11/2605.06980v1-accelerating-the-simulation-of-ordinary-differential-equations-through-physics-preserving-neural-networks)  
+   evidence：地图搜索与兴趣点检索
+7. [Hierarchical Task Network Planning with LLM-Generated Heuristics](/202605/12/2605.07707v1-hierarchical-task-network-planning-with-llm-generated-heuristics)  
    标签：评分：6.0/10、query:navwm
-   evidence：将系统状态映射到高维隐空间以模拟动力学
-6. [InterLV-Search: Benchmarking Interleaved Multimodal Agentic Search](/202605/11/2605.07510v1-interlv-search-benchmarking-interleaved-multimodal-agentic-search)  
+   evidence：利用大模型生成启发式信息的 HTN 规划
+8. [Stable Long-Horizon PDE Forecasting via Latent Structured Spectral Propagators](/202605/12/2605.10154v1-stable-long-horizon-pde-forecasting-via-latent-structured-spectral-propagators)  
    标签：评分：6.0/10、query:navwm
-   evidence：多模态智能体搜索与导航
+   evidence：面向物理系统的传播导向隐空间
 
 
 <div class="dpr-home-promo-card">

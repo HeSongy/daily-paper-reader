@@ -1,0 +1,78 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.03397v1/fig-001.webp",
+      "caption": "Fig. 1: Comparison of different POI retrieval paradigms. Unlike superficial semantic matching, our generative paradigm unifies diverse search contexts and leverages LLMs for sophisticated intent reasoning, thereby effectively handling general search queries.",
+      "page": 1,
+      "index": 1,
+      "width": 508,
+      "height": 305
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03397v1/fig-002.webp",
+      "caption": "TABLE III: Ablation study setup. EGI, GeoPE, TCG, and SSP denote explicit geographic identifiers for POIs, geographic position embedding, PID trie constrained generation, and proximity-aware search space pruning, respectively.",
+      "page": 7,
+      "index": 2,
+      "width": 529,
+      "height": 265
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03397v1/fig-003.webp",
+      "caption": "TABLE II: Comparison of POI Retrieval Performance of Different Methods. The best and second-best results are highlighted in bold and underline, respectively.",
+      "page": 7,
+      "index": 3,
+      "width": 1076,
+      "height": 292
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03397v1/fig-004.webp",
+      "caption": "Fig. 3: Results of ablation study. All variants are evaluated based on GenPOI-0.6B.",
+      "page": 7,
+      "index": 4,
+      "width": 516,
+      "height": 422
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03397v1/fig-005.webp",
+      "caption": "Fig. 2: The overview of GenPOI framework. It consists of two modules: (a) Geo-Semantic POI Tokenization, which discretizes POIs into LLM-friendly token sequences; and (b) Generative POI Retrieval, where the LLM reasons over unified heterogeneous search contexts to generate relevant POIs.",
+      "page": 3,
+      "index": 5,
+      "width": 856,
+      "height": 508
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03397v1/fig-006.webp",
+      "caption": "Fig. 4: T-SNE visualization of POI embeddings before and after GeoPE encoding.",
+      "page": 8,
+      "index": 6,
+      "width": 442,
+      "height": 666
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03397v1/fig-007.webp",
+      "caption": "Fig. 5: Distribution of categories and regions across semantic ID hierarchies. The Prefix Length denotes the number of fixed initial tokens used to aggregate POIs sharing the same semantic prefix.",
+      "page": 9,
+      "index": 7,
+      "width": 1070,
+      "height": 346
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03397v1/fig-008.webp",
+      "caption": "Fig. 6: The distribution of maximum GID prefix match lengths between the user location and the clicked POI location for the overall dataset (TMap-L) and various high-frequency queries.",
+      "page": 9,
+      "index": 8,
+      "width": 519,
+      "height": 319
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03397v1/fig-009.webp",
+      "caption": "TABLE VI: Performance comparison of GenPOI variants across different model scales, with and without historical context.",
+      "page": 9,
+      "index": 9,
+      "width": 529,
+      "height": 229
+    }
+  ]
+}

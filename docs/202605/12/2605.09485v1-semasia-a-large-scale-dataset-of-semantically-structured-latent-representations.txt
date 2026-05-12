@@ -1,0 +1,1513 @@
+Title: SEMASIA: A Large-Scale Dataset of Semantically Structured Latent Representations
+
+URL Source: https://arxiv.org/pdf/2605.09485v1
+
+Published Time: Tue, 12 May 2026 01:56:08 GMT
+
+Number of Pages: 39
+
+Markdown Content:
+# SEMASIA : A Large-Scale Dataset of Semantically Structured Latent Representations 
+
+Mario Edoardo Pandolfo ∗ † ‡ 
+
+marioedoardo.pandolfo@uniroma1.it 
+
+Enrico Grimaldi ∗ † ‡ 
+
+enrico.grimaldi@uniroma1.it 
+
+Lorenzo Marinucci §
+
+l.marinucci@uniroma1.it 
+
+Leonardo Di Nino ¶‡ 
+
+leonardo.dinino@uniroma1.it 
+
+Simone Fiorellino †
+
+simone.fiorellino@uniroma1.it 
+
+Sergio Barbarossa ¶‡ 
+
+sergio.barbarossa@uniroma1.it 
+
+Paolo Di Lorenzo ¶‡ 
+
+paolo.dilorenzo@uniroma1.it 
+
+Abstract 
+
+Latent representations learned by neural networks often exhibit semantic structure, where concept similarity is reflected by geometric proximity in embedding space. However, comparing such spaces across models remains difficult: changes in architecture, pretraining data, objective, or random seed can yield embeddings with similar content but incompatible geometry. This latent space alignment problem is central to interpretability, transfer and multimodal learning, federated systems, and semantic communication; however, progress remains limited by the lack of large-scale, model-diverse, and metadata-rich benchmarks. To address this gap, we introduce S EMASIA , a large-scale collection of latent representations extracted from approximately 1,700 pretrained vision models across eight standard image-classification benchmarks. S EMASIA pairs embeddings with structured metadata describing architectures, training regimes, pretraining sources, and model scale. We demonstrate three applications of the resource. First, we analyze the conceptual organization of individual latent spaces, showing consistent prototype-like clustering and hierarchical semantic neighborhoods across models and datasets. Second, we benchmark supervised alignment mappings between latent spaces using reconstruction error and downstream task performance. Third, we perform a large-scale regression analysis of how pretraining-data complexity, specialization, transfer learning, augmentation, and model scale relate to geometric and probing properties of embeddings. By coupling representational scale with standardized metadata, S EMASIA provides a reproducible foundation for studying latent geometry, evaluating alignment methods, and developing next-generation heterogeneous and interoperable AI systems. 
+
+Dataset: https://huggingface.co/collections/spaicom-lab/semasia .Code: https://github.com/SPAICOM/semasia-datasets . 
+
+> ∗Equal Contribution.
+> †Dept. Computer, Control and Management Engineering , Sapienza University of Rome, Rome, Italy.
+> ‡National Inter-University Consortium for Telecommunications (CNIT) , Parma, Italy.
+> §Dept. of Statistical Sciences , Sapienza University of Rome, Rome, Italy.
+> ¶Dept. of Information Engineering, Electronics, and Telecommunications , Sapienza University of Rome, Rome, Italy. Preprint.
+> arXiv:2605.09485v1 [cs.LG] 10 May 2026 Encoder Decoder
+> World (Inputs)
+> Latent Manifold
+> Labels (Decisions)
+> Mouse
+> Cat
+> Bird
+
+Figure 1: Illustration of the semiotic pipeline underlying modern neural models: raw perceptual inputs from the world W (e.g., images of animals) are mapped by an encoder f : W → Z into a latent manifold Z, where inputs are organized into geometrically structured semantic clusters. A decoder g : Z → Y then projects these abstract representations onto a discrete label space Y, yielding the final decision. This architecture mirrors the semiotic distinction between signifier (the raw input) and signified (the latent encoding), and instantiates Gärdenfors’ conceptual spaces framework, in which concepts correspond to regions of a continuous, geometrically meaningful space. 
+
+1 Introduction 
+
+The nature of reality and the mechanisms through which we perceive and represent it have long been central themes in philosophy, cognitive science, and, more recently, machine learning. A decisive turning point in this discourse came with the advent of neural models such as the perceptron [ 1], which introduced the idea that machines could ingest raw sensory inputs and automatically extract 
+
+meaningful features. This paradigm, later expanded into modern deep learning [ 2, 3], has enabled the construction of highly expressive models that can be directly identified with a semiotic pro-cess [ 4], capable of mapping observations from the physical world—the signifier —into abstract representations—the signified —that support complex reasoning and decision-making. From the perspective of statistical learning, this corresponds to learning a mapping from an input domain rooted in perception, W, to an output space Y, through intermediate latent representations in Z, as illustrated in Figure 1. These latent variables can be interpreted as semantic encodings: abstractions that progressively detach from the syntactic structure of the input and retain only the information relevant for downstream tasks. This view connects naturally to geometric theories of meaning. In cognitive science, Gärdenfors’ conceptual spaces framework [ 5, 6] models concepts as regions in a geometrically structured space, where dimensions correspond to interpretable semantic features. Similarly, Osgood’s semantic differential [ 7] represents meaning as a point in a low-dimensional evaluative space. Modern machine learning instantiates these ideas through embeddings [ 8 , 9 ], where semantic similarity is reflected by geometric proximity, and through architectures that explicitly manipulate representations in continuous latent spaces. Across architectures, latent representations emerge in different forms. In feedforward deep neural networks, they are organized hierarchically across layers, with increasing levels of abstraction [ 10 ]. In autoencoders [ 11 ] and U-Net-like architectures [ 12 ], a semantic bottleneck explicitly compresses the input into a compact representation before reconstruction or prediction. In contrast, non-hierarchical models such as Hopfield networks [ 13 ] encode information in the global activation state of a recurrent system, where the latent representation coincides with the network’s energy minima. Despite these differences, a common principle emerges: latent spaces provide a structured representation of meaning that abstracts away from raw sensory inputs. Understanding the geometry of these latent spaces has become a central challenge in representation learning. Two complementary research directions have emerged in this context. On one hand, 
+
+representation analysis methods [ 14 , 15 , 16 ] study the global structure of latent spaces and quantify similarities across models. On the other hand, mechanistic interpretability [ 17 ] seeks to reverse-engineer the computations that give rise to these representations. Together, these approaches aim to uncover how neural networks encode and manipulate information. 2A striking observation from this line of work is that representations learned by different models often exhibit convergent geometric structure. This has led to the formulation of the Platonic Representation Hypothesis [ 18 ], which posits that sufficiently powerful models approximate a shared statistical representation of reality. Empirically, this manifests as alignment in the similarity structure (kernel) of latent spaces across models and modalities. However, such convergence is inherently imperfect: unlike humans, whose representations are shaped by a strong pragmatic need to communicate with other social agents [ 19 , 20 ], the task-tailored latent space of a neural model is subject to no such constraint. As a consequence, the semantic codes produced by a neural network are not directly comparable: even minor sources of stochasticity—such as weight initialization, optimization dynamics, or data shuffling—introduce variability, while differences in architecture, modality, and training data further amplify discrepancies between latent spaces, yielding representations that are equivalent yet misaligned [21]. These discrepancies become critical in settings where representations themselves are exchanged, such as semantic communications [ 22 , 23 , 24 ], where latent codes act as communication units [ 25 ]. In this regime, misaligned latent spaces induce semantic noise [ 26 , 27 ], hindering mutual understand-ing and limiting interoperability across agents. This challenge is especially acute in AI-native 6G systems, where heterogeneous models must communicate directly through learned representations. More generally, any paradigm operating in representation space—including transfer learning, mul-timodal and multitask modeling [ 28 , 29 , 30 ], federated learning [ 31 , 32 , 33 , 34 ], and multi-agent systems—faces the same fundamental issue: without proper latent space alignment , representations remain semantically incompatible. 
+
+Contributions and Impact. Our contributions are threefold. First, we release a large-scale, stan-dardized dataset of latent representations that captures the expressivity of SoTA vision models, highlighting their capability of extracting concepts at different granularities. Second, we navigate the diversity of modern neural architectures and datasets by comparing latent representations and studying the effect of specific training and modeling choices on latent spaces. Third, we establish a unified benchmark for evaluating latent space alignment methods under realistic and heterogeneous conditions. We believe that S EMASIA provides a crucial step toward a principled understanding of semantic repre-sentations in neural networks. It opens new avenues for studying the geometry of meaning, advancing alignment methodologies, and supporting the development of next-generation AI communication systems capable of robust and meaningful interaction. Furthermore, this dataset can be used not only for benchmarking in semantic communication setups, but also as a basis for fundamental studies into the implementation of innovative techniques such as parameter-efficient fine-tuning, transfer learning, and model steering, where the geometry of the latent space and the analysis of its structure are becoming crucial [ 35 , 36 , 37 ]. Finally, we believe that the analyses presented in the paper advance the state of the art in the field of explainable AI [ 38 ], and may inspire the design of new multimodal and multitask architectures, as well as potential studies of latent dynamics [ 39 ] at the core of world models [40]. 
+
+2 The S EMASIA Dataset 
+
+SEMASIA is a large-scale collection of latent representations extracted from state-of-the-art neural vision models available in the timm library [ 41 ]. Each representation is obtained by feeding images from a standard computer vision benchmark into a pretrained model in inference mode, and recording the vector of neural activations at a designated layer. Concretely, we extract activations from the last layer immediately preceding the classification or task-specific MLP decoder, effectively repurposing 
+
+timm models as semantic feature extractors rather than classifiers. The rationale behind this choice is discussed in Section 2.4 and Appendix B. 
+
+2.1 Models and Benchmarks 
+
+The timm library hosts approximately 1,700 pretrained vision models. In this work, we restrict our analysis to a subset of 1697 architectures, excluding models on the order of 10 10 parameters due to computational constraints imposed by the available hardware. The selected models span a broad spectrum of design choices, including convolutional networks, vision transformers, hybrid architectures, and self-supervised backbones, providing a representative cross-section of modern 3Table 1: Summary of the benchmark datasets included in the S EMASIA collection. For each dataset and split we report the number of timm models from which latent representations were extracted, the number of source examples per model, and the total number of rows in the corresponding Parquet file (i.e., the number of (input, model) pairs).                                                      
+
+> Dataset # Models Split Raw examples Total Rows
+> semasia-collection semasia-celeba 1,697
+> train 100 ,000 169 ,700 ,000
+> valid 19 ,867 33 ,714 ,299
+> test 19 ,962 33 ,875 ,514
+> semasia-cifar10 1,697 train 50 ,000 84 ,850 ,000
+> test 10 ,000 16 ,970 ,000
+> semasia-cifar100 1,697 train 50 ,000 84 ,850 ,000
+> test 10 ,000 16 ,970 ,000
+> semasia-fashion_mnist 1,697 train 60 ,000 101 ,820 ,000
+> test 10 ,000 16 ,970 ,000
+> semasia-mnist 1,697 train 60 ,000 101 ,820 ,000
+> test 10 ,000 16 ,970 ,000
+> semasia-oxford-flowers 1,697 train 7,169 12 ,180 ,131
+> test 1,020 1,732 ,980
+> semasia-tiny-imagenet 1,697 train 100 ,000 169 ,700 ,000
+> valid 10 ,000 16 ,970 ,000
+> semasia-imagenet-1k 1,697 validation 50 ,000 84 ,850 ,000
+> test 100 ,000 169 ,700 ,000
+
+vision encoders. We release S EMASIA on Hugging Face as a dataset collection, with one semantic dataset per benchmark. The current release covers eight widely adopted vision benchmarks: CIFAR-10 [ 42 ], CIFAR-100 [ 42 ], MNIST [ 43 ], Fashion-MNIST [ 44 ], Oxford Flowers [ 45 ], ImageNet-1k [ 46 , 47 ], Tiny ImageNet [ 48 ] and CelebA [ 49 ]. Source datasets are obtained from their respective Hugging Face repositories, and latent representations are extracted on one or more of the default splits provided by the dataset authors, as summarized in Table 1. Additional details on the benchmarking datasets used are reported in Appendix A.2. 
+
+2.2 Data Format and Organization 
+
+Data are stored in tabular form, with one Parquet file per neural model and per benchmark in the world space W (e.g., semasia-cifar10 , semasia-mnist ). Each file has one row per input example, corresponding to a pair (input i, model k), and describes the latent representation of the i-th sample extracted from model k.Each row contains: (i) id (uint32 ), a unique identifier linking representations of the same input across models, enabling exact correspondence for alignment studies; (ii) one or more label columns, inherited from the original benchmark and task-dependent, supporting analyses such as linear probing, representation quality evaluation, and alignment or semantic communication benchmarking (e.g., mapping representations from a model A to a decoder of a model B), with dataset-specific structure ( semasia-cifar10 : single integer label; semasia-celeba : multiple binary attributes; see Appendix A.2); (iii) model_name (string ), the identifier in the timm library; and (iv) embedding 
+
+(array of shape equal to the latent dimension of the corresponding model), the latent representation extracted as described in Section 2.4. 
+
+2.3 Model Registry 
+
+The dataset is accompanied by a model registry that records metadata for each architecture used to extract latent representations, including identity, architectural characteristics (e.g., family, depth, width, input resolution), pretraining provenance, and capacity descriptors such as parameter count and latent dimensionality. This information enables controlled analyses of how design choices, scale, and training affect latent space geometry. A full description is provided in Appendix A.3. The 4Dataset Cifar10  
+
+> Cifar100
+> Mnist
+> Fashion Mnist
+> Tiny-ImageNet
+> CelebA
+> Oxford Flowers Flowers
+> Large mammals Wheeled vehicles
+
+Figure 2: Two-dimensional t-SNE projection of the aimv2_1b_patch14_224.apple_pt 2048-dimensional latent space, populated with samples from seven S EMASIA benchmarks. Each benchmark forms its own cluster, but semantically overlapping concepts collapse onto shared neighborhoods regardless of source: flower images from Oxford Flowers and CIFAR-100 occupy the same region, as do large mammals and vehicles drawn from CIFAR-10, CIFAR-100, and Tiny-ImageNet (highlighted with the related origin dataset color). architectural heterogeneity documented by the model registry makes S EMASIA a meaningful testbed for alignment, as latent spaces are not directly comparable across models. 
+
+2.4 Latent Space Extraction Extraction protocol. For each model in the registry and each benchmark dataset, we feed every raw input through the network in inference mode and record the vector of neural activations at a designated cutting point . Each input is preprocessed according to the default pipeline specified by the timm maintainers for the target model, typically including resizing, padding, and normalization to match the expected input dimensionality and statistics. The cutting point is chosen as the last layer immediately preceding the task-specific decoder, i.e., the head used at training time for the supervised objective. This choice is principled: while not every architecture exposes an explicit semantic bottleneck, most modern vision models exhibit a hierarchical structure in which early layers extract low-level, syntactic features tied to the geometry of the input, while deeper layers progressively shed input-specific structure in favor of task-relevant semantic content [ 10 ]. Cutting one layer before the head, therefore, yields a representation that has largely abandoned the geometry of the input space but has not yet collapsed onto the discrete output space Y of the supervised task. Empirical evidence supporting this choice is provided in Appendix B. 
+
+Latent spaces as point clouds. Recording one latent representation per input induces, for each (model, dataset) pair, a point cloud in Z that we treat as an empirical sample of the model’s latent space. By aggregating across the training splits of all benchmark datasets, each S EMASIA entry covers the latent space at scale and across heterogeneous semantic domains, providing a comprehensive substrate for downstream geometric and topological analyses. Figure 2 visualizes such a point cloud for a single model, aimv2_1b_patch14_224.apple_pt (model details in [ 50 ]), aggregated over the training splits of seven benchmarks and projected to two dimensions via t-SNE [51]. 
+
+Geometry of meaning. The projection in Figure 2 provides a concrete realization of the cognitive-science intuition that semantic content can be organized as a geometric space in which proximity encodes similarity [ 5, 7, 52 ]. Three observations are particularly noteworthy. First, semantically 5Label 
+
+Tiny-ImageNet 
+
+Oxford Flowers 
+
+Mnist 
+
+Fashion Mnist 
+
+Cifar100 
+
+Cifar10 
+
+CelebA                        
+
+> PC6 PC5 PC4 PC3 PC2 PC1 -0.08 -1.32 3.63 2.39 1.16 -0.47 8.28 6.09 3.90 1.72 -1.94 9.06 6.31 3.56 0.81 12.70 10.05 7.39 4.74 2.08 12.03 -2.94 8.29 4.54 0.80 15.86 11.33 -2.29 6.79 2.25
+> Vehicles 2
+> Vehicles 1
+> Trees
+> Small Mammals
+> Reptiles
+> People
+> Non-insect invertebrates
+> Medium mammals
+> Large omnivores and herbivores
+> Large natural outdoor scenes
+> Large man-made outdoor things
+> Large carnivores
+> Insects
+> Household furniture
+> Household electrical devices
+> Fruit and vegetables
+> Food containers
+> Flowers
+> Fish
+> Aquatic mammals 11.26 10.15 9.03 7.92 6.80 4.19 3.22 2.26 1.30 0.34 7.55 6.42 5.29 4.16 3.03 5.17 4.08 2.99 1.90 0.81 11.43 9.33 7.24 5.14 3.04 11.30 9.14 6.97 4.81 2.64
+> Label 11.26 10.15 9.03 7.92 6.80 4.19 3.22 2.26 1.30 0.34 7.55 6.42 5.29 4.16 3.03 5.17 4.08 2.99 1.90 0.81 11.43 9.33 7.24 5.14 3.04 11.30 9.14 6.97 4.81 2.64 PC6 PC5 PC4 PC3 PC2 PC1
+> Label PC6 PC5 PC4 PC3 PC2 PC1 11.26 10.15 9.03 7.92 6.80 4.19 3.22 2.26 1.30 0.34 7.55 6.42 5.29 4.16 3.03 5.17 4.08 2.99 1.90 0.81 11.43 9.33 7.24 5.14 3.04 11.30 9.14 6.97 4.81 2.64
+> Label PC6 PC5 PC4 PC3 PC2 PC1
+> Aquatic mammals
+> Large carnivores
+
+a.  Datasets concepts clustering  b. Cifar100  concepts clustering (coarse labels) 
+
+c.  Large Carnivores  sub-concepts clustering  d.  Aquatic mammals  sub-concepts clustering Figure 3: Concept clustering in the aimv2_1b_patch14_224.apple_pt latent space, projected along six principal components of UMAP. Each axis encodes a latent feature, and examples organize along it according to how the feature is realized. (a) Distribution of latent representations from the full SEMASIA collection, showing how each benchmark forms its own cluster (complementing Figure 2). 
+
+(b) Same projection restricted to CIFAR-100, revealing how its classes distribute along the principal axes. (c, d) Zoom on large carnivorous and aquatic mammals, respectively. In (c), PC 5 separates felines from canids/bears, and PC 4 further splits canids from bears. In (d), the first axis separates cetaceans from furred mammals, while PC 3 distinguishes rodents/mustelids from pinnipeds within the aquatic furred group. equivalent concepts collapse onto overlapping regions regardless of their dataset of origin: instances of the concept flower drawn from CIFAR-10 and from Oxford Flowers occupy the same neighborhood in the projection, despite the model never having been directly trained on either benchmark. Second, individual concepts manifest as compact, well-localized clusters whose centroids can be read as concept prototypes, in line with recent prototype-based interpretations of neural representations [ 53 ]. Third, the latent space is organized hierarchically: parallel-coordinates plots [ 54 ] along the principal UMAP [ 55 ] axes in Figure 3, reveal that concepts cluster at multiple levels of granularity, with directions in the projection encoding interpretable semantic axes. For instance, along one axis felines, canids, and bears are progressively separated, while along another, canids and bears are further disentangled from one another. The model thus appears to extract a semantics that supports discrimination between classes and subclasses of benchmarks on which it was never explicitly trained. A deeper exploration of concept clustering at varying granularities for the example model across different S EMASIA benchmarks is reported in Appendix C. The above analysis describes the latent space of a single model. A central question of the semantic-alignment literature, however, concerns whether latent spaces produced by different models are directly comparable, and whether they are semantically equivalent up to a structured transformation. Investigating this question, both within and across architectural families, is the focus of Sections 3.1 and 3.2. 
+
+2.5 Extensibility and Compatibility 
+
+The collection can be extended along two axes: applying the latent space extraction pipeline to new datasets or modalities (e.g., audio, text, video), or analyzing latent spaces of newly proposed architectures on fixed benchmarks. This design enables systematic studies of alignment across heterogeneous models, data modalities, and task-tailored representations. A key motivation is to investigate the geometric and topological structure of latent spaces, with topology-based methods offering insights into semantic alignment and disentanglement. S EMASIA is already integrated in the 6PPFE  CCA  Linear  No Mismatch 24816 32 64 128 Fashion Mnist 24816 32 64 128   
+
+> Accuracy Cifar10 24864 128 16 32 Mnist
+> Compression (K) Compression (K) Compression (K) 0.4 0.2 0.6 1.0 0.8 0.4 0.2 0.6 1.0 0.8 0.4 0.2 0.6 1.0 0.8 3.0 2.0
+> MSE 24816 32 64 128 1.50 0.50 24816 32 64 128 4.5 3.5 3.0 2.5 4.0 0.75 1.00 1.25 1.75 2.5 1.5 3.5 24816 32 64 128
+
+Figure 4: Comparison of three supervised alignment methods on every model pair from Figure 12: LINEAR (the Eigen-K baseline from 57 ), PPFE [ 53 ], and Canonical Correlation Analysis (CCA) [ 14 ]. The x-axis reports the number of non-zero components K retained by the alignment map (i.e., the active latent dimensions); the y-axis reports downstream task accuracy after communication (top) and mean squared error of latent reconstruction (bottom). Method specifications and metric definitions are detailed in Appendix E. open-source framework T OPOBENCH [ 56 ], allowing direct evaluation of classical and deep learning methods for point cloud analysis, manifold learning, and topological inference. 
+
+3 SEMASIA in Action: From Alignment to Statistical Analysis 
+
+This section illustrates how S EMASIA provides a controlled benchmark for latent space alignment methods and enables the systematic study of semantic mismatch. In section 3.1, we focus on CIFAR-10 representations from a small set of selected model pairs, and test methods from the literature on latent space alignment; the protocol extends naturally to the full collection. In section 3.2, we instead leverage the full S EMASIA arsenal to conduct what is, to our knowledge, the first large-scale regression-based analysis of latent space geometry across vision models. 
+
+3.1 Semantic Alignment 
+
+Latent spaces produced by different models exhibit structured forms of semantic mismatch. These discrepancies can be characterized geometrically, either through comparisons of latent bases (Ap-pendix D.1) or via correspondence of representative concepts (Appendix D.2). For completeness, we present a detailed empirical analysis of these phenomena in the corresponding appendices, focusing on a set of carefully selected representative models chosen to isolate specific sources of heterogeneity that we examine more broadly in Section 3.2. Together, these results, spanning both basis-level comparisons and concept-level correspondences, highlight the need for explicit alignment mappings. Figure 4 compares three supervised alignment methods—a linear map (Linear) [ 57 ], a prototype-anchor projection (PPFE) [ 53 ], and Canonical Correlation Analysis (CCA) [ 14 ]—on ViT and AiMV2 model pairs. Each curve traces performance as a function of the number of non-zero components K,i.e., the number of latent dimensions retained by the alignment map. Lower values of K correspond to more aggressive compression and thus to a stricter test of how much task-relevant semantic content survives the alignment. We report two complementary metrics: latent reconstruction quality and downstream task accuracy in a semantic-communication setting. Full experimental details are provided in Appendix E. Across all model pairs and across the full range of compression factors, 70 1 2                     
+
+> ˆβ
+> Total Spread
+> Mean Dist. to Centroid
+> Std Dist. to Centroid
+> Density
+> Effective Rank
+> N Components (90%)
+> Isotropy
+> Spectral Entropy
+> Expl. Var. Ratio (top-1)
+> Expl. Var. Ratio (top-3)
+> Probing Accuracy
+> Probing Recall
+> Probing Precision
+> Probing F1
+> Dataset Complexity
+> −1.0−0.50.00.5
+> ˆβ
+> Specialization
+> −0.50.00.51.0
+> ˆβ
+> Transfer Learning
+> −101
+> ˆβ
+> Augmentation
+> 0.00.20.4
+> ˆβ
+> Model Scale
+> p<0.01 p<0.05 p<0.10 p≥0.10
+
+Figure 5: Forest plot of pooled OLS regression coefficients ˆβ for the embedding geometry and linear probing metrics across five pretraining conditions (see Table 2 for condition definitions). Probing scores (accuracy, recall, precision, F1) are obtained via a least-squares linear probe. All ˆβ are expressed in units of the control-group standard deviation of each metric ( σcontrol , pooled across datasets and analysis types), yielding an effect-size measure analogous to Cohen’s d. Observations are pooled across CIFAR-10, MNIST, Fashion-MNIST, and Oxford Flowers. Linear consistently dominates both PPFE and CCA on both metrics. The gap is most pronounced at low values of K, where prototype-based and CCA-based alignments degrade sharply while Linear retains most of the downstream accuracy and reconstruction fidelity. These results highlight the role of S EMASIA as a benchmarking resource: rather than committing to an alignment method on theoretical grounds, practitioners can run lightweight comparisons on relevant latent space pairs and select the best-performing strategy for the heterogeneity regime at hand. The same protocol extends naturally to new alignment methods as they are proposed. 
+
+3.2 Statistical Analysis of Embedding Geometry 
+
+To demonstrate the analytical potential of SEMASIA, we regress fourteen geometric and probing metrics (described in F.1), covering spread, intrinsic dimensionality, spectral structure, and linear probing performance, against five pretraining conditions derived from the model registry (Section 2.3 and Appendix A.3). Each condition is designed as a ceteris paribus contrast, isolating a single factor while holding all others fixed. We fit a pooled OLS regression with HC3-robust standard errors, controlling for architecture family and evaluation dataset. Coefficients in Figure 5 are expressed in units of the control-group standard deviation σcontrol (pooled across datasets and analysis types), yielding an effect-size measure analogous to Cohen’s d. The analysis spans CIFAR-10, MNIST, Fashion-MNIST, and Oxford Flowers, yielding between 224 and 7,260 pooled observations per condition. Full condition definitions are given in Table 2 of Appendix F. 
+
+Dataset Complexity contrasts a smaller vs. a larger ImageNet variant, with architecture and aug-mentation fixed. Training on the richer dataset consistently expands the embedding space, increases effective rank, isotropy, and spectral entropy, and reduces explained variance of top components, indicating higher-dimensional, more uniformly distributed representations. The gain in effective rank reflects a broader activation of meaningful dimensions. Probing metrics are significantly negative, consistent with a semantic shift toward a distribution not directly aligned with the downstream classification task. 
+
+Specialization contrasts original large-scale pretraining with subsequent fine-tuning to a smaller dataset variant. Fine-tuning onto less rich data compresses the embedding space, reduces effec-tive rank, isotropy, and spectral entropy, and concentrates variance along dominant directions, the geometric signature of catastrophic forgetting. Probing metrics are non-significant. 
+
+Transfer Learning contrasts native training on the target dataset with large-scale pretraining followed by fine-tuning to the same target, and tells the complementary story: pretrained models retain wider 8spaces, higher effective rank, and more uniform dimension utilisation. The preservation of effective rank indicates that large-scale pretraining leaves a lasting imprint on semantic coding capacity. Probing metrics are non-significant, again due to semantic shift. 
+
+Augmentation compares the same model and dataset with and without augmentation during pretrain-ing. Augmentation expands distance-based spread and isotropy but does not increase effective rank; the number of components required to explain 90% of variance even decreases slightly, indicating that augmentation redistributes variance more efficiently within already active dimensions rather than expanding semantic coding capacity. Unlike other conditions, probing metrics are significantly positive, confirming that a wider, more isotropic space aids linear classification when semantic structure is preserved. 
+
+Model Scale contrasts smaller vs. larger model variants within the same architectural family, dataset, and setup, and produces the strongest effects. Larger models yield wider spaces, higher effective rank, and significantly better probing performance, but with reduced isotropy: variance concentrates along dominant directions despite overall expansion. This combination distinguishes model scale from augmentation, which widens the space without increasing its semantic coding capacity. Dataset and architecture family fixed effects are jointly significant across all conditions ( p < 0.001 ), confirming strong independent effects on embedding geometry. Taken together, these results reveal a consistent scale effect across all conditions: training on a richer dataset expands the space and distributes semantic information across more orthogonal directions (Dataset Complexity ), fine-tuning onto a less informative one compresses it ( Specialization ), and large-scale pretraining followed by fine-tuning preserves that capacity compared to native training (Transfer Learning ). Increasing syntactic but not semantic variance through Augmentation widens the space without affecting intrinsic dimensionality, but simplifies the classification landscape for a fixed downstream probe. Finally, Model Scale both widens the space and substantially increases its semantic coding capacity, though with the notable signature of reduced isotropy, suggesting a richer but more anisotropic internal geometry. In Appendix G, we conduct a statistical regression to assess whether different architecture families structure the latent space differently. Since model scale is not matched across architecture families, we rely on topological signatures, which are scale invariant by construction, to ensure that observed differences reflect architecture rather than model scale. 
+
+4 Limitations, Discussion, and Conclusions 
+
+SEMASIA provides the first opportunity to systematically study the geometry of latent spaces in vision models at scale, laying the foundation for a benchmark suite for semantic alignment that enables fast, reproducible comparison of latent spaces and both quantitative and qualitative analysis of semantic mismatch across heterogeneous configurations. Beyond semantic communication protocols, where alignment is a prerequisite for meaningful inter-agent exchange, the resource naturally extends to broader multi-agent and cooperative settings, including federated learning, model merging, and multimodal or multitask architectures. The statistical framework enabled by S EMASIA also provides the first regression-based evidence of how pretraining data complexity, specialization, transfer learning, augmentation, and model scale shape the geometry of vision embeddings. Such findings would have been difficult to obtain without a resource of this scope: pooling thousands of model– dataset observations within a unified regression framework, while controlling for architectural family and evaluation dataset, enables principled, hypothesis-driven studies of representation quality beyond task-specific performance metrics. Finally, all precomputed latent spaces are made publicly available, democratising access to large-scale representation benchmarking by eliminating the need for high-end GPU infrastructure, and decoupling latent space alignment research from hardware constraints by enabling researchers with modest computational resources to work with state-of-the-art architectures. 
+
+Limitations and future directions. The current release focuses exclusively on image models, preventing direct cross-modal comparisons of latent geometries and the study of modality-specific deviations from a putative universal representation. Extending the collection to language, audio, and video models, and aligning their latent spaces on shared semantic content, is a natural next step for investigating the conditions under which the Platonic Representation Hypothesis holds at scale. A second limitation is the use of a single extraction layer per model, fixed at the semantic bottleneck immediately preceding the task-specific head and evaluated only at the end of training. While this isolates the most semantically rich representation produced by each model, it leaves 9two complementary dimensions unexplored: depth and time . Interlayer analyses could clarify how representations evolve along the syntactic–semantic–pragmatic spectrum, while tracking latent spaces across training epochs could reveal how semantic geometry emerges during optimization, connecting SEMASIA to recent work on latent dynamics and world models. Another promising direction concerns the role of downstream objectives in shaping latent geometry. The modular design of S EMASIA is intended to support all these limitations as future extensions. 
+
+Closing remarks. By coupling representational scale with structured metadata, S EMASIA treats latent representations not as opaque vectors but as measurable, comparable, and alignable geometric objects. We hope it will provide a shared substrate for advancing the study of meaning in artificial systems, developing new alignment methodologies, and ultimately enabling robust semantic communication among heterogeneous neural agents. 
+
+Acknowledgments and Disclosure of Funding 
+
+This work was supported by the SNS JU project 6G-GOALS under the EU Horizon Europe program, Grant Agreement No. 101139232, and by Huawei Technology France SASU under Grant No. Tg20250616041. 
+
+References 
+
+[1] Frank Rosenblatt. The perceptron: A probabilistic model for information storage and organiza-tion in the brain. Psychological Review , 65(6):386–408, 1958. 2 [2] Yann LeCun, Yoshua Bengio, and Geoffrey Hinton. Deep learning. Nature , 521(7553):436–444, 2015. 2 [3] David E Rumelhart, Geoffrey E Hinton, and Ronald J Williams. Learning representations by back-propagating errors. nature , 323(6088):533–536, 1986. 2 [4] Umberto Eco. A theory of semiotics , volume 217. Indiana University Press, 1979. 2 [5] Peter Gärdenfors. Conceptual Spaces: The Geometry of Thought . MIT Press, 2000. 2, 5 [6] Peter Gärdenfors. The Geometry of Meaning: Semantics Based on Conceptual Spaces . MIT Press, 2014. 2 [7] Charles E. Osgood, George J. Suci, and Percy H. Tannenbaum. The Measurement of Meaning .University of Illinois Press, 1957. 2, 5 [8] Tomas Mikolov, Kai Chen, Greg Corrado, and Jeffrey Dean. Efficient estimation of word representations in vector space. In Proceedings of the International Conference on Learning Representations (ICLR) Workshop , 2013. 2 [9] Jeffrey Pennington, Richard Socher, and Christopher D. Manning. GloVe: Global vectors for word representation. In Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing (EMNLP) , pages 1532–1543, 2014. 2, 23 [10] Yoshua Bengio, Aaron Courville, and Pascal Vincent. Representation learning: A review and new perspectives. IEEE Transactions on Pattern Analysis and Machine Intelligence , 35(8):1798– 1828, 2013. 2, 5 [11] Diederik P. Kingma and Max Welling. Auto-encoding variational Bayes. In Proceedings of the International Conference on Learning Representations (ICLR) , 2014. 2 [12] Olaf Ronneberger, Philipp Fischer, and Thomas Brox. U-Net: Convolutional networks for biomedical image segmentation. In Medical Image Computing and Computer-Assisted Inter-vention (MICCAI) , pages 234–241, 2015. 2 [13] John J. Hopfield. Neural networks and physical systems with emergent collective computational abilities. Proceedings of the National Academy of Sciences , 79(8):2554–2558, 1982. 2 10 [14] Maithra Raghu, Justin Gilmer, Jason Yosinski, and Jascha Sohl-Dickstein. Svcca: Singular vector canonical correlation analysis for deep learning dynamics and interpretability. Advances in neural information processing systems , 30, 2017. 2, 7 [15] Ari Morcos, Maithra Raghu, and Samy Bengio. Insights on representational similarity in neural networks with canonical correlation. Advances in neural information processing systems , 31, 2018. 2 [16] Simon Kornblith, Mohammad Norouzi, Honglak Lee, and Geoffrey Hinton. Similarity of neural network representations revisited. In International conference on machine learning , pages 3519–3529. PMlR, 2019. 2 [17] Leonard Bereska and Stratis Gavves. Mechanistic interpretability for ai safety-a review. Trans-actions on Machine Learning Research , 2024. 2 [18] Minyoung Huh, Brian Cheung, Tongzhou Wang, and Phillip Isola. Position: The platonic representation hypothesis. In Proceedings of the 41st International Conference on Machine Learning (ICML) , 2024. 3 [19] Jay Zeman. Peirce’s theory of signs. A perfusion of signs , pages 22–39, 1977. 3 [20] Paul Watzlawick, Janet Beavin Bavelas, and Don D Jackson. Pragmatics of human communica-tion . WW Norton & Company, 2011. 3 [21] Hossein Javidnia. A gauge theory of superposition: Toward a sheaf-theoretic atlas of neural representations. arXiv preprint arXiv:2603.00824 , 2026. 3, 26 [22] Guangming Shi, Dahua Gao, Xiaodan Song, Jingxuan Chai, Minxi Yang, Xuemei Xie, Leida Li, and Xuyang Li. A new communication paradigm: From bit accuracy to semantic fidelity. 
+
+arXiv preprint arXiv:2101.12649 , 2021. 3 [23] Deniz Gündüz, Zhijin Qin, Inaki Estella Aguerri, Harpreet S Dhillon, Zhaohui Yang, Aylin Yener, Kai Kit Wong, and Chan-Byoung Chae. Beyond transmitting bits: Context, semantics, and task-oriented communications. IEEE Journal on Selected Areas in Communications ,41(1):5–41, 2022. 3 [24] Emilio Calvanese Strinati, Paolo Di Lorenzo, Vincenzo Sciancalepore, Adnan Aijaz, Marios Kountouris, Deniz Gündüz, Petar Popovski, Mohamed Sana, Photios A Stavrou, Beatriz Soret, et al. Goal-oriented and semantic communication in 6g ai-native networks: The 6g-goals approach. In 2024 Joint European Conference on Networks and Communications & 6G Summit (EuCNC/6G Summit) , pages 1–6. IEEE, 2024. 3 [25] Huiqiang Xie, Zhijin Qin, Geoffrey Ye Li, and Biing-Hwang Juang. Deep learning enabled semantic communication systems. IEEE transactions on signal processing , 69:2663–2675, 2021. 3 [26] Mohamed Sana and Emilio Calvanese Strinati. Semantic channel equalizer: Modelling language mismatch in multi-user semantic communications. In GLOBECOM 2023-2023 IEEE Global Communications Conference , pages 2221–2226. IEEE, 2023. 3 [27] Xuewen Luo, Hsiao-Hwa Chen, and Qing Guo. Semantic communications: Overview, open issues, and future research directions. IEEE Wireless communications , 29(1):210–219, 2022. 3 [28] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agar-wal, Girish Sastry, Amanda Askell, Pamela Mishkin, Jack Clark, Gretchen Krueger, and Ilya Sutskever. Learning transferable visual models from natural language supervision. In Proceed-ings of the 38th International Conference on Machine Learning (ICML) , pages 8748–8763, 2021. 3 [29] Rohit Girdhar, Alaaeldin El-Nouby, Zhuang Liu, Mannat Singh, Kalyan Vasudev Alwala, Armand Joulin, and Ishan Misra. ImageBind: One embedding space to bind them all. In 
+
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) ,pages 15180–15190, 2023. 3 11 [30] Giordano Cicchetti, Eleonora Grassucci, Luigi Sigillo, Danilo Comminiello, et al. Gramian multimodal representation learning and alignment. In Proceedings of International Conference on Learning Representations (ICLR 2025) . ICLR, 2025. 3 [31] Yue Tan, Guodong Long, Lu Liu, Tianyi Zhou, Qinghua Lu, Jing Jiang, and Chengqi Zhang. FedProto: Federated prototype learning across heterogeneous clients. In Proceedings of the 36th AAAI Conference on Artificial Intelligence , pages 8432–8440, 2022. 3 [32] Zheng Yang, Yuexing Zhang, Yan Zheng, Xinwei Tian, Hao Peng, Tengfei Liu, and Chunlin Chen. FedFed: Feature distillation against data heterogeneity in federated learning. In Advances in Neural Information Processing Systems , volume 36, 2023. 3 [33] Mehdi Setayesh, Mahdi Beitollahi, Yasser H. Khalil, and Hongliang Li. Toward enhancing representation learning in federated multi-task settings. In International Conference on Learning Representations (ICLR) , 2026. 3 [34] Mohamed Badi, Chaouki Ben Issaid, and Mehdi Bennis. Communication-efficient and robust multi-modal federated learning via latent-space consensus. IEEE Wireless Communications Letters , 15:2298–2302, 2026. 3 [35] Edward J. Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Lu Wang, and Weizhu Chen. LoRA: Low-rank adaptation of large language models. In 
+
+Proceedings of the International Conference on Learning Representations (ICLR) , 2022. 3 [36] Andy Zou, Long Phan, Sarah Chen, James Campbell, Phillip Guo, Richard Ren, Alexander Pan, Xuwang Yin, Mantas Mazeika, Ann-Kathrin Dombrowski, Shashwat Goel, Nathaniel Li, Michael J. Byun, Zifan Wang, Alex Mallen, Steven Basart, Sanmi Koyejo, Dawn Song, Matt Fredrikson, J. Zico Kolter, and Dan Hendrycks. Representation engineering: A top-down approach to AI transparency. arXiv preprint arXiv:2310.01405 , 2023. 3 [37] Bryce Grant and Peng Wang. Gluing local contexts into global meaning: A sheaf-theoretic decomposition of transformer representations. In ICLR 2026 Workshop on Unifying Concept Representation Learning , 2026. 3 [38] Jiajun Zhu, Siqi Miao, Rex Ying, and Pan Li. Towards understanding sensitive and decisive patterns in explainable ai: a case study of model interpretation in geometric deep learning. arXiv preprint arXiv:2407.00849 , 2024. 3 [39] Marco Fumero, Luca Moschella, Emanuele Rodolà, and Francesco Locatello. Navigating the latent space dynamics of neural models. arXiv preprint arXiv:2505.22785 , 2025. 3 [40] Yann LeCun et al. A path towards autonomous machine intelligence version 0.9. 2, 2022-06-27. 
+
+Open Review , 62(1):1–62, 2022. 3 [41] R. Wightman. Pytorch image models. https://github.com/rwightman/ pytorch-image-models , 2019. 3 [42] Alex Krizhevsky. Learning multiple layers of features from tiny images. Technical report, University of Toronto, 2009. 4, 18 [43] Yann LeCun, Leon Bottou, Yoshua Bengio, and Patrick Haffner. Gradient-based learning applied to document recognition. Proceedings of the IEEE , 86(11):2278–2324, 1998. 4, 17 [44] Han Xiao, Kashif Rasul, and Roland Vollgraf. Fashion-MNIST: a novel image dataset for benchmarking machine learning algorithms. CoRR , abs/1708.07747, 2017. 4, 17 [45] Maria-Elena Nilsback and Andrew Zisserman. Automated flower classification over a large number of classes. In Proceedings of the Indian Conference on Computer Vision, Graphics and Image Processing , December 2008. 4, 18 [46] Jia Deng, Wei Dong, Richard Socher, Li-Jia Li, Kai Li, and Li Fei-Fei. ImageNet: A large-scale hierarchical image database. In 2009 IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , pages 248–255, 2009. 4, 18 12 [47] Olga Russakovsky, Jia Deng, Hao Su, Jonathan Krause, Sanjeev Satheesh, Sean Ma, Zhiheng Huang, Andrej Karpathy, Aditya Khosla, Michael Bernstein, Alexander C. Berg, and Li Fei-Fei. ImageNet large scale visual recognition challenge. International Journal of Computer Vision ,115(3):211–252, 2015. 4, 18 [48] Ya Le and Xuan Yang. Tiny ImageNet visual recognition challenge. CS 231N , 7(7):3, 2015. 4, 18 [49] Ziwei Liu, Ping Luo, Xiaogang Wang, and Xiaoou Tang. Deep learning face attributes in the wild. In Proceedings of the IEEE International Conference on Computer Vision (ICCV) , pages 3730–3738, December 2015. 4, 18 [50] Enrico Fini, Mustafa Shukor, Xiujun Li, Philipp Dufter, Michal Klein, David Haldimann, Sai Aitharaju, Victor G Turrisi da Costa, Louis Béthune, Zhe Gan, et al. Multimodal autoregressive pre-training of large vision encoders. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 9641–9654, 2025. 5 [51] Laurens Van der Maaten and Geoffrey Hinton. Visualizing data using t-sne. Journal of machine learning research , 9(11), 2008. 5, 23 [52] Albert J Wakhloo, Will Slatton, and SueYeon Chung. Neural population geometry and optimal coding of tasks with shared latent structure. Nature Neuroscience , pages 1–11, 2026. 5 [53] Simone Fiorellino et al. Frame-based zero-shot semantic channel equalization for AI-native communications. IEEE Transactions on Cognitive Communications and Networking , 2026. 6, 7, 28, 32 [54] Alfred Inselberg. The plane with parallel coordinates. The visual computer , 1(2):69–91, 1985. 6, 23 [55] Leland McInnes, John Healy, Nathaniel Saul, and Lukas Großberger. Umap: Uniform manifold approximation and projection. Journal of Open Source Software , 3(29), 2018. 6, 23 [56] Guillermo Bernárdez, Lev Telyatnikov, Mathilde Papillon, Marco Montagna, Raffael Theiler, Louisa Cornelis, Johan Mathe, Miquel Ferriol, Pavlo Vasylenko, Jan-Willem Van Looy, et al. Topological deep learning challenge 2025: Expanding the data landscape. In Topology, Algebra, and Geometry in Data Science (TAG-DS 2025) , pages 4–14. PMLR, 2026. 7 [57] Mario Edoardo Pandolfo, Simone Fiorellino, Emilio Calvanese Strinati, and Paolo Di Lorenzo. Latent space alignment for ai-native mimo semantic communications. In 2025 International Joint Conference on Neural Networks (IJCNN) , pages 1–8. IEEE, 2025. 7, 30 [58] Scott Deerwester, Susan T Dumais, George W Furnas, Thomas K Landauer, and Richard Harshman. Indexing by latent semantic analysis. Journal of the American society for information science , 41(6):391–407, 1990. 23 [59] Thomas K Landauer and Susan T Dumais. A solution to plato’s problem: The latent semantic analysis theory of acquisition, induction, and representation of knowledge. Psychological review , 104(2):211, 1997. 23 [60] Thomas Hofmann. Unsupervised learning by probabilistic latent semantic analysis. Machine learning , 42(1):177–196, 2001. 23 [61] David M Blei, Andrew Y Ng, and Michael I Jordan. Latent dirichlet allocation. Journal of machine Learning research , 3(Jan):993–1022, 2003. 23 [62] Tomas Mikolov, Ilya Sutskever, Kai Chen, Greg S Corrado, and Jeff Dean. Distributed repre-sentations of words and phrases and their compositionality. Advances in neural information processing systems , 26, 2013. 23 [63] Omer Levy and Yoav Goldberg. Neural word embedding as implicit matrix factorization. 
+
+Advances in neural information processing systems , 27, 2014. 23 13 [64] Kawin Ethayarajh. How contextual are contextualized word representations? comparing the geometry of bert, elmo, and gpt-2 embeddings. In Proceedings of the 2019 conference on empirical methods in natural language processing and the 9th international joint conference on natural language processing (EMNLP-IJCNLP) , pages 55–65, 2019. 23 [65] Emily Reif, Ann Yuan, Martin Wattenberg, Fernanda B Viegas, Andy Coenen, Adam Pearce, and Been Kim. Visualizing and measuring the geometry of bert. Advances in neural information processing systems , 32, 2019. 23 [66] Xingyu Cai, Jiaji Huang, Yuchen Bian, and Kenneth Church. Isotropy in the contextual embed-ding space: Clusters and manifolds. In International conference on learning representations ,2021. 23 [67] Matthew A Turk, Alex Pentland, et al. Face recognition using eigenfaces. In CVPR , volume 91, pages 586–591, 1991. 23, 24 [68] Richard Zhang, Phillip Isola, Alexei A Efros, Eli Shechtman, and Oliver Wang. The unrea-sonable effectiveness of deep features as a perceptual metric. In Proceedings of the IEEE conference on computer vision and pattern recognition , pages 586–595, 2018. 23 [69] Simon Kornblith, Jonathon Shlens, and Quoc V Le. Do better imagenet models transfer better? In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pages 2661–2671, 2019. 23 [70] Andrey Voynov and Artem Babenko. Unsupervised discovery of interpretable directions in the gan latent space. In International conference on machine learning , pages 9786–9796. PMLR, 2020. 23 [71] Erik Härkönen, Aaron Hertzmann, Jaakko Lehtinen, and Sylvain Paris. Ganspace: Discovering interpretable gan controls. Advances in neural information processing systems , 33:9841–9850, 2020. 23 [72] Been Kim, Martin Wattenberg, Justin Gilmer, Carrie Cai, James Wexler, Fernanda Viegas, et al. Interpretability beyond feature attribution: Quantitative testing with concept activation vectors (tcav). In International conference on machine learning , pages 2668–2677. PMLR, 2018. 23 [73] Pang Wei Koh, Thao Nguyen, Yew Siang Tang, Stephen Mussmann, Emma Pierson, Been Kim, and Percy Liang. Concept bottleneck models. In International conference on machine learning ,pages 5338–5348. PMLR, 2020. 23, 24 [74] Etienne Becht, Leland McInnes, John Healy, Charles-Antoine Dutertre, Immanuel W. H. Kwok, Lai Guan Ng, Florent Ginhoux, and Evan W. Newell. Dimensionality reduction for visualizing single-cell data using UMAP. Nature Biotechnology , 37(1):38–44, 2019. 23 [75] Dmitry Kobak and Philipp Berens. The art of using t-SNE for single-cell transcriptomics. 
+
+Nature Communications , 10(1):5416, 2019. 23 [76] Maks Ovsjanikov, Mirela Ben-Chen, Justin Solomon, Adrian Butscher, and Leonidas Guibas. Functional maps: a flexible representation of maps between shapes. ACM Transactions on Graphics (ToG) , 31(4):1–11, 2012. 27 [77] Mikhail Belkin and Partha Niyogi. Laplacian eigenmaps for dimensionality reduction and data representation. Neural computation , 15(6):1373–1396, 2003. 26 [78] Enrico Grimaldi, Mario Edoardo Pandolfo, Gabriele D’Acunto, Sergio Barbarossa, and Paolo Di Lorenzo. Learning network sheaves for ai-native semantic communication. In 2025 59th Asilomar Conference on Signals, Systems, and Computers , pages 1692–1696. IEEE, 2025. 26, 30 [79] Harold W Kuhn. The hungarian method for the assignment problem. Naval research logistics quarterly , 2(1-2):83–97, 1955. 27 [80] Luca Moschella, Valentino Maiorca, Marco Fumero, Antonio Norelli, Francesco Locatello, and Emanuele Rodolà. Relative representations enable zero-shot latent space communication. In 
+
+ICLR , 2023. 30 14 [81] Simone Fiorellino et al. Dynamic relative representations for goal-oriented semantic communi-cations. In Proc. IEEE EUSIPCO , pages 2107–2111, 2024. 30 [82] T. Hüttebräucker et al. Relative representations of latent spaces enable efficient semantic channel equalization. In Proc. IEEE GLOBECOM , 2024. 30 [83] Jack Merullo, Louis Castricato, Carsten Eickhoff, and Ellie Pavlick. Linearly mapping from image to text space. In The Eleventh International Conference on Learning Representations ,2023. 30 [84] Mazda Moayeri, Keivan Rezaei, Maziar Sanjabi, and Soheil Feizi. Text-to-concept (and back) via cross-model alignment. In International Conference on Machine Learning , pages 25037–25060. PMLR, 2023. 30 [85] Valentino Maiorca, Luca Moschella, Antonio Norelli, Marco Fumero, Francesco Locatello, and Emanuele Rodolà. Latent space translation via semantic alignment. Advances in Neural Information Processing Systems , 36:55394–55414, 2023. 30 [86] Zorah Lähner and Michael Moeller. On the direct alignment of latent spaces. In Proceedings of UniReps: the First Workshop on Unifying Representations in Neural Models , pages 158–169. PMLR, 2024. 30 [87] Giuseppe Di Poce, Mario Edoardo Pandolfo, Emilio Calvanese Strinati, and Paolo Di Lorenzo. Federated latent space alignment for multi-user semantic communications. In 2025 IEEE 26th International Workshop on Signal Processing and Artificial Intelligence for Wireless Communications (SPAWC) , pages 1–5. IEEE, 2025. 30 [88] Marco Fumero, Marco Pegoraro, Valentino Maiorca, Francesco Locatello, and Emanuele Rodolà. Latent functional maps: a spectral framework for representation alignment. Advances in Neural Information Processing Systems , 37:66178–66203, 2024. 30 [89] Meng Zhang, Yang Liu, Huanbo Luan, and Maosong Sun. Earth mover’s distance minimization for unsupervised bilingual lexicon induction. In Proceedings of the 2017 Conference on Empirical Methods in Natural Language Processing , pages 1934–1945, 2017. 30 [90] David Alvarez-Melis and Tommi Jaakkola. Gromov-wasserstein alignment of word embedding spaces. In Proceedings of the 2018 conference on empirical methods in natural language processing , pages 1881–1890, 2018. 30 [91] Edouard Grave, Armand Joulin, and Quentin Berthet. Unsupervised alignment of embeddings with wasserstein procrustes. In The 22nd International Conference on Artificial Intelligence and Statistics , pages 1880–1890. PMLR, 2019. 30 [92] Rishi Dev Jha, Collin Zhang, Vitaly Shmatikov, and John Xavier Morris. Harnessing the univer-sal geometry of embeddings. In The Thirty-ninth Annual Conference on Neural Information Processing Systems , 2025. 30 [93] Claude E. Shannon. A mathematical theory of communication. Bell System Technical Journal ,27(3):379–423, 1948. 36 [94] Olivier Roy and Martin Vetterli. The effective rank: A measure of effective dimensionality. In 
+
+2007 15th European signal processing conference , pages 606–610. IEEE, 2007. 36 [95] Christopher D. Manning, Prabhakar Raghavan, and Hinrich Schütze. Introduction to Information Retrieval . Cambridge University Press, 2008. 36 [96] Pedro G. Lind, Marta C. González, and Hans J. Herrmann. Cycles and clustering in bipartite networks. Physical Review E , 72(5), November 2005. 38 [97] Martin Knor, Riste Škrekovski, and Aleksandra Tepeh. Mathematical aspects of wiener index. 
+
+Ars Mathematica Contemporanea , 11:327–352, 01 2016. 39 [98] Miroslav Fiedler. Algebraic connectivity of graphs. Czechoslovak Mathematical Journal ,23(2):298–305, 1973. 39 15 Supplementary Material 
+
+# Table of Contents 
+
+A Data Extraction and Organization 17 B Semantic Bottleneck of Simple Neural Models 20 C Concept Clustering 23 D Semantic Mismatch 25 E Semantic Alignment Methodologies 30 F Statistical Analysis 33 G Graph-Based Regression Analysis 37 
+
+16 A Data Extraction and Organization 
+
+A.1 Computational Infrastructure and Latent Space Extraction 
+
+Extracting the latent representations used in this work constitutes the most computationally demanding phase of the pipeline. We encoded the embeddings of 1,697 pretrained models drawn from the timm 
+
+library across eight standard vision benchmarks: CIFAR-10, CIFAR-100, Tiny-ImageNet, ImageNet-1k, MNIST, Fashion-MNIST, CelebA, and Oxford Flowers. The extraction was carried out on a heterogeneous GPU cluster consisting of two NVIDIA RTX 3090 GPUs (24 GB VRAM each) and two NVIDIA RTX 4090 GPUs (8 GB and 24 GB VRAM respectively). The total computational cost of this phase scales as 
+
+C =
+
+> M
+
+X
+
+> m=1
+
+FLOPs( m) × N, 
+
+where M = 1 ,697 is the number of models, FLOPs( m) denotes the floating-point operation count of a single forward pass through model m, and N = P 
+
+> d
+
+|D d| is the total number of observations aggregated across all eight dataset benchmarks {D d}. Given the diversity of architectures in timm 
+
+this cost is substantial and non-trivial to reproduce. Crucially, this one-time extraction cost need not be borne by future researchers. All precomputed latent spaces are made publicly available, removing the need to re-run any model inference. This democratises access to large-scale representation benchmarking in two distinct ways. First, it eliminates the need for high-end GPU infrastructure and days of computation: researchers can directly load the precomputed embeddings and focus on the alignment methods themselves, reducing the effective cost from O(M · N ) forward passes to a simple data download. Second, and more significantly, it opens access to the latent spaces of large-scale models that would otherwise be inaccessible to many research groups. Several models in the timm library require substantial GPU memory even at inference time, placing them out of reach for researchers without access to high-end hardware. By releasing their precomputed embeddings, we decouple the study of latent space alignment from the hardware requirements of the underlying models, allowing any researcher with modest computational resources to work with representations from state-of-the-art architectures. 
+
+A.2 Benchmark Datasets 
+
+This appendix details the benchmark datasets used to construct the S EMASIA collection. For each dataset, we describe the domain, the number of classes and samples, the native image resolution and color format, the data splits on which latent representations were extracted, and the structure of the label columns inherited from the source dataset and preserved in our Parquet files. A summary is reported in Table 1. 
+
+Label-handling convention. Across all S EMASIA datasets, label columns are inherited verbatim from the corresponding Hugging Face source repository, with the only modification being the addition of the id column that pairs every latent representation with its source example. Whenever the source repository exposes a single class label, we preserve it under the name label as a ClassLabel feature, mapping integer indices to human-readable class names through the metadata in the dataset card. Whenever the source repository exposes multi-attribute or fine/coarse label hierarchies (as in CelebA and CIFAR-100, respectively), we preserve every label column individually so that downstream users can choose the granularity most relevant for their analysis. The full list of label columns for each dataset, together with their data types and value ranges, is given in the per-dataset paragraphs below. 
+
+MNIST [ 43 ] is a classical benchmark for handwritten digit recognition. It contains 70 ,000 grayscale images of digits from 0 to 9, each of resolution 28 ×28 pixels, partitioned into 60 ,000 training and 
+
+10 ,000 test samples. We extract latent representations on both splits. The semasia-mnist dataset exposes a single label column, label (int64 , range 0–9), corresponding to the digit class.  
+
+> Original Dataset: https://huggingface.co/datasets/ylecun/mnist .
+
+Fashion-MNIST [ 44 ] is a drop-in replacement for MNIST designed to be more challenging while pre-serving the same format. It contains 70 ,000 grayscale images at 28 ×28 resolution, evenly distributed across 10 clothing-item classes (e.g., t-shirt , trouser , sneaker ), with the canonical 60 ,000 /10 ,000 
+
+17 train/test split. We extract latent representations on both splits. The semasia-fashion-mnist 
+
+dataset provides a single label column, label (int64 , range 0–9), with class names available in the source dataset card.  
+
+> Original Dataset: https://huggingface.co/datasets/zalando-datasets/fashion_mnist .
+
+CIFAR-10 [42 ] consists of 60 ,000 RGB natural images at 32 × 32 resolution, organized into 10 
+
+mutually exclusive object categories ( airplane , automobile , bird , cat , deer , dog , frog , horse , ship ,
+
+truck ) with 6,000 images per class and the canonical 50 ,000 /10 ,000 train/test split. We extract latent representations on both splits. The semasia-cifar10 dataset exposes a single label column, label 
+
+(int64 , range 0–9).  
+
+> Original Dataset: https://huggingface.co/datasets/uoft-cs/cifar10 .
+
+CIFAR-100 [ 42 ] extends CIFAR-10 to 100 fine-grained classes, grouped into 20 semantic super-classes. It contains 60 ,000 RGB images at 32 × 32 resolution, with 600 images per class and the standard 50 ,000 /10 ,000 train/test split. We extract latent representations on both splits. The 
+
+semasia-cifar100 dataset exposes two label columns, both inherited from the source: the fine label fine_label (int64 , range 0–99 ) and the coarse label coarse_label (int64 , range 0–19 ). Preserving both granularities makes this dataset particularly suitable for probing the hierarchical organization of learned representations.  
+
+> Original Dataset: https://huggingface.co/datasets/uoft-cs/cifar100 .
+
+The Oxford 102 Flowers dataset [ 45 ] is a fine-grained classification benchmark consisting of 8,189 
+
+RGB images of flowers commonly found in the United Kingdom, distributed across 102 categories with between 40 and 258 images per class. The dataset is split into 7,170 training, and 1,020 test images. We extract latent representations on all three splits. The semasia-oxford-flowers dataset exposes a single label column, label (int64 , range 0–101 ), with class names recoverable from the source dataset card.  
+
+> Original Dataset: https://huggingface.co/datasets/nkirschi/oxford-flowers .
+
+Tiny ImageNet [ 48 ] is a downsampled subset of ImageNet introduced for the Stanford CS231N course. It contains 200 classes with 100 ,000 training, and 10 ,000 validation images per class, all rescaled to 64 ×64 resolution. We extract latent representations on the training and validation splits, since test labels are not publicly released. The semasia-tiny-imagenet dataset exposes a single label column, label (int64 , range 0–199 ), where each integer corresponds to a WordNet synset (wnid ) preserved in the source repository for cross-referencing with the full ImageNet hierarchy.  
+
+> Original Dataset: https://huggingface.co/datasets/zh-plus/tiny-imagenet .
+
+ImageNet-1k [ 46 , 47 ] is the de facto standard large-scale benchmark for image classification. It comprises approximately 1.28 million training images, 50 ,000 validation, and 100 ,000 test images, organized into 1,000 object categories drawn from the WordNet hierarchy. Images are RGB and of variable resolution, typically resized and center-cropped to 224 ×224 during preprocessing. We extract latent representations on the validation split. The semasia-imagenet1k dataset exposes a single label column, label (int64 , range 0–999 ), with each integer corresponding to a WordNet synset whose human-readable description is provided in the source dataset card.  
+
+> Original Dataset: https://huggingface.co/datasets/ILSVRC/imagenet-1k .
+
+CelebFaces Attributes (CelebA) [ 49 ] is a large-scale face attributes dataset containing 202 ,599 
+
+celebrity face images from 10 ,177 unique identities. We use the aligned-and-cropped version of the dataset and follow the official 162 ,770 /19 ,867 /19 ,962 train/validation/test split, extracting latent representations on all three. CelebA is the only benchmark in S EMASIA with multi-label annotations: the semasia-celeba dataset exposes 40 binary attribute columns, one per attribute (e.g., Smiling ,
+
+Eyeglasses , Young , Male , Wearing_Hat , each int64 with values in {0, 1}), preserving the exact column naming of the source repository. The 5 landmark coordinates available in the original CelebA release are not retained, since they are not relevant to the classification analyses targeted by SEMASIA ; users requiring landmark information can join S EMASIA rows with the source repository through the id column. This rich multi-attribute structure enables fine-grained probing of attribute disentanglement in latent representations.  
+
+> Original Dataset: https://huggingface.co/datasets/flwrlabs/celeba .
+
+18 10 6 10 7 10 8 10 9 10 10           
+
+> Number of Parameters
+> 10 2
+> 10 3
+> 10 4
+> Latent Dimension
+> 10 610 710 810 910 10
+> Number of Parameters
+> 10 2
+> 10 3
+> 10 4
+> Latent Dimension
+> 10 5
+> 10 6
+> 10 7
+> 10 8
+> 10 9
+> 10 10
+> Number of Parameters
+> other
+> 10 5
+> 10 6
+> 10 7
+> 10 8
+> 10 9
+> 10 10
+> Number of Parameters
+> 10 1
+> 10 2
+> 10 3
+> 10 4
+> 10 5
+> Latent Dimension  other
+> 10 1
+> 10 2
+> 10 3
+> 10 4
+> 10 5
+> Latent Dimension
+> Model Family (top 15)
+> ViT
+> ResNet
+> ConvNeXt
+> EfficientNet
+> RegNet
+> ResNeXt
+> MetaFormer
+> MobileNet
+> XCiT
+> MaxViT
+> Swin
+> EVA
+> EfficientViT
+> DeiT
+> FastViT
+> Other
+> Macro-Family
+> Convolutional Vision Transformer Hybrid CNN-Transformer Hierarchical Vision Transformer MetaFormer MLP State Space Model
+
+Figure 6: Exploratory analysis of the S EMASIA model registry. Left: joint distribution of the number of trainable parameters and the latent space dimensionality, shown on a log–log scale. Center: 
+
+marginal distribution of the number of parameters across models. Right: marginal distribution of the latent space dimensionality. The bottom row aggregates models by architectural macro-family, while the top row provides a fine-grained breakdown by model family, showing the fifteen most populated families and grouping the remaining ones under Others .
+
+A.3 Model Registry 
+
+The S EMASIA model registry is a tabular companion dataset collecting metadata for every timm 
+
+architecture used to extract latent representations. Its design follows the timm identifier convention: 
+
+everything before the dot encodes the architecture, everything after encodes how and where the model was pretrained. The registry mirrors this split, organizing columns into six thematic groups: identity, architecture, head and attention, variant flags, pretraining, and capacity. 
+
+Identity. The model_name field stores the full timm identifier (e.g., vit_large_patch14_clip_-224.openai_ft_in1k ) and serves as the primary key linking the registry to the per-row model_-name column in each semantic dataset, so any joint analysis reduces to a join on this column. 
+
+Architecture. Parsed from the pre-dot portion of the identifier, this group decomposes architec-tural choices into nine fields. family captures the high-level class ( ViT , ConvNeXt , ResNet , Swin ,
+
+DeiT , EfficientNet , etc.), optionally refined by model_version (v2 , v3 , SE , NF , CSP , . . . ) for multi-generation families. Capacity is described by three complementary fields: a human-readable 
+
+size label ( Tiny –Giant , or EfficientNet B 0–B 8), a numeric depth_code for depth-scaled families (e.g., 50 /101 for ResNets, f0 –f6 for NFNets), and a width_code for channel/group-width multi-pliers (e.g., 32x4d for ResNeXt, w44 for HRNet, 075 for MobileNet). Geometric parameters are captured by patch_size (ViT only, null for CNNs), input_resolution (the native architectural resolution, distinct from pretraining/fine-tuning resolution), window_size (Swin/MaxViT/CoAtNet local-attention window, null for global attention), and stride_code (a stage/stride code for families such as CaiT, ConvFormer, and ShViT). 19 Head and attention. This group captures pooling and attention choices. head_type reports the pooling strategy: GAP (global average pooling), CLS (class-token), or CLS+GAP (hybrid). num_-registers records DINOv2-style register tokens (typically 1 or 4). positional_encoding flags non-default schemes ( RoPE , RelPos , SinCos , APE ), with null for the default learned absolute encoding. activation flags non-default activations, notably QuickGELU for OpenAI-style CLIP models ( null for standard GELU/ReLU). Finally, pe_scope records the ViT-PE scope tag ( Lang ,
+
+Core , Spatial ). 
+
+Variant flags. A set of booleans records architectural and training variants. Training-regime flags: 
+
+is_distilled (e.g., DeiT with a RegNet teacher), is_pruned (structured pruning), and is_-legacy (older models under the legacy_ prefix). is_gap and uses_quickgelu are shorthands for 
+
+head_type == "GAP" and activation == "QuickGELU" , included to simplify filtering. Family-specific micro-architectural flags: uses_rmlp (MaxViT/CoAtNet with MLP Log-CPB relative position bias for resolution-generalizable attention); uses_rw (timm re-implementations tuned for PyTorch eager-mode efficiency); uses_cr (SwinV2 cross-resolution variants); uses_ns (SwinV2-CR norm-per-stage variants applying LayerNorm at every stage); uses_abswin (Hiera with absolute window position embeddings); uses_ts (BYOBNet with a tiered three-layer convolutional stem); and uses_aa (anti-aliased downsampling). 
+
+Pretraining. Parsed from the post-dot portion of the identifier, this group describes how and where the checkpoint was produced. The raw configuration string is preserved under pretrain_config 
+
+for reference and debugging. pretrain_org records the training organization (e.g., Meta , Apple ,
+
+OpenAI , Google , timm SBB recipe ). The corpus is described by pretrain_dataset (ImageNet-1K/21K/22K , LAION-2B , WebLI , LVD-142M , . . . ) and, when ambiguous, by pretrain_dataset_-size (400M , s39b , 2.1T ). pretrain_method captures the objective ( CLIP , SigLIP , MAE , DINO ,
+
+DINOv2 , MIM , FCMAE , AugReg , . . . ; null for standard supervised training). pretrain_ft records subsequent fine-tuning (typically ImageNet-1K , occasionally ImageNet-22K or ImageNet-12K ). Resolution differences are split across pretrain_resolution and pretrain_ft_resolution .Compute budget is encoded either in pretrain_epochs (e.g., e200 → 200 ) or, for token-budget recipes such as SAM2, in pretrain_tokens (e.g., 2pt1 → 2.1T tokens). pretrain_aug tracks augmentation ( AugReg , AdvProp , NoisyStudent , AutoAugment , RandAugment ). Finally, pretrain_-i18n flags SigLIP models pretrained on multilingual WebLI ( 109 languages). 
+
+Model capacity. Two derived fields are obtained by instantiating each model in timm (without downloading weights, when feasible). num_parameters reports total trainable parameters, and 
+
+latent_dim reports the output dimensionality of forward_features() , i.e., the dimensionality of the vector stored in the embedding column of the corresponding S EMASIA dataset. Together they enable scaling analyses and comparisons of representational capacity across the registry. The model registry metadata are leveraged to analyze mismatches across models from different architectural families, as well as differing pre-training and fine-tuning regimes, highlighting the analytical potential of SEMASIA as the first large-scale collection of latent spaces enabling controlled statistical inference over representations. To illustrate the diversity of the collection, Figure 6 presents a preliminary exploratory analysis of two key model capacity descriptors: the number of trainable parameters and the dimensionality of the latent space at the selected extraction layer. The left panels reveal a clear power-law relationship between these quantities, indicating sublinear scaling of latent dimensionality with model size: increases in parameter count correspond to proportionally smaller increases in representation width on a logarithmic scale. However, this aggregate trend conceals substantial heterogeneity across architectural families. As shown in the central and right panels, transformer-based and convolutional models occupy distinct regions of the parameter–latent dimension space, each exhibiting characteristic latent widths and scaling behaviors. 
+
+B Semantic Bottleneck of Simple Neural Models 
+
+We present two controlled experiments designed to empirically validate the central claims of our framework. The first studies the emergence of the semantic bottleneck in a classification setting; the second examines how the nature of the downstream task shapes the geometry of the learned representations. Taken together, these experiments demonstrate that the semantic bottleneck is not 20 conv1 
+
+> conv2
+> conv3
+> Latent
+> FC1
+> FC2
+> Logits
+> Cifar10
+> Epoch 0
+> conv1
+> conv2
+> conv3
+> Latent
+> FC1
+> FC2
+> Logits
+> Epoch 50
+> conv1
+> conv2
+> conv3
+> Latent
+> FC1
+> FC2
+> Logits
+> Epoch 100
+> airplane
+> automobile
+> bird
+> cat
+> deer
+> dog
+> frog
+> horse
+> ship
+> truck
+> conv1
+> conv2
+> conv3
+> Latent
+> FC1
+> FC2
+> Logits
+> Mnist
+> conv1
+> conv2
+> conv3
+> Latent
+> FC1
+> FC2
+> Logits
+> conv1
+> conv2
+> conv3
+> Latent
+> FC1
+> FC2
+> Logits
+> 0
+> 1
+> 2
+> 3
+> 4
+> 5
+> 6
+> 7
+> 8
+> 9
+> conv1
+> conv2
+> conv3
+> Latent
+> FC1
+> FC2
+> Logits
+> Fashion Mnist
+> conv1
+> conv2
+> conv3
+> Latent
+> FC1
+> FC2
+> Logits
+> conv1
+> conv2
+> conv3
+> Latent
+> FC1
+> FC2
+> Logits
+> T-shirt
+> Trouser
+> Pullover
+> Dress
+> Coat
+> Sandal
+> Shirt
+> Sneaker
+> Bag
+> Boot
+
+Figure 7: Evolution of the representation space learned by the convolutional classifier across three datasets (MNIST, Fashion-MNIST, CIFAR-10) and three training checkpoints. At each layer, 1D t-SNE is applied to the test-set representations, with colors denoting class labels. The semantic bottleneck emerges progressively within the encoder, while the decoder introduces no further semantic reorganization. an intrinsic property of the architecture alone, but is actively shaped by the objective the model is trained to optimize. 
+
+B.1 Semantic Bottleneck in Classification Setup. We consider image classification on three standard benchmarks: MNIST, Fashion-MNIST, and CIFAR-10. The model follows an encoder-decoder architecture. The encoder consists of four convolutional layers with channel widths doubling at each stage, each followed by batch normalization, ReLU activation, max pooling, and dropout. The decoder is a two-layer fully connected network with ReLU activations, culminating in a linear projection to class logits. 
+
+Emergence of the semantic bottleneck. Figure 7 traces the evolution of the representation space across layers and training stages, evaluated on held-out test data. At each layer, we apply 1D t-SNE to visualize the geometry of the learned representations. At initialization, the network produces unstructured embeddings with no discernible semantic organization. As training progresses, a clear bottleneck structure emerges in the latent space: representations become increasingly clustered, reflecting the semantic content of the input. This structure manifests at two complementary levels of granularity. At the micro level, class-conditional inputs form compact, well-separated clusters, providing the geometric basis for downstream classification. At the macro level, semantically related classes coalesce into broader super-clusters without explicit supervision: in CIFAR-10, animal and vehicle categories form two clearly delineated groups, while in Fashion-MNIST, footwear and clothing are similarly distinguished. This unsupervised emergence of hierarchical semantic organization suggests that the encoder discovers latent structure that generalizes beyond the classification objective itself. 
+
+Role of the decoder. Representations extracted from the classifier head introduce no additional semantic structure beyond what is already present at the bottleneck: they constitute permutations 21 Enc1 
+
+> Enc2
+> Enc3
+> Latent
+> Dec1
+> Dec2
+> Dec3
+> Dec4
+> Cifar10
+> Epoch 0
+> Enc1
+> Enc2
+> Enc3
+> Latent
+> Dec1
+> Dec2
+> Dec3
+> Dec4
+> Epoch 50
+> Enc1
+> Enc2
+> Enc3
+> Latent
+> Dec1
+> Dec2
+> Dec3
+> Dec4
+> Epoch 100
+> airplane
+> automobile
+> bird
+> cat
+> deer
+> dog
+> frog
+> horse
+> ship
+> truck
+> Enc1
+> Enc2
+> Enc3
+> Latent
+> Dec1
+> Dec2
+> Dec3
+> Dec4
+> Mnist
+> Enc1
+> Enc2
+> Enc3
+> Latent
+> Dec1
+> Dec2
+> Dec3
+> Dec4
+> Enc1
+> Enc2
+> Enc3
+> Latent
+> Dec1
+> Dec2
+> Dec3
+> Dec4
+> 0
+> 1
+> 2
+> 3
+> 4
+> 5
+> 6
+> 7
+> 8
+> 9
+> Enc1
+> Enc2
+> Enc3
+> Latent
+> Dec1
+> Dec2
+> Dec3
+> Dec4
+> Fashion Mnist
+> Enc1
+> Enc2
+> Enc3
+> Latent
+> Dec1
+> Dec2
+> Dec3
+> Dec4
+> Enc1
+> Enc2
+> Enc3
+> Latent
+> Dec1
+> Dec2
+> Dec3
+> Dec4
+> T-shirt
+> Trouser
+> Pullover
+> Dress
+> Coat
+> Sandal
+> Shirt
+> Sneaker
+> Bag
+> Boot
+
+Figure 8: Evolution of the representation space learned by the convolutional autoencoder across three datasets (MNIST, Fashion-MNIST, CIFAR-10) and three training checkpoints. At each layer, 1D t-SNE is applied to the test-set representations, with colors denoting class labels. Unlike the classification setting, the reconstruction objective does not induce a semantically organized bottleneck, highlighting the critical role of the downstream task in shaping representation geometry. of the clusters formed in the encoder’s latent space. This finding has two important implications. First, it empirically validates our architectural choice of locating the semantic bottleneck at the encoder-decoder interface. Second, it provides evidence that the locus of semantic compression is the encoder, not the classifier, lending empirical support to a semantic theory of learned representations. 
+
+B.2 The Role of the Downstream Task: Reconstruction Setup. To isolate the effect of the downstream task on the geometry of learned representations, we train a convolutional autoencoder on the same three benchmarks. The encoder follows the same architecture as above. The decoder mirrors it with transposed convolutions, reconstructing the input from the bottleneck representation. Unlike the classification setting, no explicit semantic signal is provided during training: the sole objective is pixel-level reconstruction. 
+
+Task-dependent geometry. Figure 8 reveals a striking contrast with the classification case. Un-der the reconstruction objective, the latent space lacks the well-defined cluster structure observed previously. We interpret this as evidence that the downstream task actively guides the geometry of the representation space: without a semantic objective, the encoder is not incentivized to organize representations according to class identity or semantic similarity, but merely to preserve enough information for faithful reconstruction. While the latent spaces for MNIST and Fashion-MNIST exhibit a modest degree of grouping — likely attributable to perceptual similarity between inputs within the same category — this structure is considerably weaker and less consistent than in the clas-sification setting. Crucially, the decoder plays an entirely different role here: rather than preserving the semantic geometry of the bottleneck, it must invert it, mapping compressed representations back to pixel space and thereby dissolving any aggregated semantic structure present at the latent level. 
+
+Task as a geometric prior. Jointly, these two experiments support a central tenet of our framework: the semantic bottleneck is not an emergent property of depth or nonlinearity alone, but is induced by 22 the interplay between architecture and objective. The downstream task acts as a geometric prior on the representation space, and it is the classification objective — with its requirement to map semantically distinct inputs to distinct outputs — that drives the formation of a structured, semantically organized bottleneck. 
+
+C Concept Clustering 
+
+We extend the analysis of Section 2.4 by examining concept clustering in the latent space across different granularities. The focus is on how representations distribute along principal directions of the embedding, in analogy with a long line of work that interprets dominant axes of a learned representation as carriers of semantic content. 
+
+Latent semantic analysis in NLP. The earliest and most influential instance of this idea is Latent Semantic Analysis (LSA) [ 58 , 59 ], where a truncated singular value decomposition (SVD) of a term–document matrix recovers latent semantic factors aligned with the leading singular directions. This linear-algebraic view of meaning was later refined by probabilistic latent variable models such as probabilistic LSA [ 60 ] and Latent Dirichlet Allocation [ 61 ], and extended to distributed word representations whose principal directions encode syntactic and semantic regularities [ 62 , 9, 63 ]. More recent analyses of contextual embeddings produced by transformer language models show that a small number of principal components captures most of the linguistic variance and isolates interpretable factors such as part-of-speech, sentiment, or topic [ 64 , 65 , 66 ]. Across these works, the recurring pattern is that linear projections onto leading components of an SVD- or PCA-style decomposition expose structure that is otherwise entangled in the raw representation. 
+
+Principal directions in visual representations. A parallel line of work in computer vision interprets principal axes of learned features as visual concept directions. Classical results on Eigenfaces [ 67 ]already showed that PCA on aligned face images yields components that correspond to coarse identity and illumination factors. In modern deep representations, PCA and related linear probes on convolutional and transformer features have been used to identify part- and object-level concepts [ 68 ,69 ], while the authors of [ 70 ] and [ 71 ] show that the leading principal directions of GAN latent and feature spaces correspond to interpretable image edits such as zoom, rotation, age, or lighting. Concept-activation methods such as TCAV [ 72 ] and concept-bottleneck models [ 73 ] formalize the idea that human-interpretable concepts live along low-dimensional linear subspaces of deep representations. 
+
+Nonlinear projections and visualization. Beyond linear factorizations, nonlinear dimensionality reduction methods such as t-SNE [ 51 ] and UMAP [ 55 ] preserve local neighborhood structure. Although the coordinates produced by t-SNE and UMAP have no closed-form interpretation as eigenvectors of an underlying operator, they are routinely treated as semantic axes in their own right: in single-cell biology, individual UMAP coordinates are interpreted as developmental or phenotypic gradients [ 74 , 75 ], and in representation analysis, they are inspected directly to recover class structure and intra-class variation. Visualizing such embeddings via parallel coordinates [ 54 ] makes the per-axis distribution of samples explicit and allows class-conditional patterns along each UMAP dimension to be read off directly. This is the strategy adopted below. 
+
+Empirical analysis on S EMASIA . We analyze the aimv2_1b_patch14_224.apple_pt latent space on multiple S EMASIA benchmarks using UMAP followed by parallel coordinate visualizations. Clear class-level clustering emerges, together with interpretable intra-class structure, mirroring the linear-semantic pattern observed in LSA and Eigenfaces but at the scale of modern self-supervised encoders. On Fashion-MNIST (Figure 10), the embedding captures fine-grained visual attributes. For example, 
+
+sandals separate along a principal direction according to the presence of heels, recovering a structural attribute that was never explicitly supervised. On CIFAR-10 (Figure 9), samples cluster by class across UMAP dimensions, and individual compo-nents encode meaningful semantic variations. PC6 organizes the ship class along a size continuum, from small private boats to large vessels such as container ships and tankers. For airplanes , PC4 separates subcategories such as commercial aircraft, vintage planes, and fighter jets. 23 truck 
+
+ship 
+
+horse 
+
+frog 
+
+dog 
+
+deer 
+
+cat 
+
+bird 
+
+automobile 
+
+airplane 7.27 6.19 5.10 4.02 2.93 7.87 6.16 4.46 2.76 1.05 10.38 8.02 5.66 3.30 0.94 11.04 -1.87 7.81 4.59 1.36 10.36 -2.50 7.15 3.93 0.72 11.83 -3.60 7.97 4.12 0.26 6.19 5.10 4.02 2.93 6.16 4.46 2.76 1.05 8.02 5.66 3.30 0.94 -1.87 7.81 4.59 1.36 -2.50 7.15 3.93 0.72 -3.60 7.97 4.12 0.26 7.27 7.87 10.38 11.04 10.36 11.83 ship 6.19 5.10 4.02 2.93 6.16 4.46 2.76 1.05 8.02 5.66 3.30 0.94 -1.87 7.81 4.59 1.36 -2.50 7.15 3.93 0.72 -3.60 7.97 4.12 0.26 7.27 7.87 10.38 11.04 10.36 11.83 airplane Label PC6 PC5 PC4 PC3 PC2 PC1 Figure 9: Parallel coordinates of the t-SNE projection of the latent space of aimv2_1b_patch14_-224.apple_pt on CIFAR-10. Lines denote samples colored by class. Top: full dataset. Middle/bot-tom: zoom on ship and airplane , highlighting intra-class structure. Figure 11 shows a 2D UMAP projection for CelebA. The embedding exhibits structured clustering across multiple facial attributes, including gender, age, and finer visual traits such as hairstyle. Nearby regions correspond to visually similar subjects, while distinct groups remain well separated, in line with the Eigenfaces tradition [ 67 ] and with concept-bottleneck analyses of face representations [ 73 ]. These patterns reflect correlations in the learned visual representations induced by the syntactic relations among input examples from the dataset, without implying any normative interpretation of sensitive attributes. Taken together, they support the broader hypothesis, recurrent across NLP and vision, that semantically meaningful structure in learned representations is concentrated along a small number of dominant directions and is well exposed by combining linear factorizations with neighborhood-preserving projections. 24 Ankle boot 
+
+Bag 
+
+Sneaker 
+
+Shirt 
+
+Sandal 
+
+Coat 
+
+Dress 
+
+Pullover 
+
+Trouser 
+
+T-shirt/top 6.71 5.28 3.85 2.42 0.99 6.51 5.49 4.48 3.46 2.45 5.52 4.16 2.80 1.44 0.08 9.05 7.63 6.22 4.81 3.39 -1.26 4.78 3.27 1.76 0.25 12.64 6.71 5.28 3.85 2.42 0.99 6.51 5.49 4.48 3.46 2.45 5.52 4.16 2.80 1.44 0.08 9.05 7.63 6.22 4.81 3.39 -1.26 4.78 3.27 1.76 0.25 12.64 -1.87 9.01 5.39 1.76 -1.87 9.01 5.39 1.76 Label PC6 PC5 PC4 PC3 PC2 PC1 Sandal Figure 10: Parallel coordinates of the t-SNE projection of the latent space on Fashion-MNIST. The embedding separates garment categories and reveals intra-class structure (e.g., sandals split by structural attributes such as heels). 
+
+D Semantic Mismatch 
+
+In this section, we examine the differences between the bases used to represent the latent spaces of pairs of models. As discussed in Section 2.4 and Appendix C, these bases capture the principal directions along which latent representations are distributed and clusterized, serving as a proxy for latent features. In addition, we characterize semantic mismatch through the analysis of concepts, defined as prototyp-ical representations (centroids) within the latent space. Prototypes provide a natural entry point for probing the semantics encoded at different levels of granularity. By matching these prototypes across models, we can identify where their representations align and where they diverge in their internal organization of the data. 25 Class Male 
+
+> Female
+
+Figure 11: 2D UMAP projection of latent representations for CelebA. Points correspond to images. The embedding shows structured clustering driven by multiple facial attributes (e.g., gender, age, and other visual traits). 
+
+D.1 Comparing Latent Bases 
+
+A natural way to compare two latent spaces is to inspect the bases that summarize their geometry. For each model, we compute two complementary bases from its CIFAR-10 latent point cloud: the first 20 
+
+principal components and the first 20 Laplacian eigenmaps [77] of a k-NN graph with k = 10 .Figure 12 reports this comparison across five model pairs, each isolating a single source of het-erogeneity. Two patterns emerge. First, basis mismatch tracks the magnitude of the perturbation, decreasing from architectural changes to padding, with patch size inducing a stronger effect than padding due to its impact on tokenization granularity [ 78 ]. Second, Laplacian eigenmaps are more robust than PCA, exhibiting structured cross-correlation patterns even when PCA bases appear unstructured. By encoding intrinsic neighborhood relations rather than ambient linear geometry, the 
+
+k-NN graph captures a topological signature that is largely preserved under model-level perturbations. A quantitative analysis of these effects is provided in Appendix F. 
+
+D.2 Concepts Correspondence 
+
+Basis mismatch alone cannot distinguish genuine differences in expressivity from reparameterizations of semantically equivalent representations [ 21 ]. We therefore turn to prototypical anchors , defined as centroids of the latent point cloud, which provide a concept-level description of the representation. Figure 13 reports cross-model concept similarity matrices for a representative model pair, varying the number of prototypes extracted according to Algorithm 1. Compared to basis-level analyses, these matrices are significantly sparser, indicating that prototypical anchors capture a more localized and discriminative semantic structure. For a small number of prototypes, we observe a near one-to-one correspondence. As the number increases, correspondences become many-to-one, reflecting differences in semantic granularity between models. 26 PCA LE 
+
+> vit_base _patch16_224.orig_in21k_ft_in1k
+> beit3_base _patch16_224.in22k_ft_in1k
+> Model Architecture
+> vs
+> vit_base_patch16_224. orig _in21k_ft_in1k
+> vit_base_patch16_224. augreg _in21k_ft_in1k
+> Data Augmentation
+> vs
+> vit_base_patch16_ 384 .augreg_in1k
+> vit_base_patch16_ 224 .augreg_in1k
+> Padding Size
+> vs
+> vit_base_patch16_224.augreg_ in21k
+> vit_base_patch16_224.augreg_ in1k
+> Training Dataset Complexity
+> vs
+> vit_base_ patch32 _224.augreg_in21k
+> vit_base_ patch16 _224.augreg_in21k
+> Token Patch Dimension
+> vs
+> 1.00
+> 0.75
+> 0.50
+> 0.25
+> 0.00
+> -0.25
+> -0.50
+> -0.75
+> -1.00
+
+Figure 12: Cross-correlation heatmaps between basis vectors extracted from pairs of CIFAR-10 latent spaces [ 76 ]. Each column corresponds to a model pair differing along a single controlled source of heterogeneity: (i) architecture; (ii) pretraining data scale; (iii) data augmentation; (iv) tokenization patch size; and (v) padding size. Rows compare PCA (top) and Laplacian eigenmaps (bottom), truncated to the first twenty components. 0
+
+> 0.8
+> 0.6
+> 0.4
+> 0.2
+
+vit_base_patch16_224.augreg_ in21k Jaccard similarity 
+
+> 1
+> vit_base_patch16_224.augreg_ in1k
+
+3 Concepts 6 Concepts 10 Concepts 
+
+Figure 13: Jaccard similarity heatmaps between prototypical anchors extracted from two ViT models differing in pretraining data complexity. From left to right, 3, 6, and 10 anchors are extracted per model. Given the k × k Jaccard similarity matrix J (shown in Fig. 13), where each entry 
+
+Jij = |CA
+
+i ∩ CB
+
+j ||CA
+
+i ∪ CB
+
+j | (1) measures the overlap between prototype i of model A and prototype j of model B in terms of the data points they attract, we then consider three methods to identify correspondences between the two sets of prototypes. 
+
+Hungarian matching . We solve the Linear Sum Assignment Problem (LSAP) on −J using the Hungarian algorithm [ 79 ], finding the permutation π∗ that maximizes the total matched Jaccard similarity: 
+
+π∗ = arg max 
+
+πkX
+
+i=1 
+
+Ji,π (i). (2) 27 Algorithm 1 Prototypical Anchors  
+
+> 1:
+
+Require: a dataset D, a desired number of clusters κ or an achors matrix A, a number of samples 
+
+ϱ, a neural encoder E, and a complex compression mapping ψ. 
+
+> 2:
+
+Return: Index set A and prototypical anchor matrix P. 
+
+> 3:
+
+if A is not provided then  
+
+> 4:
+
+X ← E(D). 
+
+> 5:
+
+{C 1, . . . , Cκ} ← apply a clustering algorithm with κ clusters to X such that Sκi=1 Ci = X . 
+
+> 6:
+
+A = {A 1, . . . , Aκ} ← for each cluster Ci, randomly sample ϱ indices to form Ai. 
+
+> 7:
+
+end if  
+
+> 8:
+
+Compute the prototypical anchors matrix as 
+
+P = {p1, . . . , pκ}, where each prototype is computed as: 
+
+pi = 1
+
+ϱ
+
+X
+
+> α∈A i
+
+ψ(Xα). 
+
+> 9:
+
+return A and P.This yields a strict one-to-one correspondence between prototypes. The mean Jaccard similarity under this assignment, 
+
+SHung = 1
+
+k
+
+> k
+
+X
+
+> i=1
+
+Ji,π ∗(i), (3) 
+
+Injected matching . Each sample xi ∈ X is assigned to the same cluster index j ∈ { 1, . . . , k } in both models, bypassing B’s own clustering entirely. This constructs k perfectly matched groups in which both models share the same partition of the data. The injected method allows us to isolate the contribution of B’s learned geometry: discrepancies between the injected and independently clustered results reveal where the two encoders impose different partitions on the same data. Formally, let A : X → { 1, . . . , k } denote the clustering function of model A, which assigns each sample xi ∈ X to a cluster index ci = A(xi). In the injected matching scheme [ 53 ], the same assignment is forced onto model B:
+
+cA 
+
+> i
+
+= cB 
+
+> i
+
+:= A(xi), ∀ xi ∈ X , (4) so that the k groups {Gj }kj=1 are defined by a single shared partition: 
+
+Gj =  xi ∈ X | A (xi) = j , j = 1 , . . . , k. (5) This contrasts with the independent clustering scheme, in which B produces its own assignment 
+
+ˆcB 
+
+> i
+
+= B(xi), potentially yielding a different partition of X .
+
+Spectral matching . We embed the 2k prototype nodes jointly using the eigenvectors of the normal-ized graph Laplacian of the symmetric adjacency matrix 
+
+A =
+
+ 0 JJ⊤ 0
+
+
+
+∈ R2k×2k. (6) The number of groups kest is estimated automatically via the spectral gap: 
+
+kest = arg max  
+
+> ℓ
+
+(λℓ+1 − λℓ) + 1 , (7) where {λℓ} are the sorted eigenvalues of the normalized Laplacian. The rows of the leading kest 
+
+eigenvectors, normalized to unit norm, are then clustered with k-Means, grouping nodes that are jointly well-connected in the Jaccard graph. Unlike Hungarian matching, spectral matching can recover many-to-many correspondences and does not require a similarity threshold, making it suitable for detecting merge/split phenomena where a single semantic region in one model is distributed across multiple clusters in the other. We qualitatively evaluate the three matching methods by visualizing the prototype correspon-dences identified between vit_base_patch16_224.augreg_in1k and vit_base_patch16_-224.augreg_in21k on two datasets of increasing semantic complexity. 28 Hungarian Match 
+
+Injected Match 
+
+Spectral Match  
+
+> vit_base_patch16_224.augreg_in1k vit_base_patch16_224.augreg_in21k
+
+Figure 14: Prototype correspondences between vit_base_patch16_224.augreg_in1k (left) and 
+
+vit_base_patch16_224.augreg_in21k (right) on CIFAR-10. Each row represents a matched pair of clusters, with green connectors indicating semantically coherent correspondences and red connectors indicating mismatches. The three panels show results for Hungarian matching (top), injected matching (middle), and spectral matching (bottom). Figure 14 shows results on CIFAR-10, a dataset consisting of images spanning animals, vehicles, and aircraft. The three matching methods exhibit markedly different behaviors. Hungarian matching produces four green-connected pairs and one red pair. The green pairs capture semantically coherent correspondences, correctly aligning clusters of animals and vehicles across the two models. The single red pair associates a cluster dominated by aircraft and watercraft in A with a cluster of small animals in B. This mismatch is not incidental but rather reflects a structural limitation of the one-to-one assignment constraint: the transport-related concepts encoded by A in a single prototype are distributed across multiple clusters in B, and the Hungarian algorithm, being unable to capture such many-to-one correspondences, is forced into a semantically incoherent pairing. Injected matching yields five green pairs, all consistent by construction since the partition is entirely determined by 
+
+A. Spectral matching recovers three green pairs with broader, semantically compact groups. The reduced number of correspondences suggests that the method has identified many-to-many structures, merging prototypes that the two models distribute differently across their respective partitions. Figure 15 shows results on a multi-dataset benchmark obtained by combining CIFAR-10, MNIST, and Fashion-MNIST, thus covering a diverse range of visual domains including natural images, handwritten digits, and clothing items. When operating at this scale, individual datasets emerge as macro-concepts, and the matching methods can be evaluated on their ability to recover these coarse semantic partitions. Hungarian matching produces four green pairs and one red pair. The green pairs reveal that both models consistently separate the three domains, correctly aligning clusters of clothing items (Fashion-MNIST), handwritten digits (MNIST), and natural images (CIFAR-10) across the two encoders. The single red pair, however, exposes the structural limitation of the one-to-one assignment constraint: the digit macro-concept is distributed across a different number of prototypes in A and B,and the Hungarian algorithm, being unable to capture such many-to-many correspondences, is forced to match a digit cluster in A with a natural image cluster in B. Injected matching yields five green pairs, all consistent by construction, but the clusters attributed to B are more heterogeneous, with digits and natural images occasionally co-occurring within the same group. Spectral matching recovers four green pairs with semantically compact groups, cleanly separating clothing, digits, and natural image categories, confirming that both models agree on the macro-concept level partition induced by the dataset composition, while naturally handling the many-to-many structure that Hungarian matching fails to capture. 29 Hungarian Match Injected Match Spectral Match vit_base_patch16_224.augreg_in1k  vit_base_patch16_224.augreg_in21k Figure 15: Prototype correspondences between vit_base_patch16_224.augreg_in1k (left) and 
+
+vit_base_patch16_224.augreg_in21k (right) on a multi-dataset benchmark combining CIFAR-10, MNIST, and Fashion-MNIST. Each row represents a matched pair of clusters, with green connec-tors indicating semantically coherent correspondences and red connectors indicating mismatches. At this scale, individual datasets act as macro-concepts, allowing the matching methods to be evaluated on their ability to recover coarse semantic partitions. The three panels show results for Hungarian matching (top), injected matching (middle), and spectral matching (bottom) 
+
+E Semantic Alignment Methodologies 
+
+E.1 The Semantic Alignment problem 
+
+The semantic alignment problem arises when two independently trained models produce represen-tations of the same domain in mutually incompatible latent spaces. Given a source model A and a target model B, the goal is to find a map T : ZA → Z B such that the transferred embeddings are semantically comparable to those of B, without requiring joint retraining or access to raw data at inference time. This semantic mismatch is not merely a technical inconvenience: embeddings from different architec-tures or training regimes may differ not only in dimensionality but also in the orientation, scale, and curvature of their latent geometry. A classifier or retrieval system trained on B’s representations will therefore fail systematically when fed embeddings from A, even if the two models encode the same semantic content. Alignment methods bridge this gap by learning a data-driven transformation on a shared set of paired training embeddings {(ai, b i)}ni=1 , where ai ∈ Z A and bi ∈ Z B correspond to the same input sample. A rich body of work has explored this problem from multiple perspectives, including anchor-based relative representations [ 80 , 81 , 82 ], supervised linear mappings [ 83 , 84 , 85 , 86 , 57 , 87 , 78 ], spectral and geometric approaches [ 88 , 78 ], and optimal transport or contrastive learning methods [ 89 , 90 , 91 ,92]. 
+
+E.2 Semantic Alignment Pipeline 
+
+Most of the methods considered in this work share the same three-stage pipeline, which decomposes the alignment into a normalisation step, a linear transformation step, and an inverse normalisation 
+
+step. Given a test embedding a ∈ Z A, the transmitted embedding ˆb ∈ Z B is obtained as illustrated in Figure 16. 30 Receiver Side Transmitter Side  
+
+> Source Space Target Space
+
+Semantic 
+
+Mismatch  
+
+> Prewhitening Dewhitening
+
+Figure 16: The three-stage alignment pipeline shared by all methods considered in this work. A test embedding a ∈ Z A is first prewhitened into a canonical coordinate system via W = L−1 (Cholesky-based whitening), then mapped by the method-specific alignment operator A, and finally dewhitened 
+
+back into ZB via W−1 = L, yielding the transmitted embedding ˆb ∈ Z B . The normalisation steps are shared across all methods; only A varies. The matrix A is the alignment operator, whose specific form depends on the method (see Appendix E.3). The prewhitening and dewhitening steps are shared across methods and are described below. 
+
+Prewhitening. Whitening is a linear normalisation that maps a set of embeddings to a canonical coordinate system with zero mean and identity covariance. It serves two purposes: (i) it removes the influence of the individual scale and correlation structure of each space, making the alignment problem more symmetric; (ii) it stabilises the estimation of the alignment operator by conditioning the data. Concretely, let X ∈ Rn×d be the matrix of training embeddings with mean μ and empirical covariance 
+
+C = 1
+
+n − 1 X⊤ 
+
+> c
+
+Xc + εI, Xc = X − 1μ⊤,
+
+where ε = 10 −6 ensures positive definiteness. The covariance is factorised via its Cholesky decom-position C = LL ⊤, where L ∈ Rd×d is lower triangular. The whitening operator is W = L−1, and the whitened embeddings are 
+
+eX = Xc W⊤ = Xc L−⊤ .
+
+The result eX has covariance approximately equal to the identity matrix, i.e. its dimensions are decorrelated and each has unit variance. Both L and μ are stored at training time for use at inference. The prewhitening is applied independently to both spaces ZA and ZB , yielding eA and eB respectively. 
+
+Alignment operator. After prewhitening, the alignment operator A ∈ RdA×dB (or more generally a map RdA → RdB ) is estimated from the paired whitened embeddings ( eA, eB). The specific form of A — whether a prototype frame, a truncated linear map, or a canonical projection — defines the alignment method and determines the transmitted whitened embedding eb = A ea.
+
+Dewhitening. Dewhitening is the inverse of the prewhitening applied to ZB . It maps the transmitted whitened embedding back to the original coordinate system of ZB :
+
+ˆb = eb L ⊤ 
+
+> B
+
++ μB ,
+
+where LB is the Cholesky factor of ZB ’s empirical covariance and μB is its mean. Geometrically, 
+
+LB acts as a square root of the covariance of ZB : the map z 7 → zL −⊤  
+
+> B
+
+whitens (decorrelates and normalises), while its inverse z 7 → zL ⊤ 
+
+> B
+
+re-introduces the original covariance structure. The dewhitening step ensures that ˆb lies in the same geometric space as the embeddings of ZB , making it directly compatible with any downstream model trained on ZB .
+
+E.3 Alignment Methodologies 
+
+We evaluate three alignment methods of increasing structural complexity. All operate on the prewhitened spaces eA and eB, and all are parametrised by a rank/dimensionality hyperparame-31 ter k that controls the effective complexity of the transmitted representation. The methods differ in the inductive bias they impose on the alignment operator A.
+
+E.3.1 PROTO — Prototype-based Parseval Frame 
+
+This method exploits the geometric structure of both latent spaces through a framework of prototypes 
+
+and Parseval Frame Equalizers [ 53 ]. Prototypical anchors are computed from ZA’s whitened embeddings via Algorithm 1, producing k centroids and a shared index set A. Let eXA ∈ R|A|× dA
+
+and eYA ∈ R|A|× dB denote the whitened anchor embeddings of ZA and ZB respectively, indexed by 
+
+A. The private PFE operators are 
+
+FT = eXA
+
+ eX⊤A eXA
+
+−1/2
+
+, FR = eYA
+
+ eY⊤A eYA
+
+−1/2
+
+,
+
+where FT is the analysis operator of ZA and F⊤ 
+
+> R
+
+is the synthesis operator of ZB . The normalisation by ( eX⊤A eXA)−1/2 ensures that both operators satisfy the Parseval condition F⊤ 
+
+> T
+
+FT = F⊤ 
+
+> R
+
+FR =
+
+I [ 53 ], which guarantees norm-preserving projections. The alignment operator is then obtained by composing the two: 
+
+A = F⊤ 
+
+> R
+
+FT ∈ RdB ×dA ,
+
+so that the transmitted whitened embedding is eb = A ea ∈ RdB , which is subsequently dewhitened to obtain ˆb. The anchor embeddings of ZB are computed via the injected matching scheme (Ap-pendix D.2): rather than clustering {ebi} independently, the same index set A is reused, forcing a shared semantic partition across both spaces. 
+
+E.3.2 LINEAR — Rank-k Truncated Linear Map 
+
+This method learns an optimal linear map between the two whitened spaces and uses a low-rank approximation to control the effective dimensionality of the transmission. Unlike the prototype approach, no structural prior is imposed on the map; the solution is purely data-driven. 
+
+Least-squares map. Let ZA ∈ RdA×n and ZB ∈ RdB ×n be the matrices collecting the n whitened training embeddings of ZA and ZB respectively. The alignment operator A ∈ RdB ×dA is obtained by solving 
+
+A = arg min  
+
+> A
+
+ZB − A Z A 
+
+> 2
+> F
+
+,
+
+whose closed-form solution is A = ZB Z†
+
+> A
+
+.
+
+Rank-k truncation via SVD. The operator A is decomposed as A = U Σ V ⊤. For a given rank k,the truncated operator 
+
+Ak = U:k Σk V⊤
+
+> :k
+
+retains only the k most informative directions. The transmitted whitened embedding is 
+
+eb = Ak ea ∈ RdB .
+
+The SVD is computed once on the full operator A and the truncation is applied separately for each value of k, making L INEAR the most computationally efficient method to sweep over k.
+
+E.3.3 CCA — Canonical Correlation Analysis 
+
+Canonical Correlation Analysis finds pairs of linear projections — one for each space — that maximise the correlation between the projected embeddings. The resulting k-dimensional canonical space serves as a shared intermediate representation through which the transmission is performed. Differently from P ROTO and L INEAR , CCA operates directly on the raw embeddings and bypasses both the prewhitening and dewhitening steps : whitening is implicit in the construction of the canonical directions, and re-centering plays the role of dewhitening at inference time. 
+
+Covariance estimation. Let Xc = Atrain − μA and Yc = Btrain − μB be the centred training matrices. The empirical covariance and cross-covariance matrices are 
+
+SAA = X⊤ 
+
+> c
+
+Xc
+
+n − 1 + εI, SBB = Y⊤ 
+
+> c
+
+Yc
+
+n − 1 + εI, SAB = X⊤ 
+
+> c
+
+Yc
+
+n − 1 .
+
+32 Canonical directions. The cross-whitened matrix 
+
+T = S−1/2 
+
+> AA
+
+SAB S−1/2
+
+> BB
+
+is decomposed via SVD as T = U Σ V ⊤. The canonical projection matrices are 
+
+WA = S−1/2 
+
+> AA
+
+U:k ∈ RdA×k, WB = S−1/2 
+
+> BB
+
+V:k ∈ RdB ×k,
+
+where S−1/2 
+
+> AA
+
+and S−1/2 
+
+> BB
+
+are obtained via the spectral decomposition of the respective covariance matrices. 
+
+Transmission. A test embedding a is taken in its raw form — no prewhitening is applied — projected into the canonical space, and then lifted back to ZB ’s original space via the pseudo-inverse of WB :
+
+z = ( a − μA) WA, ˆb = z W † 
+
+> B
+
++ μB .
+
+The re-centering by μB plays the role of the dewhitening step, so no separate Cholesky-based dewhitening is required. CCA therefore departs from the three-stage pipeline described above: it implicitly normalises both spaces through T and handles centering at both ends, making prewhitening and dewhitening redundant. 
+
+E.4 Alignment Evaluation 
+
+We evaluate the quality of the alignment along two complementary axes: reconstruction fidelity and downstream task performance. 
+
+Evaluation protocol. Once the alignment operator A has been estimated on the training set, model 
+
+ZA transmits its held-out test embeddings to ZB through the three-stage pipeline. Concretely, for each test embedding a ∈ Z A, the transmitted embedding ˆb is obtained as 
+
+a prewhitening 
+
+−−−−−−→ ea A
+
+−−→ eb dewhitening 
+
+−−−−−−→ ˆb,
+
+and is then compared against the corresponding ground-truth embedding b ∈ Z B , i.e. the representa-tion that model ZB would have produced for the same input. 
+
+Reconstruction fidelity. The mean squared error between the transmitted and the ground-truth embeddings is computed over the test set of ntest samples: 
+
+MSE = 1
+
+ntest 
+
+> ntest
+
+X
+
+> i=1
+
+ˆbi − bi
+
+> 22
+
+.
+
+This metric directly quantifies the geometric distortion introduced by the alignment, independently of any downstream task. 
+
+Downstream performance. To assess whether the aligned embeddings are semantically usable, we evaluate classification accuracy via linear probing. A linear classifier trained on ZB ’s training embeddings is applied to the transmitted test embeddings ˆb, and the resulting accuracy is compared to the upper bound obtained by probing ZB ’s own test embeddings b. The gap between the two measures the cost of alignment in terms of task-relevant information. 
+
+F Statistical Analysis 
+
+For each of the five treatments, we fit a pooled OLS regression per target metric with HC3 heteroskedasticity-consistent standard errors. Most of the dependent variables are described in Appendix F.1. The analysis spans four evaluation datasets: CIFAR-10, MNIST, Fashion-MNIST, and Oxford Flowers. The treatment indicator 1[treated ]i is binary (0 = control, 1 = treatment) and is built from matched pairs: each pair contributes one control row and one treatment row sharing the same architecture family. Formally, for each metric y we estimate 
+
+yi = α + β · 1[treated ]i + γ⊤ai + δ⊤di + εi,
+
+where ai and di are vectors of architecture-family and evaluation-dataset fixed effects respectively, included as nuisance controls. The coefficient of interest is β, which answers: does the treatment affect this metric, regardless of which dataset or architecture family? 
+
+33 Table 2: Design of the five pretraining conditions. For each condition, all factors not listed are held fixed. Examples are drawn from actual models in SEMASIA. 
+
+Analysis Type Control Treatment N. Obs. 
+
+Dataset Complexity Smaller ImageNet variant 
+
+> vit_base_patch16_224.augreg_-in1k
+
+Larger ImageNet variant 
+
+> vit_base_patch16_224.augreg_-in21k
+
+328 Specialization Same model, no fine-tuning 
+
+> vit_base_patch16_224.augreg_-in21k
+
+Same model fine-tuned to ImageNet-1K 
+
+> vit_base_patch16_224.augreg_-in21k_ft_in1k
+
+484 Transfer Learning Pretrained directly on ImageNet-1K 
+
+> vit_base_patch16_224.augreg_-in1k
+
+Large pretraining + fine-tuned to ImageNet-1K 
+
+> vit_base_patch16_224.augreg_-in21k_ft_in1k
+
+452 Augmentation Same model, same pretraining dataset, no augmentation 
+
+> vit_base_patch16_224.orig_-in21k
+
+Same model, same pretraining dataset, with augmentation 
+
+> vit_base_patch16_224.augreg_-in21k
+
+224 Model Scale Same architectural family, smaller model variant 
+
+> vit_small_patch16_-224.augreg_in1k
+
+Same architectural family, larger model variant 
+
+> vit_base_patch16_224.augreg_-in1k
+
+7,260 
+
+Each treatment is constructed as a strict ceteris paribus contrast, isolating a single pretraining factor by holding all others fixed. For the first three treatments, Dataset Complexity, Specialization, and Transfer Learning, we rely on ImageNet variants (IN-1K and IN-21K) as the pretraining datasets. This choice is deliberate: ImageNet variants have a well-defined ordering in terms of scale and informativeness, allowing us to unambiguously establish which dataset constitutes the more complex pretraining condition without relying on heuristic arguments. • Dataset Complexity varies only the pretraining dataset, comparing a smaller ImageNet variant (IN-1K) against a larger one (IN-21K). Architecture, augmentation strategy, and training procedure are identical across the pair. • Specialization varies only whether fine-tuning has occurred. The control is a model pretrained on IN-21K without any subsequent fine-tuning; the treatment is the same model checkpoint further fine-tuned to IN-1K. Architecture, augmentation, and base pretraining are therefore shared. • Transfer Learning varies the pretraining source while holding the final training target fixed. Both the control and treatment are evaluated after training on IN-1K, but the control was trained on IN-1K directly, whereas the treatment was first pretrained on IN-21K and then fine-tuned to IN-1K. Architecture and augmentation are held constant. • Augmentation varies only whether data augmentation was applied during pretraining. Both models share the same architecture, the same pretraining dataset (IN-21K), and the same training procedure, differing solely in the use of augmentation regularisation. • Model Scale varies only the size of the model within a fixed architectural family. The control is a smaller variant (e.g., ViT-Small) and the treatment is a larger variant (e.g., ViT-Base), trained on the same dataset with the same augmentation and setup. This design ensures that any systematic difference in the geometric metrics can be attributed to the manipulated factor rather than to confounds. Table 2 details the design of each treatment. 34 F.1 Target Variables Total Spread . Given an embedding Z ∈ Rn×d, we measure its global scale using its total variance. Mathematically, this is defined as the trace of the covariance matrix, 
+
+T S (Z) = Tr(Cov( Z)) = 
+
+> d
+
+X
+
+> j=1
+
+Var( Zj ).
+
+This quantity captures the overall spread of the representation around its mean, aggregating variance across all dimensions. 
+
+Mean Distance to Centroid . Given an embedding Z ∈ Rn×d, we consider the mean Euclidean distance of points from the centroid as an additional measure of scale, 
+
+M DC (Z) = 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+∥zi − μ∥,
+
+where μ is the mean of the embedding. Compared to total spread, which averages squared distances, this quantity is less sensitive to outliers, as it grows linearly with the distance from the centroid. 
+
+Standard Deviation of Distance to Centroid . Let Z ∈ Rn×d be an embedding. To assess how uniformly its points are distributed, we consider the standard deviation of their Euclidean distances to the centroid: 
+
+SDDC (Z) = 
+
+vuut 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+∥zi − μ∥2 − 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+∥zi − μ∥
+
+!2
+
+While mean distance captures the typical scale of the embedding, this quantity measures how consistent that scale is across points. Low values indicate that points lie at similar distances from the centroid, suggesting a uniform spread, whereas high values reflect heterogeneity, such as the presence of clusters or outliers. 
+
+Density Estimate . Given an embedding Z ∈ Rn×d, we define a simple proxy for its global density as the ratio between the number of points and the total variance, 
+
+ρ(Z) = n
+
+Tr(Cov( Z)) .
+
+This quantity measures how many points are packed within the overall spread of the representation. Higher values indicate that points are more concentrated in a smaller region of the latent space, while lower values correspond to more diffuse embeddings. 
+
+Number of Components for 90% Variance . Given an embedding Z ∈ Rn×d, we estimate its dimensionality using principal component analysis. Let {λi} denote the eigenvalues of the covariance matrix in decreasing order. We define 
+
+k0.9(Z) = min 
+
+(
+
+k :
+
+Pki=1 λi
+
+Pdi=1 λi
+
+≥ 0.9
+
+)
+
+,
+
+the number of principal components required to explain 90% of the total variance. Lower values indicate that most of the variance is captured by a small number of directions, while higher values reflect a more distributed representation. 
+
+Explained Variance Ratios . Given an embedding Z ∈ Rn×d, we analyze how variance is concen-trated in the leading principal components. Let {λi} denote the eigenvalues of the covariance matrix in decreasing order, and define the explained variance ratios as ri = λi/ P 
+
+> j
+
+λj .We report the proportion of variance explained by the top principal components, 
+
+EV R 1(Z) = r1 and EV R 3(Z) = 
+
+> 3
+
+X
+
+> i=1
+
+ri,
+
+35 corresponding to the top-1 and top-3 components, respectively. These quantities capture how strongly the representation is dominated by a small number of directions. High values indicate that most of the variance lies in a few principal components, while lower values reflect a more distributed structure. 
+
+Isotropy . Given an embedding Z ∈ Rn×d, we quantify isotropy by comparing the minimum and maximum variance across dimensions, 
+
+Is (Z) = min j Var( Zj )max j Var( Zj ) .
+
+This provides a simple proxy for how uniformly variance is distributed across coordinates. Values close to 1 indicate isotropic representations, while values near 0 reflect strong anisotropy, with variance concentrated in a few directions. 
+
+Spectral Entropy . To quantify how information is distributed across the latent space, we consider the spectral entropy of the embedding matrix [ 93 ]. Given an embedding Z ∈ Rn×d, we first center it and compute its singular values {σi}. These are then normalized to form a probability distribution 
+
+pi = σi
+
+P 
+
+> j
+
+σj
+
+.
+
+The spectral entropy is defined as 
+
+H(Z) = − X
+
+> i
+
+pi log pi.
+
+Intuitively, this quantity measures how evenly the variance of the representation is spread across different directions. When most of the mass is concentrated in a few singular values, the entropy is low, indicating that the embedding effectively lies in a low-dimensional subspace. Conversely, when the singular values are more uniform, the entropy is higher, reflecting a more isotropic representation. 
+
+Effective Rank . To obtain a real-valued measure of dimensionality, we use the effective rank of the embedding as the exponential of its spectral entropy [ 94 ]. Given a centered embedding Z ∈ Rn×d,the effective rank is then defined as 
+
+reff (Z) = exp( H(Z)) .
+
+This quantity can be interpreted as the number of dimensions that are effectively used by the representation. In particular, if the singular values are uniformly distributed over k directions, then 
+
+H(Z) = log k and reff (Z) = k. More generally, the effective rank provides a smooth proxy for dimensionality, taking non-integer values when variance is unevenly distributed across directions. Compared to the algebraic rank, which is sensitive to noise and thresholding, the effective rank captures the intrinsic structure of the embedding by accounting for how variance is distributed across its principal components. 
+
+Linear Probing Metrics . To quantify how much class information is encoded in the learned representations, we perform a linear probing task. Given an embedding Z ∈ Rn×d and class labels 
+
+yi ∈ { 1, . . . , C }, a linear classifier 
+
+f (z) = W z + b
+
+is trained to predict the dataset class labels from the embedding vectors. High predictive performance indicates that classes are linearly separable in the latent space. We report four standard classification metrics: accuracy, precision, recall, and F1-score [ 95 ]. Accuracy measures the overall fraction of correctly classified samples. Precision evaluates how often predicted labels are correct, while recall measures how many true instances of each class are successfully recovered. The F1-score is the harmonic mean of precision and recall, balancing both aspects of performance. All metrics are computed using macro-averaging across classes, so that each dataset class contributes equally regardless of class frequency. 36 5 10 15 20       
+
+> Convolutional
+> Vision Transformer
+> Hybrid CNN-Transformer
+> Hierarchical Vision Transformer
+> MetaFormer
+> Cycle Length
+> 0.1 0.2
+> Mean Square Clustering
+> 0.00 0.02 0.04 0.06
+> Eigengap
+> 10 15
+> Convolutional
+> Vision Transformer
+> Hybrid CNN-Transformer
+> Hierarchical Vision Transformer
+> MetaFormer
+> Graph Diameter
+> 02
+> ×10 8
+> Wiener Index
+
+Figure 17: Violin plots of five latent graph signatures across model macro-families on CIFAR-10. For each model, embeddings are represented as a point cloud and converted into a k-nearest-neighbor graph ( k = 10 ), from which the reported descriptors are computed. 
+
+G Graph-Based Regression Analysis 
+
+G.1 Experiment 
+
+To investigate whether latent geometry reflects architectural design choices, we perform a graph-based analysis of embedding spaces on CIFAR-10. We consider all model embeddings associated with five macro-families introduced above: Convolutional , Vision Transformer , Hybrid CNN–Transformer ,
+
+Hierarchical Vision Transformer , and MetaFormer . For each model, the embedding cloud induced by CIFAR-10 samples is treated as a point cloud in latent space. To obtain a discrete approximation of the underlying representation manifold, we construct a k-nearest-neighbor graph with k = 10 for each embedding cloud. This graph connects each point to its ten nearest latent neighbors and provides a local geometric skeleton from which graph-theoretic descriptors can be extracted. We then compute five graph signatures, described in Appendix G.2: 
+
+Cycle Length, Mean Square Clustering Coefficient, Wiener Index, Laplacian Eigengap , and 
+
+Graph Diameter . Collectively, these metrics capture complementary aspects of latent organization, including local cyclic redundancy, quadrilateral density, global compactness, spectral connectivity, and maximal geodesic extent. Figure 17 reports the empirical distributions of these signatures across macro-families. Clear family-level differences emerge. For instance, convolutional models tend to exhibit more compact and weakly connected graphs compared to transformer-based families. Hybrid and hierarchical architectures often occupy intermediate regimes. To quantify these differences formally, we fit a multinomial logistic regression in which the dependent variable is the model macro-family and the predictors are the graph signatures computed from each latent space, together with two scale-related covariates: Latent Dimension and Number of Parameters . This framework estimates whether systematic changes in graph geometry are associated with the probability that an embedding originates from a given architectural family, while accounting for the simultaneous contribution of all signatures. 37 Variable LR Statistic p-value 
+
+Latent Dimension 951.78 1.00 × 10 −204 
+
+Number of Parameters 455.78 2.44 × 10 −97 
+
+Eigengap 121.08 3.14 × 10 −25 
+
+Mean Square Clustering 68.04 5.87 × 10 −14 
+
+Density 56.77 1.38 × 10 −11 
+
+Cycle Length 22.36 1.70 × 10 −4
+
+Graph Diameter 21.53 2.49 × 10 −4
+
+Table 3: Variable-level likelihood-ratio tests from the multinomial logistic regression predicting model macro-family from latent graph signatures and scale covariates. For each predictor, the reported statistic compares the full model against a reduced model excluding that variable only. Smaller 
+
+p-values indicate stronger incremental explanatory value conditional on the remaining predictors. We then assess predictor significance through variable-level likelihood-ratio tests. Concretely, for each signature, we compare the full multinomial model against a reduced model in which that single predictor is removed, while all remaining predictors are retained. If excluding a variable leads to a substantial deterioration in model likelihood, the corresponding graph signature contains information that helps discriminate among families beyond what is already explained by the others. The resulting test statistic follows a χ2 reference distribution under standard large-sample assumptions, allowing conventional p-value inference. Table 3 summarizes the results. Latent dimensionality and parameter count provide the strongest incremental contribution, as expected from their close relationship to model scale. More notably, several graph signatures remain highly significant after controlling for these size variables. In particular, the Laplacian Eigengap, Mean Square Clustering Coefficient, and Density exhibit strong associations with macro-family membership, indicating that architectural families differ not only in scale, but also in the connectivity and local structure of their latent manifolds. Cycle Length and Graph Diameter are also significant, though with smaller incremental contributions. Taken together, these findings suggest that broad model families induce statistically distinguishable latent graph geometries. Convolutional and transformer-derived architectures do not merely differ in parameterization or embedding dimension; they also organize representations according to different manifold topologies, local connectivity patterns, and global geodesic structure. 
+
+G.2 Graph Signatures Cycle length. We define the average fundamental cycle length as a tree-based graph descriptor that summarizes the typical size of loops generated by redundant edges. Small values indicate mainly local cyclic structure (short loops such as triangles), whereas large values indicate longer-range cycles connecting distant regions. Let G = ( V, E ) be a connected graph and let T be a spanning tree of G. For each non-tree edge 
+
+e = ( u, v ) ∈ E \ T , adding e to T creates a unique fundamental cycle whose length is 
+
+ℓT (e) = dT (u, v ) + 1 ,
+
+where dT (u, v ) denotes the graph distance between u and v in T .We then define 
+
+CL( G; T ) = 1
+
+|E \ T |
+
+X
+
+> e∈E\T
+
+ℓT (e).
+
+Thus, this descriptor summarizes whether the graph redundancy is mostly local or global. 
+
+Mean Square Clustering Coefficient. The mean square clustering coefficient measures the preva-lence of local four-node cycles (squares) in a graph. Let C4(v) denote the square clustering coefficient of node v, defined as the fraction of length-two paths through v that participate in a square (see [ 96 ]). The mean square clustering coefficient is then 38 C4(G) = 1
+
+|V |
+
+X
+
+> v∈V
+
+C4(v).
+
+Large values indicate neighborhoods rich in local quadrilateral structure, whereas small values correspond to weak four-cycle connectivity. 
+
+Wiener Index. The Wiener index measures the overall distance-based compactness of a graph by summing all pairwise shortest-path distances (see [ 97 ]). Small values correspond to compact and well-connected graphs, whereas large values indicate more elongated or weakly connected structures. Let d(u, v ) denote the shortest-path distance between vertices u, v ∈ V . The Wiener index is defined as 
+
+W (G) = X
+
+> {u,v }⊆ V
+
+d(u, v )
+
+where only connected pairs contribute in disconnected graphs. This descriptor provides a global summary of how efficiently vertices are mutually reachable across the graph. 
+
+Laplacian Eigengap ( k = 1 ). To provide information about global connectivity and large-scale structure of a graph, we consider spectral descriptors derived from the graph Laplacian. In particular, the Laplacian eigengap for k = 1 (also known as the Fiedler value [ 98 ]) measures the strength of global graph connectivity. Let L be the graph Laplacian matrix, and let 
+
+0 = λ0 ≤ λ1 ≤ · · · ≤ λn−1
+
+be its ordered eigenvalues. Since λ0 = 0 for any graph, the eigengap at k = 1 is 
+
+λ1 − λ0 = λ1.
+
+Large values indicate stronger overall connectivity, while values close to zero suggest near-disconnected components. 
+
+Graph Diameter. The graph diameter is a distance-based descriptor that measures the largest shortest-path separation between vertices. Let d(u, v ) denote the shortest-path distance between vertices u, v ∈ V . The graph diameter is defined as 
+
+diam( G) = max  
+
+> u,v ∈V
+
+d(u, v ),
+
+where only connected pairs are considered in disconnected graphs. Small values indicate compact graphs in which all vertices are mutually close, whereas large values correspond to elongated or weakly connected structures with distant regions. 39

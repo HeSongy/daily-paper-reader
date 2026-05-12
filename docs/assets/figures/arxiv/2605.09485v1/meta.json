@@ -1,0 +1,150 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.09485v1/fig-001.webp",
+      "caption": "Figure 10: Parallel coordinates of the t-SNE projection of the latent space on Fashion-MNIST. The embedding separates garment categories and reveals intra-class structure (e.g., sandals split by structural attributes such as heels).",
+      "page": 25,
+      "index": 1,
+      "width": 758,
+      "height": 870
+    },
+    {
+      "url": "assets/figures/arxiv/2605.09485v1/fig-002.webp",
+      "caption": "Figure 11: 2D UMAP projection of latent representations for CelebA. Points correspond to images. The embedding shows structured clustering driven by multiple facial attributes (e.g., gender, age, and other visual traits).",
+      "page": 26,
+      "index": 2,
+      "width": 812,
+      "height": 515
+    },
+    {
+      "url": "assets/figures/arxiv/2605.09485v1/fig-003.webp",
+      "caption": "Figure 7: Evolution of the representation space learned by the convolutional classifier across three datasets (MNIST, Fashion-MNIST, CIFAR-10) and three training checkpoints. At each layer, 1D t-SNE is applied to the test-set representations, with colors denoting class labels. The semantic bottleneck emerges progressively within the encoder, while the decoder introduces no further semantic reorganization.",
+      "page": 21,
+      "index": 3,
+      "width": 817,
+      "height": 548
+    },
+    {
+      "url": "assets/figures/arxiv/2605.09485v1/fig-004.webp",
+      "caption": "Figure 15: Prototype correspondences between vit_base_patch16_224.augreg_in1k (left) and vit_base_patch16_224.augreg_in21k (right) on a multi-dataset benchmark combining CIFAR10, MNIST, and Fashion-MNIST. Each row represents a matched pair of clusters, with green connectors indicating semantically coherent correspondences and red connectors indicating mismatches. At this scale, individual datasets act as macro-concepts, allowing the matching methods to be evaluated on their ability to recover coarse semantic partitions. The three panels show results for Hungarian matching (top), injected matching (middle), and spectral matching (bottom)",
+      "page": 30,
+      "index": 4,
+      "width": 668,
+      "height": 430
+    },
+    {
+      "url": "assets/figures/arxiv/2605.09485v1/fig-005.webp",
+      "caption": "Figure 1: Illustration of the semiotic pipeline underlying modern neural models: raw perceptual inputs from the worldW (e.g., images of animals) are mapped by an encoder f : W → Z into a latent manifold Z , where inputs are organized into geometrically structured semantic clusters. A decoder g : Z → Y then projects these abstract representations onto a discrete label space Y , yielding the final decision. This architecture mirrors the semiotic distinction between signifier (the raw input) and signified (the latent encoding), and instantiates Gärdenfors’ conceptual spaces framework, in which concepts correspond to regions of a continuous, geometrically meaningful space.",
+      "page": 2,
+      "index": 5,
+      "width": 798,
+      "height": 241
+    },
+    {
+      "url": "assets/figures/arxiv/2605.09485v1/fig-006.webp",
+      "caption": "Figure 4: Comparison of three supervised alignment methods on every model pair from Figure 12: LINEAR (the Eigen-K baseline from 57), PPFE [53], and Canonical Correlation Analysis (CCA) [14]. The x-axis reports the number of non-zero components K retained by the alignment map (i.e., the active latent dimensions); the y-axis reports downstream task accuracy after communication (top) and mean squared error of latent reconstruction (bottom). Method specifications and metric definitions are detailed in Appendix E.",
+      "page": 7,
+      "index": 6,
+      "width": 819,
+      "height": 372
+    },
+    {
+      "url": "assets/figures/arxiv/2605.09485v1/fig-007.webp",
+      "caption": "Figure 14: Prototype correspondences between vit_base_patch16_224.augreg_in1k (left) and vit_base_patch16_224.augreg_in21k (right) on CIFAR-10. Each row represents a matched pair of clusters, with green connectors indicating semantically coherent correspondences and red connectors indicating mismatches. The three panels show results for Hungarian matching (top), injected matching (middle), and spectral matching (bottom).",
+      "page": 29,
+      "index": 7,
+      "width": 774,
+      "height": 368
+    },
+    {
+      "url": "assets/figures/arxiv/2605.09485v1/fig-008.webp",
+      "caption": "Figure 8: Evolution of the representation space learned by the convolutional autoencoder across three datasets (MNIST, Fashion-MNIST, CIFAR-10) and three training checkpoints. At each layer, 1D t-SNE is applied to the test-set representations, with colors denoting class labels. Unlike the classification setting, the reconstruction objective does not induce a semantically organized bottleneck, highlighting the critical role of the downstream task in shaping representation geometry.",
+      "page": 22,
+      "index": 8,
+      "width": 817,
+      "height": 548
+    },
+    {
+      "url": "assets/figures/arxiv/2605.09485v1/fig-009.webp",
+      "caption": "Table 2: Design of the five pretraining conditions. For each condition, all factors not listed are held fixed. Examples are drawn from actual models in SEMASIA.",
+      "page": 34,
+      "index": 9,
+      "width": 786,
+      "height": 473
+    },
+    {
+      "url": "assets/figures/arxiv/2605.09485v1/fig-010.webp",
+      "caption": "Figure 5: Forest plot of pooled OLS regression coefficients β̂ for the embedding geometry and linear probing metrics across five pretraining conditions (see Table 2 for condition definitions). Probing scores (accuracy, recall, precision, F1) are obtained via a least-squares linear probe. All β̂ are expressed in units of the control-group standard deviation of each metric (σcontrol, pooled across datasets and analysis types), yielding an effect-size measure analogous to Cohen’s d. Observations are pooled across CIFAR-10, MNIST, Fashion-MNIST, and Oxford Flowers.",
+      "page": 8,
+      "index": 10,
+      "width": 821,
+      "height": 384
+    },
+    {
+      "url": "assets/figures/arxiv/2605.09485v1/fig-011.webp",
+      "caption": "Table 1: Summary of the benchmark datasets included in the SEMASIA collection. For each dataset and split we report the number of timm models from which latent representations were extracted, the number of source examples per model, and the total number of rows in the corresponding Parquet file (i.e., the number of (input, model) pairs).",
+      "page": 4,
+      "index": 11,
+      "width": 682,
+      "height": 474
+    },
+    {
+      "url": "assets/figures/arxiv/2605.09485v1/fig-012.webp",
+      "caption": "Figure 6: Exploratory analysis of the SEMASIA model registry. Left: joint distribution of the number of trainable parameters and the latent space dimensionality, shown on a log–log scale. Center: marginal distribution of the number of parameters across models. Right: marginal distribution of the latent space dimensionality. The bottom row aggregates models by architectural macro-family, while the top row provides a fine-grained breakdown by model family, showing the fifteen most populated families and grouping the remaining ones under Others.",
+      "page": 19,
+      "index": 12,
+      "width": 822,
+      "height": 570
+    },
+    {
+      "url": "assets/figures/arxiv/2605.09485v1/fig-013.webp",
+      "caption": "Figure 12: Cross-correlation heatmaps between basis vectors extracted from pairs of CIFAR-10 latent spaces [76]. Each column corresponds to a model pair differing along a single controlled source of heterogeneity: (i) architecture; (ii) pretraining data scale; (iii) data augmentation; (iv) tokenization patch size; and (v) padding size. Rows compare PCA (top) and Laplacian eigenmaps (bottom), truncated to the first twenty components.",
+      "page": 27,
+      "index": 13,
+      "width": 819,
+      "height": 352
+    },
+    {
+      "url": "assets/figures/arxiv/2605.09485v1/fig-014.webp",
+      "caption": "Figure 13: Jaccard similarity heatmaps between prototypical anchors extracted from two ViT models differing in pretraining data complexity. From left to right, 3, 6, and 10 anchors are extracted per model.",
+      "page": 27,
+      "index": 14,
+      "width": 789,
+      "height": 259
+    },
+    {
+      "url": "assets/figures/arxiv/2605.09485v1/fig-015.webp",
+      "caption": "Figure 9: Parallel coordinates of the t-SNE projection of the latent space of aimv2_1b_patch14_224.apple_pt on CIFAR-10. Lines denote samples colored by class. Top: full dataset. Middle/bottom: zoom on ship and airplane, highlighting intra-class structure.",
+      "page": 24,
+      "index": 15,
+      "width": 548,
+      "height": 869
+    },
+    {
+      "url": "assets/figures/arxiv/2605.09485v1/fig-016.webp",
+      "caption": "Figure 17: Violin plots of five latent graph signatures across model macro-families on CIFAR-10. For each model, embeddings are represented as a point cloud and converted into a k-nearest-neighbor graph (k = 10), from which the reported descriptors are computed.",
+      "page": 37,
+      "index": 16,
+      "width": 818,
+      "height": 535
+    },
+    {
+      "url": "assets/figures/arxiv/2605.09485v1/fig-017.webp",
+      "caption": "Figure 16: The three-stage alignment pipeline shared by all methods considered in this work. A test embedding a ∈ ZA is first prewhitened into a canonical coordinate system via W = L−1 (Choleskybased whitening), then mapped by the method-specific alignment operator A, and finally dewhitened back into ZB via W−1 = L, yielding the transmitted embedding b̂ ∈ ZB . The normalisation steps are shared across all methods; only A varies.",
+      "page": 31,
+      "index": 17,
+      "width": 804,
+      "height": 225
+    },
+    {
+      "url": "assets/figures/arxiv/2605.09485v1/fig-018.webp",
+      "caption": "Figure 2: Two-dimensional t-SNE projection of the aimv2_1b_patch14_224.apple_pt 2048- dimensional latent space, populated with samples from seven SEMASIA benchmarks. Each benchmark forms its own cluster, but semantically overlapping concepts collapse onto shared neighborhoods regardless of source: flower images from Oxford Flowers and CIFAR-100 occupy the same region, as do large mammals and vehicles drawn from CIFAR-10, CIFAR-100, and Tiny-ImageNet (highlighted with the related origin dataset color).",
+      "page": 5,
+      "index": 18,
+      "width": 806,
+      "height": 499
+    }
+  ]
+}

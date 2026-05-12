@@ -1,0 +1,54 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.08732v1/fig-001.webp",
+      "caption": "Table 1: Main results. GC-IDM vs. CEM on the four LeWM benchmark environments. Both methods use the frozen LeWM checkpoint from Maes et al. [2026] and the same solver configuration. We experiment each environment at two sample sizes: n=200 is our headline reporting protocol, chosen for lower variance; n=50 is the LeWM paper’s own protocol. Both GC-IDM and CEM are mean ± standard deviation across three seeds. Our method’s columns are underlined throughout for visual tracking; highlighted cells mark the winning method per row. Two speed up measures are recorded: wall / ep. is the end-to-end per-episode wall-clock ratio; ms / plan is the average wall-clock of a single get_action call (one per environment step for both methods). Because CEM buffers 25 raw actions per solver call, its average includes both expensive solver steps and cheap buffer returns; the reported 100–130× speedup is therefore already amortized over CEM’s commit window.",
+      "page": 6,
+      "index": 1,
+      "width": 777,
+      "height": 265
+    },
+    {
+      "url": "assets/figures/arxiv/2605.08732v1/fig-002.webp",
+      "caption": "Table I: Uniform noise schedule for GC-IDM. Sampling σ per-batch from [0, σmax] does not recover any of the performance lost to fixed-σ injection. Push-T sits in a narrow 78–80.5% band that is 4–7 points below the no-noise baseline (85.5%) and shows no preference between fixed and uniform schedules. The conclusion that GC-IDM does not need noise augmentation is robust to both schedule choice and environment.",
+      "page": 25,
+      "index": 2,
+      "width": 527,
+      "height": 277
+    },
+    {
+      "url": "assets/figures/arxiv/2605.08732v1/fig-003.webp",
+      "caption": "Figure 3: Matched execution rollout on Two-Room. Expert, CEM, and GC-IDM (ours) on the same episode from identical start and goal states. The first column shows the start (top) and goal (bottom); columns 1–10 are evenly spaced frames. Green shading marks success; red borders mark failure. CEM and GC-IDM share the same time axis; the expert row uses the dataset’s own time axis. GC-IDM reaches the goal in fewer steps with visibly smoother motion. On this environment, GC-IDM achieves 92% latent monotonicity (the agent’s latent distance to the goal decreases at every step in 92% of episodes) versus 73% for CEM, and 35.5× lower action jerk (0.055 vs. 1.962).",
+      "page": 7,
+      "index": 3,
+      "width": 822,
+      "height": 249
+    },
+    {
+      "url": "assets/figures/arxiv/2605.08732v1/fig-004.webp",
+      "caption": "Figure 4: Solver-family comparison, n=200, four environments. Success rate and per-plan-call wall-clock, mean ± std over three training seeds. All sampling solvers use stable_worldmodel defaults; GradientSolver uses SGD with lr= 1.0. GC-IDM is the highest-success method in every environment: it exceeds the best sampling baseline by 12.5 pp on Two-Room, 1.7 pp on Push-T, 28.2 pp on Cube, and 29.4 pp on Reacher, at 29–134× lower per-plan-call cost. Appendix E.4 gives the n=50 protocol, per-episode timing, and full configuration details.",
+      "page": 8,
+      "index": 4,
+      "width": 818,
+      "height": 226
+    },
+    {
+      "url": "assets/figures/arxiv/2605.08732v1/fig-005.webp",
+      "caption": "Figure 1: Evolution of Push-T latent geometry across training. Panels (a)–(f) show twodimensional t-SNE embeddings of latent states from Push-T sequence at epochs 1, 2, 4, 6, 8, and 10, with points colored by frame index. Panel (g) shows subsampled observation frames from the same sequence. Panel (h) shows the standardized marginal latent distribution at t=0 for epoch 10, together with a Gaussian reference curve. Across training, the embedding evolves from a diffuse cloud into a smooth ordered path aligned with task progress, providing qualitative support for the claim that the learned representation is structured enough for local inverse recovery.",
+      "page": 4,
+      "index": 5,
+      "width": 826,
+      "height": 320
+    },
+    {
+      "url": "assets/figures/arxiv/2605.08732v1/fig-006.webp",
+      "caption": "Figure 2: Pipeline overview. Left: World model encoder training process, which follows LeWM [Maes et al., 2026]. Center: Goal-conditioned inverse dynamics model (GC-IDM) training. From a trajectory τ ∼ D, a tuple (zt, zg, h,at) is sampled at random horizon h ∈ [1, Hmax] using frozen LeWM embeddings; the IDM is trained by MSE regression with gradients flowing only into the inverse dynamics module, i.e., GC-IDMψ. Right: GC-IDM planning. The current observation ot is re-encoded at every step; the goal embedding zg is encoded once and cached. The concatenated pair zt∥zg passes through a 3-layer MLP modulated by the remaining horizon ht via AdaLN-Zero, producing estimated action ât in a single forward inference pass with no search or rollout.",
+      "page": 4,
+      "index": 6,
+      "width": 816,
+      "height": 205
+    }
+  ]
+}

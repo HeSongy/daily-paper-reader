@@ -1,0 +1,78 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.03334v1/fig-001.webp",
+      "caption": "Figure 12 The gray region is Q(ν) for the right child ν of ν̂. The two non-base sides of △ν are marked with green dashed segments. The orange dashed segment on the base side πν of △ν is the left bridge lν of πν . In this case, ν cannot have a left subtree in TQ.",
+      "page": 26,
+      "index": 1,
+      "width": 392,
+      "height": 377
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03334v1/fig-002.webp",
+      "caption": "Figure 13 Illustrating the geodesic triangles △ν̂ (the gray region) and △ν (the green region). For any µ in the right subtree of ν, △µ must be “right” of △ν .",
+      "page": 26,
+      "index": 2,
+      "width": 628,
+      "height": 330
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03334v1/fig-003.webp",
+      "caption": "Figure 6 The visibility of q in P \\ Pπ is constrained by the cone Cq(s).",
+      "page": 15,
+      "index": 3,
+      "width": 369,
+      "height": 331
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03334v1/fig-004.webp",
+      "caption": "Figure 10 Illustrating the case a ≠ pj . The green region is Q ab (△k). The union of the green region and the gray region is Q. The red solid polygonal chain is in B1 and the blue solid polygonal chain is in B2.",
+      "page": 21,
+      "index": 4,
+      "width": 477,
+      "height": 345
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03334v1/fig-005.webp",
+      "caption": "Table 1 Summary of the results for visibility queries (k is the output size).",
+      "page": 3,
+      "index": 5,
+      "width": 719,
+      "height": 204
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03334v1/fig-006.webp",
+      "caption": "Figure 7 The shaded region bounded by d is a pocket Pd(△∗). a∗b∗ is the bride d∗ on ∂△∗ \\ dv∗ . The bigger shaded region bounded by d∗ is Pd∗ (△∗).",
+      "page": 18,
+      "index": 6,
+      "width": 600,
+      "height": 228
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03334v1/fig-007.webp",
+      "caption": "Figure 8 The gray region Q is an open B1-bounded subpocket while the green region Q′ is a closed B2-bounded subpocket.",
+      "page": 19,
+      "index": 7,
+      "width": 600,
+      "height": 228
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03334v1/fig-008.webp",
+      "caption": "Figure 11 The green region is Q ab (△ν). The union of the green region and the gray region is Pd(△ν). The red solid polygonal chain is in B1 and the blue polygonal chain is in B2. The portion of B1 from pi to b is B1(Q ab (△ν)).",
+      "page": 24,
+      "index": 8,
+      "width": 612,
+      "height": 377
+    },
+    {
+      "url": "assets/figures/arxiv/2605.03334v1/fig-009.webp",
+      "caption": "Figure 9 Illustrating the case a = pj . The gray region is Q. The left dotted polygonal chain is",
+      "page": 20,
+      "index": 9,
+      "width": 441,
+      "height": 420
+    }
+  ]
+}
