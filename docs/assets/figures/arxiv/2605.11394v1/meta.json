@@ -1,0 +1,118 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.11394v1/fig-001.webp",
+      "caption": "Table 2: Basis transferability diagnostic on GWHD (reconstruction, not prediction). Adapter rows project each test image’s observed patch labels onto the train-learned basis Φ; high metrics measure how well Φ spans test-image residual structure, not predictive classification. Backbone-only rows are the no-adapter prediction reference. Mean (std. error) over 30 seeds.",
+      "page": 11,
+      "index": 1,
+      "width": 810,
+      "height": 377
+    },
+    {
+      "url": "assets/figures/arxiv/2605.11394v1/fig-002.webp",
+      "caption": "Table 7: Weather2K reconstruction results under different time splits (all stations observed). Mean (std. error) across 30 seeds.",
+      "page": 25,
+      "index": 2,
+      "width": 830,
+      "height": 192
+    },
+    {
+      "url": "assets/figures/arxiv/2605.11394v1/fig-003.webp",
+      "caption": "Figure 9: Signed low-rank correction Φ̂(s)⊤α̂j at the same test time as Fig. 3, on a shared diverging scale centred at zero. Left: adapter trained only on the 80% observed stations (TPS-interpolated to held-out locations). Right: no-holdout reference trained with the 20% held-out stations included, so the basis is read off in-sample and the correction is therefore what the observed-only adapter is trying to recover. Held-out stations are outlined in black. Regions where the two differ mark where observed-only training over- or under-shoots the all-stations reference.",
+      "page": 25,
+      "index": 3,
+      "width": 698,
+      "height": 364
+    },
+    {
+      "url": "assets/figures/arxiv/2605.11394v1/fig-004.webp",
+      "caption": "Figure 11: Learned basis ϕ̂(s) across the regularization path (seed 42). Dashed grey: ground truth ϕ(s); solid blue: learned ϕ̂(s) after sign alignment to ϕ. Companion to Figure 10.",
+      "page": 26,
+      "index": 4,
+      "width": 829,
+      "height": 227
+    },
+    {
+      "url": "assets/figures/arxiv/2605.11394v1/fig-005.webp",
+      "caption": "Figure 10: Estimated spatial covariance Σ̂r along the regularization path on the synthetic benchmark of Appendix I (median-representative seed, shared colour scale). Three regimes are visible: under-regularization injects spurious off-diagonal structure; λ⋆ recovers the ground-truth rank-1 covariance; over-regularization collapses toward the noise floor. The accompanying basisalignment / CovFrob path summary is in main-body Figure 2 (right); the four-panel main-text comparison at Σtrue / OLS / unreg. / reg. is Figure 2 (left). Corresponding learned bases are in Figure 11.",
+      "page": 26,
+      "index": 5,
+      "width": 829,
+      "height": 277
+    },
+    {
+      "url": "assets/figures/arxiv/2605.11394v1/fig-006.webp",
+      "caption": "Table 4: Rank-selection summary. K is deterministic per split and comes from the cumulativevariance rule at τvar = 0.9 (full training split). The effective rank is the integer-valued output of the Wang–Huang eigenvalue-thresholding rule (Eq. (24), Appendix G) used downstream by Σ̂r (Section 2.5); we report its mean over the 30 Stage-2 seeds, which is why the column carries a decimal part even though every individual seed yields an integer count of retained directions.",
+      "page": 22,
+      "index": 6,
+      "width": 829,
+      "height": 1000
+    },
+    {
+      "url": "assets/figures/arxiv/2605.11394v1/fig-007.webp",
+      "caption": "Figure 5: GWHD within-image refinement (ResNet-152, shared scale [0, 1]): (a) image + GT boxes, (b) GT patch mask, (c) backbone probability, (d) adapter-refined (spatially sharpened, aligns with (b)).",
+      "page": 10,
+      "index": 7,
+      "width": 675,
+      "height": 188
+    },
+    {
+      "url": "assets/figures/arxiv/2605.11394v1/fig-008.webp",
+      "caption": "Figure 1: Spatial Adapter overview. The adapter extracts an explicit low-rank spatial representation Φ̂(s)⊤α̂j from the residual field of a frozen first-stage predictor, supporting prediction together with closed-form covariance estimation and downstream uncertainty quantification. Stage-2 ADMM details: Algorithm 1.",
+      "page": 3,
+      "index": 8,
+      "width": 761,
+      "height": 200
+    },
+    {
+      "url": "assets/figures/arxiv/2605.11394v1/fig-009.webp",
+      "caption": "Table 9: Median wall-clock cost per component across seeds (NVIDIA Tesla V100 SXM2 32 GB). Stage 1: first-stage fit (STDK for KAUST and Weather2K; identity for Synthetic; frozen backbone with a linear head for GWHD, see note below). Unreg: a single adapter ADMM solve at τ1 =τ2 =0. Reg/trial: one Optuna trial (adapter ADMM solve at a sampled (τ1, τ2)). Reg total: the full Optuna sweep (ntrials trials). Per-seed total: Stage 1 + Reg total, i.e. the cost of reproducing one seed’s final result.",
+      "page": 28,
+      "index": 9,
+      "width": 905,
+      "height": 633
+    },
+    {
+      "url": "assets/figures/arxiv/2605.11394v1/fig-010.webp",
+      "caption": "Table 8: Experimental configurations. “First stage” describes the frozen predictor; “Adapter” describes the Stage 2 ADMM settings. Seeds are contiguous starting from the listed start value.",
+      "page": 27,
+      "index": 10,
+      "width": 859,
+      "height": 647
+    },
+    {
+      "url": "assets/figures/arxiv/2605.11394v1/fig-011.webp",
+      "caption": "Figure 8: Station split (observed vs. held-out).",
+      "page": 24,
+      "index": 11,
+      "width": 492,
+      "height": 294
+    },
+    {
+      "url": "assets/figures/arxiv/2605.11394v1/fig-012.webp",
+      "caption": "Figure 4: Per-station held-out RMSE on Weather2K. Left: RMSE ratio (adapter / STDK) overlaid on the held-out-station map; cool colours indicate the adapter outperforms the backbone. Right: paired RMSE trajectories, stations sorted by STDK RMSE — the gap between the two curves shows consistent per-station improvement across the 20% held-out stations, not an average driven by a few outliers.",
+      "page": 9,
+      "index": 12,
+      "width": 822,
+      "height": 257
+    },
+    {
+      "url": "assets/figures/arxiv/2605.11394v1/fig-013.webp",
+      "caption": "Figure 3: Held-out Weather2K kriging at one test time. Left: STDK extrapolation baseline. Middle: adapter kriging surface — STDK plus the learned low-rank correction Φ̂(s)⊤α̂j , interpolated to held-out locations via thin-plate splines. Right: no-holdout reference — the same pipeline refit with the 20% held-out stations included in training, so the basis is read off in-sample (no TPS interpolation). All three panels share the response colour scale and the 20% held-out stations are overlaid on every panel. The adapter kriging surface tracks the no-holdout reference closely at the continental scale; the multi-seed Adapter-vs-STDK RMSE gap is given in Table 6 (Appendix M). The signed correction surface is broken out in Fig. 9.",
+      "page": 9,
+      "index": 13,
+      "width": 822,
+      "height": 295
+    },
+    {
+      "url": "assets/figures/arxiv/2605.11394v1/fig-014.webp",
+      "caption": "Figure 6: ADMM convergence on the synthetic benchmark (seed 42). (a) The primal residual ∥Z − R(ψ)∥F decays monotonically in both settings, with staircase steps corresponding to basis updates before the freeze horizon Nfreeze = 200. (b) The dual residual ρ∥Z(k) − Z(k−1)∥F (rolling median shown as solid line; raw trace as shading). The unregularized variant converges to ∼10−8; the regularized variant shows intermittent spikes typical of stochastic ADMM with a non-smooth ℓ1 penalty, while its rolling median decays steadily.",
+      "page": 20,
+      "index": 14,
+      "width": 810,
+      "height": 293
+    }
+  ]
+}

@@ -1,0 +1,6135 @@
+Title: Multi-Task Representation Learning for Conservative Linear Bandits
+
+URL Source: https://arxiv.org/pdf/2605.12176v1
+
+Published Time: Wed, 13 May 2026 01:24:35 GMT
+
+Number of Pages: 17
+
+Markdown Content:
+> 1
+
+# Multi-Task Representation Learning for Conservative Linear Bandits 
+
+Jiabin Lin and Shana Moothedath 
+
+Abstract —This paper presents the Constrained Multi-Task Representation Learning (CMTRL) framework for linear ban-dits. We consider T linear bandit tasks in a d dimensional space, which share a common low-dimensional representation of dimension r ≪ min {d, T }. Furthermore, tasks are constrained so that only actions meeting specific safety or performance requirements are allowed, referred to as conservative (safe) bandits. We introduce a novel algorithm, Safe-Alternating pro-jected Gradient Descent and minimization (Safe-AltGDmin), to recover a low-rank feature matrix while satisfying the given constraints. Building on this algorithm, we propose a multi-task representation learning framework for conservative linear ban-dits and establish theoretical guarantees for its regret and sample complexity bounds. We presented experiments and compared the performance of our algorithm with benchmark algorithms. 
+
+Index Terms —Multi-task representation learning, Conservative linear bandits, Low-dimensional learning 
+
+I. I NTRODUCTION 
+
+Stochastic linear bandits are a fundamental online learning framework in which an agent sequentially selects actions to maximize cumulative rewards while balancing exploration and exploitation [2]. They arise in applications such as robotics, clinical trials, communications, and recommender systems. Recently, multi-task learning, which enables the simultaneous learning of multiple related tasks, has garnered significant attention due to its ability to leverage shared structures across tasks to enhance performance [3], [4]. A common assumption in multi-task learning is that different tasks share an underlying representation. This shared structure enables the model to leverage information across tasks, referred to as multi-task representation learning (MTRL) , improving overall learning efficiency and performance [5]–[9]. The MTRL approach is particularly beneficial in data-scarce settings, as it allows models to improve efficiency by sharing representations. Motivated by the immense success of MTRL in the supervised learning (static data) setting, recent works have begun exploring its potential in sequential decision-making problems, including bandit learning [1], [3], [4], [8], [10]–[13] and reinforcement learning [14]–[17]. The primary goal of these works is to learn shared representations that enable effective learning across tasks, enhancing performance with limited data and reducing overall sample complexity. However, in many practical real-world scenarios, such as autonomous driving, power systems, and finance, there are often safety or performance constraints that must be consid-ered. Here, each action must meet certain performance/safety thresholds, particularly in safety-critical applications. While recent studies have addressed conservative or safe bandits 
+
+> J. Lin is with the Department of Computer Science and Technology, Qingdao Uni-versity, China, and S. Moothedath is with Department of Electrical and Computer Engi-neering, Iowa State University, USA. Email: linjiabin@qdu.edu.cn,mshana@iastate.edu. A prior related work was published in the 2024 International Conference on Machine Learning (ICML, 2024) [1]. This work was supported by the U.S. National Science Foundation under Grant NSF CAREER 2440455.
+
+(single-task setting) [18]–[22], works on distributed (multi-task) bandit learning under safety constraints remains limited [23]. Representation learning in constrained multi-task bandits is underexplored and is the main focus of this paper. This paper presents a novel framework Constrained Multi-Task Representation Learning (CMTRL) , where the goal is to learn shared representations across multiple tasks while adhering to predefined safety or performance constraints. By addressing both learning and constraint satisfaction, CMTRL extends the benefits of multi-task learning to constrained learning. To the best of our knowledge, this is the first work to consider this problem and to investigate it with provable guarantees. The key contributions are presented below. 
+
+Main Contributions: We present a new algorithmic frame-work, the Safe-Alternating gradient descent and minimization (Safe-AltGDmin) algorithm, to solve the CMTRL problem with a low-rank common representation and present regret and sample complexity bounds. Our algorithm consists of three main components: safe exploration and safety estima-tion, greedy exploration, and reward estimation. It starts with safe exploration based on a known baseline policy without any model information Subsequently, the algorithm utilizes estimates of unknown reward parameters learned using the AltGDmin approach to choose actions via a greedy strategy. In contrast to previous work on conservative bandits [19], [24], which eliminates unsafe actions, our estimator-based approach establishes bounds on safe exploration rounds and GD itera-tions, facilitating efficient safe learning. The Safe-AltGDmin algorithm is based on gradient descent (GD), making it com-putationally efficient. Due to the non-convex nature of the cost function, we employ a careful initialization for GD referred to as spectral initialization. Specifically, we show that with care-fully chosen learning parameters, all actions taken during the safe exploration phase and the greedy exploration phase adhere to the constraints. Under certain sample complexity conditions, we illustrate that the subspace distance (SD) between the shared model and the learned model decreases exponentially with high probability. Finally, we present a bound on the cumulative regret, which demonstrates a sublinear relation with respect to the number of tasks. To verify our theoretical findings, we performed comprehensive experiments utilizing synthetic data and real Movielens datasets. The experimental results demonstrate that our algorithm consistently satisfies the constraints and outperforms existing benchmark algorithms. In summary, our key contributions are fourfold. (1) First, we formulated the CMTRL framework, establishing a founda-tional approach for addressing multi-task problems in safety-constrained multi-task bandits. (2) Second, we developed a novel Safe-AltGDmin algorithm that enhances the learning process across multiple tasks, improving both learning effi-ciency and performance. (3) Third, we established the con-vergence and regret guarantees of the algorithm and sample 
+
+> arXiv:2605.12176v1 [cs.LG] 12 May 2026 2
+
+efficiency. (4) Finally, we conducted extensive experiments to validate our theoretical results, showcasing the practical applicability and performance of our approach. 
+
+Related Work: Low-dimensional representation learning has emerged as a popular research area in supervised [5]–[7] and dynamic settings [1], [10]–[12]. Solving multi-task representa-tion learning in linear bandits inherently presents a non-convex estimation challenge. Existing studies often either assume that the optimal solution to the non-convex problem is known [10], [12], or rely on the trace norm regularization approach [11]. Our prior work [1] introduced a new approach, alternating gradient descent and minimization algorithm (AltGDmin), for estimating the unknown reward matrix. This work, however, considered an unconstrained setting. In this paper, we propose a novel algorithm, Safe-AltGDmin for constrained multi-task representation learning in linear bandits. Specifically, we for-mulate the MTRL problem with explicit safety constraints and develop an approach that guarantees the safety of all chosen actions throughout the learning process. See Table I. Constrained bandit learning has received significant at-tention, particularly in the context of incorporating safety into learning [19]–[22], [25]–[36]. [19] studied stage-wise conservative linear bandits in the single-task setting and de-veloped algorithms that maintain performance constraints by constructing a safe action set. However, it does not consider multiple related tasks or a shared low-rank representation across tasks. Recently, [24] considered constrained learning for multi-task bandits. However, the approach there did not address the representation learning setting or sample com-plexity that is studied in this paper. In addition to safety constraints, some studies have examined MABs under budget constraints, where the objective is to maximize cumulative reward without exceeding a defined budget, as explored in works like [37]–[40]. Resource-constrained bandits are further examined in [41]–[43]. Constrained bandits in the context of nonlinear bandits are studied in [44]. Multi-task representation learning for constrained bandits remains largely unexplored in the existing literature, which is the focus of this paper. II. P ROBLEM SETTING 
+
+Background: Linear Bandits and Conservative Bandits. 
+
+Linear Bandits: We denote the action set as X . At each round 
+
+n ∈ [N], the learner chooses an action xn ∈ X . The environment provides a reward yn ∈ R, defined as yn := x⊤ 
+
+> n
+
+θ ⋆ + ηn, where 
+
+θ ⋆ represents a fixed but unknown reward parameter, and ηn
+
+represents the noise following to a zero-mean ση −Gaussian distribution. We define rn = x⊤ 
+
+> n
+
+θ ⋆ as the expected reward associated with the action xn, i.e., rn = E[yn]. The goal of the learner is to maximize the cumulative reward ∑Nn=1 rn, which is minimizing the cumulative (pseudo) regret 
+
+RN =
+
+> N
+
+# ∑
+
+> n=1
+
+x⋆⊤ 
+
+> n
+
+θ ⋆ − x⊤ 
+
+> n
+
+θ ⋆,
+
+where x⋆ 
+
+> n
+
+denotes the optimal action. 
+
+Conservative linear bandits: The learner has a baseline policy that provides a baseline action xbn and a reward rbn for each round n, both of which are known to the learner [19], [26], [34], [45]. The learner’s action selection rule is subject to a stage-wise constraint rn = x⊤ 
+
+> n
+
+θ ⋆ ⩾ (1−α)rbn , where α ∈ (0, 1)
+
+is the parameter that controls the conservatism level of the learning process, which is known to the learner. In each round, the reward for the chosen action must be no less than the specified fraction (1 − α) of the baseline reward. Therefore, the goal of the learner is to choose actions that maximize the cumulative reward while meeting the stage-wise constraint minimize RN such that x⊤ 
+
+> n
+
+θ ⋆ ⩾ (1 − α)rbn , n ∈ [N].
+
+A. Problem Setting 
+
+In this paper, we study the CMTRL problem in linear bandits. In each round n ∈ [N], each task t ∈ [T ] independently chooses an action xn,t , subject to the safety constraint. The environment provides the feedback yn,t as yn,t := x⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
++ ηn,t ,
+
+where θ ⋆ 
+
+> t
+
+∈ Rd denotes the unknown reward parameter related to task t. The goal is to optimize the selection of actions to maximize the cumulative reward or minimize the cumulative regret while ensuring that the constraints are satisfied. min RT,N =
+
+> N
+
+# ∑
+
+> n=1
+> T
+
+# ∑
+
+> t=1
+
+x⋆⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
+− x⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
+(1) such that x⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
+⩾ (1 − α)rbn,t ,t ∈ [T ], n ∈ [N],
+
+where x⋆ 
+
+> n,t
+
+denotes the optimal action. We assume that Θ⋆ =[θ ⋆ 
+
+> 1
+
+· · · θ ⋆ 
+
+> T
+
+] is a rank-r matrix, where r ≪ min {d, T }, allowing improved learning by leveraging the similarities of the tasks. 
+
+B. Preliminaries 
+
+Let Θ⋆ SVD 
+
+= B⋆ΣV ⋆ := B⋆W ⋆ represent the reduced (rank r)Singular Value Decomposition (SVD) of Θ⋆, where B⋆ ∈ Rd×r,
+
+V ⋆ ∈ Rr×T , and Σ ∈ Rr×r is a diagonal matrix with non-negative entries (singular values). Here, B⋆ and V ⋆⊤ ∈ are matrices with orthonormal columns (basis matrices) . We de-fine W ⋆ := ΣV ⋆. We denote σ ⋆ 
+
+> max
+
+and σ ⋆ 
+
+> min
+
+as the maximum and minimum singular values of Σ, respectively. The condition number of Σ is defined as κ := σ ⋆
+
+> max
+
+/σ ⋆
+
+> min
+
+.
+
+Notations: For any positive integer n, [n] denotes {1, 2, · · · , n}.For any vector x, ∥x∥ represents the ℓ2 norm, while for any matrix A, ∥A∥ denotes the 2-norm. The Frobenius norm is denoted as ∥A∥F . The symbol ⊤ represents the transpose of a matrix or vector, while |x| indicates the element-wise absolute value of a vector x. The notation Ik (or sometimes just I)represents the k × k identity matrix, while ek denotes the k−th canonical basis vector. For basis matrices B1 and B2, we define Subspace Distance (SD) as SD (B1, B2) := ∥(I − B1B⊤ 
+
+> 1
+
+)B2∥F .We define the noise-to-signal ratio as NSR : = T σ 2 
+
+> η
+> σ⋆2min
+
+.We present the assumptions used in our analysis below. 
+
+Assumption 1. (Common Feature Extractor). We assume the existence of a matrix B ⋆ ∈ Rd×r, denoted as the common feature extractor, along with a set of linear coefficient vectors 
+
+{wt }Tt=1. Hence, the reward parameter matrix can be expressed as Θ⋆ = B⋆W ⋆, where W ⋆ = [ w⋆
+
+> 1
+
+, w⋆
+
+> 2
+
+, . . . , w⋆ 
+
+> T
+
+].
+
+Based on this assumption, the expected reward for the t-th task in the n-th round is E[yn,t ] = ⟨xn,t , B⋆w⋆ 
+
+> t
+
+⟩, where xn,t ∈
+
+Rd denotes the feature vector. The common feature extractor across various tasks facilitates effective learning from limited 3
+
+Table I: Table comparing technical contributions of existing work versus ours.                                                                                          
+
+> Work MTRL Constraints Regret Sample Complexity (All Tasks) Sample Complexity (Per Task)
+> Yang et al., 2020 [10] ✓×eO(T√rN +√drNT )××
+> Hu et al., 2021 [12] ✓×eO(T√drN +d√rNT )××
+> Cella et al., 2023 [11] ✓×eO(T√rN +√drNT )××
+> Naive extension of [19] ×✓eO(dT √N)××
+> Lin et al., 2025 [23] ×✓eO(d√NT )××
+> Lin et al., 2024 [1] ✓×eO(max {ε,εnoise }√rNT )eO(( d+T)r(r2+log 1max {ε,εnoise })) eO(max {log d,log T,r}log 1max {ε,εnoise })
+> This work ✓✓eO(prNT (ρ2−ρ+1)) eO(( d+r)rmax {1,NSR
+> ε2})) eO(( r+log T+log d)max {1,NSR
+> ε2r})
+
+data for each task. It is consistent with previous works on representation learning [1], [5]–[7], [10], [12]. 
+
+Assumption 2. Let κbn,t := x⋆⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
+−x⊤ 
+
+> bn,t
+
+θ ⋆ 
+
+> t
+
+denote the baseline gap. Let constants κl and κh are such that 0 ⩽ κl ⩽ κbn,t ⩽ κh
+
+for all n ∈ [N] and t ∈ [T ].
+
+This assumption is non-restrictive and is used in (conser-vative) linear bandits. Furthermore, the interval constraint on 
+
+κbn,t helps in limiting the gap in expected rewards between the optimal and baseline action. This assumption is consistent with prior studies, including [19], [23]. 
+
+Assumption 3. We assume that x n,t follows an independent and identically distributed (i.i.d.) standard Gaussian. The additive noise variable ηn,t follows i.i.d. Gaussian distribution with a zero mean and variance σ 2 
+
+> η
+
+.
+
+This assumption is standard in the study of random design linear regression [1], [8], [11]. We note that while the assump-tion on xn,t holds for the first epoch in our algorithm (during the random exploration phase), it is restrictive for subsequent epochs. We can relax the assumption to accommodate a non-zero mean by rewriting yn,t = ( xn,t − μxn,t )⊤θ ⋆ 
+
+> t
+
++ ηn,t + μxn,t θ ⋆ 
+
+> t
+
+,where the term ηn,t + μxn,t θ ⋆ 
+
+> t
+
+now constitutes the noise com-ponent. A complete relaxation of this assumption is planned as part of our future work. 
+
+Assumption 4. We assume the existence of constants l and u, where 0 < l ⩽ u such that l ⩽ ∥w⋆ 
+
+> t
+
+∥2 ⩽ u for all t ∈ [T ].
+
+This assumption implies the column-wise incoherence of the true reward matrix Θ⋆, as described in Section A. This is essential for interpolating across columns based on localized observations yn,t , which rely only on individual columns of Θ⋆.The incoherence is a crucial attribute necessary for effective matrix estimation and various sensing challenges involving sparse measurements [46], [47], and it has been utilized in many recent studies in representation learning [6], [7], [9]. III. P ROPOSED SAFE -A LT GD MIN ALGORITHM 
+
+This section presents the Safe-AltGDmin algorithm for CMTRL in linear bandits, building on the AltGDmin frame-work studied in [1], [6], [48]. Our approach uses a doubling schedule rule, as suggested in many studies [49]–[51], which systematically divides the learning horizon N into M epochs. An online algorithm cannot learn the optimal policy without sufficient system exploration. To learn the optimal policy, we face two main challenges: (i) ensure that the chosen actions consistently satisfy the constraints and (ii) obtain accurate estimations of Θ⋆ for the rank-constrained non-convex op-timization problem in Eq. (1). To address these challenges, our algorithm consists of two main parts: (a) safe exploration and (b) alternating GD and minimization for feature matrix estimation. In epoch-1, we perform safe exploration using the baseline policy. Following this, we perform an AltGDmin-based estimation to estimate the unknown reward matrix. During the safe exploration, instead of relying solely on the baseline policy, we incorporate conservative exploration tech-niques motivated by [19], [21], [45]. In the subsequent epochs, we refine the estimates and perform a greedy exploration based on the estimate of the parameters from previous epoch. 
+
+A. Conservative Safe Exploration 
+
+We assume that the learner has a baseline policy that provides a baseline action xbn,t . During the first epoch, for each round n ∈ [G1], each task t selects a baseline action xbn,t .Since relying only on the baseline action restricts exploration, we utilize a conservative feature vector as (1 − ρ)xbn,t + ρζ n,t ,
+
+where ζn,t represents a sequence of vectors sampled from an i.i.d. standard Gaussian distribution, ρ ∈ [0, 1]. Qualitatively, the user-specified parameter ρ controls the balance between safety and exploration. In Lemma 3 we provide an upper bound on ρ such that for all ρ ∈ [0, αrbn ,t      
+
+> rbn ,t+
+> q
+> 2rTlog G1T
+> δμσ ⋆
+> max
+
+],conservative action is guaranteed to be safe. 
+
+B. AltGDmin Estimation 
+
+In each epoch m, Gm − Gm−1 samples are collected during the exploration. Using the data, our goal is to minimize 
+
+fm( bB, bW ) = 
+
+> Gm
+
+# ∑
+
+> n=Gm−1+1
+> T
+
+# ∑
+
+> t=1
+
+∥yn,t − x⊤ 
+
+> n,t
+
+bB bwt ∥2. (2) Here bB ∈ Rd×r, bW = [ bw1, . . . , bwT ] ∈ Rr×T , and the matrix bΘ =
+
+bB bW is an estimate of the parameter Θ⋆ at epoch m. Due to the non-convex nature of the cost function fm( bB, bW ), we utilize a spectral initialization approach [1], [48], to derive the top r
+
+singular vectors from the initial estimation bΘ0, f ull , where 
+
+bΘ0, f ull = 1
+
+G1
+
+[( Φ(1) 
+
+> 1
+> ⊤
+
+Y (1)  
+
+> 1
+
+), · · · , (Φ(1) 
+
+> T
+> ⊤
+
+Y (1)  
+
+> T
+
+)] = 1
+
+G1
+
+> T
+
+# ∑
+
+> t=1
+> G1
+
+# ∑
+
+> n=1
+
+xn,t yn,t e⊤ 
+
+> t
+
+,4
+
+where Φ(1)  
+
+> t
+
+denotes the feature matrix generated by stacking all the feature vectors {xn,t }G1 
+
+> n=1
+
+for task t in first epoch. The expected value E[bΘ0, f ull ] = Θ⋆ and bΘ0, f ull represents a sum-mand of sub-exponential random variable with a maximum norm max t ∥θ ⋆ 
+
+> t
+
+∥ ⩽ μp rT σ ⋆ 
+
+> max
+
+based on Assumption 4 and Section A. However, the large magnitude presents an issue in bounding ∥bΘ0, f ull − Θ⋆∥ with the desired sample complexity. To reduce the impact of the outlier value and ensure reliable parameter initialization, we use a truncation strategy [1], [48], [52], initializing bB(0) with the top r left singular vectors of 
+
+bΘ0 = 1
+
+G1
+
+> T
+
+# ∑
+
+> t=1
+> G1
+
+# ∑
+
+> n=1
+
+xn,t yn,t e⊤ 
+
+> t
+
+1{y2 
+
+> t,n⩽α}
+
+= 1
+
+G1
+
+> T
+
+# ∑
+
+> t=1
+
+xn,t yt,trunc (α)e⊤ 
+
+> t
+
+,
+
+where α = ˜C 
+
+> G1T
+
+∑G1,Tn=1,t=1 y2 
+
+> n,t
+
+, ˜C = 9κ2μ2, and yt,trunc (α) :=
+
+Y (1)  
+
+> t
+
+◦ 1{| Y (1)  
+
+> t|⩽√α}
+
+. We extract the top r left singular vectors from bΘ0 to derive the initial estimation of bB(0) . In Proposi-tion 3, we provide the initialization guarantee of this approach. After the initialization step, we alternate between gradient descent (GD) and minimization steps iteratively to estimate 
+
+bB and bW . Since each wt is decoupled in fm( bB, bW ), the minimization step for each task is also decoupled as wt ∈
+
+arg min ewt ∥Y (m)  
+
+> t
+
+− Φ(m)  
+
+> t
+
+B ewt ∥2. Each task t update wt as 
+
+wt = ( Φ(m)  
+
+> t
+
+B)†Y (m)  
+
+> t
+
+,
+
+and B via a GD step as bB+ ← B − γ∇B f (B,W ), followed by QR decomposition bB+ QR 
+
+= B+R+ to ensure the orthogonality and stability of the updates. Thus we have B = B+. Beginning with epoch-2, for each epoch m ⩾ 2, we utilize the estimation 
+
+bθ (m)  
+
+> t
+
+derived from the previous epoch for greedy exploration. At the end of the epochs, we obtain the estimate of (B⋆,W ⋆).
+
+Practical setting of parameters. In our algorithm, we set the parameters, GD step size γ and the multiplier eC in the spectral initialization step. Our theorem states that γ = c   
+
+> (1+0.04
+> (1−2ρ)2)2σ⋆2max
+
+with c ⩽ 0.5. However, σ ⋆ 
+
+> max
+
+is unknown. Given the initial-ization matrix bΘ0 provides an approximation to Θ⋆, we set 
+
+σ ⋆ 
+
+> max
+
+≈ ∥ bΘ0∥ and γ = c   
+
+> (1+0.04
+> (1−2ρ)2)2∥bΘ0∥2
+
+. Our analysis requires 
+
+eC = 9κ2μ2, with κ and μ being functions of Θ⋆ and hence unknown. Using the incoherence assumption, we can set 
+
+κ2μ2 by an estimate of its lower bound, T max t ∥bθt ∥2
+
+> ∥bΘ∥2
+> F
+
+, with 
+
+∥bθt ∥2 = 1 
+
+> G1
+
+∑G1 
+
+> n=1
+
+y2 
+
+> n,t
+
+and ∥bΘ∥2 
+
+> F
+
+= 1 
+
+> G1
+
+∑Tt=1 ∑G1 
+
+> n=1
+
+y2 
+
+> n,t
+
+.IV. M AIN RESULTS AND GUARANTEES 
+
+This section establishes safety guarantees, presents bounds on the estimation error between the learned parameter B+
+
+and the true parameter B⋆, and finally derives the cumulative regret bound. Let ε be the final desired error between the true parameter B⋆ and its estimate. To establish the safety guarantee, we consider two cases: (a) the initial epoch ( m = 1) and (b) subsequent epochs ( m ⩾ 2). In Lemma 3, we show that the actions taken during the safe exploration phase comply with the safety constraints. Additionally, Theorem 1 proves that the actions derived using the estimate bθ (m)  
+
+> t
+
+for m ⩾ 2also satisfy the safety requirements. In the subsequent theorem statements, the quantities G1T and (Gm − Gm−1)T denote the 
+
+Algorithm III.1 Proposed Safe-AltGDmin Algorithm  
+
+> 1:
+
+Let M = ⌈log 2 log 2 N⌉, G0 = 0, GM = N, Gm = N1−2−m
+
+, for 1 ⩽ m ⩽ M − 1 
+
+> 2:
+
+Parameters: Multiplier in specifying α for init step, ˜C;GD step size, γ; Number of GD iterations, L 
+
+> 3:
+
+for m ← 1, · · · , M do  
+
+> 4:
+
+if m = 1 then  
+
+> 5:
+
+for n ← 1, · · · , G1 do  
+
+> 6:
+
+For each task t ∈ [T ]: choose baseline action 
+
+xn,t = xbn,t , get the feature vector xn,t = ( 1 − ρ)xbn,t + ρζ n,t ,and obtain the reward yn,t 
+
+> 7:
+
+end for  
+
+> 8:
+
+else  
+
+> 9:
+
+for n ← Gm−1 + 1, · · · , Gm do  
+
+> 10:
+
+For each task t ∈ [T ]: choose action xn,t =
+
+arg max x∈X x⊤ bθ (m-1)  
+
+> t
+
+, and obtain yn,t 
+
+> 11:
+
+end for  
+
+> 12:
+
+end if  
+
+> 13:
+
+For t ∈ [T ], compute Y (m)  
+
+> t
+
+= [ yGm−1+1,t , · · · , yGm,t ]⊤,
+
+Φ(m)  
+
+> t
+
+= [ xGm−1+1,t , · · · , xGm,t ]⊤ 
+
+> 14:
+
+Sample-split: Partition the measurements and measure matrices into 2 L equal-sized disjoint sets for m ⩾ 2 and 2L + 1 sets for m = 1. Denote these by Y (m)  
+
+> t,τ
+
+, Φ(m)  
+
+> t,τ
+
+, τ = 00 (only for m = 1), 01 , · · · 2L 
+
+> 15:
+
+if m = 1 then Spectral Initialization  
+
+> 16:
+
+Use Y (1)  
+
+> t
+
+≡ Y (1) 
+
+> t,00
+
+, Φ(1)  
+
+> t
+
+≡ Φ(1) 
+
+> t,00
+
+, α = ˜C 
+
+> G1T
+
+∑G1,Tn=1,t=1 y2 
+
+> n,t
+> 17:
+
+yt,trunc (α) := Y (1)  
+
+> t
+
+◦ 1{| Y (1)   
+
+> t|⩽√α}
+> 18:
+
+bΘ0 := 1 
+
+> G1
+
+∑Tt=1 Φ(1) 
+
+> t
+> ⊤
+
+yt,trunc (α)e⊤ 
+
+> t
+> 19:
+
+Set bB(0) ← top-r-singular-vectors of bΘ0 
+
+> 20:
+
+end if  
+
+> 21:
+
+GD-Minimization  
+
+> 22:
+
+Set B0 ← bB(m-1)  
+
+> 23:
+
+for ℓ = 1 to L do  
+
+> 24:
+
+Let B ← Bℓ−1 
+
+> 25:
+
+Update wt,ℓ , θt,ℓ : For each t ∈ [T ], set wt,ℓ ←
+
+(Φ(m)  
+
+> t,l
+
+B)†Y (m)  
+
+> t,l
+
+and set θt,ℓ ← Bw t,ℓ  
+
+> 26:
+
+Gradient w.r.t B: With Y (m)  
+
+> t
+
+≡ Y (m) 
+
+> t,L+ℓ
+
+, Φ(m)  
+
+> t
+
+≡
+
+Φ(m) 
+
+> t,L+ℓ
+
+, find ∇B f (B,Wℓ) = ∑Tt=1 Φ(m) 
+
+> t
+> ⊤
+
+(Φ(m)  
+
+> t
+
+Bw t,ℓ −Y (m)  
+
+> t
+
+)w⊤ 
+
+> t,ℓ
+> 27:
+
+GD step: Set bB+ ← B − γ 
+
+> Gm−Gm−1
+
+∇B f (B,Wℓ) 
+
+> 28:
+
+Projection step: Compute bB+ QR 
+
+= B+R+, Bℓ ← B+ 
+
+> 29:
+
+end for  
+
+> 30:
+
+Set bB(m) ← BL and set bW (m) ← WL 
+
+> 31:
+
+For each task t ∈ [T ]: let bθ (m)  
+
+> t
+
+= bB(m) bw(m)  
+
+> t
+> 32:
+
+end for 
+
+total number of samples collected across all tasks in the first and subsequent epochs, respectively, while G1 and Gm − Gm−1
+
+denote the number of samples available per task. 
+
+Theorem 1. Set the GD step-size and conservative explo-ration parameters as γ = c   
+
+> (1+0.04
+> (1−2ρ)2)2σ⋆2max
+
+and ρ ∈ [0, 0.25 ] ∪
+
+[0.75 , 1], and number of GD iterations at least L ⩾
+
+Cκ2 log 
+
+ κbn ,t +αrbn ,t
+
+> 2
+
+ 1+ 2
+
+> (1−2ρ)2
+
+μσ ⋆   
+
+> max
+> q2rTlog NT
+> δ
+
+
+
+. Define NSR : = T σ 2 
+
+> η
+> σ⋆2min
+
+,5
+
+and let ε represent the desired final error. If 
+
+G1T > Cμ4dr κ6 max (rκ2, NSR ),
+
+G1 > C(r + log T + log d) max (1, NSR 
+
+μ2rκ2 ),
+
+and for m ⩾ 2,
+
+(Gm − Gm−1)T ⩾Cμ2κ4(d + r)r max (1, κ2NSR 
+
+ε2 ),
+
+Gm − Gm−1 ⩾C(r + log T + log d) max (1, NSR 
+
+ε2r ),
+
+then with high probability, the chosen action x n,t in each epoch m ⩾ 2 consistently meets the performance constraint. 
+
+Discussion on Theorem 1. Theorem 1 guarantees safety for all greedy epochs. The conditions define two types of data requirements: G1T and (Gm − Gm−1)T represent the total number of samples across the T tasks, per epoch while G1
+
+and Gm − Gm−1 denote the per-task number sample required in each epoch. Specifically, treating μ and κ as problem-dependent constants and hiding logarithmic factors, the first epoch requires eΩ(dr max {r, NSR }) total samples, whereas each subsequent epoch requires eΩ(( d + r)r max {1, NSR /ε2})
+
+total samples. Under these conditions, the estimation error is sufficiently small, ensuring that the greedy action chosen using bθ (m)  
+
+> t
+
+meets the stage-wise performance constraint with high probability. Thus, Lemma 3 (for safe exploration) and Theorem 1 together provide the safety guarantee for the proposed algorithm for all epochs. 
+
+Proof Sketch (Details in Appendix B-B). By adding and subtracting x⊤ 
+
+> n,t
+
+bθ (m)  
+
+> t
+
+, safety is guaranteed if 
+
+x⊤ 
+
+> n,t
+
+bθ (m)  
+
+> t
+
++ x⊤ 
+
+> n,t
+
+(θ ⋆ 
+
+> t
+
+− bθ (m)  
+
+> t
+
+) ⩾ (1 − α)rbn,t .
+
+Using the greedy choice of xn,t , we have 
+
+x⊤ 
+
+> n,t
+
+bθ (m)  
+
+> t
+
+⩾ x⋆⊤ 
+
+> n,t
+
+bθ (m)  
+
+> t
+
+= x⋆⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
++ x⋆⊤ 
+
+> n,t
+
+(bθ (m)  
+
+> t
+
+− θ ⋆ 
+
+> t
+
+).
+
+Hence, it suffices to show that 
+
+x⋆⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
++ x⋆⊤ 
+
+> n,t
+
+(bθ (m)  
+
+> t
+
+− θ ⋆ 
+
+> t
+
+) + x⊤ 
+
+> n,t
+
+(θ ⋆ 
+
+> t
+
+− bθ (m)  
+
+> t
+
+) ⩾ (1 − α)rbn,t .
+
+Utilizing the Gaussian concentration bound uniformly across all task-round pairs yields 
+
+x⊤ 
+
+> n,t
+
+(θ ⋆ 
+
+> t
+
+− bθ (m)  
+
+> t
+
+) ⩽
+
+r
+
+2 log (Gm+1 − Gm)T
+
+δ ∥θ ⋆ 
+
+> t
+
+− bθ (m)  
+
+> t
+
+∥, and 
+
+x⋆⊤ 
+
+> n,t
+
+(bθ (m)  
+
+> t
+
+− θ ⋆ 
+
+> t
+
+) ⩽
+
+r
+
+2 log (Gm+1 − Gm)T
+
+δ ∥θ ⋆ 
+
+> t
+
+− bθ (m)  
+
+> t
+
+∥.
+
+Thus, safety is guaranteed whenever 2
+
+r
+
+2 log (Gm+1 − Gm)T
+
+δ ∥θ ⋆ 
+
+> t
+
+− bθ (m)  
+
+> t
+
+∥ ⩽ κbn,t + αrbn,t .
+
+Given that the estimation error does not increase following the first epoch, Lemma 1 together with Theorem 2 yields 
+
+∥θ ⋆ 
+
+> t
+
+− bθ (m)  
+
+> t
+
+∥ ⩽ (1 + 2
+
+(1 − 2ρ)2 )μ
+
+r rT (1 − c
+
+κ2 )Lσ ⋆
+
+> max
+
+.
+
+Picking L to ensure that the right-hand side of the above equa-tion satisfies the prior inequality provides the stated condition. The first epoch is guaranteed to be safe by Lemma 3. 
+
+Remark 1. The safety requirement for each epoch m ⩾ 2 is determined by Theorem 1. The interval ρ ∈ [0, 0.25 ] ∪ [0.75 , 1]
+
+arises from the first epoch’s estimation and contraction analy-sis. Specifically, it ensures the Grammian matrix M in the first epoch is well-conditioned. Proposition 4 demonstrates that 
+
+∥M−1∥ ⩽ 2 
+
+> (1−2ρ)2G1
+
+, and this factor influences the coefficient estimation and contraction bounds utilized in Lemma 1 and Theorem 2. As ρ → 12 , the constants appearing in the proof become unbounded. Thus, to show the contraction guarantee with fixed numerical constants, we set (1 − 2ρ)2 ⩾ 14 , which is equivalent to ρ ∈ [0, 0.25 ] ∪ [0.75 , 1].
+
+To establish the estimation guarantee, we consider three steps: (i) spectral initialization, (ii) initial epoch ( m = 1), and (iii) subsequent epochs ( m ⩾ 2). The initialization guarantee can be directly obtained from Proposition 3 (Theorem 2.2 in [53]). In Theorem 2, we establish a guarantee for exponential error decay during the first epoch. In Theorem 3 we prove the exponential error decay for later epochs. Thus, Proposition 3 and Theorems 2 and 3 together prove that the GDmin iterations result in exponential error decay of the reward parameter. 
+
+Theorem 2. Assume SD (B0, B⋆) ⩽ δ0. If δ0 ⩽ 0.02  
+
+> μ√rκ2
+
+, γ ⩽   
+
+> 1
+> (1+0.04
+> (1−2ρ)2)2σ⋆2max
+
+, and ρ ∈ [0, 0.25 ] ∪ [0.75 , 1], and if for each GD iteration ℓ in epoch m = 1,
+
+G1T > C(d + r)κ2 max (μ2rκ2, NSR )
+
+G1 > C(r + log T + log d) max (1, NSR 
+
+μ2rκ2 ),
+
+then with probability at least 1 − ℓd−10 ,
+
+SD (B+, B⋆) ⩽ δℓ+1 := ( 1 − 0.23 γσ ⋆2
+
+> min
+
+)ℓδ0.
+
+Discussion on Theorem 2. Theorem 2 establishes the es-timation guarantee for the first conservative epoch. After achieving a sufficiently accurate subspace estimate through spectral initialization, each iteration reduces the subspace error by the factor 1 − 0.23 γσ ⋆2
+
+> min
+
+. Thus, the first epoch not only en-sures safety via conservative exploration but also provides an exponentially improving estimate of the shared representation. 
+
+Proof Sketch (Details in Appendix B-A). Define P := I −
+
+B⋆B⋆⊤. According to Theorem 5.2 in [1], we have 
+
+∥P bB+∥ ⩽ ∥PB ∥∥ I − γWW ⊤∥ + γ
+
+G1
+
+∥E[GradB ] − GradB ∥,
+
+SD (B+, B⋆) ⩽ ∥P bB+∥
+
+1 − γ 
+
+> G1
+
+∥E[GradB ]∥ − γ 
+
+> G1
+
+∥GradB − E[GradB ]∥ .
+
+Thus, the proof requires bounding ∥I − γWW ⊤∥, ∥E[GradB ] −
+
+GradB ∥, and ∥E[GradB ]∥. Lemma 1 establishes bounds on 
+
+σmin (W ) and σmax (W ) using Bernstein inequality. The upper bound on σmax (W ) guarantees that I − γWW ⊤ ⪰ 0 under the stated step-size condition, while the lower bound on σmin (W )
+
+provides the required contraction bound for ∥I − γWW ⊤∥.Lemma 2 bounds both ∥E[GradB ] − GradB ∥ and ∥E[GradB ]∥
+
+utilizing the Bernstein inequality. Applying these bounds into the previous inequalities results in the one-step recursion SD (B+, B⋆) ⩽  1 − 0.23 γσ ⋆2
+
+> min
+
+δℓ.
+
+Applying this recursion throughout the gradient descent steps 6
+
+in the first epoch provides the stated exponential error decay. 
+
+Theorem 3. Assume SD ( bB(1) , B⋆) ⩽ δ0 = c 
+
+> μ√rκ2
+
+, γ ⩽ 0.5 
+
+> σ⋆2max
+
+.Define NSR : = T σ 2 
+
+> η
+> σ⋆2min
+
+, and let ε represent the desired final error. If at each GD iteration ℓ, for any epoch m ⩾ 2,
+
+(Gm − Gm−1)T ⩾Cμ2κ4(d + r)r max (1, κ2NSR 
+
+ε2 ),
+
+Gm − Gm−1 ⩾C(r + log T + log d) max (1, NSR 
+
+ε2r ),
+
+then in the (ℓ + 1)th GD iteration, with probability at least 
+
+1 − (( m − 1)L + ℓ)d−10 , we have 
+
+SD (B+, B⋆) ⩽ δℓ+1 := ( 1 − 0.36 γσ ⋆2
+
+> min
+
+)(( m−2)L+ℓ)δ0.
+
+Discussion on Theorem 3. Theorem 3 extends the exponential decay guarantee from the first conservative epoch to all following greedy epochs. The target accuracy ε is included in the sample-size conditions because the stochastic estima-tion error in subsequent epochs must be maintained below the desired final error level. Treating μ and κ as constants and hiding logarithmic factors, each subsequent epoch needs 
+
+eΩ(( d + r)r max {1, NSR /ε2}) collect samples, with a per-task sample requirement that scales logarithmically with respect to T and d. This demonstrates the advantage of the rank-r
+
+shared representation: when r ≪ min {d, T }, the required total number of sample can be significantly less than the dT samples required to independently estimate all task parameters. Proof is given in Section B-C. From Theorem 2 and Theorem 3, the proposed approach achieves exponential error decay in all epochs. 
+
+Sample Complexity. To analyze the sample complexity, we focus on the term (Gm − Gm−1)T . Let κ and μ be constant val-ues. For the first epoch m = 1, the sample complexity is O(( d +
+
+r) max {r, NSR }). For any epoch m ⩾ 2, the required sample complexity is O(( d + r)r max {1, NSR  
+
+> ε2
+
+}). Since rank r ⩾ 1 and the desired final error ε ≪ 1, the sample complexity of our proposed algorithm in each epoch is O(( d + r)r max {1, NSR  
+
+> ε2
+
+}).Without making the low-rank assumption and without using our algorithm, if we were to perform matrix inversion for Φ(m) 
+
+> t
+
+in order to extract each vector θ ⋆ 
+
+> t
+
+from Y (m)  
+
+> t
+
+, we would need at least (Gm − Gm−1)T ⩾ T d samples per epoch. 
+
+Time and Communication Complexity. To achieve a ε-error between the estimate bB and the true parameter B⋆,the time complexity is O(( Gm − Gm−1)T dr log 1 
+
+> ε
+
+), while the communication complexity is O(dr κ log 1 
+
+> ε
+
+).We provide the guarantee for the cumulative regret bound. 
+
+Theorem 4. Set γ ⩽ c   
+
+> (1+0.04
+> (1−2ρ)2)2σ⋆2max
+
+, ρ ∈ [0, 0.25 ] ∪ [0.75 , 1] ∩
+
+h
+
+0, αrbn ,t      
+
+> rbn ,t+
+> q
+> 2rTlog G1T
+> δμσ ⋆
+> max
+
+i
+
+, and L = Cκ2 log 
+
+ √2(ρ2−ρ+1) 
+
+> 1+2
+> (1−2ρ)2
+
+
+
+. Let 
+
+ε represent the desired final error. If 
+
+G1T > Cμ4dr κ6 max (rκ2, NSR ),
+
+G1 > C(r + log T + log d) max (1, NSR 
+
+μ2rκ2 ),
+
+and for m ⩾ 2,
+
+(Gm − Gm−1)T ⩾ Cμ2κ4(d + r)r max (1, κ2NSR 
+
+ε2 ),
+
+Gm − Gm−1 ⩾ C(r + log T + log d) max (1, NSR 
+
+ε2r ),
+
+then with probability at least 1−2δ −MLd −10 , the cumulative regret RN,T is bounded as 
+
+RN,T ⩽ 4√2μσ ⋆
+
+> max
+
+r
+
+rNT (ρ2 − ρ + 1) log 1
+
+δ .
+
+Discussion on Theorem 4. Theorem 4 provides the regret guarantee derived using the safety and estimation results. Given the stated sample size and parameter conditions, while considering μ, σ ⋆ 
+
+> max
+
+and ρ as constants, the cumulative regret scales as eO(√rNT ). Thus, the regret is sublinear with respect to the number of samples N, the number of tasks T , and the rank r instead of the ambient dimension d. We note that the standard (naive) algorithm for conservative bandits results in a regret bound of eO(d√N) for each task [19], [54]. Thus, solving 
+
+T tasks separately would result in a regret of eO(T d √N).Theorem 4 thus validates the efficiency of MTRL. Prior work on MTRL bandits [12] assumes access to the optimal solution of the non-convex estimation problem and obtained regret bound that has a linear dependence on T . In contrast, even without this assumption, we obtain sublinear regret, where the above bound is influenced by Assumption 4. 
+
+Proof Sketch (Details in Appendix B-D). Write RN,T =
+
+R(1) 
+
+> N,T
+
++ R(2) 
+
+> N,T
+
+. In the first epoch, the action is xn,t = ( 1 −
+
+ρ)xbn,t +ρζ n,t . Hence, utilizing Gaussian concentration and the incoherence condition, we have 
+
+R(1) 
+
+> N,T
+
+⩽ 2μσ ⋆
+
+> max
+
+r
+
+G1rT (ρ2 − ρ + 1) log 1
+
+δ .
+
+In subsequent epochs, the greedy selection rule gives that 
+
+x⊤ 
+
+> n,t
+
+bθm−1,t ⩾ x⋆⊤ 
+
+> n,t
+
+bθm−1,t . Thus, 
+
+x⋆⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
+− x⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
+⩽ (x⋆ 
+
+> n,t
+
+− xn,t )⊤(θ ⋆ 
+
+> t
+
+− bθm−1,t ).
+
+By selecting L and applying Lemma 1, we have 
+
+∥θ ⋆ 
+
+> t
+
+− bθm−1,t ∥ ⩽ ∥θ ⋆ 
+
+> t
+
+− bθ1,t ∥ ⩽
+
+q
+
+2(ρ2 − ρ + 1)μ
+
+r rT σ ⋆
+
+> max
+
+.
+
+Applying Gaussian concentration gives 
+
+R(2) 
+
+> N,T
+
+⩽ 2μσ ⋆
+
+> max
+
+r
+
+2(N − G1)rT (ρ2 − ρ + 1) log 1
+
+δ .
+
+Combining the two bounds, we derive 
+
+RN,T ⩽ 4√2μσ ⋆
+
+> max
+
+r
+
+rNT (ρ2 − ρ + 1) log 1
+
+δ .
+
+Remark 2. Theorem 4 provides an upper bound on the regret. The parameter μ is referred to as the incoherence parameter and arises from the column-wise incoherence condition of W ⋆ = Σ⋆V ⋆, namely max t ∥w⋆ 
+
+> t
+
+∥2 ⩽ μp rT σ ⋆
+
+> max
+
+. Specifically, Assumption 4 states that 0 < l ⩽ ∥w⋆ 
+
+> t
+
+∥2 ⩽ u for all t ∈ [T ],and Appendix A demonstrates that one can select μ = ul ⩾ 1.Thus, μ is a column-imbalance parameter, i.e., it does not 7
+
+scale with d, T , or r. Intuitively, μ measures whether the energy of the task-specific coefficient vectors w ⋆ 
+
+> t
+
+is evenly distributed across the T columns. When μ approaches 1, the column norms are well balanced. When μ increases, certain columns may become more concentrated. Furthermore, we have 1 
+
+> T
+
+∑Tt=1 ∥w⋆ 
+
+> t
+
+∥22 = ∥W ⋆∥2 
+
+> F
+> T
+
+= ∥Σ⋆∥2 
+
+> F
+> T
+
+. Consequently, the root-mean-square column norm 
+
+r   
+
+> ∑ri=1σ⋆2
+> i
+> T
+
+lies between p rT σ ⋆
+
+> min
+
+and p rT σ ⋆
+
+> max
+
+. Therefore, p rT σ ⋆ 
+
+> max
+
+serves as an inherent standard scale for the task-specific coefficient vectors, while 
+
+μ only allows the maximum column norm to exceed this scale by a constant factor. Moreover, κ = σ ⋆ 
+
+> max
+> σ⋆
+> min
+
+represents the condition number of Σ⋆. It measures the conditioning of the nonzero singular spectrum. When κ approaches 1,all r nonzero singular values show comparable magnitudes, indicating that the latent subspace directions have similar levels of informativeness. A large κ indicates that certain singular directions are significantly weaker than others, com-plicating subspace estimation and recovery. Treating κ as a numerical constant aligns with the standard well-conditioned scenario where the nonzero singular values have comparable magnitudes, thus κ = O(1) is common in our settings. 
+
+Remark 3. [19], [20] explored conservative linear bandits under both known and unknown baseline reward settings. As-sumption 3 in [19] imposes a bounded baseline reward condi-tion, r l ⩽ rbn,t ⩽ rh, which ensures theoretical guarantees even when the exact baseline reward is unknown. Our proposed algorithm, along with its theoretical guarantees, remains valid even in the unknown baseline setting. Specifically, during the initial conservative exploration phase, the sufficient condition in Lemma 3 can be satisfied by selecting the conservative parameter ρ based on the lower bound r l and upper bound rh, resulting in a consistently safe selection. In the subse-quent greedy epochs, a sufficient condition for the number of gradient descent (GD) iterations L in Theorem 1 can be determined using upper bounds κh + αrh for the numerator of the logarithmic term, rather than the exact baseline reward. This modification seamlessly propagates through the analysis, ensuring that our theoretical guarantees remain intact. 
+
+V. S IMULATIONS 
+
+This section presents an experimental analysis of our pro-posed Safe-AltGDmin algorithm using both synthetic data and the real-world Movielens dataset. We compared our proposed algorithm with three benchmark algorithms: (i) the trace-norm convex relaxation approach [5], [11], [55], (ii) the Thompson Sampling (TS)-based algorithm [19] for independently solving 
+
+T constrained tasks, and (iii) the Method-of-Moments (MoM) algorithm from [7], [10]. The algorithm based on trace norm relaxation utilizes a convex relaxation to transform the rank constraint into a trace norm convex constraint, iteratively estimating bΘ and the regularization parameter λ . TS algorithm independently estimates bθt for each task t during each itera-tion and constructs a safe action set. The MoM algorithm, during the first epoch, uses top-r SVD to estimate bB from  
+
+> 1
+> G1T
+
+∑Tt=1 ∑G1 
+
+> n=1
+
+xn,t x⊤ 
+
+> n,t
+
+y2 
+
+> n,t
+
+and in the second epoch utilizes a least-squares estimator to estimate bW ; the estimates bB and bW
+
+are subsequently applied to compute bΘ. In later epochs, the algorithm selects actions according to a greedy strategy uti-lizing bΘ. In our experiments, we varied parameters dimension 
+
+d, rank r, and the number of tasks T . All experiments were carried out in Python, and for synthetic data experiments, the results are averaged over independent 100 trials. 
+
+A. Datasets 
+
+Synthetic data: In synthetic data experiments, we used the following default setting: dimension d = 100, rank r = 2, number of tasks T = 100, number of actions K = 10, and 5-th best action is selected as the baseline action. We randomly generated orthonormal matrices for B⋆ and W ⋆ from an i.i.d. Gaussian distribution. The Φt matrices are independently sampled from a standard Gaussian distribution. We used a Gaussian distribution for the reward noise, with mean zero and variance 10 −6.
+
+Movielens data: We evaluated our proposed algorithm using the Movielens-100K dataset from [56]. The dataset was pre-processed using collaborative filtering, resulting in the rating matrix R ∈ R943 ×1682 . The ratings range from 0 to 5, and we normalized to the range [0, 1]. Subsequently, we implemented Non-negative Matrix Factorization (MNF) to decompose the matrix as R = UH , with the latent factor dimension at √d,where U ∈ R943 ×√d and H ∈ R√d×1682 . We utilized the k-means algorithm to cluster the columns of H into T distinct groups to derive feature vectors xn,t for various tasks. For each task t, the feature vector is obtained by computing the outer product of the ith row of U and jth column of the t-th cluster in H, subsequently vectorizing the resulting √d × √d matrix. The reward noise is generated from a Gaussian distribution with a mean of zero and a variance of 10 −6. The reward parameter θ ⋆ 
+
+> t
+
+for each task t under this modeling is the vectorized I√d matrix. Thus, Θ⋆ = [ θ ⋆ 
+
+> 1
+
+· · · θ ⋆ 
+
+> T
+
+] has rank r = 1. We set the default setting of the parameters as d = 100, T = 5, with the baseline action chosen as the 5-th optimal action. 
+
+B. Evaluation of the Proposed Algorithm 1 2 3 4 5 6 7       
+
+> Number of Epochs, M
+> 4.894
+> 4.895
+> 4.896
+> 4.897
+> 4.898
+> 4.899
+> Cumulative Regret  M, T
+> 1e3 Synthetic data: d= 100, T= 100, r= 2
+> Proposed Algorithm
+
+Figure 2: Cumulative regret vs. number of epochs. We start by evaluating the proposed algorithm on synthetic data. Figure 2 shows a sublinear increase in cumulative regret as the number of epochs increases (each epoch is 50 rounds), indicating that our algorithm gradually enhances the efficiency of decision making over epochs. In the following subsections, we evaluate the proposed algorithm against various benchmark algorithms. To evaluate performance, we vary d, r, T , and α.8100 125 150 
+
+dimension, d 
+
+1e 05 
+
+1e 04 
+
+1e 03 
+
+1e 02 
+
+1e 01 
+
+1
+
+> Err-
+
+Synthetic data 
+
+(a) 100 125 150 
+
+dimension, d 
+
+0
+
+5000 
+
+10000 
+
+15000 
+
+20000 
+
+> Cumulative Regret,  RT, N
+
+Synthetic data (b) 100 125 150 
+
+dimension, d 
+
+0
+
+1000 
+
+2000 
+
+3000 
+
+4000 
+
+5000 
+
+6000 
+
+> Total Number of Violation
+
+Synthetic data (c) 2 5 10 
+
+rank, r 
+
+1e 05 
+
+1e 04 
+
+1e 03 
+
+1e 02 
+
+1e 01 
+
+1
+
+> Err-
+
+Synthetic data 
+
+(d) 2 5 10 
+
+rank, r 
+
+0
+
+10000 
+
+20000 
+
+30000 
+
+40000 
+
+50000 
+
+> Cumulative Regret,  RT, N
+
+Synthetic data (e) 2 5 10 
+
+rank, r 
+
+0
+
+2000 
+
+4000 
+
+6000 
+
+8000 
+
+> Total Number of Violation
+
+Synthetic data (f) 50 75 100 
+
+Task, T 
+
+1e 05 
+
+1e 04 
+
+1e 03 
+
+1e 02 
+
+1e 01 
+
+1
+
+> Err-
+
+Synthetic data 
+
+(g) 50 75 100 
+
+Task, T 
+
+0
+
+5000 
+
+10000 
+
+15000 
+
+20000 
+
+> Cumulative Regret,  RT, N
+
+Synthetic data (h) 50 75 100 
+
+Task, T 
+
+0
+
+1000 
+
+2000 
+
+3000 
+
+4000 
+
+5000 
+
+6000 
+
+> Total Number of Violation
+
+Synthetic data (i) 1 2 3 4
+
+Number of Epoch, M 
+
+4840 
+
+4860 
+
+4880 
+
+4900 
+
+> Cumulative Regret,  RT, N
+
+Synthetic data 
+
+= 0.3 
+
+= 0.5 
+
+= 0.7 
+
+(j) 1 2 3 4
+
+Number of Epoch, M 
+
+13.0 
+
+13.5 
+
+14.0 
+
+14.5 
+
+15.0 
+
+15.5 
+
+> Cumulative Regret,  RT, N
+
+Movielens data 
+
+= 0.3 
+
+= 0.5 
+
+= 0.7 (k) 81 100 121 
+
+dimension, d 
+
+100 
+
+> Cumulative Regret,  RT, N
+
+Movielens data (l) 81 100 121 
+
+dimension, d 
+
+10 
+
+100 
+
+> Total Number of Violation
+
+Movielens data 
+
+(m) 5 6 7
+
+Task, T 
+
+100 
+
+> Cumulative Regret,  RT, N
+
+Movielens data (n) 5 6 7
+
+Task, T 
+
+0
+
+100 
+
+200 
+
+300 
+
+400 
+
+> Total Number of Violation
+
+Movielens data (o) 
+
+Figure 1: Our proposed algorithm (Safe-AltGDmin), Trace-norm (convex relaxation), Method of Moments (MoM), Thompson sampling (naive baseline). The plots present estimation error, cumulative regret, and number of violations for synthetic data (Figures 1a to 1j) and Movielens data (Figures 1k to 1o). The number of epochs is M = 4and 50 data samples in each epoch for all algorithms. 9
+
+C. Results and Discussions 
+
+Estimation error: Figures 1a, 1d, and 1g illustrate the esti-mation error Err-Θ = ∥bΘ−Θ⋆∥F
+
+∥Θ⋆∥F for synthetic data by varying dimensions d and the number of tasks T . We compare against the three benchmark algorithms. The y-axis of the plots is the percentage error in estimating bΘ in the final epoch compared to the true parameter Θ⋆. The plots clearly show that the performance of our proposed algorithm substantially exceeds that of the benchmark algorithms. As the number of tasks T
+
+increases, learning improves, validating the benefits of MTRL. 
+
+Cumulative regret and number of violations: We com-pared the cumulative regret and constraint satisfaction of our proposed algorithm with three benchmark algorithms. Figures 1b, 1e, and 1h present the cumulative regret for synthetic data when dimension d, rank r, and number of tasks 
+
+T are varied. Figures 1a, 1d, and 1g present the number of constraint violations across the algorithms for different values of d, r, and T . Both our proposed algorithm and the TS algorithm with safe set estimation from [19] perform safety-focused exploration, while the trace norm-based and MoM algorithms do not account for the constraints, allowing them to explore without restrictions. This allows these two benchmark algorithms to achieve a lower cumulative regret. However, this leads to a large number of constraint violations. Both our proposed algorithm and the TS algorithm with safe set estimation consistently meet the performance constraints, in contrast to trace-norm-based and MoM approaches, which demonstrate numerous violations. The TS algorithm, however, has a larger cumulative regret. As the number of tasks T
+
+increases, the cumulative regret of our proposed algorithm grows sublinearly. In contrast, the method from [19], which treats each task independently, leads to linear regret. Similarly, as the rank r increases, the cumulative regret of our pro-posed algorithm also increases sublinearly, as expected. This validates our proposed algorithm. Figures 1l and 1n present cumulative regret plots by varying d and T for the Movielens dataset. Figures 1m and 1o present the number of violations for the Movielens dataset. These plots clearly illustrate that our proposed algorithm consistently outperforms the benchmark algorithms without any violations. Furthermore, Figures 1j and 1k show the cumulative regret of our proposed algorithm for synthetic and Movielens datasets, respectively, as the constraint parameter α is altered. All experiments consistently demonstrate the effectiveness of our proposed approach. VI. C ONCLUSION 
+
+This paper presented a novel Safe-AltGDmin algorithm to solve the multi-task representation learning problem in conser-vative linear bandits. In our proposed algorithm, we effectively addressed CMTRL with a low-rank common representation, guaranteeing that all chosen actions meet the performance constraints while concurrently providing an accurate estima-tion of the shared representation. We provided theoretical guarantees for Safe-AltGDmin, including the cumulative regret bound and compliance with performance constraints. We con-ducted experiments using both synthetic data and real-world Movielens data to assess the effectiveness of our method. The experimental results showed our algorithm’s effectiveness regarding regret and its ability to consistently meet the con-straints compared to the benchmark algorithms. REFERENCES 
+
+[1] J. Lin, S. Moothedath, and N. Vaswani, “Fast and sample efficient multi-task representation learning in stochastic contextual bandits,” in Proceedings of the 41st International Conference on Machine Learning , ser. Proceedings of Machine Learning Research, vol. 235. PMLR, 21–27 Jul 2024, pp. 30 227–30 251. [2] T. Lattimore and C. Szepesvári, Bandit algorithms . Cambridge University Press, 2020. [3] J. Lin and S. Moothedath, “Provably efficient multi-task meta bandit learning via shared representations,” in Conference on Neural Information Processing Systems ,2025. [4] T. Duong, Z. Wang, and C. Zhang, “Beyond task diversity: Provable representation transfer for sequential multi-task linear bandits,” Conference on Neural Information Processing Systems , 2024. [5] S. S. Du, W. Hu, S. M. Kakade, J. D. Lee, and Q. Lei, “Few-shot learning via learning the representation, provably,” in International Conference on Learning Representations (ICLR) , 2021. [6] L. Collins, H. Hassani, A. Mokhtari, and S. Shakkottai, “Exploiting shared representations for personalized federated learning,” in International conference on machine learning . PMLR, 2021, pp. 2089–2099. [7] N. Tripuraneni, C. Jin, and M. Jordan, “Provable meta-learning of linear represen-tations,” in International Conference on Machine Learning . PMLR, 2021, pp. 10 434–10 443. [8] L. Cella and M. Pontil, “Multi-task and meta-learning with sparse linear bandits,” in Uncertainty in Artificial Intelligence . PMLR, 2021, pp. 1692–1702. [9] K. K. Thekumparampil, P. Jain, P. Netrapalli, and S. Oh, “Sample efficient linear meta-learning by alternating minimization,” arxiv:2105.08306 , 2021. [10] J. Yang, W. Hu, J. D. Lee, and S. S. Du, “Impact of representation learning in linear bandits,” arXiv:2010.06531 , 2020. [11] L. Cella, K. Lounici, G. Pacreau, and M. Pontil, “Multi-task representation learning with stochastic linear bandits,” in International Conference on Artificial Intelligence and Statistics , 2023, pp. 4822–4847. [12] J. Hu, X. Chen, C. Jin, L. Li, and L. Wang, “Near-optimal representation learning for linear bandits and linear RL,” in International Conference on Machine Learning ,2021, pp. 4349–4358. [13] Y. Du, L. Huang, and W. Sun, “Multi-task representation learning for pure exploration in linear bandits,” in International Conference on Machine Learning .PMLR, 2023, pp. 8511–8564. [14] H. Ishfaq, T. Nguyen-Tang, S. Feng, R. Arora, M. Wang, M. Yin, and D. Precup, “Offline multitask representation learning for reinforcement learning,” Advances in Neural Information Processing Systems , vol. 37, pp. 70 557–70 616, 2024. [15] D. M. Nagaraj, S. S. Kowshik, N. Agarwal, P. Netrapalli, and P. Jain, “Multi-user reinforcement learning with low rank rewards,” in International Conference on Machine Learning , 2023, pp. 25 627–25 659. [16] D. Borsa, T. Graepel, and J. Shawe-Taylor, “Learning shared representations in multi-task reinforcement learning,” arXiv preprint arXiv:1603.02041 , 2016. [17] R. Lu, A. Zhao, S. S. Du, and G. Huang, “Provable general function class repre-sentation learning in multitask bandits and mdp,” Advances in Neural Information Processing Systems , vol. 35, pp. 11 507–11 519, 2022. [18] A. Gangrade, A. Pacchiano, C. Scott, and V. Saligrama, “Feasible action search for bandit linear programs via thompson sampling,” in Forty-second International Conference on Machine Learning , 2025. [19] A. Moradipari, C. Thrampoulidis, and M. Alizadeh, “Stage-wise conservative linear bandits,” Advances in neural information processing systems , vol. 33, pp. 11 191– 11 201, 2020. [20] A. Kazerouni, M. Ghavamzadeh, Y. Abbasi Yadkori, and B. Van Roy, “Conservative contextual linear bandits,” Advances in Neural Information Processing Systems ,vol. 30, 2017. [21] K. Khezeli and E. Bitar, “Safe linear stochastic bandits,” in Proceedings of the AAAI Conference on Artificial Intelligence , vol. 34, 2020, pp. 10 202–10 209. [22] R. Camilleri, A. Wagenmaker, J. H. Morgenstern, L. Jain, and K. G. Jamieson, “Ac-tive learning with safety constraints,” Advances in Neural Information Processing Systems , vol. 35, pp. 33 201–33 214, 2022. [23] J. Lin and S. Moothedath, “Distributed multi-task learning for stochastic bandits with context distribution and stage-wise constraints,” IEEE Transactions on Signal and Information Processing over Networks , vol. 11, pp. 577–591, 2025. [24] J. Lin and S. Moothedath, “Distributed multi-task learning for stochastic bandits with context distribution and stage-wise constraints,” IEEE Transactions on Signal and Information Processing over Networks , 2025. [25] Y. Wu, R. Shariff, T. Lattimore, and C. Szepesvári, “Conservative bandits,” in 
+
+International Conference on Machine Learning , 2016, pp. 1254–1262. [26] A. Pacchiano, M. Ghavamzadeh, and P. Bartlett, “Contextual bandits with stage-wise constraints,” arxiv:2401.08016 , 2024. [27] S. Amani, M. Alizadeh, and C. Thrampoulidis, “Linear stochastic bandits under safety constraints,” arXiv:1908.05814 , 2019. [28] S. Amani, M. Alizadeh, and C. Thrampoulidis, “Generalized linear bandits with safety constraints,” in ICASSP 2020-2020 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) . IEEE, 2020, pp. 3562–3566. [29] K. N. Varma, S. Lale, and A. Anandkumar, “Stochastic linear bandits with unknown safety constraints and local feedback,” in ICML Workshop on New Frontiers in Learning, Control, and Dynamical Systems , 2023. [30] W. Sun, D. Dey, and A. Kapoor, “Safety-aware algorithms for adversarial contextual bandit,” in International Conference on Machine Learning . PMLR, 2017, pp. 3280–3288. 10 [31] X. Zhou and B. Ji, “On kernelized multi-armed bandits with constraints,” Advances in neural information processing systems , vol. 35, pp. 14–26, 2022. [32] R. Jagerman, I. Markov, and M. D. Rijke, “Safe exploration for optimizing contextual bandits,” ACM Transactions on Information Systems (TOIS) , vol. 38, no. 3, pp. 1–23, 2020. [33] S. Daulton, S. Singh, V. Avadhanula, D. Dimmery, and E. Bakshy, “Thomp-son sampling for contextual bandit problems with auxiliary safety constraints,” 
+
+arXiv:1911.00638 , 2019. [34] E. Garcelon, M. Ghavamzadeh, A. Lazaric, and M. Pirotta, “Improved algorithms for conservative exploration in bandits,” in Proceedings of the AAAI Conference on Artificial Intelligence , vol. 34, no. 04, 2020, pp. 3962–3969. [35] T. Chen, A. Gangrade, and V. Saligrama, “A doubly optimistic strategy for safe linear bandits,” arXiv:2209.13694 , 2022. [36] X. Liu, B. Li, P. Shi, and L. Ying, “An efficient pessimistic-optimistic algorithm for stochastic linear bandits with general constraints,” Advances in Neural Information Processing Systems , vol. 34, pp. 24 075–24 086, 2021. [37] A. Badanidiyuru, R. Kleinberg, and A. Slivkins, “Bandits with knapsacks,” Journal of the ACM (JACM) , vol. 65, no. 3, pp. 1–55, 2018. [38] A. Badanidiyuru, J. Langford, and A. Slivkins, “Resourceful contextual bandits,” in Conference on Learning Theory , 2014, pp. 1109–1134. [39] S. Agrawal and N. R. Devanur, “Bandits with concave rewards and convex knapsacks,” in ACM conference on Economics and computation , 2014, pp. 989– 1006. [40] H. Wu, R. Srikant, X. Liu, and C. Jiang, “Algorithms with logarithmic or sub-linear regret for constrained contextual bandits,” Advances in Neural Information Processing Systems , vol. 28, 2015. [41] A. Slivkins, X. Zhou, K. A. Sankararaman, and D. J. Foster, “Contextual ban-dits with packing and covering constraints: A modular lagrangian approach via regression,” Journal of Machine Learning Research , vol. 25, no. 394, pp. 1–37, 2024. [42] V. Sivakumar, S. Zuo, and A. Banerjee, “Smoothed adversarial linear contex-tual bandits with knapsacks,” in International Conference on Machine Learning .PMLR, 2022, pp. 20 253–20 277. [43] R. Deb, A. Saha, and A. Banerjee, “Think before you duel: Understanding complexities of preference learning under constrained resources,” in International Conference on Artificial Intelligence and Statistics . PMLR, 2024, pp. 4546–4554. [44] R. Deb, M. Ghavamzadeh, and A. Banerjee, “Conservative contextual bandits: Beyond linear representations,” in The Thirteenth International Conference on Learning Representations , 2025. [45] S. Chaudhary and D. Kalathil, “Safe online convex optimization with unknown linear safety constraints,” in Proceedings of the AAAI Conference on Artificial Intelligence , vol. 36, no. 6, 2022, pp. 6175–6182. [46] E. J. Candes and B. Recht, “Exact matrix completion via convex optimization,” 
+
+Found. of Comput. Math , vol. 9, pp. 717–772, 2008. [47] Y. Chi, Y. M. Lu, and Y. Chen, “Nonconvex optimization meets low-rank matrix factorization: An overview,” IEEE Transactions on Signal Processing , vol. 67, no. 20, pp. 5239–5269, 2019. [48] S. Nayer and N. Vaswani, “Fast and sample-efficient federated low rank matrix recovery from column-wise linear and quadratic projections,” IEEE Transactions on Infomation Theory , 2023. [49] Z. Gao, Y. Han, Z. Ren, and Z. Zhou, “Batched multi-armed bandits problem,” 
+
+Advances in Neural Information Processing Systems , vol. 32, 2019. [50] Y. Han, Z. Zhou, Z. Zhou, J. Blanchet, P. W. Glynn, and Y. Ye, “Sequential batch learning in finite-action linear contextual bandits,” arXiv:2004.06321 , 2020. [51] D. Simchi-Levi and Y. Xu, “Phase transitions and cyclic phenomena in bandits with switching constraints,” Advances in Neural Information Processing Systems ,vol. 32, 2019. [52] S. Nayer, P. Narayanamurthy, and N. Vaswani, “Provable low rank phase retrieval,” 
+
+IEEE Transactions on Information Theory , vol. 66, no. 9, pp. 5875–5903, 2020. [53] A. P. Singh and N. Vaswani, “Noisy low rank column-wise sensing,” 
+
+arxiv:2409.08384 , 2024. [54] Y. Abbasi-Yadkori, D. Pál, and C. Szepesvári, “Improved algorithms for linear stochastic bandits,” Advances in Neural Information Processing Systems , vol. 24, pp. 2312–2320, 2011. [55] Y. Chen, K. Jamieson, and S. Du, “Active multi-task representation learning,” in 
+
+International Conference on Machine Learning . PMLR, 2022, pp. 3271–3298. [56] F. M. Harper and J. A. Konstan, “The movielens datasets: History and context,” 
+
+ACM Transactions on Interactive Intelligent Systems , vol. 5, no. 4, pp. 1–19, 2015. [57] R. Vershynin, High-dimensional probability: An introduction with applications in data science . Cambridge university press, 2018, vol. 47. 
+
+APPENDIX APRELIMINARIES 
+
+Proposition 1 (Theorem 2.8.1, [57]) . Let c > 0 is an absolute constant, and let X 1, · · · , XN be independent, mean zero, sub-exponential random variables. Then, for every g ⩾ 0, we have 
+
+P
+
+n N
+
+# ∑
+
+i=1
+
+Xi ⩾ g
+
+o
+
+⩽ 2 exp 
+
+h
+
+−c min   g2
+
+∑Ni=1 ∥Xi∥2
+
+ψ1
+
+, g
+
+max i ∥Xi∥ψ1
+
+i
+
+.
+
+Proposition 2 (Chernoff bound for Gaussian) . Let X ∼
+
+N (μx, σ 2
+
+x ), then for all g > 0, P
+
+n
+
+X − μx ⩾ g
+
+o
+
+⩽ exp (− g2
+
+2σ 2
+
+> x
+
+).
+
+Proposition 3 (Theorem 2.2, [53]) . Pick a δ0 < 0.1. Define the noise-to-signal ratio as NSR : = T σ 2
+
+> η
+
+σ ⋆2min 
+
+. If G1T > Cμ2κ2(dr κ2
+
+δ 20
+
++
+
+d
+
+δ 20
+
+NSR ), then with probability at least 1 − exp (−c(d + T )) ,
+
+SD (B0, B⋆) ⩽ δ0.
+
+Definition 1. (Incoherence) A rank-r matrix M ∈ Rd1×d2 is defined as μ-column-wise incoherent if for every column m i ∈
+
+Rd1 of M, max i∈[d2] ∥mi∥2 ⩽ μ
+
+q d1
+
+d2 ∥M∥2, where μ ⩾ 1 is a constant that remains invariant with respect to d 1, d 2, r. 
+
+Under Assumption 4, we derive that 
+
+∥W ⋆∥F =
+
+s T
+
+# ∑
+
+t=1
+
+∥w⋆
+
+t ∥22 ⩾ √T l .
+
+Furthermore, the Frobenius norm of W ⋆ satisfies 
+
+∥W ⋆∥F =
+
+s r
+
+# ∑
+
+i=1
+
+σ 2
+
+i (W ⋆) ⩽ √rσ ⋆
+
+max .
+
+By defining μ = ul ⩾ 1, we conclude that 
+
+∥w⋆
+
+t ∥2 ⩽ u = ul
+
+√T l 
+
+√T ⩽ ul
+
+r rT σ ⋆
+
+max = μ
+
+r rT σ ⋆
+
+max .
+
+According to Definition 1, W ⋆ is μ-column-wise incoherent. Define P := I − B⋆B⋆⊤, G := B⊤Θ⋆, gt := B⊤θ ⋆
+
+t for t ∈ [T ],GradB 1 =
+
+T
+
+# ∑
+
+t=1
+
+G1
+
+# ∑
+
+n=0
+
+xbn,t x⊤
+
+bn,t (θt − θ ⋆
+
+t )w⊤
+
+t
+
+GradB 2 =
+
+T
+
+# ∑
+
+t=1
+
+G1
+
+# ∑
+
+n=0
+
+xbn,t ζ ⊤
+
+n,t (θt − θ ⋆
+
+t )w⊤
+
+t
+
+GradB 3 =
+
+T
+
+# ∑
+
+t=1
+
+G1
+
+# ∑
+
+n=0
+
+ζn,t x⊤
+
+bn,t (θt − θ ⋆
+
+t )w⊤
+
+t
+
+GradB 4 =
+
+T
+
+# ∑
+
+t=1
+
+G1
+
+# ∑
+
+n=0
+
+ζn,t ζ ⊤
+
+n,t (θt − θ ⋆
+
+t )w⊤
+
+t
+
+GradB = ∇B f (B,W ) = 
+
+T
+
+# ∑
+
+t=1
+
+Φ(1) 
+
+t
+
+⊤(Φ(1) 
+
+t Bw t −Y (1) 
+
+t )w⊤
+
+t
+
+=
+
+T
+
+# ∑
+
+t=1
+
+G1
+
+# ∑
+
+n=0
+
+((( 1 − ρ)xbn,t + ρζ n,t )⊤Bw t − yn,t )(( 1 − ρ)xbn,t + ρζ n,t )w⊤
+
+t
+
+− (1 − ρ)ηn,t xbn,t w⊤
+
+t − ρη n,t ζn,t w⊤
+
+t
+
+= ( 1 − ρ)2GradB 1 + ρ(1 − ρ)( GradB 2 + GradB 3) + ρ2GradB 4
+
+−
+
+T
+
+# ∑
+
+t=1
+
+G1
+
+# ∑
+
+n=0
+
+(1 − ρ)ηn,t xbn,t w⊤
+
+t −
+
+T
+
+# ∑
+
+t=1
+
+G1
+
+# ∑
+
+n=0
+
+ρη n,t ζn,t w⊤
+
+t .
+
+APPENDIX BSUPPORTING RESULTS AND PROOFS 
+
+Proposition 4. Let M = B⊤Φ(1) 
+
+t
+
+⊤Φ(1) 
+
+t B. For all t ∈ [T ], the following statements hold: 
+
+• With probability at least 1 − 4T exp (r − cG1),
+
+∥M−1∥ ⩽ 2
+
+(1 − 2ρ)2G111  
+
+> •
+
+With probability at least 1 − 8T exp (r − cε22 G1),
+
+∥M−1B⊤Φ(1) 
+
+> t
+> ⊤
+
+Φ(1)  
+
+> t
+
+(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥ ⩽ ∥(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥
+
+(1 − 2ρ)2 .
+
+Proof. Consider a fixed z ∈ Sr. We have z⊤B⊤Φ(1) 
+
+> t
+> ⊤
+
+Φ(1)  
+
+> t
+
+Bz 
+
+=
+
+> G1
+
+# ∑
+
+> n=0
+
+z⊤B⊤[( 1 − ρ)xbn,t + ρζ n,t ][( 1 − ρ)xbn,t + ρζ n,t ]⊤Bz 
+
+Given that E[( 1 − ρ)z⊤B⊤xbn,t ] = 0, 
+
+E[( 1 − ρ)2z⊤B⊤xbn,t x⊤ 
+
+> bn,t
+
+Bz ] = ( 1 − ρ)2z⊤B⊤E[xbn,t x⊤ 
+
+> bn,t
+
+]Bz 
+
+= ( 1 − ρ)2z⊤B⊤Bz = ( 1 − ρ)2,
+
+Var (( 1 − ρ)z⊤B⊤xbn,t ) = E[( 1 − ρ)z⊤B⊤xbn,t ]2
+
+= ( 1 − ρ)2z⊤B⊤E[xbn,t x⊤ 
+
+> bn,t
+
+]Bz = ( 1 − ρ)2.
+
+The summands are presented as independent sub-exponential random variables with a bounded norm Kn ⩽ C(1 − ρ)2. We apply the sub-exponential Bernstein inequality, as specified in Proposition 1, by setting g = ε2(1 − ρ)2G1. We have 
+
+g2
+
+∑G1 
+
+> n=0
+
+K2
+
+> n
+
+⩾ ε22 (1 − ρ)4G21
+
+G1C2(1 − ρ)4 ⩾ cε22 G1
+
+g
+
+max n Kn
+
+⩾ ε2(1 − ρ)2G1
+
+C(1 − ρ)2 ⩾ cε2G1
+
+For a fixed z ∈ Sr, with probability at least 1 − exp (−cε22 G1),
+
+> G1
+
+# ∑
+
+> n=0
+
+(1 − ρ)2z⊤B⊤xbn,t x⊤ 
+
+> bn,t
+
+Bz ⩾ (1 − ε2)( 1 − ρ)2G1
+
+By extending our analysis over the entire space Sr through an epsilon-net, the result adds a multiplicative factor of exp (r).Therefore, with probability at least 1 − exp (r − cε22 G1),min 
+
+> z∈Sr
+> G1
+
+# ∑
+
+> n=0
+
+(1 − ρ)2z⊤B⊤xbn,t x⊤ 
+
+> bn,t
+
+Bz ⩾ (1 − ρ)2(1 − ε2)G1
+
+Building on this idea, with the same probability, we derive min 
+
+> z∈Sr
+> G1
+
+# ∑
+
+> n=0
+
+ρ(1 − ρ)z⊤B⊤xbn,t ζ ⊤ 
+
+> n,t
+
+Bz ⩾ −ρ(1 − ρ)ε2G1
+
+min 
+
+> z∈Sr
+> G1
+
+# ∑
+
+> n=0
+
+ρ(1 − ρ)z⊤B⊤ζn,t x⊤ 
+
+> bn,t
+
+Bz ⩾ −ρ(1 − ρ)ε2G1
+
+min 
+
+> z∈Sr
+> G1
+
+# ∑
+
+> n=0
+
+ρ2z⊤B⊤ζn,t ζ ⊤ 
+
+> n,t
+
+Bz ⩾ ρ2(1 − ε2)G1
+
+By using the union bound and setting ε2 = 0.5, with probability at least 1 − 4T exp (r − cG1), for all t ∈ [T ], we conclude that 
+
+∥M−1∥ = ∥(B⊤Φ(1) 
+
+> t
+> ⊤
+
+Φ(1)  
+
+> t
+
+B)−1∥
+
+= 1
+
+σmin (B⊤Φ(1) 
+
+> t
+> ⊤
+
+Φ(1)  
+
+> t
+
+B) = 1min z∈Sr ∑G1 
+
+> n=0
+
+zT B⊤Φ(1) 
+
+> t
+> ⊤
+
+Φ(1)  
+
+> t
+
+Bz 
+
+⩽ 1
+
+(1 − ρ)2(1 − ε2)G1 − ρ(1 − ρ)ε2G1 − ρ(1 − ρ)ε2G1 + ρ2(1 − ε2)G1
+
+= 2
+
+(1 − 2ρ)2G1
+
+.
+
+This proves the first statement. Now consider a fixed z ∈ Sr,
+
+z⊤B⊤Φ(1) 
+
+> t
+> ⊤
+
+Φ(1)  
+
+> t
+
+(I − BB ⊤)θ ⋆
+
+> t
+
+=
+
+> G1
+
+# ∑
+
+> n=0
+
+z⊤B⊤[( 1 − ρ)xbn,t + ρζ n,t ][( 1 − ρ)xbn,t + ρζ n,t ]⊤(I − BB ⊤)θ ⋆
+
+> t
+
+Given that E[( 1 − ρ)x⊤ 
+
+> bn,t
+
+(I − BB ⊤)θ ⋆ 
+
+> t
+
+] = 0, 
+
+E[( 1 − ρ)z⊤B⊤xbn,t ] = 0, Var (( 1 − ρ)z⊤B⊤xbn,t ) = ( 1 − ρ)2,
+
+E[( 1 − ρ)2z⊤B⊤xbn,t x⊤ 
+
+> bn,t
+
+(I − BB ⊤)θ ⋆ 
+
+> t
+
+] = 0Var (( 1 − ρ)x⊤ 
+
+> bn,t
+
+(I − BB ⊤)θ ⋆ 
+
+> t
+
+)= E[( 1 − ρ)2θ ⋆ 
+
+> t⊤
+
+(I − BB ⊤)⊤xbn,t x⊤ 
+
+> bn,t
+
+(I − BB ⊤)θ ⋆ 
+
+> t
+
+]= ( 1 − ρ)2θ ⋆ 
+
+> t⊤
+
+(I − BB ⊤)⊤(I − BB ⊤)θ ⋆ 
+
+> t
+
+= ( 1 − ρ)2∥(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥2.
+
+As before, the summands are independent sub-exponential random variables with norm Kn ⩽ C(1 − ρ)2∥(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥.We use the sub-exponential Bernstein inequality stated in Proposition 1, set g = ε2(1 − ρ)2∥(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥G1. We have 
+
+g2
+
+∑G1 
+
+> n=0
+
+K2
+
+> n
+
+⩾ ε22 (1 − ρ)4∥(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥2G21
+
+G1C2(1 − ρ)4∥(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥2 ⩾ cε22 G1,
+
+g
+
+max n Kn
+
+⩾ ε2(1 − ρ)2∥(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥G1
+
+C(1 − ρ)2∥(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥ ⩾ cε2G1.
+
+For a fixed z ∈ Sr, with probability at least 1 − exp (−cε22 G1),
+
+> G1
+
+## ∑
+
+> n=0
+
+(1 − ρ)2z⊤B⊤xbn,t x⊤ 
+
+> bn,t
+
+(I − BB ⊤)θ ⋆ 
+
+> t
+
+⩽ ε2(1 − ρ)2∥(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥G1.
+
+Extending this to include all Sr through an epsilon-net in-troduces a factor of exp (r). Consequently, with probability at least 1 − exp (r − cε22 G1), we obtain max 
+
+> z∈Sr
+> G1
+
+# ∑
+
+> n=0
+
+(1 − ρ)2z⊤B⊤xbn,t x⊤ 
+
+> bn,t
+
+(I − BB ⊤)θ ⋆
+
+> t
+
+⩽ ε2(1 − ρ)2∥(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥G1.
+
+Using this approach, with the same probability, we have max 
+
+> z∈Sr
+> G1
+
+# ∑
+
+> n=0
+
+ρ(1 − ρ)z⊤B⊤xbn,t ζ ⊤ 
+
+> n,t
+
+(I − BB ⊤)θ ⋆
+
+> t
+
+⩽ ε2ρ(1 − ρ)∥(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥G1,
+
+max 
+
+> z∈Sr
+> G1
+
+# ∑
+
+> n=0
+
+ρ(1 − ρ)z⊤B⊤ζn,t x⊤ 
+
+> bn,t
+
+(I − BB ⊤)θ ⋆
+
+> t
+
+⩽ ε2ρ(1 − ρ)∥(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥G1,
+
+max 
+
+> z∈Sr
+> G1
+
+# ∑
+
+> n=0
+
+ρ2z⊤B⊤ζn,t ζ ⊤ 
+
+> n,t
+
+(I − BB ⊤)θ ⋆ 
+
+> t
+
+⩽ ε2ρ2∥(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥G1.
+
+Using the union bound, with probability at least 1 − 4 exp (r −12 
+
+cG1), for ε2 = 0.5, we conclude that 
+
+∥B⊤Φ(1) 
+
+> t
+> ⊤
+
+Φ(1)  
+
+> t
+
+(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥ = max 
+
+> z∈Sr
+
+z⊤B⊤Φ(1) 
+
+> t
+> ⊤
+
+Φ(1)  
+
+> t
+
+(I − BB ⊤)θ ⋆
+
+> t
+
+⩽ ε2(1 − ρ)2∥(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥G1 + ε2ρ(1 − ρ)∥(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥G1
+
++ ε2ρ(1 − ρ)∥(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥G1 + ε2ρ2∥(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥G1
+
+= 12 ∥(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥G1.
+
+By combining these results and using the union bound, for all 
+
+t ∈ [T ], with probability at least 1 − 8T exp (r − cG1), we have 
+
+∥M−1B⊤Φ(1) 
+
+> t
+> ⊤
+
+Φ(1)  
+
+> t
+
+(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥
+
+⩽ ∥M−1∥∥ B⊤Φ(1) 
+
+> t
+> ⊤
+
+Φ(1)  
+
+> t
+
+(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥
+
+⩽ 2
+
+(1 − 2ρ)2G1
+
+12 ∥(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥G1 = ∥(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥
+
+(1 − 2ρ)2 .
+
+This proves the second statement and completes the proof. 
+
+Lemma 1. If δℓ ⩽ 0.02  
+
+> μ√rκ2
+
+, then with probability at least 1 −
+
+8T exp (r − cG1) − 2T exp (r − cε23 G1 
+
+> σ2
+> η
+
+), the following hold: 
+
+1) ∥wt − gt ∥ ⩽ 2 
+
+> (1−2ρ)2
+
+μp rT δℓσ ⋆
+
+> max
+
+2) ∥wt ∥ ⩽
+
+
+
+1 + 0.04 
+
+> (1−2ρ)2
+
+
+
+μp rT σ ⋆
+
+> max
+
+3) ∥W − G∥F ⩽ 2 
+
+> (1−2ρ)2
+
+μ√rδℓσ ⋆
+
+> max
+
+4) ∥θt − θ ⋆ 
+
+> t
+
+∥ ⩽
+
+
+
+1 + 2
+
+> (1−2ρ)2
+
+
+
+μδ ℓ
+
+p rT σ ⋆
+
+> max
+
+5) ∥Θℓ − Θ⋆∥F ⩽
+
+
+
+1 + 2
+
+> (1−2ρ)2
+
+
+
+μδ ℓ
+
+√rσ ⋆
+
+> max
+
+6) σmin (W ) ⩾
+
+√1 − 4 × 10 −4 − 0.04 
+
+> (1−2ρ)2
+
+
+
+σ ⋆
+
+> min
+
+7) σmax (W ) ⩽
+
+
+
+1 + 0.04 
+
+> (1−2ρ)2
+
+
+
+σ ⋆
+
+> max
+
+Proof. From Algorithm III.1, we have 
+
+wt = ( Φ(1)  
+
+> t
+
+B)†Y (1)  
+
+> t
+
+= (( Φ(1)  
+
+> t
+
+B)⊤(Φ(1)  
+
+> t
+
+B)) −1(Φ(1)  
+
+> t
+
+B)⊤Y (1) 
+
+> t
+
+= ( B⊤Φ(1) 
+
+> t
+> ⊤
+
+Φ(1)  
+
+> t
+
+B)−1(B⊤Φ(1) 
+
+> t
+> ⊤
+
+)Φ(1)  
+
+> t
+
+BB ⊤θ ⋆
+
+> t
+
++ ( B⊤Φ(1) 
+
+> t
+> ⊤
+
+Φ(1)  
+
+> t
+
+B)−1(B⊤Φ(1) 
+
+> t
+> ⊤
+
+)Φ(1)  
+
+> t
+
+(I − BB ⊤)θ ⋆
+
+> t
+
++ ( B⊤Φ(1) 
+
+> t
+> ⊤
+
+Φ(1)  
+
+> t
+
+B)−1(B⊤Φ(1) 
+
+> t
+> ⊤
+
+)η(1) 
+
+> t
+
+= gt + M−1B⊤Φ(1) 
+
+> t
+> ⊤
+
+Φ(1)  
+
+> t
+
+(I − BB ⊤)θ ⋆ 
+
+> t
+
++ M−1B⊤Φ(1) 
+
+> t
+> ⊤
+
+η(1)  
+
+> t
+
+.
+
+We know wt − gt = M−1B⊤Φ(1) 
+
+> t
+> ⊤
+
+Φ(1)  
+
+> t
+
+(I − BB ⊤)θ ⋆ 
+
+> t
+
++
+
+M−1B⊤Φ(1) 
+
+> t
+> ⊤
+
+η(1)  
+
+> t
+
+. To bound wt − gt , we also need to find the upper bound of ∥B⊤Φ(1) 
+
+> t
+> ⊤
+
+η(1)  
+
+> t
+
+∥. We know 
+
+∥B⊤Φ(1) 
+
+> t
+> ⊤
+
+η(1)  
+
+> t
+
+∥ = max 
+
+> z∈Sr
+
+z⊤B⊤Φ(1) 
+
+> t
+> ⊤
+
+η(1) 
+
+> t
+
+= max 
+
+> z∈Sr
+> G1
+
+# ∑
+
+> n=0
+
+z⊤B⊤[( 1 − ρ)xbn,t + ρζ n,t ]ηn,t
+
+= max 
+
+> z∈Sr
+> G1
+
+# ∑
+
+> n=0
+
+(1 − ρ)z⊤B⊤xbn,t ηn,t + max 
+
+> z∈Sr
+> G1
+
+# ∑
+
+> n=0
+
+ρz⊤B⊤ζn,t ηn,t .
+
+Considering a fixed z ∈ Sr. Given that 
+
+E[( 1 − ρ)z⊤B⊤xbn,t ηn,t ] = 0, E[ηn,t ] = 0,
+
+E[( 1 − ρ)z⊤B⊤xbn,t ] = 0, Var (ηn,t ) = σ 2 
+
+> η
+
+,
+
+Var (( 1 − ρ)z⊤B⊤xbn,t ) = E[( 1 − ρ)z⊤B⊤xbn,t ]2
+
+= E[( 1 − ρ)2z⊤B⊤xbn,t x⊤ 
+
+> bn,t
+
+Bz ] = ( 1 − ρ)2z⊤B⊤E[xbn,t x⊤ 
+
+> bn,t
+
+]Bz 
+
+= ( 1 − ρ)2z⊤B⊤Bz = ( 1 − ρ)2,
+
+the summands are presented as independent sub-exponential random variables with a bounded norm Kn ⩽ C(1 − ρ)ση . We apply the sub-exponential Bernstein inequality from Proposi-tion 1with g = ε3(1 − ρ)G1. We have 
+
+g2
+
+∑G1 
+
+> n=0
+
+K2
+
+> n
+
+⩾ ε23 (1 − ρ)2G21
+
+G1C2(1 − ρ)2σ 2
+
+> η
+
+⩾ cε23 G1
+
+σ 2
+
+> η
+
+,
+
+g
+
+max n Kn
+
+⩾ ε3(1 − ρ)G1
+
+C(1 − ρ)ση
+
+⩾ cε3G1
+
+ση
+
+.
+
+Considering ε3 ⩽ ση . Consequently, for a fixed z ∈ Sr, with probability at least 1 − exp (− cε23 G1 
+
+> σ2
+> η
+
+), we derive 
+
+> G1
+
+# ∑
+
+> n=0
+
+(1 − ρ)z⊤B⊤xbn,t ηn,t ⩽ ε3(1 − ρ)G1.
+
+By extending this over Sr using an epsilon-net, the result adds a multiplicative factor of exp (r). Therefore, with probability at least 1 − exp (r − cε23 G1 
+
+> σ2
+> η
+
+), we have max 
+
+> z∈Sr
+> G1
+
+# ∑
+
+> n=0
+
+(1 − ρ)z⊤B⊤xbn,t ηn,t ⩽ ε3(1 − ρ)G1.
+
+Following the same idea, we determine that with probability at least 1 − exp (r − cε23 G1 
+
+> σ2
+> η
+
+), we have max 
+
+> z∈Sr
+> G1
+
+# ∑
+
+> n=0
+
+ρz⊤B⊤ζn,t ηn,t ⩽ ε3ρG1.
+
+Using union bound, w.p. at least 1 − 2T exp (r − cε23 G1 
+
+> σ2
+> η
+
+)
+
+∥B⊤Φ(1) 
+
+> t
+> ⊤
+
+η(1)  
+
+> t
+
+∥ ⩽ ε3(1 − ρ)G1 + ε3ρG1 = ε3G1.
+
+Therefore, by using the union bound and setting ε3 = 
+
+> c
+> 2
+
+μp rT δℓσ ⋆
+
+> max
+
+, with probability at least 1 − 8T exp (r − cG1) −
+
+2T exp (r − cε23 G1 
+
+> σ2
+> η
+
+), we conclude that 
+
+∥wt − gt ∥ ⩽ ∥(I − BB ⊤)θ ⋆ 
+
+> t
+
+∥
+
+(1 − 2ρ)2 + 2ε3
+
+(1 − 2ρ)2
+
+⩽ 1
+
+(1 − 2ρ)2 μ
+
+r rT δℓσ ⋆ 
+
+> max
+
++ 1
+
+(1 − 2ρ)2 μ
+
+r rT δℓσ ⋆ 
+
+> max
+
+(3) 
+
+= 2
+
+(1 − 2ρ)2 μ
+
+r rT δℓσ ⋆
+
+> max
+
+, (4) where Eq. (3) is derived from Assumption 4. This proves 1). 
+
+∥W − G∥F ⩽ 2
+
+(1 − 2ρ)2 μ√rδℓσ ⋆ 
+
+> max
+
+(5) 
+
+∥wt ∥ = ∥wt − gt + gt ∥ ⩽ ∥wt − gt ∥ + ∥w⋆ 
+
+> t
+
+∥ (6) 
+
+⩽ 2
+
+(1 − 2ρ)2 μ
+
+r rT δℓσ ⋆ 
+
+> max
+
++ μ
+
+r rT σ ⋆
+
+> max 13
+
+= ( 1 + 0.04 
+
+(1 − 2ρ)2 )μ
+
+r rT σ ⋆
+
+> max
+
+.
+
+∥θ ⋆ 
+
+> t
+
+− bθt ∥ = ∥Bg t + ( I − BB ⊤)θ ⋆ 
+
+> t
+
+− Bw t ∥
+
+⩽ (1 + 2
+
+(1 − 2ρ)2 )μ
+
+r rT δℓσ ⋆
+
+> max
+
+, (7) where Eq. (6) is derived from ∥gt ∥ ⩽ ∥w⋆ 
+
+> t
+
+∥. This completes the proofs of 2), 3), and 4). Eq. (7) implies 
+
+∥Θℓ − Θ⋆∥F ⩽
+
+
+
+1 + 2
+
+(1 − 2ρ)2
+
+
+
+μ√rδℓσ ⋆
+
+> max
+
+.
+
+This proves 5). Furthermore, 
+
+σmin (W ) = σmin (G − (G −W )) 
+
+⩾ σmin (G) − ∥ W − G∥ ⩾ σmin (G) − ∥ W − G∥F .
+
+Given that 
+
+σmin (G) = σmin (G⊤) = σmin (W ⋆⊤B⋆⊤B) ⩾ σ ⋆
+
+> min
+
+σmin (B⋆⊤B),
+
+σmin (B⋆⊤B) = 
+
+q
+
+λmin (B⊤B⋆B⋆⊤ B)) = 
+
+q
+
+λmin (B⊤(I − P)B)=
+
+q
+
+λmin (I − B⊤PB ) = 
+
+q
+
+λmin (I − B⊤P2B)=
+
+q
+
+1 − λmax (B⊤P2B) = 
+
+q
+
+1 − ∥ PB ∥2 ⩾
+
+q
+
+1 − δ 2 
+
+> ℓ
+
+.
+
+By combining the above with Eq. (6) and substituting δℓ
+
+σmin (W ) ⩾
+
+q
+
+1 − δ 2 
+
+> ℓ
+
+σ ⋆ 
+
+> min
+
+− 2
+
+(1 − 2ρ)2 μ√rδℓσ ⋆
+
+> max
+
+⩾  p 
+
+1 − 4 × 10 −4 − 0.04 
+
+(1 − 2ρ)2
+
+σ ⋆
+
+> min
+
+σmax (W ) = σmax (G − (G −W )) ⩽ σmax (G) + σmax (G −W )= σmax (B⊤B⋆W ⋆) + σmax (G −W )
+
+⩽ σmax (B⊤B⋆)σmax (W ⋆) + ∥G −W ∥F
+
+⩽ σ ⋆ 
+
+> max
+
++ 2
+
+(1 − 2ρ)2 μ√rδℓσ ⋆ 
+
+> max
+
+=  1 + 0.04 
+
+(1 − 2ρ)2
+
+σ ⋆
+
+> max
+
+.
+
+This completes the proofs of 6) and 7). 
+
+Proposition 5. Assume SD (B, B⋆) ⩽ δℓ. Then, the following statements hold:  
+
+> •
+
+We have E[GradB 1] = E[GradB 4] = G1(Θ − Θ⋆)W ⊤ and 
+
+E[GradB 2] = E[GradB 3] = 0. 
+
+> •
+
+With probability at least 1−8T exp (r −cG1)−2T exp (r −  
+
+> cε23G1
+> σ2
+> η
+
+), we have ∥E[GradB 2]∥ = ∥E[GradB 3]∥ = 0 and 
+
+∥E[GradB 1]∥ = ∥E[GradB 4]∥
+
+⩽
+
+
+
+1 + 0.04 
+
+(1 − 2ρ)2
+
+ 
+
+1 + 2
+
+(1 − 2ρ)2
+
+
+
+G1μ√rδℓσ ⋆2
+
+> max
+
+. 
+
+> •
+
+If δℓ ⩽ 0.02  
+
+> μ√rκ2
+
+, then with probability at least 1−exp (C(d +
+
+r)−c ε24 G1T 
+
+> μ2rκ4
+
+)−8T exp (r −cG1)−2T exp (r − cε23 G1 
+
+> σ2
+> η
+
+), for i ∈{1, 2, 3, 4}, we have 
+
+∥GradB i − E[GradB i]∥
+
+⩽
+
+
+
+1 + 0.04 
+
+(1 − 2ρ)2
+
+ 
+
+1 + 2
+
+(1 − 2ρ)2
+
+
+
+ε4G1σ ⋆2
+
+> min
+
+δℓ.
+
+Proof. Starting with the definition, we have 
+
+E[GradB 1] = E[
+
+> T
+
+# ∑
+
+> t=1
+> G1
+
+# ∑
+
+> n=0
+
+xbn,t x⊤ 
+
+> bn,t
+
+(θt − θ ⋆ 
+
+> t
+
+)w⊤ 
+
+> t
+
+]=
+
+> T
+
+# ∑
+
+> t=1
+> G1
+
+# ∑
+
+> n=0
+
+E[xbn,t x⊤ 
+
+> bn,t
+
+]( θt − θ ⋆ 
+
+> t
+
+)w⊤ 
+
+> t
+
+=
+
+> T
+
+# ∑
+
+> t=1
+> G1
+
+# ∑
+
+> n=0
+
+(θt − θ ⋆ 
+
+> t
+
+)w⊤
+
+> t
+
+=
+
+> T
+
+# ∑
+
+> t=1
+
+G1(θt − θ ⋆ 
+
+> t
+
+)w⊤ 
+
+> t
+
+= G1(Θ − Θ⋆)W ⊤.
+
+Using the same idea, we derive E[GradB 2] = E[GradB 3] = 0, 
+
+E[GradB 4] = E[
+
+> T
+
+# ∑
+
+> t=1
+> G1
+
+# ∑
+
+> n=0
+
+ζn,t ζ ⊤ 
+
+> n,t
+
+(θt − θ ⋆ 
+
+> t
+
+)w⊤ 
+
+> t
+
+] = G1(Θ − Θ⋆)W ⊤.
+
+Using the result from Lemma 1, with probability at least 1 −
+
+8T exp (r − cG1) − 2T exp (r − cε23 G1 
+
+> σ2
+> η
+
+), we conclude 
+
+∥E[GradB 1]∥ = ∥E[GradB 4]∥ ⩽ G1∥(Θ − Θ⋆)∥∥ W ∥
+
+⩽
+
+
+
+1 + 0.04 
+
+(1 − 2ρ)2
+
+  
+
+1 + 2
+
+(1 − 2ρ)2
+
+
+
+G1μ√rδℓσ ⋆2
+
+> max
+
+∥E[GradB 2]∥ = ∥E[GradB 3]∥ ⩽ G1∥(Θ − Θ⋆)∥∥ W ∥ = 0.
+
+Considering the fixed unit norm vectors z and v. We have 
+
+∥GradB 1 − E[GradB 1]∥
+
+= max  
+
+> ∥z∥=1,∥v∥=1
+
+z⊤ T
+
+# ∑
+
+> t=1
+> G1
+
+# ∑
+
+> n=0
+
+xbn,t x⊤ 
+
+> bn,t
+
+(θt − θ ⋆ 
+
+> t
+
+)w⊤ 
+
+> t
+
+− E[GradB 1]
+
+
+
+v
+
+= max 
+
+> ∥z∥=1,∥v∥=1
+
+ T
+
+# ∑
+
+> t=1
+> G1
+
+# ∑
+
+> n=0
+
+z⊤xbn,t w⊤ 
+
+> t
+
+vx ⊤ 
+
+> bn,t
+
+(θt − θ ⋆ 
+
+> t
+
+) − z⊤E[GradB 1]v
+
+
+
+.
+
+Given that E[GradB 1 −E[GradB 1]] = 0, E[z⊤xbn,t w⊤ 
+
+> t
+
+v] = 0, and 
+
+E[x⊤ 
+
+> bn,t
+
+(θt − θ ⋆ 
+
+> t
+
+)] = 0, Var (z⊤xbn,t w⊤ 
+
+> t
+
+v) = E[( w⊤ 
+
+> t
+
+v)2z⊤xbn,t x⊤ 
+
+> bn,t
+
+z]= ( w⊤ 
+
+> t
+
+v)2z⊤E[xbn,t x⊤ 
+
+> bn,t
+
+]z = ( w⊤ 
+
+> t
+
+v)2z⊤z = ( w⊤ 
+
+> t
+
+v)2,
+
+Var (x⊤ 
+
+> bn,t
+
+(θt − θ ⋆ 
+
+> t
+
+)) = E[( θt − θ ⋆ 
+
+> t
+
+)⊤xbn,t x⊤ 
+
+> bn,t
+
+(θt − θ ⋆ 
+
+> t
+
+)] = ( θt − θ ⋆ 
+
+> t
+
+)⊤E[xbn,t x⊤ 
+
+> bn,t
+
+]( θt − θ ⋆ 
+
+> t
+
+) = ( θt − θ ⋆ 
+
+> t
+
+)⊤(θt − θ ⋆ 
+
+> t
+
+) = ∥θ ⋆ 
+
+> t
+
+− θt ∥2,
+
+the summands are presented as independent sub-exponential random variables with a bounded norm Kn ⩽ C(w⊤ 
+
+> t
+
+v)∥θ ⋆ 
+
+> t
+
+−θt ∥.We use the sub-exponential Bernstein inequality from Propo-sition 1 with g =
+
+
+
+1 + 0.04 
+
+> (1−2ρ)2
+
+  
+
+1 + 2
+
+> (1−2ρ)2
+
+
+
+ε4G1σ ⋆2
+
+> min
+
+δℓ. To apply this, based on the result of Lemma 1, we have 
+
+g2
+
+∑G1 
+
+> n=0
+
+K2
+
+> n
+
+⩾
+
+
+
+1 + 0.04 
+
+> (1−2ρ)2
+
+2 
+
+1 + 2
+
+> (1−2ρ)2
+
+2
+
+ε24 G21 σ ⋆4
+
+> min
+
+δ 2
+
+> ℓ
+
+∑Tt=1 ∑G1 
+
+> n=0
+
+C2(w⊤ 
+
+> t
+
+v)2∥θ ⋆ 
+
+> t
+
+− θt ∥2
+
+⩾
+
+
+
+1 + 0.04 
+
+> (1−2ρ)2
+
+2 
+
+1 + 2
+
+> (1−2ρ)2
+
+2
+
+ε24 G21 σ ⋆4
+
+> min
+
+δ 2
+
+> ℓ
+
+G1C2 max t ∥θ ⋆ 
+
+> t
+
+− θt ∥2∥v⊤W ∥2
+
+⩾
+
+
+
+1 + 0.04 
+
+> (1−2ρ)2
+
+2 
+
+1 + 2
+
+> (1−2ρ)2
+
+2
+
+ε24 G21 σ ⋆4
+
+> min
+
+δ 2
+
+> ℓ
+
+G1C2
+
+
+
+1 + 2
+
+> (1−2ρ)2
+
+2
+
+μ2 rT δ 2 
+
+> ℓ
+
+σ ⋆2
+
+> max
+
+
+
+1 + 0.04 
+
+> (1−2ρ)2
+
+2
+
+σ ⋆2
+
+> max
+
+⩾ cε24 G1T
+
+μ2rκ4 .14 
+
+g
+
+max n Kn
+
+⩾
+
+
+
+1 + 0.04 
+
+> (1−2ρ)2
+
+  
+
+1 + 2
+
+> (1−2ρ)2
+
+
+
+ε4G1σ ⋆2
+
+> min
+
+δℓ
+
+max n,t C(w⊤ 
+
+> t
+
+v)∥θ ⋆ 
+
+> t
+
+− θt ∥
+
+⩾
+
+
+
+1 + 0.04 
+
+> (1−2ρ)2
+
+  
+
+1 + 2
+
+> (1−2ρ)2
+
+
+
+ε4G1σ ⋆2
+
+> min
+
+δℓ
+
+C max t ∥wt ∥ max t ∥θ ⋆ 
+
+> t
+
+− θt ∥
+
+⩾
+
+
+
+1 + 0.04 
+
+> (1−2ρ)2
+
+  
+
+1 + 2
+
+> (1−2ρ)2
+
+
+
+ε4G1σ ⋆2
+
+> min
+
+δℓ
+
+C
+
+
+
+1 + 0.04 
+
+> (1−2ρ)2
+
+
+
+μp rT σ ⋆
+
+> max
+
+
+
+1 + 2
+
+> (1−2ρ)2
+
+
+
+μp rT δℓσ ⋆
+
+> max
+
+⩾ cε4G1T
+
+μ2rκ2 .
+
+Thus, for a fixed unit norm vectors z, v, with probability at least 1 − exp (− cε24 G1T 
+
+> μ2rκ4
+
+) − 8T exp (r − cG1) − 2T exp (r − cε23 G1 
+
+> σ2
+> η
+
+),
+
+z⊤(GradB 1 − E[GradB 1]) v ⩽ (1 + 0.04 
+
+(1 − 2ρ)2 )( 1 + 2
+
+(1 − 2ρ)2 )ε4G1σ ⋆2
+
+> min
+
+δℓ.
+
+Applying a standard epsilon-net argument to bound the max-imum of the above expression across all unit norm vectors 
+
+z and v introduces a multiplicative factor of exp (C(d + r)) .Consequently, with probability at least 1 − exp (C(d + r) −  
+
+> cε24G1T
+> μ2rκ4
+
+) − 8T exp (r − cG1) − 2T exp (r − cε23 G1 
+
+> σ2
+> η
+
+), it follows that 
+
+∥GradB 1 − E[GradB 1]∥ ⩽ (1 + 0.04 
+
+(1 − 2ρ)2 )( 1 + 2
+
+(1 − 2ρ)2 )ε4G1σ ⋆2
+
+> min
+
+δℓ.
+
+Following the same idea, we have the same bounds for GradB 2, GradB 3, and GradB 4. We determine that with proba-bility at least 1 − exp (C(d + r) − cε24 G1T 
+
+> μ2rκ4
+
+) − 8T exp (r − cG1) −
+
+2T exp (r − cε23 G1 
+
+> σ2
+> η
+
+), for i ∈ { 2, 3, 4}, it holds that 
+
+∥GradB i − E[GradB i]∥ ⩽ (1 + 0.04 
+
+(1 − 2ρ)2 )( 1 + 2
+
+(1 − 2ρ)2 )ε4G1σ ⋆2
+
+> min
+
+δℓ.
+
+This completes the proof. 
+
+Lemma 2. Assume that SD (B, B⋆) ⩽ δℓ. Then, the following statements hold:  
+
+> •
+
+E[GradB ] = ( 2ρ2 − 2ρ + 1)G1(Θ − Θ⋆)W ⊤• With probability at least 1−8T exp (r −cG1)−2T exp (r −  
+
+> cε23G1
+> σ2
+> η
+
+), we derive the upper bound of ∥E[GradB ]∥ by 
+
+(2ρ2 − 2ρ + 1)( 1 + 0.04 
+
+(1 − 2ρ)2 )( 1 + 2
+
+(1 − 2ρ)2 )G1μ√rδℓσ ⋆2 
+
+> max
+> •
+
+If δℓ ⩽ 0.02  
+
+> μ√rκ2
+
+, then with probability at least 1 −
+
+2 exp (C(d + r) − cε25 G1σ ⋆2min    
+
+> σ2
+> ηκ2
+
+) − 4 exp (C(d + r) − c ε24 G1T 
+
+> μ2rκ4
+
+) −
+
+8T exp (r − cG1) − 2T exp (r − cε23 G1 
+
+> σ2
+> η
+
+),
+
+∥GradB − E[GradB ]∥ ⩽ 2(1 + 0.04 
+
+(1 − 2ρ)2 )(1 + 2
+
+(1 − 2ρ)2 )ε4δℓG1σ ⋆2
+
+> min
+
+.
+
+Proof. Given the definition of GradB, we have 
+
+E[GradB ] = ( 1 − ρ)2E[GradB 1] + ρ(1 − ρ)( E[GradB 2] + E[GradB 3]) 
+
+−
+
+> T
+
+# ∑
+
+> t=1
+> G1
+
+# ∑
+
+> n=0
+
+(1 − ρ)E[ηn,t xbn,t w⊤ 
+
+> t
+
+] −
+
+> T
+
+# ∑
+
+> t=1
+> G1
+
+# ∑
+
+> n=0
+
+ρE[ηn,t ζn,t w⊤ 
+
+> t
+
+]= ( 1 − ρ)2G1(Θ − Θ⋆)W ⊤ + ρ2G1(Θ − Θ⋆)W ⊤
+
+= ( 2ρ2 − 2ρ + 1)G1(Θ − Θ⋆)W ⊤.
+
+Using the result form Lemma 1, with probability at least 1 −
+
+8T exp (r − cG1) − 2T exp (r − cε23 G1 
+
+> σ2
+> η
+
+), we have 
+
+∥E[GradB ]∥ = ∥(2ρ2 − 2ρ + 1)G1(Θ − Θ⋆)W ⊤∥
+
+⩽ (2ρ2 − 2ρ + 1)G1∥(Θ − Θ⋆)∥∥ W ∥
+
+⩽ (2ρ2 − 2ρ + 1)( 1 + 0.04 
+
+(1 − 2ρ)2 )( 1 + 2
+
+(1 − 2ρ)2 )G1μ√rδℓσ ⋆2
+
+> max
+
+.
+
+Next, we bound ∥GradB − E[GradB ]∥ by bounding terms 
+
+∥ ∑Tt=1 ∑G1
+
+> n=0
+
+(1 − ρ)ηn,t xbn,t w⊤ 
+
+> t
+
+∥ and ∥ ∑Tt=1 ∑G1 
+
+> n=0
+
+ρη n,t ζn,t w⊤ 
+
+> t
+
+∥.Considering the fixed unit norm vectors z and v. Given that E[( 1 − ρ)ηn,t v⊤xbn,t w⊤ 
+
+> t
+
+z] = 0, E[ηn,t ] = 0, E[( 1 −
+
+ρ)v⊤xbn,t w⊤ 
+
+> t
+
+z] = 0, and Var (ηn,t ) = σ 2 
+
+> η
+
+,Var (( 1 − ρ)v⊤xbn,t w⊤ 
+
+> t
+
+z) = E[( 1 − ρ)v⊤xbn,t w⊤ 
+
+> t
+
+z]2
+
+= E[( 1 − ρ)2(w⊤ 
+
+> t
+
+z)2v⊤xbn,t x⊤ 
+
+> bn,t
+
+v] = ( 1 − ρ)2(w⊤ 
+
+> t
+
+z)2v⊤E[xbn,t x⊤ 
+
+> bn,t
+
+]v
+
+= ( 1 − ρ)2(w⊤ 
+
+> t
+
+z)2v⊤v = ( 1 − ρ)2(w⊤ 
+
+> t
+
+z)2,
+
+the summands are presented as independent sub-exponential random variables with a bounded norm Kn ⩽ C(1−ρ)|w⊤ 
+
+> t
+
+z|ση .Applying the sub-exponential Bernstein inequality from Proposition 1 with g = ε5(1 − ρ)
+
+
+
+1 + 0.04 
+
+> (1−2ρ)2
+
+
+
+G1σ ⋆2
+
+> min
+
+. To apply this, based on the result of Lemma 1, we have 
+
+g2
+
+∑G1 
+
+> n=0
+
+K2
+
+> n
+
+⩾
+
+ε25 (1 − ρ)2 1 + 0.04 
+
+> (1−2ρ)2
+
+2G21 σ ⋆4
+
+> min
+
+∑Tt=1 ∑G1 
+
+> n=0
+
+C2(1 − ρ)2|w⊤ 
+
+> t
+
+z|2σ 2
+
+> η
+
+⩾
+
+ε25 (1 − ρ)2 1 + 0.04 
+
+> (1−2ρ)2
+
+2G21 σ ⋆4
+
+> min
+
+G1C2(1 − ρ)2∥W ∥2σ 2
+
+> η
+
+⩾
+
+ε25 (1 − ρ)2 1 + 0.04 
+
+> (1−2ρ)2
+
+2G21 σ ⋆4
+
+> min
+
+G1C2(1 − ρ)2σ 2
+
+> η
+
+ 1 + 0.04 
+
+> (1−2ρ)2
+
+2σ ⋆ 
+
+> max 2
+
+⩾ cε25 G1σ ⋆2
+
+> min
+
+σ 2 
+
+> η
+
+κ2
+
+g
+
+max n Kn
+
+⩾
+
+ε5(1 − ρ) 1 + 0.04 
+
+> (1−2ρ)2
+
+G1σ ⋆2
+
+> min
+
+max n,t C(1 − ρ)|w⊤ 
+
+> t
+
+z|ση
+
+⩾
+
+ε5(1 − ρ) 1 + 0.04 
+
+> (1−2ρ)2
+
+G1σ ⋆2
+
+> min
+
+C(1 − ρ)∥wt ∥ση
+
+⩾
+
+ε5(1 − ρ) 1 + 0.04 
+
+> (1−2ρ)2
+
+G1σ ⋆2
+
+> min
+
+C(1 − ρ) 1 + 0.04 
+
+> (1−2ρ)2
+
+μp rT σ ⋆
+
+> max
+
+ση
+
+⩾ cε5G1σ ⋆
+
+> min
+
+μp rT κσ η
+
+.
+
+By considering ε5 = cε4δℓ and c 
+
+> κ3
+
+⩽  
+
+> √Tση
+> σ⋆
+> min
+
+, for a fixed unit norm vectors z, v, with probability at least 1 −
+
+exp (− cε25 G1σ ⋆2min    
+
+> σ2
+> ηκ2
+
+) − 8T exp (r − cG1) − 2T exp (r − cε23 G1 
+
+> σ2
+> η
+
+),
+
+> T
+
+# ∑
+
+> t=1
+> G1
+
+# ∑
+
+> n=0
+
+(1 − ρ)ηn,t v⊤xbn,t w⊤ 
+
+> t
+
+z ⩽ ε5(1 − ρ) 1 + 0.04 
+
+(1 − 2ρ)2
+
+G1σ ⋆2
+
+> min
+
+.
+
+Applying a standard epsilon-net argument to bound the max-imum of the above expression across all unit norm vectors 
+
+z and v introduces a multiplicative factor of exp (C(d + r)) .Consequently, with probability at least 1 − exp (C(d + r) −15      
+
+> cε25G1σ⋆2min
+> σ2
+> ηκ2
+
+)−8T exp (r −cG1)−2T exp (r − cε23 G1 
+
+> σ2
+> η
+
+), it follows that 
+
+∥
+
+> T
+
+# ∑
+
+> t=1
+> G1
+
+# ∑
+
+> n=0
+
+(1 − ρ)ηn,t xbn,t w⊤ 
+
+> t
+
+∥ ⩽ ε5(1 − ρ) 1 + 0.04 
+
+(1 − 2ρ)2
+
+G1σ ⋆2
+
+> min
+
+.
+
+Following the same idea, with the same probability, we have 
+
+∥
+
+> T
+
+# ∑
+
+> t=1
+> G1
+
+# ∑
+
+> n=0
+
+ρη n,t ζn,t w⊤ 
+
+> t
+
+∥ ⩽ ε5ρ 1 + 0.04 
+
+(1 − 2ρ)2
+
+G1σ ⋆2
+
+> min
+
+.
+
+By combining these results and Proposition 5, with probability at least 1 − 2 exp (C(d + r) − cε25 G1σ ⋆2min    
+
+> σ2
+> ηκ2
+
+) − 4 exp (C(d + r) −
+
+c ε24 G1T 
+
+> μ2rκ4
+
+) − 8T exp (r − cG1) − 2T exp (r − cε23 G1 
+
+> σ2
+> η
+
+), we show that 
+
+∥GradB − E[GradB ]∥
+
+⩽ (1 − ρ)2∥GradB 1 − E[GradB 1]∥ + ρ2∥GradB 4 − E[GradB 4]+ ρ(1 − ρ)( ∥GradB 2 − E[GradB 2]∥ + ∥GradB 3 − E[GradB 3]∥)+
+
+> T
+
+# ∑
+
+> t=1
+> G1
+
+# ∑
+
+> n=0
+
+(1 − ρ)ηn,t xbn,t w⊤ 
+
+> t
+
++
+
+> T
+
+# ∑
+
+> t=1
+> G1
+
+# ∑
+
+> n=0
+
+ρη n,t ζn,t w⊤
+
+> t
+
+⩽ 2
+
+
+
+1 + 0.04 
+
+(1 − 2ρ)2
+
+ 
+
+1 + 2
+
+(1 − 2ρ)2
+
+
+
+ε4δℓG1σ ⋆2
+
+> min
+
+.
+
+Lemma 3. Let ρ ∈ [0, αrbn ,t      
+
+> rbn ,t+
+> q
+> 2rTlog G1T
+> δμσ ⋆
+> max
+
+]. Then, with prob-ability at least 1 − δ , the conservative feature vector is safe. Proof. To determine the safety of the conservative feature vector, it is sufficient to demonstrate that 
+
+(1 − ρ)x⊤ 
+
+> bn,t
+
+θ ⋆ 
+
+> t
+
++ ρζ ⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
+⩾ (1 − α)rbn,t .
+
+This is equivalent to satisfy 
+
+ρ ⩽ αrbn,t
+
+rbn,t + |ζ ⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
+| . (8) Since ζn,t follows standard Gaussian distribution, ζ ⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
+∼
+
+N (0, ∥θ ⋆ 
+
+> t
+
+∥2). Utilizing Gaussian tail bounds and union bound over T tasks and G1 rounds, with probability at least 1 − δζ ⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
+⩽
+
+r
+
+2 log G1T
+
+δ ∥θ ⋆ 
+
+> t
+
+∥.
+
+To prove the inequality Eq. (8), we combine this result with Assumption 4. It is sufficient to show that 
+
+ρ ⩽ αrbn,t
+
+rbn,t +
+
+q
+
+2 rT log G1T 
+
+> δ
+
+μσ ⋆
+
+> max
+
+.
+
+This provides the sufficient condition for the range of ρ.
+
+A. Proof of Theorem 2 
+
+Based on the analysis from Theorem 5.2 in [1], we have 
+
+∥P bB+∥ ⩽ ∥PB ∥∥ I − γWW ⊤∥ + γ
+
+G1
+
+∥E[GradB ] − GradB ∥,
+
+SD (B+, B⋆) ⩽ ∥P bB+∥
+
+1 − γ 
+
+> G1
+
+∥E[GradB ]∥ − γ 
+
+> G1
+
+∥GradB − E[GradB ]∥ .
+
+Using the result from Lemma 1, with probability at least 1 −
+
+8T exp (r − cG1) − 2T exp (r − cε23 G1 
+
+> σ2
+> η
+
+), we obtain 
+
+λmin (I − γWW ⊤) = 1 − γ∥W ∥2 ⩾ 1 − γ
+
+
+
+1 + 0.04 
+
+(1 − 2ρ)2
+
+2
+
+σ ⋆2
+
+> max
+
+,
+
+∥I − γWW ⊤∥ = λmax (I − γWW ⊤)
+
+⩽ 1 − γ
+
+p 
+
+1 − 4 × 10 −4 − 0.04 
+
+(1 − 2ρ)2
+
+2
+
+σ ⋆2
+
+> min
+
+.
+
+Since γ ⩽ 1  
+
+> 
+> 1+0.04
+> (1−2ρ)2
+> 2
+> σ⋆2max
+
+, I − γWW ⊤ is positive semi-definite. Combining the above with Lemma 2 and set-ting ε4 = 0.01, with probability at least 1 − 2 exp (C(d +
+
+r) − cε25 G1σ ⋆2min    
+
+> σ2
+> ηκ2
+
+) − 4 exp (C(d + r) − c ε24 G1T 
+
+> μ2rκ4
+
+) − 8T exp (r − cG1) −
+
+2T exp (r − cε23 G1 
+
+> σ2
+> η
+
+), we have 
+
+∥P bB+∥ ⩽ ∥PB ∥∥ I − γWW ⊤∥ + γ
+
+G1
+
+∥E[GradB ] − GradB ∥
+
+⩽
+
+h
+
+1 − γ p 
+
+1 − 4 × 10 −4 − 0.04 
+
+(1 − 2ρ)2
+
+2σ ⋆2
+
+> min
+
+i
+
+δℓ
+
++ 2γ 1 + 0.04 
+
+(1 − 2ρ)2
+
+  1 + 2
+
+(1 − 2ρ)2
+
+ε4δℓσ ⋆2
+
+> min
+
+⩽
+
+
+
+1 − (
+
+p
+
+1 − 4 × 10 −4 − 0.04 
+
+(1 − 2ρ)2 )2
+
+− 2(1 + 0.04 
+
+(1 − 2ρ)2 )( 1 + 2
+
+(1 − 2ρ)2 )ε4
+
+γσ ⋆2
+
+> min
+
+
+
+δℓ
+
+⩽ (1 − 0.5γσ ⋆2
+
+> min
+
+)δℓ,
+
+
+
+1 − γ
+
+G1
+
+∥E[GradB ]∥ − γ
+
+G1
+
+∥GradB − E[GradB ]∥
+
+−1
+
+⩽
+
+
+
+1 − (2ρ2 − 2ρ + 1)γ(1 + 0.04 
+
+(1 − 2ρ)2 )( 1 + 2
+
+(1 − 2ρ)2 )μδℓ
+
+√rσ ⋆2 
+
+> max
+
+− 2γ(1 + 0.04 
+
+(1 − 2ρ)2 )σ ⋆2
+
+> min
+
+(1 + 2
+
+(1 − 2ρ)2 )ε4δℓ
+
+−1
+
+⩽ 1 + 2(2ρ2 − 2ρ + 1)γ(1 + 0.04 
+
+(1 − 2ρ)2 )( 1 + 2
+
+(1 − 2ρ)2 )μδℓ
+
+√rσ ⋆2 
+
+> max
+
++ 4γ(1 + 0.04 
+
+(1 − 2ρ)2 )σ ⋆2
+
+> min
+
+(1 + 2
+
+(1 − 2ρ)2 )ε4δℓ (9) 
+
+⩽ 1 + 0.04 (1 + 0.04 
+
+(1 − 2ρ)2 )
+
+h
+
+(2ρ2 − 2ρ + 1)( 1 + 2
+
+(1 − 2ρ)2 )+ 2ε4(1 + 2
+
+(1 − 2ρ)2 )
+
+i
+
+γσ ⋆2 
+
+> min
+
+⩽ 1 + 0.27 γσ ⋆2
+
+> min
+
+,
+
+where Eq. (9) is derived from (1 − x)−1 ⩽ (1 + 2x) if |x| ⩽ 12
+
+for ρ ∈ [0, 0.25 ]∪[0.75 , 1] and γ ⩽ 1   
+
+> (1+0.04
+> (1−2ρ)2)2σ⋆2max
+
+. Combining these results above, we conclude that SD (B+, B⋆) ⩽  1 − 0.5γσ ⋆2
+
+> min
+
+  1 + 0.27 γσ ⋆2
+
+> min
+
+δℓ ⩽  1 − 0.23 γσ ⋆2
+
+> min
+
+δℓ.
+
+To ensure high probability guarantees for all stated results in the first epoch, it is necessary to set the bounds for G1 and G1T .These bounds must guarantee that the following probability is sufficiently high: 1 − 2 exp (C(d + r) − cε25 G1σ ⋆2min    
+
+> σ2
+> ηκ2
+
+) − 4 exp (C(d +
+
+r) − c ε24 G1T 
+
+> μ2rκ4
+
+) − 8T exp (r − cG1) − 2T exp (r − cε23 G1 
+
+> σ2
+> η
+
+). This re-quired that each exponential term be substantially smaller than or equal to d−10 . By considering ε3 = c 
+
+> 2
+
+μp rT δℓσ ⋆
+
+> max
+
+,16 
+
+ε4 = 0.01, ε5 = cε4δℓ, and δL = p2(ρ2 − ρ + 1), we obtain 
+
+C(d + r) − cε25 G1σ ⋆2
+
+> min
+
+σ 2 
+
+> η
+
+κ2 < −10 log d ⇒ G1T > C(d + r)κ2NSR 
+
+C(d + r) − c ε24 G1T
+
+μ2rκ4 < −10 log d ⇒ G1T > C(d + r)μ2rκ4
+
+log T + r − cG1 < −10 log d ⇒ G1 > C(r + log T + log d)
+
+log T + r − c ε23 G1
+
+σ 2
+
+> η
+
+< −10 log d ⇒ G1 > C(r + log T + log d)
+
+μ2rκ2 NSR .
+
+Consequently, combining these results, we conclude that 
+
+G1T > C(d + r)κ2 max (μ2rκ2, NSR )
+
+G1 > C(r + log T + log d) max (1, NSR 
+
+μ2rκ2 ).
+
+Moreover, when the initialization phase is considered, and by combining the above bounds with G1T >
+
+Cμ2κ2
+
+
+
+dr κ2 
+
+> δ20
+
++ d 
+
+> δ20
+
+NSR 
+
+
+
+= C′μ4rκ6d  rκ2 + NSR  from Proposition 3, with the condition d + r ⩽ dr , we prove that 
+
+G1T > Cμ4dr κ6 max (rκ2, NSR )
+
+G1 > C(r + log T + log d) max (1, NSR 
+
+μ2rκ2 ).
+
+This completes the proof that ensures error decay in subse-quent GD iterations in epoch-1 (safe exploration). 
+
+B. Proof of Theorem 1 
+
+To guarantee the chosen action xn,t is safe, it is necessary that the following inequality is held: 
+
+x⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
+⩾ (1 − α)rbn,t .
+
+Adding and subtracting x⊤ 
+
+> n,t
+
+bθ (m)  
+
+> t
+
+, we derive 
+
+x⊤ 
+
+> n,t
+
+bθ (m)  
+
+> t
+
++ x⊤ 
+
+> n,t
+
+(θ ⋆ 
+
+> t
+
+− bθ (m)  
+
+> t
+
+) ⩾ (1 − α)rbn,t .
+
+Given that xn,t follows a standard Gaussian distribution, it follows that x⊤ 
+
+> n,t
+
+(θ ⋆ 
+
+> t
+
+− bθ (m)  
+
+> t
+
+) ∼ N (0, ∥θ ⋆ 
+
+> t
+
+− bθ (m)  
+
+> t
+
+∥2). Utilizing Gaussian tail bounds and the union bound over T tasks and 
+
+Gm+1 − Gm rounds, with probability at least 1 − δ , we have 
+
+x⊤ 
+
+> n,t
+
+(θ ⋆ 
+
+> t
+
+− bθ (m)  
+
+> t
+
+) ⩽
+
+r
+
+2 log (Gm+1 − Gm)T
+
+δ ∥θ ⋆ 
+
+> t
+
+− bθ (m)  
+
+> t
+
+∥.
+
+To guarantee the validity of this inequality, we combine this result with ∥bθ (m)  
+
+> t
+
+− θ ⋆ 
+
+> t
+
+∥ ⩽ ∥bθ (1)  
+
+> t
+
+− θ ⋆ 
+
+> t
+
+∥ for m ⩾ 1. Consequently, to ensure constraints are met, we need to show that the following inequality holds. 
+
+x⊤ 
+
+> n,t
+
+bθ (m)  
+
+> t
+
+⩾
+
+r
+
+2 log (Gm+1 − Gm)T
+
+δ ∥bθ (1)  
+
+> t
+
+− θ ⋆ 
+
+> t
+
+∥ + ( 1 − α)rbn,t .
+
+Using Lemma 1 and Theorem 2, the inequality reduces to 
+
+x⊤ 
+
+> n,t
+
+bθ (m)  
+
+> t
+
+⩾(1 + 2
+
+(1 − 2ρ)2 )μ(1 − 0.23 γσ ⋆2
+
+> min
+
+)Lδ0σ ⋆
+
+> max
+
+r 2rT log (Gm+1 − Gm)T
+
+δ + ( 1 − α)rbn,t .
+
+Given that δ0 < 1, ρ ∈ [0, 0.25 ] ∪ [0.75 , 1], and by setting γ =   
+
+> c
+> (1+0.04
+> (1−2ρ)2)2σ⋆2max
+
+, it suffices to ensure that 
+
+x⊤ 
+
+> n,t
+
+bθ (m)  
+
+> t
+
+⩾ (1 + 2
+
+(1 − 2ρ)2 )μ(1 − c
+
+κ2 )Lσ ⋆
+
+> max
+
+r 2rT log (Gm+1 − Gm)T
+
+δ + ( 1 − α)rbn,t .
+
+Given the fact that x⊤ 
+
+> n,t
+
+bθ (m)  
+
+> t
+
+⩾ x⋆⊤ 
+
+> n,t
+
+bθ (m)  
+
+> t
+
+, to ensure safety (con-straint satisfaction) it suffices to verify that 
+
+x⋆⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
++ x⋆⊤ 
+
+> n,t
+
+(bθ (m)  
+
+> t
+
+− θ ⋆ 
+
+> t
+
+) ⩾(1 − α)rbn,t +  1 + 2
+
+(1 − 2ρ)2
+
+μσ ⋆
+
+> max
+
+ 1 − c
+
+κ2
+
+L
+
+r 2rT log (Gm+1 − Gm)T
+
+δ .
+
+We can rewrite the safety condition as 
+
+x⋆⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
+⩾ 2(1 + 2
+
+(1 − 2ρ)2 )μ(1 − c
+
+κ2 )Lσ ⋆
+
+> max
+
+r 2rT log (Gm+1 − Gm)T
+
+δ + ( 1 − α)rbn,t .
+
+Applying log x ⩾ 1 − 1 
+
+> x
+
+, for x ∈ (0, 1], it is equivalent to satisfy 
+
+ 1 − c
+
+κ2
+
+L ⩽ κbn,t + αrbn,t
+
+2 1 + 2
+
+> (1−2ρ)2
+
+μσ ⋆
+
+> max
+
+q 2rT log NT 
+
+> δ
+
+L ⩾
+
+log 
+
+ κbn ,t +αrbn ,t
+
+> 2
+
+ 1+ 2
+
+> (1−2ρ)2
+
+μσ ⋆   
+
+> max
+> q2rTlog NT
+> δ
+
+
+
+log  1 − c
+
+> κ2
+
+
+
+L ⩾ Cκ2 log 
+
+ κbn,t + αrbn,t
+
+2 1 + 2
+
+> (1−2ρ)2
+
+μσ ⋆
+
+> max
+
+q 2rT log NT 
+
+> δ
+
+
+
+.
+
+Thus, we obtained the bound on the number of GD iterations to ensure safety. This completes the proof. 
+
+C. Proof of Theorem 3 
+
+This theorem is derived using Theorem 2.3 from [53]. To obtain our result, we set ε2 = cε1δℓ in the original proof. This modification guarantees an exponential decay in SD (B+, B⋆)
+
+at every iteration, given the specified conditions. 
+
+D. Proof of Theorem 4 
+
+We start by determining the upper bound for the cu-mulative regret R1 
+
+> N,T
+
+during the first epoch, and R2
+
+> N,T
+
+in the following epochs. In the first epoch, since both 
+
+xbn,t and ζn,t are i.i.d standard Gaussian vectors, it follows that ∑G1
+
+> n=1
+
+ x⋆ 
+
+> n,t
+
+− (1 − ρ)xbn,t − ρζ n,t
+
+⊤ θ ⋆ 
+
+> t
+
+∼ N (0, 2G1(ρ2 −
+
+ρ + 1)∥θ ⋆ 
+
+> t
+
+∥2). Using the Chernoff bound for Gaussian stated in Proposition 2, with probability at least 1 − δ , we have 
+
+> G1
+
+# ∑
+
+> n=1
+
+ x⋆ 
+
+> n,t
+
+− (1 − ρ)xbn,t − ρζ n,t
+
+⊤ θ ⋆ 
+
+> t
+
+⩽ 2
+
+r
+
+G1(ρ2 − ρ + 1) log 1
+
+δ ∥θ ⋆ 
+
+> t
+
+∥.
+
+(10) By using the union bound and combining the result from Theorem 2, with probability at least 1 − δ − Ld −10 , we have 17 
+
+R1 
+
+> N,T
+
+=
+
+> T
+
+# ∑
+
+> t=1
+> G1
+
+# ∑
+
+> n=1
+
+x⋆⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
+− x⊤ 
+
+> n,t
+
+θ ⋆
+
+> t
+
+=
+
+> T
+
+# ∑
+
+> t=1
+> G1
+
+# ∑
+
+> n=1
+
+(x⋆ 
+
+> n,t
+
+− (1 − ρ)xbn,t − ρζ n,t )⊤θ ⋆
+
+> t
+
+⩽
+
+> T
+
+# ∑
+
+> t=1
+
+2
+
+r
+
+G1(ρ2 − ρ + 1) log 1
+
+δ ∥θ ⋆ 
+
+> t
+
+∥ (11) 
+
+⩽ 2μσ ⋆
+
+> max
+
+r
+
+G1rT (ρ2 − ρ + 1) log 1
+
+δ , (12) where Eq. (12) is derived from Assumption 4 and Eq. (11) is from Eq. (10). By applying L = Cκ2 log 
+
+ √2(ρ2−ρ+1) 
+
+> 1+2
+> (1−2ρ)2
+
+
+
+, we demonstrate SD (BL, B⋆) ⩽
+
+√2(ρ2−ρ+1) 
+
+> 1+2
+> (1−2ρ)2
+
+. Subsequently, using the result from Lemma 1, we obtain 
+
+∥θ ⋆ 
+
+> t
+
+− bθ1,t ∥ ⩽  1 + 2
+
+(1 − 2ρ)2
+
+μδ L
+
+r rT σ ⋆
+
+> max
+
+⩽
+
+q
+
+2(ρ2 − ρ + 1)μ
+
+r rT σ ⋆
+
+> max
+
+.
+
+Given that ρ ∈ [0, 0.25 ] ∪ [0.75 , 1], we have p2(ρ2 − ρ + 1) >
+
+1. Thus, 
+
+Cκ2 log 
+
+ p2(ρ2 − ρ + 1)
+
+1 + 2
+
+> (1−2ρ)2
+
+
+
+> Cκ2 log 
+
+ 11 + 2
+
+> (1−2ρ)2
+
+
+
+= Cκ2 log 
+
+ 2μσ ⋆
+
+> max
+
+q 2rT log NT 
+
+> δ
+
+2 1 + 2
+
+> (1−2ρ)2
+
+μσ ⋆
+
+> max
+
+q 2rT log NT 
+
+> δ
+
+
+
+⩾ Cκ2 log 
+
+ 2x⋆⊤ 
+
+> n,t
+
+θ ⋆
+
+> t
+
+2 1 + 2
+
+> (1−2ρ)2
+
+μσ ⋆
+
+> max
+
+q 2rT log NT 
+
+> δ
+
+
+
+⩾ Cκ2 log 
+
+ κbn,t + αrbn,t
+
+2 1 + 2
+
+> (1−2ρ)2
+
+μσ ⋆
+
+> max
+
+q 2rT log NT 
+
+> δ
+
+
+
+,
+
+where the first inequality is derived with at least probability 1 − δ , x⋆⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
+⩽ μσ ⋆
+
+> max
+
+q 2rT log NT  
+
+> δ
+
+. Thus, the inequality above shows that the bound on L satisfies the condition for L in Theorem 1. For subsequent epochs, given xn,t as an i.i.d standard Gaussian, we derive that ∑Mm=2 ∑Gm 
+
+> n=Gm−1+1
+
+x⋆⊤ 
+
+> n,t
+
+(θ ⋆ 
+
+> t
+
+−
+
+bθm−1,t ) − x⊤ 
+
+> n,t
+
+(θ ⋆ 
+
+> t
+
+− bθm−1,t ) ∼ N (0, 2(N − G1)∥θ ⋆ 
+
+> t
+
+− bθm−1,t ∥2).Using the Chernoff bound for Gaussian stated in Proposition 2, with probability at least 1 − δ , we have 
+
+> M
+
+# ∑
+
+> m=2
+> Gm
+
+# ∑
+
+> n=Gm−1+1
+
+x⋆⊤ 
+
+> n,t
+
+(θ ⋆ 
+
+> t
+
+− bθm−1,t ) − x⊤ 
+
+> n,t
+
+(θ ⋆ 
+
+> t
+
+− bθm−1,t )
+
+⩽ 2
+
+r
+
+(N − G1) log 1
+
+δ ∥θ ⋆ 
+
+> t
+
+− bθm−1,t ∥.
+
+By applying the union bound and Lemma 1 to our analysis, with probability at least 1 − δ − (M − 1)Ld −10 , we have 
+
+R2 
+
+> N,T
+
+=
+
+> M
+
+# ∑
+
+> m=2
+> T
+
+# ∑
+
+> t=1
+> Gm
+
+# ∑
+
+> n=Gm−1+1
+
+x⋆⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
+− x⊤ 
+
+> n,t
+
+θ ⋆
+
+> t
+
+=
+
+> M
+
+# ∑
+
+> m=2
+> T
+
+# ∑
+
+> t=1
+> Gm
+
+# ∑
+
+> n=Gm−1+1
+
+x⋆⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
+− x⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
++ x⋆⊤ 
+
+> n,t
+
+bθm−1,t − x⋆⊤ 
+
+> n,t
+
+bθm−1,t
+
+⩽
+
+> T
+
+# ∑
+
+> t=1
+
+2
+
+r
+
+(N − G1) log 1
+
+δ ∥θ ⋆ 
+
+> t
+
+− bθm−1,t ∥
+
+⩽
+
+> T
+
+# ∑
+
+> t=1
+
+2
+
+r
+
+(N − G1) log 1
+
+δ ∥θ ⋆ 
+
+> t
+
+− bθ1,t ∥ (13) 
+
+⩽ 2μσ ⋆
+
+> max
+
+r
+
+2(N − G1)( ρ2 − ρ + 1)rT log 1
+
+δ ,
+
+where Eq. (13) is derived from ∥θ ⋆ 
+
+> t
+
+− bθm−1,t ∥ ⩽ ∥θ ⋆ 
+
+> t
+
+− bθ1,t ∥.Finally, by applying the union bound across all epochs, with probability at least 1 − 2δ − MLd −10 , the cumulative regret 
+
+RN,T is bound as follows: 
+
+RN,T =
+
+> M
+
+# ∑
+
+> m=1
+> T
+
+# ∑
+
+> t=1
+> Gm
+
+# ∑
+
+> n=Gm−1+1
+
+x⋆⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
+− x⊤ 
+
+> n,t
+
+θ ⋆
+
+> t
+
+=
+
+> T
+
+# ∑
+
+> t=1
+> G1
+
+# ∑
+
+> n=1
+
+x⋆⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
+− x⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
++
+
+> M
+
+# ∑
+
+> m=2
+> T
+
+# ∑
+
+> t=1
+> Gm
+
+# ∑
+
+> n=Gm−1+1
+
+x⋆⊤ 
+
+> n,t
+
+θ ⋆ 
+
+> t
+
+− x⊤ 
+
+> n,t
+
+θ ⋆
+
+> t
+
+⩽ 2μσ ⋆
+
+> max
+
+r
+
+G1rT (ρ2 − ρ + 1) log 1
+
+δ
+
++ 2μσ ⋆
+
+> max
+
+r
+
+2(N − G1)( ρ2 − ρ + 1)rT log 1
+
+δ
+
+= 2μσ ⋆
+
+> max
+
+r
+
+rT (ρ2 − ρ + 1) log 1
+
+δ
+
+p G1 + p2(N − G1)
+
+
+
+⩽ 4√2μσ ⋆
+
+> max
+
+r
+
+rNT (ρ2 − ρ + 1) log 1
+
+δ , (14) where Eq. (14) is derived from √x + √y ⩽ 2√x + y.
+
+Jiabin Lin received his B.S. degree in Computer Science and Communication Engineering from Guangxi University of Science and Technology in 2019, and his M.S. degree in Electrical Engineering from the University of South Florida in 2021. He is a graduate student in the Department of Electrical and Computer Engineering at Iowa State University. His research interests include bandit learning, multi-task learning, and representation learning. 
+
+Shana Moothedath received her Ph.D. degree in Electrical Engineering from the Indian Institute of Technology Bombay (IITB) in 2018, and she was a postdoc-toral scholar in Electrical and Computer Engineering at the University of Washing-ton, Seattle (UW) till 2021. Currently, she is the Harpole-Pentair Assistant Professor in the Department of Electrical and Computer Engineering at Iowa State University. Her research focuses on distributed decision-making, learning and control, and security of cyber-physical systems. She was awarded ISU Award for Early Achievement in Research 2026, NSF CAREER Award 2025, the Best Research Thesis Award at IITB in 2019, and selected as a MIT-EECS Rising Star in 2019.

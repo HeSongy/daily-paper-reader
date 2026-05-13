@@ -1,0 +1,721 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-05-13T21:35:00.149098+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 8,
+    "deep_cap": 6,
+    "deep_selected": 7,
+    "quick_candidates": 14,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2605.07195v1",
+      "source": "arxiv",
+      "title": "See Tomorrow, Act Today: Foresight-Driven Autonomous Driving",
+      "abstract": "Current end-to-end autonomous driving planners are fundamentally reactive: they condition on historical and present observations to predict future actions. We argue that autonomous agents should instead imagine future scenes before deciding, just as human drivers mentally simulate ``what will happen next\" before acting. We introduce ForeSight, a foundation world model centric planning framework that reframes autonomous driving as anticipatory decision-making. Rather than treating world models as auxiliary components, ForeSight makes future scene imagination the primary driver of action prediction. Our approach operates in two stages: (1) generating plausible future visual worlds via a pretrained world model, and (2) planning actions conditioned on these imagined futures. This paradigm shift from ``what should I do now?\" to ``what will happen, and how should I respond?\" enables genuinely anticipatory rather than reactive planning. By grounding decisions in anticipated contexts rather than present observations alone, ForeSight navigates dynamic, interactive scenarios more effectively. Extensive experiments on NAVSIM and nuScenes demonstrate that explicit future imagination significantly outperforms previous state-of-the-art alternatives, validating our foresight-driven approach.",
+      "authors": [
+        "Bozhou Zhang",
+        "Nan Song",
+        "Yuang Wang",
+        "Jiankang Deng",
+        "Xiatian Zhu",
+        "Li Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-08T03:42:05+00:00",
+      "link": "https://arxiv.org/pdf/2605.07195v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "foundation world model centric planning framework for autonomous driving",
+      "llm_evidence_cn": "以基础世界模型为核心的自动驾驶规划框架",
+      "llm_evidence": "以基础世界模型为核心的自动驾驶规划框架",
+      "canonical_evidence": "以基础世界模型为核心的自动驾驶规划框架",
+      "llm_tldr_en": "Introduces ForeSight, a world model framework that uses future scene imagination for anticipatory driving decisions.",
+      "llm_tldr_cn": "提出ForeSight框架，将世界模型生成的未来场景预测作为自动驾驶决策的核心驱动。",
+      "llm_tldr": "提出ForeSight框架，将世界模型生成的未来场景预测作为自动驾驶决策的核心驱动。",
+      "llm_tags": [
+        "query:navwm:composite"
+      ],
+      "matched_query_tag": "query:navwm:composite",
+      "matched_query_text": "Papers central to 隐空间、导航与世界模型相关论文检索, especially work that connects or combines: 研究隐空间表示及其在智能系统中的作用; 智能体在复杂环境中的导航策略与学习方法; 世界模型的结构与在自主系统中的应用; 探索表示学习在构建世界模型与导航中的运用; 基于隐空间表示的规划与决策模型; 空间表示与认知映射的算法及模型; 检索关于隐空间表示在世界模型和导航中的研究论文; 寻找利用世界模型进行强化学习或规划的最新研究; 探索智能体如何利用隐空间进行导航与环境理解.",
+      "matched_requirement_id": "req-composite-navwm",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.08732v1",
+      "source": "arxiv",
+      "title": "Latent Geometry Beyond Search: Amortizing Planning in World Models",
+      "abstract": "Modern vision-based world models can represent observations as compact yet expressive latent manifolds, but fast goal-oriented planning in these spaces remains challenging. This raises a central question: when does a learned representation simplify control, rather than merely enabling prediction? We study this question in a pretrained LeWorldModel, whose latent geometry is regularized for smoothness and uniformity. Our key insight is that, under such geometry, planning can be amortized into a latent inverse-dynamics mapping instead of requiring online search. We therefore replace iterative planning with a lightweight Goal-Conditioned Inverse Dynamics Model (GC-IDM) that maps the current latent state, goal latent state, and remaining horizon directly to the next action. Empirically, across four benchmark environments spanning navigation, contact-rich manipulation, and continuous control, our controller matches or exceeds CEM in seven of eight environment-protocol settings while reducing per-decision cost by 100-130x. A broader sweep over test-time planners (CEM, MPPI, iCEM, and gradient-based methods) shows that this result is not specific to a particular optimizer. These findings suggest that much of the structure recovered by test-time planning is already locally encoded in the latent representation. More broadly, our results indicate that sufficiently structured latent spaces can shift part of the planning burden from online optimization to learned inference.",
+      "authors": [
+        "Hoang Nguyen",
+        "Xiaohao Xu",
+        "Xiaonan Huang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.LG"
+      ],
+      "published": "2026-05-09T06:36:23+00:00",
+      "link": "https://arxiv.org/pdf/2605.08732v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "planning in latent manifolds of world models using latent geometry",
+      "llm_evidence_cn": "利用世界模型的隐空间几何进行规划",
+      "llm_evidence": "利用世界模型的隐空间几何进行规划",
+      "canonical_evidence": "利用世界模型的隐空间几何进行规划",
+      "llm_tldr_en": "Explores how regularized latent geometry in world models can amortize planning into inverse-dynamics mapping.",
+      "llm_tldr_cn": "研究世界模型中的正则化隐空间几何如何将规划摊销为逆动力学映射。",
+      "llm_tldr": "研究世界模型中的正则化隐空间几何如何将规划摊销为逆动力学映射。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.11367v1",
+      "source": "arxiv",
+      "title": "3D-Belief: Embodied Belief Inference via Generative 3D World Modeling",
+      "abstract": "Recent advances in visual generative models have highlighted the promise of learning generative world models. However, most existing approaches frame world modeling as novel-view synthesis or future-frame prediction, emphasizing visual realism rather than the structured uncertainty required by embodied agents acting under partial observability. In this work, we propose a different perspective: world modeling as embodied belief inference in 3D space. From this view, a world model should not merely render what may be seen, but maintain and update an agent's belief about the unobserved 3D world as new observations are acquired. We identify several key capabilities for such models, including spatially consistent scene memory, multi-hypothesis belief sampling, sequential belief updating, and semantically informed prediction of unseen regions. We instantiate these ideas in 3D-Belief, a generative 3D world model that infers explicit, actionable 3D beliefs from partial observations and updates them online over time. Unlike prior visual prediction models, 3D-Belief represents uncertainty directly in 3D, enabling embodied agents to imagine plausible scene completions and reason over partially observed environments. We evaluate 3D-Belief on 2D visual quality for scene memory and unobserved-scene imagination, object- and scene-level 3D imagination using our proposed 3D-CORE benchmark, and challenging object navigation tasks in both simulation and the real world. Experiments show that 3D-Belief improves 2D and 3D imagination quality and downstream embodied task performance compared to state-of-the-art methods.",
+      "authors": [
+        "Yifan Yin",
+        "Zehao Wen",
+        "Jieneng Chen",
+        "Zehan Zheng",
+        "Nanru Dai",
+        "Haojun Shi",
+        "Suyu Ye",
+        "Aydan Huang",
+        "Zheyuan Zhang",
+        "Alan Yuille",
+        "Jianwen Xie",
+        "Ayush Tewari",
+        "Tianmin Shu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-12T00:42:27+00:00",
+      "link": "https://arxiv.org/pdf/2605.11367v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "generative 3D world modeling for embodied belief inference",
+      "llm_evidence_cn": "用于具身信念推理的生成式3D世界建模",
+      "llm_evidence": "用于具身信念推理的生成式3D世界建模",
+      "canonical_evidence": "用于具身信念推理的生成式3D世界建模",
+      "llm_tldr_en": "Proposes 3D-Belief, a world model that maintains structured uncertainty for agents under partial observability.",
+      "llm_tldr_cn": "提出3D-Belief，一种在部分可观测条件下为智能体维护结构化不确定性的世界模型。",
+      "llm_tldr": "提出3D-Belief，一种在部分可观测条件下为智能体维护结构化不确定性的世界模型。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.12334v1",
+      "source": "arxiv",
+      "title": "Reinforcing VLAs in Task-Agnostic World Models",
+      "abstract": "Post-training Vision-Language-Action (VLA) models via reinforcement learning (RL) in learned world models has emerged as an effective strategy to adapt to new tasks without costly real-world interactions. However, while using imagined trajectories reduces the sample complexity of policy training, existing methods still heavily rely on task-specific data to fine-tune both the world and reward models, fundamentally limiting their scalability to unseen tasks. To overcome this, we argue that world and reward models should capture transferable physical priors that enable zero-shot inference. We propose RAW-Dream (Reinforcing VLAs in task-Agnostic World Dreams), a new paradigm that completely disentangles world model learning from downstream task dependencies. RAW-Dream utilizes a world model pre-trained on diverse task-free behaviors for predicting future rollouts, and an off-the-shelf Vision-Language Model (VLM) for reward generation. Because both components are task-agnostic, VLAs can be readily finetuned for any new task entirely within this zero-shot imagination. Furthermore, to mitigate world model hallucinations, we introduce a dual-noise verification mechanism to filter out unreliable rollouts. Extensive experiments across simulation and real-world settings demonstrate consistent performance gains, proving that generalized physical priors can effectively substitute for costly task-dependent data, offering a highly scalable roadmap for VLA adaptation.",
+      "authors": [
+        "Yucen Wang",
+        "Rui Yu",
+        "Fengming Zhang",
+        "Junjie Lu",
+        "Xinyao Qin",
+        "Tianxiang Zhang",
+        "Kaixin Wang",
+        "Li Zhao"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-05-12T16:16:15+00:00",
+      "link": "https://arxiv.org/pdf/2605.12334v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Vision-Language-Action models in task-agnostic world models for reinforcement learning",
+      "llm_evidence_cn": "在任务无关的世界模型中通过强化学习训练视觉-语言-动作模型",
+      "llm_evidence": "在任务无关的世界模型中通过强化学习训练视觉-语言-动作模型",
+      "canonical_evidence": "在任务无关的世界模型中通过强化学习训练视觉-语言-动作模型",
+      "llm_tldr_en": "Proposes RAW-Dream to train VLA models in task-agnostic world models using transferable physical priors.",
+      "llm_tldr_cn": "提出RAW-Dream，利用可迁移的物理先验在任务无关的世界模型中训练VLA模型。",
+      "llm_tldr": "提出RAW-Dream，利用可迁移的物理先验在任务无关的世界模型中训练VLA模型。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.10118v1",
+      "source": "arxiv",
+      "title": "Plan in Sandbox, Navigate in Open Worlds: Learning Physics-Grounded Abstracted Experience for Embodied Navigation",
+      "abstract": "Vision-Language Models (VLMs) have demonstrated exceptional general reasoning capabilities. However, their performance in embodied navigation remains hindered by a scarcity of aligned open-world vision and robot control data. Despite simulators providing a cost-effective alternative for data collection, the inherent reliance on photorealistic simulations often limits the transferability of learned policies. To this end, we propose \\textit{\\textbf{S}andbox-\\textbf{A}bstracted \\textbf{G}rounded \\textbf{E}xperience} (\\textbf{\\textit{SAGE}}), a framework that enables agents to learn within a physics-grounded semantic abstraction rather than a photorealistic simulation, mimicking the human capacity for mental simulation where plans are rehearsed in simplified physics abstractions before execution. \\textit{SAGE} system operates via three synergistic phases: (1) \\textit{Genesis}: constructing diverse, physics-constrained semantic environments to bootstrap experience; (2) \\textit{Evolution}: distilling experiences through Reinforcement Learning (RL), utilizing a novel asymmetric adaptive clipping mechanism to stabilize updates; (3) \\textit{Navigation}: bridging the abstract policy to open-world control. We demonstrate that \\textit{SAGE} significantly improves planner-assisted embodied navigation, achieving a 53.21\\% LLM-Match Success Rate on A-EQA (+9.7\\% over baseline), while showing encouraging transfer to physical indoor robot deployment.",
+      "authors": [
+        "Zhixuan Shen",
+        "Jiawei Du",
+        "Ziyu Guo",
+        "Han Luo",
+        "Lilan Peng",
+        "Joey Tianyi Zhou",
+        "Haonan Luo",
+        "Tianrui Li"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-11T07:34:30+00:00",
+      "link": "https://arxiv.org/pdf/2605.10118v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "physics-grounded semantic abstraction for mental simulation in navigation",
+      "llm_evidence_cn": "用于导航心理模拟的物理接地语义抽象",
+      "llm_evidence": "用于导航心理模拟的物理接地语义抽象",
+      "canonical_evidence": "用于导航心理模拟的物理接地语义抽象",
+      "llm_tldr_en": "SAGE enables embodied agents to learn navigation via physics-grounded semantic abstractions.",
+      "llm_tldr_cn": "SAGE框架使具身智能体能够通过物理接地的语义抽象学习导航。",
+      "llm_tldr": "SAGE框架使具身智能体能够通过物理接地的语义抽象学习导航。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索智能体如何利用隐空间进行导航与环境理解",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.11743v1",
+      "source": "arxiv",
+      "title": "WorldComp2D: Spatio-semantic Representations of Object Identity and Location from Local Views",
+      "abstract": "Learning latent representations that capture both semantic and spatial information is central to efficient spatio-semantic reasoning. However, many existing approaches rely on implicit latent structures combined with dense feature maps or task-specific heads, limiting computational efficiency and flexibility. We propose WorldComp2D, a novel lightweight representation learning framework that explicitly structures latent space geometry according to object identity and spatial proximity using multiscale local receptive fields. This framework consists of (i) a proximity-dependent encoder that maps a given observation into a spatio-semantic latent space and (ii) a localizer that infers the coordinates of objects in the input from the resulting spatio-semantic representation. Using facial landmark localization as a proof-of-concept, we show that, compared to SoTA lightweight models, WorldComp2D reduces the numbers of parameters and FLOPs by up to 4.0X and 2.2X, respectively, while maintaining real-time performance on CPU. These results demonstrate that explicitly structured latent spaces provide an efficient and general foundation for spatio-semantic reasoning. This framework is open-sourced at https://github.com/JinSeongmin/WorldComp2D.",
+      "authors": [
+        "SeongMin Jin",
+        "Doo Seok Jeong"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-05-12T08:21:41+00:00",
+      "link": "https://arxiv.org/pdf/2605.11743v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "spatio-semantic latent space and object identity representations",
+      "llm_evidence_cn": "空间语义隐空间与物体身份表示",
+      "llm_evidence": "空间语义隐空间与物体身份表示",
+      "canonical_evidence": "空间语义隐空间与物体身份表示",
+      "llm_tldr_en": "Proposes a framework for learning structured latent representations of object identity and location.",
+      "llm_tldr_cn": "提出了一种学习物体身份和位置结构化隐空间表示的框架。",
+      "llm_tldr": "提出了一种学习物体身份和位置结构化隐空间表示的框架。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索表示学习在构建世界模型与导航中的运用",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.12289v1",
+      "source": "arxiv",
+      "title": "PriorZero: Bridging Language Priors and World Models for Decision Making",
+      "abstract": "Leveraging the rich world knowledge of Large Language Models (LLMs) to enhance Reinforcement Learning (RL) agents offers a promising path toward general intelligence. However, a fundamental prior-dynamics mismatch hinders existing approaches: static LLM knowledge cannot directly adapt to the complex transition dynamics of long-horizon tasks. Using LLM priors as fixed policies limits exploration diversity, as the prior is blind to environment-specific dynamics; while end-to-end fine-tuning suffers from optimization instability and credit assignment issues. To bridge this gap, we propose PriorZero, a unified framework that integrates LLM-derived conceptual priors into world-model-based planning through a decoupled rollout-training design. During rollout, a novel root-prior injection mechanism incorporates LLM priors exclusively at the root node of Monte Carlo Tree Search (MCTS), focusing search on semantically promising actions while preserving the world model's deep lookahead capability. During training, PriorZero decouples world-model learning from LLM adaptation: the world model is continuously refined on interaction data to jointly improve its dynamics, policy, and value predictions, its value estimates are then leveraged to provide fine-grained credit assignment signals for stable LLM fine-tuning via alternating optimization. Experiments across diverse benchmarks, including text-based adventure games in Jericho and instruction-following gridworld tasks in BabyAI, demonstrate that PriorZero consistently improves both exploration efficiency and asymptotic performance, establishing a promising framework for LLM-empowered decision-making. Our code is available at https://github.com/opendilab/LightZero.",
+      "authors": [
+        "Junyu Xiong",
+        "Yuan Pu",
+        "Jia Tang",
+        "Yazhe Niu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-05-12T15:47:18+00:00",
+      "link": "https://arxiv.org/pdf/2605.12289v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "integrating LLM priors into world-model-based planning",
+      "llm_evidence_cn": "将大语言模型先验集成到基于世界模型的规划中",
+      "llm_evidence": "将大语言模型先验集成到基于世界模型的规划中",
+      "canonical_evidence": "将大语言模型先验集成到基于世界模型的规划中",
+      "llm_tldr_en": "Introduces PriorZero, a framework bridging language priors and world models for long-horizon decision making.",
+      "llm_tldr_cn": "引入PriorZero框架，将语言先验与世界模型结合以进行长程决策规划。",
+      "llm_tldr": "引入PriorZero框架，将语言先验与世界模型结合以进行长程决策规划。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "寻找利用世界模型进行强化学习或规划的最新研究",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2605.09441v1",
+      "source": "arxiv",
+      "title": "Beyond Isolation: A Unified Benchmark for General-Purpose Navigation",
+      "abstract": "The pursuit of general-purpose embodied agents is hindered by fragmented evaluation protocols that isolate navigation skills and fixate on specific robot morphologies, failing to reflect real-world scenarios where agents must orchestrate diverse behaviors across varying embodiments. To bridge this gap, we introduce OmniNavBench, a benchmark for cross-skill coordination and cross-embodiment generalization. OmniNavBench introduces three paradigm shifts: (1) Compositional Complexity. We propose composite instructions that interleave sub-tasks from 6 categories (PointNav, VLN, ObjectNav, SocialNav, Human Following and EQA), compelling agents to transition between exploration, interaction, and social compliance within a single episode. (2) Morphological Universality and Sensor Flexibility. We present a simulation platform that breaks the reliance on single-morphology evaluation, enabling generalization tests across humanoid, quadrupedal, and wheeled robots, with a modular sensor interface and 170 environments blending synthetic assets with real-world scans. (3) Demonstrations Quality. Moving beyond shortest-path algorithms, we curate 1779 expert trajectories via human teleoperation, capturing behavioral nuances such as exploratory glance and anticipatory avoidance. Extensive evaluations demonstrate that current methods, despite their claimed unified design, struggle with the complex, interleaved nature of general-purpose navigation. This exposes a critical disparity between existing capabilities and real-world deployment demands, underscoring OmniNavBench as a testbed for the next generation of generalist navigators. Dataset, code, and leaderboard are available at http://omninavbench.cloud-ip.cc.",
+      "authors": [
+        "Samson Sun",
+        "Tianyi Yang",
+        "Tengyue Wang",
+        "Yikai Xue",
+        "Zhengjie Xu",
+        "Lingming Zhang",
+        "Qichen Zhang",
+        "Chao Liang",
+        "Zhipeng Zhang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-10T09:34:05+00:00",
+      "link": "https://arxiv.org/pdf/2605.09441v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "unified benchmark for general-purpose navigation across diverse skills",
+      "llm_evidence_cn": "跨多种技能的通用导航统一基准",
+      "llm_evidence": "跨多种技能的通用导航统一基准",
+      "canonical_evidence": "跨多种技能的通用导航统一基准",
+      "llm_tldr_en": "OmniNavBench provides a comprehensive benchmark for cross-skill and cross-embodiment navigation.",
+      "llm_tldr_cn": "OmniNavBench为跨技能和跨形态的通用导航提供了一个全面的评估基准。",
+      "llm_tldr": "OmniNavBench为跨技能和跨形态的通用导航提供了一个全面的评估基准。",
+      "llm_tags": [
+        "query:navwm:composite"
+      ],
+      "matched_query_tag": "query:navwm:composite",
+      "matched_query_text": "Papers central to 隐空间、导航与世界模型相关论文检索, especially work that connects or combines: 研究隐空间表示及其在智能系统中的作用; 智能体在复杂环境中的导航策略与学习方法; 世界模型的结构与在自主系统中的应用; 探索表示学习在构建世界模型与导航中的运用; 基于隐空间表示的规划与决策模型; 空间表示与认知映射的算法及模型; 检索关于隐空间表示在世界模型和导航中的研究论文; 寻找利用世界模型进行强化学习或规划的最新研究; 探索智能体如何利用隐空间进行导航与环境理解.",
+      "matched_requirement_id": "req-composite-navwm",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2605.08477v1",
+      "source": "arxiv",
+      "title": "Do Agents Need to Plan Step-by-Step? Rethinking Planning Horizon in Data-Centric Tool Calling",
+      "abstract": "Explicit planning is a critical capability for LLM-based agents solving complex data-centric tasks, which require precise tool calling over external data sources. Existing strategies fall into two paradigms based on planning horizon: (1) full-horizon (FH), which generates a complete plan before execution, and (2) single-step horizon (SH), which interleaves each action (tool call) with incremental reasoning and observation. While step-by-step execution is a common default under the assumption that eager execution monitoring is necessary for adaptability, we revisit this assumption for well-defined data-centric tasks. Our controlled empirical study isolates planning horizon as the key architectural feature and systematically analyzes the effects of topological complexity and tool robustness on both paradigms. Our experiments across Knowledge Base Question Answering and Multi-hop QA show that FH planning with lazy replanning achieves accuracy parity with SH across varying depths, breadths, and robustness levels, while using 2-3x fewer tokens. These findings suggest that for well-defined data-centric tasks, eager step-wise monitoring is often unnecessary, and full-horizon planning with on-demand replanning can offer a more efficient default.",
+      "authors": [
+        "Naoki Otani",
+        "Nikita Bhutani",
+        "Hannah Kim",
+        "Dan Zhang",
+        "Estevam Hruschka"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-05-08T20:51:42+00:00",
+      "link": "https://arxiv.org/pdf/2605.08477v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "planning horizon and strategies for LLM-based agents",
+      "llm_evidence_cn": "基于大语言模型智能体的规划时界与策略",
+      "llm_evidence": "基于大语言模型智能体的规划时界与策略",
+      "canonical_evidence": "基于大语言模型智能体的规划时界与策略",
+      "llm_tldr_en": "Evaluates planning horizons for agents, comparing full-horizon versus step-by-step execution strategies.",
+      "llm_tldr_cn": "评估了智能体的规划时界，比较了全时界与逐步执行策略。",
+      "llm_tldr": "评估了智能体的规划时界，比较了全时界与逐步执行策略。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.06840v3",
+      "source": "arxiv",
+      "title": "Extracting Search Trees from LLM Reasoning Traces Reveals Myopic Planning",
+      "abstract": "Large language models (LLMs), especially reasoning models, generate extended chain-of-thought (CoT) reasoning that often contains explicit deliberation over future outcomes. Yet whether this deliberation constitutes genuine planning, how it is structured, and what aspects of it drive performance remain poorly understood. In this work, we introduce a new method to characterize LLM planning by extracting and quantifying search trees from reasoning traces in the four-in-a-row board game. By fitting computational models on the extracted search trees, we characterize how plans are structured and how they influence move decisions. We find that LLMs' search is shallower than humans', and that performance is predicted by search breadth rather than depth. Most strikingly, although LLMs expand deep nodes in their traces, their move choices are best explained by a myopic model that ignores those nodes entirely. A causal intervention study where we selectively prune CoT paragraphs further suggests that move selection is driven predominantly by shallow rather than deep nodes. These patterns contrast with human planning, where performance is driven primarily by deep search. Together, our findings reveal a key difference between LLM and human planning: while human expertise is driven by deeper search, LLMs do not act on deep lookahead. This dissociation offers targeted guidance for aligning LLM and human planning. More broadly, our framework provides a generalizable approach for interpreting the structure of LLM planning across strategic domains.",
+      "authors": [
+        "Sixing Chen",
+        "Ji-An Li",
+        "Saner Cakir",
+        "Sinan Akcali",
+        "Kayla Lee",
+        "Marcelo G. Mattar"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-05-07T18:45:46+00:00",
+      "link": "https://arxiv.org/pdf/2605.06840v3",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "extracting search trees to analyze planning in reasoning models",
+      "llm_evidence_cn": "提取搜索树以分析推理模型中的规划",
+      "llm_evidence": "提取搜索树以分析推理模型中的规划",
+      "canonical_evidence": "提取搜索树以分析推理模型中的规划",
+      "llm_tldr_en": "Analyzes LLM planning capabilities by extracting search trees from reasoning traces.",
+      "llm_tldr_cn": "通过从推理轨迹中提取搜索树来分析大语言模型的规划能力。",
+      "llm_tldr": "通过从推理轨迹中提取搜索树来分析大语言模型的规划能力。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "寻找利用世界模型进行强化学习或规划的最新研究",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.09963v1",
+      "source": "arxiv",
+      "title": "Learning to Perceive \"Where\": Spatial Pretext Tasks for Robust Self-Supervised Learning",
+      "abstract": "Existing self-supervised learning (SSL) methods primarily learn object-invariant representations but often neglect the spatial structure and relationships among object parts. To address this limitation, we introduce Spatial Prediction (SP), a spatially aware pretext regression task that predicts the relative position and scale between a pair of disentangled local views from the same image. By modeling part-to-part relationships in a continuous geometric space, SP encourages representations to capture fine-grained spatial dependencies beyond invariant categorical semantics, thereby learning the compositional structure of visual scenes. SP is implemented as a decoupled plug-in and can be seamlessly integrated into diverse SSL frameworks. Extensive experiments show consistent improvements across image recognition, fine-grained classification, semantic segmentation, and depth estimation, as well as substantial gains in out-of-distribution robustness for object recognition. To evaluate spatial reasoning, we introduce (1) a position and scale prediction task on image patch pairs and (2) a jigsaw understanding task requiring patch reordering and recognition after reconstruction. Strong performance on these tasks indicates improved spatial structure and geometric awareness. Overall, explicitly modeling spatial information provides an effective inductive bias for SSL, leading to more structured representations and better generalization. Code and models will be released.",
+      "authors": [
+        "Yang Shen",
+        "Yusen Cai",
+        "Weronika Hryniewska-Guzik",
+        "Qing Lin",
+        "Mengmi Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-11T04:15:34+00:00",
+      "link": "https://arxiv.org/pdf/2605.09963v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "modeling part-to-part relationships in continuous geometric space for scene structure",
+      "llm_evidence_cn": "在连续几何空间中建模部分与整体的关系以学习场景结构",
+      "llm_evidence": "在连续几何空间中建模部分与整体的关系以学习场景结构",
+      "canonical_evidence": "在连续几何空间中建模部分与整体的关系以学习场景结构",
+      "llm_tldr_en": "Introduces a spatial pretext task for SSL to capture fine-grained spatial dependencies and scene structure.",
+      "llm_tldr_cn": "引入空间自监督学习任务，通过建模几何空间关系来捕捉细粒度的场景结构表示。",
+      "llm_tldr": "引入空间自监督学习任务，通过建模几何空间关系来捕捉细粒度的场景结构表示。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.08431v1",
+      "source": "arxiv",
+      "title": "Latent Secret Spin: Keyed Orthogonal Rotations for Blind Speech Watermarking in Anisotropic Latent Spaces",
+      "abstract": "We introduce Latent Secret Spin (LSS), a blind speech watermarking method based on geometric operations in codec latent space. Based upon orthogonal rotations to principal components, LSS induces imperceptible but detectable covariance signatures according to a pseudo-random watermarking schedule. The scheme generalises across datasets, preserves perceptual quality and, unlike some learned, neural watermarking schemes, it does not require neural network training, is resistant to common signal manipulations and is flexible to payload size. Analyses show that structured latent-space watermarking is a promising and interpretable alternative to existing approaches.",
+      "authors": [
+        "Emma Coletta",
+        "Massimiliano Todisco",
+        "Michele Panariello",
+        "Antonio Faonio",
+        "Nicholas Evans"
+      ],
+      "primary_category": "eess.AS",
+      "categories": [
+        "eess.AS"
+      ],
+      "published": "2026-05-08T19:53:31+00:00",
+      "link": "https://arxiv.org/pdf/2605.08431v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "geometric operations in codec latent space",
+      "llm_evidence_cn": "编解码器隐空间中的几何操作",
+      "llm_evidence": "编解码器隐空间中的几何操作",
+      "canonical_evidence": "编解码器隐空间中的几何操作",
+      "llm_tldr_en": "Proposes a speech watermarking method using orthogonal rotations in anisotropic latent spaces.",
+      "llm_tldr_cn": "提出了一种在各向异性隐空间中使用正交旋转的语音水印方法。",
+      "llm_tldr": "提出了一种在各向异性隐空间中使用正交旋转的语音水印方法。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.10707v1",
+      "source": "arxiv",
+      "title": "ObjView-Bench: Rethinking Difficulty and Deployment for Object-Centric View Planning",
+      "abstract": "Object-centric view planning is a core component of active geometric 3D reconstruction in robotics, yet existing evaluations often conflate object complexity, planning difficulty, budget assumptions, and physical reachability constraints. As a result, conclusions drawn from idealized view-planning evaluations may not reliably predict performance under realistic reconstruction settings. We introduce ObjView-Bench, an evaluation framework for rethinking difficulty and deployment in object-centric view planning. First, we disentangle three quantities underlying view-planning evaluation: omnidirectional self-occlusion as an object-side attribute, observation saturation difficulty, and protocol-dependent planning difficulty defined through a set-cover formulation. This separation supports controlled dataset construction, analysis of slow-saturation objects, and a case study showing that planning difficulty-aware sampling can improve learned view planners. Second, we design deployment-oriented evaluation protocols that reveal how budget regimes and reachable-view constraints alter method behavior. Across classical, learned, and hybrid planners, ObjView-Bench shows that difficulty, budget, and reachability constraints substantially change method rankings and failure modes.",
+      "authors": [
+        "Sicong Pan",
+        "Hao Hu",
+        "Xuying Huang",
+        "Benno Wingender",
+        "Maren Bennewitz"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-11T15:20:22+00:00",
+      "link": "https://arxiv.org/pdf/2605.10707v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "object-centric view planning in robotics and physical reachability constraints",
+      "llm_evidence_cn": "机器人中的以物体为中心的视图规划和物理可达性约束",
+      "llm_evidence": "机器人中的以物体为中心的视图规划和物理可达性约束",
+      "canonical_evidence": "机器人中的以物体为中心的视图规划和物理可达性约束",
+      "llm_tldr_en": "Introduces a benchmark for object-centric view planning in robotics to improve realistic 3D reconstruction.",
+      "llm_tldr_cn": "引入机器人以物体为中心视图规划的基准，以改进现实的3D重建。",
+      "llm_tldr": "引入机器人以物体为中心视图规划的基准，以改进现实的3D重建。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.09348v1",
+      "source": "arxiv",
+      "title": "HOME-KGQA: A Benchmark Dataset for Multimodal Knowledge Graph Question Answering on Household Daily Activities",
+      "abstract": "Large Language Models (LLMs) provide flexible natural language processing capabilities, while knowledge graphs (KGs) offer explicit and structured knowledge. Integrating these two in a complementary manner enables the development of reliable and verifiable AI systems. In particular, knowledge graph question answering (KGQA) has attracted attention as a means to reduce LLM hallucinations and to leverage knowledge beyond the training data. However, existing KGQA benchmark datasets are biased toward encyclopedic knowledge, limited to a single modality, and lack fine-grained spatiotemporal data, which limits their applicability to real-world scenarios targeted by Embodied AI. We introduce HOME-KGQA, a novel KGQA benchmark dataset built on a multimodal KG of daily household activities. HOME-KGQA consists of complex, multi-hop natural language questions paired with graph database query languages. Compared to existing benchmarks, it includes more challenging questions that involve multi-level spatiotemporal reasoning, multimodal grounding, and aggregate functions. Experimental results show that the LLM-based KGQA methods fail to achieve performance comparable to that on existing datasets when evaluated on HOME-KGQA. This highlights significant challenges that should be addressed for the real-world deployment of KGQA systems. Our dataset is available at https://github.com/aistairc/home-kgqa",
+      "authors": [
+        "Shusaku Egami",
+        "Aoi Ohta",
+        "Tomoki Tsujimura",
+        "Masaki Asada",
+        "Tatsuya Ishigaki",
+        "Ken Fukuda",
+        "Masahiro Hamasaki",
+        "Hiroya Takamura"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI",
+        "cs.DB",
+        "cs.MM"
+      ],
+      "published": "2026-05-10T06:00:29+00:00",
+      "link": "https://arxiv.org/pdf/2605.09348v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal knowledge graph for household activities and spatiotemporal data",
+      "llm_evidence_cn": "用于家庭活动和时空数据的多模态知识图谱",
+      "llm_evidence": "用于家庭活动和时空数据的多模态知识图谱",
+      "canonical_evidence": "用于家庭活动和时空数据的多模态知识图谱",
+      "llm_tldr_en": "Introduces a multimodal KGQA benchmark for embodied AI in household scenarios.",
+      "llm_tldr_cn": "引入了一个针对具身智能家庭场景的多模态知识图谱问答基准。",
+      "llm_tldr": "引入了一个针对具身智能家庭场景的多模态知识图谱问答基准。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.11225v1",
+      "source": "arxiv",
+      "title": "PIVOT: Bridging Planning and Execution in LLM Agents via Trajectory Refinement",
+      "abstract": "Large language model (LLM)-based agents frequently generate seemingly coherent plans that fail upon execution due to infeasible actions, constraint violations, and compounding errors over extended horizons. PIVOT (Plan-Inspect-eVOlve Trajectories) addresses this plan-execution misalignment through a self-supervised framework that treats trajectories as optimizable objects iteratively refined via environment interaction. The framework comprises four stages: PLAN generates candidate trajectories; INSPECT executes them and computes structured losses with textual gradients encoding plan-execution discrepancies; EVOLVE applies these signals to produce improved trajectories; and VERIFY performs a final global check against task constraints. A monotonic acceptance process ensures a non-decreasing solution quality. Empirical evaluations on DeepPlanning and GAIA demonstrate state-of-the-art performance: with human-in-the-loop (HITL) feedback, PIVOT establishes a strong upper bound up to 94% relative improvement in constraint satisfaction, while its fully autonomous variant retains substantial gains, showing that the core trajectory-refinement mechanism remains effective without external supervision. At the same time, PIVOT remains computationally efficient, requiring up to 3x to 5x fewer tokens than competing refinement methods. These findings establish that (self- or human-supervised) feedback-based trajectory optimization is a principled methodology for mitigating plan-execution gaps in autonomous agent systems.",
+      "authors": [
+        "Tuo Zhang",
+        "Alin-Ionut Popa",
+        "Yan Xu",
+        "Rui Song",
+        "Dimitrios Dimitriadis"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.LG",
+        "cs.MA"
+      ],
+      "published": "2026-05-11T20:43:20+00:00",
+      "link": "https://arxiv.org/pdf/2605.11225v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "trajectory refinement for planning and execution in LLM agents",
+      "llm_evidence_cn": "大模型智能体规划与执行中的轨迹优化",
+      "llm_evidence": "大模型智能体规划与执行中的轨迹优化",
+      "canonical_evidence": "大模型智能体规划与执行中的轨迹优化",
+      "llm_tldr_en": "PIVOT refines agent trajectories through environment interaction to bridge planning and execution.",
+      "llm_tldr_cn": "PIVOT通过环境交互迭代优化智能体轨迹，从而弥合规划与执行之间的差距。",
+      "llm_tldr": "PIVOT通过环境交互迭代优化智能体轨迹，从而弥合规划与执行之间的差距。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.11394v1",
+      "source": "arxiv",
+      "title": "Spatial Adapter: Structured Spatial Decomposition and Closed-Form Covariance for Frozen Predictors",
+      "abstract": "We present the Spatial Adapter, a parameter-efficient post-hoc layer that equips any frozen first-stage predictor with a structured spatial representation of its residual field and an induced closed-form spatial covariance. The adapter operates as a cascade second stage on residuals, jointly learning a spatially regularized orthonormal basis and per-sample scores via a tractable mini-batch ADMM procedure, without modifying any first-stage parameter. Because the first-stage parameters are frozen, the adapter does not retrain the backbone; its role is to supply a compressed distributional summary of the residual field. Smoothness, sparsity, and orthogonality together turn a generic low-rank factorization into an identifiable spatial representation whose induced residual covariance admits a closed-form low-rank-plus-noise estimator; the effective rank is determined data-adaptively by spectral thresholding, while the nominal rank K is an optimization-side upper bound only. This covariance enables kriging-style spatial prediction at unobserved locations, with plug-in uncertainty quantification as a secondary downstream use. Across synthetic data, Weather2K for spatial-holdout prediction, and GWHD patch grids as a basis-transferability diagnostic, the adapter recovers residual spatial structure when paired with frozen first stages from linear models to deep spatiotemporal and vision backbones; the added representation uses fewer than K(N+T) parameters alongside a compact residual-trend network.",
+      "authors": [
+        "Wen-Ting Wang",
+        "Wei-Ying Wu",
+        "Hao-Yun Huang",
+        "Xuan-Chun Wang"
+      ],
+      "primary_category": "stat.ML",
+      "categories": [
+        "stat.ML",
+        "cs.AI",
+        "cs.LG",
+        "stat.AP",
+        "stat.ME"
+      ],
+      "published": "2026-05-12T01:29:56+00:00",
+      "link": "https://arxiv.org/pdf/2605.11394v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "structured spatial representation of residual fields",
+      "llm_evidence_cn": "残差场的结构化空间表示",
+      "llm_evidence": "残差场的结构化空间表示",
+      "canonical_evidence": "残差场的结构化空间表示",
+      "llm_tldr_en": "Introduces a Spatial Adapter to equip frozen predictors with structured spatial representations and covariance.",
+      "llm_tldr_cn": "引入空间适配器，为冻结的预测器提供结构化的空间表示和协方差。",
+      "llm_tldr": "引入空间适配器，为冻结的预测器提供结构化的空间表示和协方差。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.12176v1",
+      "source": "arxiv",
+      "title": "Multi-Task Representation Learning for Conservative Linear Bandits",
+      "abstract": "This paper presents the Constrained Multi-Task Representation Learning (CMTRL) framework for linear bandits. We consider T linear bandit tasks in a d dimensional space, which share a common low-dimensional representation of dimension r, where r is much smaller than the minimum of d and T. Furthermore, tasks are constrained so that only actions meeting specific safety or performance requirements are allowed, referred to as conservative (safe) bandits. We introduce a novel algorithm, Safe-Alternating projected Gradient Descent and minimization (Safe-AltGDmin), to recover a low-rank feature matrix while satisfying the given constraints. Building on this algorithm, we propose a multi-task representation learning framework for conservative linear bandits and establish theoretical guarantees for its regret and sample complexity bounds. We presented experiments and compared the performance of our algorithm with benchmark algorithms.",
+      "authors": [
+        "Jiabin Lin",
+        "Shana Moothedath"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-05-12T14:22:03+00:00",
+      "link": "https://arxiv.org/pdf/2605.12176v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "representation learning for conservative decision making in bandits",
+      "llm_evidence_cn": "用于老虎机任务中保守决策的表示学习",
+      "llm_evidence": "用于老虎机任务中保守决策的表示学习",
+      "canonical_evidence": "用于老虎机任务中保守决策的表示学习",
+      "llm_tldr_en": "Develops a multi-task representation learning framework for safe and constrained decision-making in bandits.",
+      "llm_tldr_cn": "开发了一种多任务表示学习框架，用于老虎机任务中的安全受限决策。",
+      "llm_tldr": "开发了一种多任务表示学习框架，用于老虎机任务中的安全受限决策。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.12389v1",
+      "source": "arxiv",
+      "title": "SEMIR: Semantic Minor-Induced Representation Learning on Graphs for Visual Segmentation",
+      "abstract": "Segmenting small and sparse structures in large-scale images is fundamentally constrained by voxel-level, lattice-bound computation and extreme class imbalance -- dense, full-resolution inference scales poorly and forces most pipelines to rely on fixed regionization or downsampling, coupling computational cost to image resolution and attenuating boundary evidence precisely where minority structures are most informative. We introduce SEMIR (Semantic Minor-Induced Representation Learning), a representation framework that decouples inference from the native grid by learning a task-adapted, topology-preserving latent graph representation with exact decoding. SEMIR transforms the underlying grid graph into a compact, boundary-aligned graph minor through parameterized edge contraction, node deletion, and edge deletion, while preserving an exact lifting map from minor predictions to lattice labels. Minor construction is formalized as a few-shot structure learning problem that replaces hand-tuned preprocessing with a boundary-alignment objective: minor parameters are learned by maximizing agreement between predicted boundary elements and target-specific semantic edges under a boundary Dice criterion, and the induced minor is annotated with scale- and rotation-robust geometric and intensity descriptors and supports efficient region-level inference via message passing on a graph neural network (GNN) with relational edge features. We benchmark SEMIR on three tumor segmentation datasets -- BraTS 2021, KiTS23, and LiTS -- where targets exhibit high structural variability and distributional uncertainty. SEMIR yields consistent improvements in minority-structure Dice at practical runtime. More broadly, SEMIR establishes a framework for learning task-adapted, topology-preserving latent representations with exact decoding for high-resolution structured visual data.",
+      "authors": [
+        "Luke James Miller",
+        "Yugyung Lee"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-05-12T16:52:02+00:00",
+      "link": "https://arxiv.org/pdf/2605.12389v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "topology-preserving latent graph representation for spatial segmentation",
+      "llm_evidence_cn": "用于空间分割的拓扑保持隐图表示",
+      "llm_evidence": "用于空间分割的拓扑保持隐图表示",
+      "canonical_evidence": "用于空间分割的拓扑保持隐图表示",
+      "llm_tldr_en": "Introduces SEMIR, a framework for learning topology-preserving latent graph representations for visual tasks.",
+      "llm_tldr_cn": "引入 SEMIR 框架，通过学习保持拓扑的隐图表示来优化视觉分割任务。",
+      "llm_tldr": "引入 SEMIR 框架，通过学习保持拓扑的隐图表示来优化视觉分割任务。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

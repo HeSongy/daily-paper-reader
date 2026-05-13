@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.12176v1/fig-001.webp",
+      "caption": "Table I: Table comparing technical contributions of existing work versus ours.",
+      "page": 3,
+      "index": 1,
+      "width": 1052,
+      "height": 204
+    },
+    {
+      "url": "assets/figures/arxiv/2605.12176v1/fig-002.webp",
+      "caption": "Figure 1: Our proposed algorithm (Safe-AltGDmin), Trace-norm (convex relaxation), Method of Moments (MoM), Thompson sampling (naive baseline). The plots present estimation error, cumulative regret, and number of violations for synthetic data (Figures 1a to 1j) and Movielens data (Figures 1k to 1o). The number of epochs is M = 4 and 50 data samples in each epoch for all algorithms.",
+      "page": 8,
+      "index": 2,
+      "width": 1001,
+      "height": 1081
+    }
+  ]
+}
