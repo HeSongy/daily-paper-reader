@@ -1,0 +1,62 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.10288v1/fig-001.webp",
+      "caption": "Table 7 Memory and per-step time for different algorithms in data-mixture learning.",
+      "page": 47,
+      "index": 1,
+      "width": 838,
+      "height": 267
+    },
+    {
+      "url": "assets/figures/arxiv/2605.10288v1/fig-002.webp",
+      "caption": "Figure 1 Hyper-data cleaning on MNIST with 50% label noise. Left: Main comparison among Penalty, FdeHBO, MA-SOBA, ZOFO, and BROS with projection ratio r/n = 0.25. Right: Projection-ratio ablation for BROS.",
+      "page": 10,
+      "index": 2,
+      "width": 596,
+      "height": 277
+    },
+    {
+      "url": "assets/figures/arxiv/2605.10288v1/fig-003.webp",
+      "caption": "Table 4 Baseline lower-network peak-memory proxy under the same non-GQA decoder-block model. The HVP/JVP column reports derivative-query scale rather than a backend-specific peak constant.",
+      "page": 46,
+      "index": 3,
+      "width": 986,
+      "height": 187
+    },
+    {
+      "url": "assets/figures/arxiv/2605.10288v1/fig-004.webp",
+      "caption": "Table 1 Rate- and assumption-oriented comparison of representative stochastic bilevel algorithms. Nε denotes the oracle/iteration complexity for obtaining E∥∇Φ(x̄)∥2 ≤ ε, following each paper’s own oracle model and stationarity convention.",
+      "page": 4,
+      "index": 4,
+      "width": 984,
+      "height": 782
+    },
+    {
+      "url": "assets/figures/arxiv/2605.10288v1/fig-005.webp",
+      "caption": "Table 11 CIFAR-100 ViT sample-reweighting results.",
+      "page": 49,
+      "index": 5,
+      "width": 798,
+      "height": 257
+    },
+    {
+      "url": "assets/figures/arxiv/2605.10288v1/fig-006.webp",
+      "caption": "Table 9 CIFAR-10 hyper-representation results.",
+      "page": 48,
+      "index": 6,
+      "width": 811,
+      "height": 248
+    },
+    {
+      "url": "assets/figures/arxiv/2605.10288v1/fig-007.webp",
+      "caption": "Figure 3 Hyper-representation learning. CIFAR-10 test accuracy for main baselines and BROS rank-ratio ablations.",
+      "page": 48,
+      "index": 7,
+      "width": 957,
+      "height": 319
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.06840v4/fig-001.webp",
+      "caption": "Figure 3: Predicting moves from extracted search trees with cognitive modeling. (A) Features used in the heuristic value function. Features include connected two-in-a-row (blue), unconnected two-in-a-row (orange), three-in-a-row (purple), a four-in-a-row feature (not shown in the figure), and a central tendency feature. Features with identical colors are constrained to have identical weights. (B) Schematics of computational models. The top square represents the current board state. Each downstream circle represents a state resulting from a model’s own simulated move, and each downstream square represents a state resulting from a simulated opponent’s move. Red edges mark states evaluated by the heuristic function. Red arrows illustrate value backups. In the discount model, deeper nodes are down-weighted (grayed). (C) Negative log-likelihood per sample. (D) Move prediction accuracy. (E) Depth harm, defined as the NLL gap between the full-tree model and the myopic model, as a function of search depth. (F) Candidate gain, defined as the NLL gap between the no-tree model and the myopic model, as a function of search breadth. (G) Winning rate as a function of fitted offensive bias. Dashed lines connect models in a model family. Asterisks denote significance levels (* p < 0.05, ** p < 0.01).",
+      "page": 6,
+      "index": 1,
+      "width": 808,
+      "height": 736
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06840v4/fig-002.webp",
+      "caption": "Figure 1: Game setup and search tree extraction. (A) An example board position in the four-ina-row game. Two players (black and white) alternate placing pieces on a 4 × 9 board, and the first player who achieves four-in-a-row wins the game. (B) Task prompt. The system prompt describes the rule of four-in-a-row, the board representation (FEN notation), and move submission format. The user message provides the current board state and the active player. (C) Reasoning trace and move output. The model generates CoT reasoning traces before committing to a final move in the output. In the example reasoning traces, deliberated moves of the model are highlighted in blue, while deliberated opponent’s moves are highlighted in orange. (D) Search tree extraction. An LLM judge (GPT-5) parses the reasoning trace to extract the search tree of considered moves. In the example search tree, the top square shows the current board state (denoted by the board’s FEN notation). Each circle represents a state resulting from a model’s own simulated move, and each square represents a state resulting from a simulated opponent’s move. Numbers inside each node indicate the board coordinate of the corresponding move (zero-indexed). The search tree shown is for illustration only and does not correspond to the example board position in (A).",
+      "page": 3,
+      "index": 2,
+      "width": 815,
+      "height": 598
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06840v4/fig-003.webp",
+      "caption": "Table 1: Models evaluated in this study and their APIs.",
+      "page": 13,
+      "index": 3,
+      "width": 779,
+      "height": 367
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06840v4/fig-004.webp",
+      "caption": "Figure 4: Causal intervention on reasoning traces. (A) An LLM judge (Claude Opus 4.7) labels each paragraph of the reasoning trace as preamble, branch, final decision, or meta. Branch paragraphs are associated with a specific candidate move. The judge additionally annotates all moves mentioned within each paragraph, together with their search depths. We then prune the trace according to these labels and feed the pruned trace back to the LLM player, which generates a new move. (B) Move change rate after five pruning conditions: removing only the final decision, removing both the final decision and an entire branch, and progressively adding back branch paragraphs by depth. Orange: chosen branch; gray: largest unchosen branch.",
+      "page": 8,
+      "index": 4,
+      "width": 804,
+      "height": 336
+    },
+    {
+      "url": "assets/figures/arxiv/2605.06840v4/fig-005.webp",
+      "caption": "Figure 2: Planning effort and game performance across models. (A) Winning rate as a function of search tree size. (B) Search breadth (number of first-ply candidate moves considered) as a function of depth (max ply, i.e., the maximum number of alternating moves simulated ahead) across models. (C) Winning rate as a function of breadth-depth ratio. Dashed lines connect models in a model family. Asterisks denote significance levels (* p < 0.05, ** p < 0.01).",
+      "page": 4,
+      "index": 5,
+      "width": 804,
+      "height": 273
+    }
+  ]
+}

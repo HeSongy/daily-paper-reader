@@ -1,0 +1,433 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-05-14T20:44:45.187446+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 5,
+    "deep_cap": 6,
+    "deep_selected": 5,
+    "quick_candidates": 6,
+    "quick_skim_target": 11,
+    "quick_selected": 6
+  },
+  "deep_dive": [
+    {
+      "id": "2605.13013v1",
+      "source": "arxiv",
+      "title": "JEDI: Joint Embedding Diffusion World Model for Online Model-Based Reinforcement Learning",
+      "abstract": "Diffusion world models have recently become competitive for online model-based reinforcement learning, but current approaches expose a tension: pixel diffusion is effective but computationally expensive while the latest latent diffusion approach improves efficiency yet performs subpar. The latter also relies on separately trained latents rather than the end-to-end world-model objectives that have driven much of modern MBRL progress. In particular, JEPA-style predictive representation learning has emerged as an especially promising direction for world modeling and MBRL. Concurrently, diffusion-style objectives have gained traction across multiple domains, with iterative refinement as a promising approach for multimodal and stochastic targets. Taken together, these trends motivate Joint Embedding DIffusion (JEDI), the first online end-to-end latent diffusion world model. JEDI learns its latent space directly from the diffusion denoising loss with a JEPA framework, using denoising to learn and predict future latents rather than relying on reconstruction and pretrained models. We provide a theoretical motivation showing that conventional JEPA objectives induce a predictive information bottleneck, and that conditional diffusion denoising admits a closely related predictive-compression decomposition. Empirically, JEDI is competitive on Atari100k and outperforms the baseline with seperately trained latents where directly comparable. Relative to the pixel diffusion baseline, JEDI uses 43% less VRAM, over 3$\\times$ faster world-model sampling, and 2.5$\\times$ faster training. JEDI also exhibits a markedly different task-level performance profile from the pixel baseline, suggesting that end-to-end predictive latents change more than compute alone.",
+      "authors": [
+        "Jing Yu Lim",
+        "Rushi Shah",
+        "Zarif Ikram",
+        "Samson Yu",
+        "Haozhe Ma",
+        "Tze-Yun Leong",
+        "Dianbo Liu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-05-13T05:07:32+00:00",
+      "link": "https://arxiv.org/pdf/2605.13013v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "joint embedding diffusion world model for reinforcement learning",
+      "llm_evidence_cn": "用于强化学习的联合嵌入扩散世界模型",
+      "llm_evidence": "用于强化学习的联合嵌入扩散世界模型",
+      "canonical_evidence": "用于强化学习的联合嵌入扩散世界模型",
+      "llm_tldr_en": "Proposes a diffusion-based world model using joint-embedding predictive representation learning for MBRL.",
+      "llm_tldr_cn": "提出了一种基于扩散的世界模型，利用联合嵌入预测表示学习进行模型强化学习。",
+      "llm_tldr": "提出了一种基于扩散的世界模型，利用联合嵌入预测表示学习进行模型强化学习。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.09441v1",
+      "source": "arxiv",
+      "title": "Beyond Isolation: A Unified Benchmark for General-Purpose Navigation",
+      "abstract": "The pursuit of general-purpose embodied agents is hindered by fragmented evaluation protocols that isolate navigation skills and fixate on specific robot morphologies, failing to reflect real-world scenarios where agents must orchestrate diverse behaviors across varying embodiments. To bridge this gap, we introduce OmniNavBench, a benchmark for cross-skill coordination and cross-embodiment generalization. OmniNavBench introduces three paradigm shifts: (1) Compositional Complexity. We propose composite instructions that interleave sub-tasks from 6 categories (PointNav, VLN, ObjectNav, SocialNav, Human Following and EQA), compelling agents to transition between exploration, interaction, and social compliance within a single episode. (2) Morphological Universality and Sensor Flexibility. We present a simulation platform that breaks the reliance on single-morphology evaluation, enabling generalization tests across humanoid, quadrupedal, and wheeled robots, with a modular sensor interface and 170 environments blending synthetic assets with real-world scans. (3) Demonstrations Quality. Moving beyond shortest-path algorithms, we curate 1779 expert trajectories via human teleoperation, capturing behavioral nuances such as exploratory glance and anticipatory avoidance. Extensive evaluations demonstrate that current methods, despite their claimed unified design, struggle with the complex, interleaved nature of general-purpose navigation. This exposes a critical disparity between existing capabilities and real-world deployment demands, underscoring OmniNavBench as a testbed for the next generation of generalist navigators. Dataset, code, and leaderboard are available at http://omninavbench.cloud-ip.cc.",
+      "authors": [
+        "Samson Sun",
+        "Tianyi Yang",
+        "Tengyue Wang",
+        "Yikai Xue",
+        "Zhengjie Xu",
+        "Lingming Zhang",
+        "Qichen Zhang",
+        "Chao Liang",
+        "Zhipeng Zhang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-10T09:34:05+00:00",
+      "link": "https://arxiv.org/pdf/2605.09441v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "benchmark for general-purpose navigation and cross-skill coordination in complex environments",
+      "llm_evidence_cn": "复杂环境下通用导航与跨技能协作的基准测试",
+      "llm_evidence": "复杂环境下通用导航与跨技能协作的基准测试",
+      "canonical_evidence": "复杂环境下通用导航与跨技能协作的基准测试",
+      "llm_tldr_en": "Introduces OmniNavBench to evaluate embodied agents on composite navigation tasks and morphological generalization.",
+      "llm_tldr_cn": "推出 OmniNavBench，用于评估具身智能体在复合导航任务中的跨技能协作能力。",
+      "llm_tldr": "推出 OmniNavBench，用于评估具身智能体在复合导航任务中的跨技能协作能力。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.12689v1",
+      "source": "arxiv",
+      "title": "3D RL-DWA: A Hybrid Reinforcement Learning and Dynamic Window Approach for Goal-Directed Local Navigation in Multi-DoF Robots",
+      "abstract": "In this paper, we present a novel hybrid approach that combines Reinforcement Learning (RL) with Dynamic Window Approach (DWA) for adaptive 3D local navigation of high-degree-of-freedom robotic systems. Our method leverages sparse point cloud data to dynamically adjust both the motion and the shape of a deformable microrobot, enabling the system to navigate toward a goal in complex, constrained environments while maximizing the occupied volume. We evaluate our framework in a simulated vascular network. Experimental results, based on 1080 trials, indicate that integrating RL with a DWA-based local planner significantly enhances both deformation and navigation capabilities compared to a pure RL and a model-based methods. In particular, the proposed autonomous controller consistently achieves high deformation and near-perfect path completion during training and maintains robust performance in unseen scenarios. These findings highlight the potential of hybrid planning strategies for efficient and adaptive 3D navigation under sparse sensory conditions.",
+      "authors": [
+        "Chiara Castellani",
+        "Enrico Turco",
+        "Domenico Prattichizzo"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-12T19:37:32+00:00",
+      "link": "https://arxiv.org/pdf/2605.12689v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "hybrid RL and DWA for local navigation in complex environments",
+      "llm_evidence_cn": "结合强化学习与动态窗口法的复杂环境局部导航",
+      "llm_evidence": "结合强化学习与动态窗口法的复杂环境局部导航",
+      "canonical_evidence": "结合强化学习与动态窗口法的复杂环境局部导航",
+      "llm_tldr_en": "Proposes a hybrid RL-DWA framework for adaptive 3D navigation of multi-DoF robots in constrained environments.",
+      "llm_tldr_cn": "提出一种结合强化学习与动态窗口法的混合框架，用于多自由度机器人在受限环境中的自适应3D导航。",
+      "llm_tldr": "提出一种结合强化学习与动态窗口法的混合框架，用于多自由度机器人在受限环境中的自适应3D导航。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.12897v1",
+      "source": "arxiv",
+      "title": "DynoJEPP: Joint Estimation, Prediction and Planning in Dynamic Environments",
+      "abstract": "DynoJEPP is a factor-graph-based framework that jointly formulates and simultaneously optimizes estimation, prediction, and planning in dynamic environments. In conventional factor-graph-based approaches that jointly formulate estimation, prediction, and planning, information from prediction and planning feeds back into state estimation, yielding corrupted estimates, undesired behaviors, and unsafe plans. To address this, DynoJEPP introduces a novel directed factor that enforces directional information flow within the factor graph, preventing prediction and planning from corrupting state estimation. We evaluate the impact of directed factors on inter-module interactions during navigation in both static and dynamic environments. Our results demonstrate that these factors are critical for safe operation, as without them, the robot collides in the majority of experiments. Building on this, we further introduce Cooperative DynoJEPP, which enables the ego robot to incorporate cooperative object behavior into its prediction and trajectory planning.",
+      "authors": [
+        "Mikolaj Kliniewski",
+        "Jesse Morris",
+        "Yiduo Wang",
+        "Ian R. Manchester",
+        "Viorela Ila"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-13T02:18:58+00:00",
+      "link": "https://arxiv.org/pdf/2605.12897v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "planning in dynamic environments and navigation",
+      "llm_evidence_cn": "动态环境中的规划与导航",
+      "llm_evidence": "动态环境中的规划与导航",
+      "canonical_evidence": "动态环境中的规划与导航",
+      "llm_tldr_en": "Introduces a factor-graph framework for joint estimation and planning in dynamic navigation tasks.",
+      "llm_tldr_cn": "引入了一种因子图框架，用于动态导航任务中的联合估计与规划。",
+      "llm_tldr": "引入了一种因子图框架，用于动态导航任务中的联合估计与规划。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.12920v1",
+      "source": "arxiv",
+      "title": "Embodied Multi-Agent Coordination by Aligning World Models Through Dialogue",
+      "abstract": "Effective collaboration between embodied agents requires more than acting in a shared environment; it demands communication grounded in each agent's evolving understanding of the world. When agents can only partially observe their surroundings, coordination without communication is provably hard, but communication can, in principle, bridge this gap by allowing agents to share observations and align their world models. In this work, we examine whether LLM-based embodied agents actually realize the ability to communicate. We extend PARTNR, a benchmark for collaborative household robotics, with a natural-language dialogue channel that enables two agents with partial observability to communicate during task execution. To evaluate whether dialogue leads to genuine world-model alignment rather than superficial coordination, we propose a framework for measuring world-model alignment defined over per-agent world graphs: observation convergence (do private world models align over time?), information novelty (do messages convey what the partner lacks?), and belief-sensitive messaging (do agents model what their partner knows?). Our experiments across three LLMs reveal that dialogue reduces action conflicts 40 to 83 percentage points but degrades task success relative to silent coordination. Using our metrics, we characterize the gap between superficial coordination and genuine world-model alignment, and identify where current models fall on this spectrum.",
+      "authors": [
+        "Vardhan Dongre",
+        "Dilek Hakkani-Tür"
+      ],
+      "primary_category": "cs.MA",
+      "categories": [
+        "cs.MA",
+        "cs.AI",
+        "cs.CL"
+      ],
+      "published": "2026-05-13T02:48:14+00:00",
+      "link": "https://arxiv.org/pdf/2605.12920v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "aligning world models for embodied agents",
+      "llm_evidence_cn": "具身智能体世界模型的对齐",
+      "llm_evidence": "具身智能体世界模型的对齐",
+      "canonical_evidence": "具身智能体世界模型的对齐",
+      "llm_tldr_en": "Explores aligning world models through dialogue to improve coordination in partially observable environments.",
+      "llm_tldr_cn": "探索通过对话对齐世界模型，以提高部分可观测环境下具身智能体的协作能力。",
+      "llm_tldr": "探索通过对话对齐世界模型，以提高部分可观测环境下具身智能体的协作能力。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2605.05405v2",
+      "source": "arxiv",
+      "title": "Zero-Shot Satellite Image Retrieval through Joint Embeddings: Application to Crisis Response",
+      "abstract": "Semantic search of Earth observation archives remains challenging. Visual foundation models such as CLAY produce rich embeddings of satellite imagery but lack the natural-language grounding needed for intuitive query, and full contrastive training of a remote-sensing CLIP-style model requires paired data and compute that are unavailable at global scale. To allow natural language querying at global scales, we present GeoQuery, a zero-shot retrieval system that sidesteps data and compute constraints through a two-stage semantic and visual search, leveraging a natural language embedding of a subset (proxy) of global data. Rather than training a joint encoder, we generate language descriptions for a 100k proxy subset of global Sentinel-2 tiles and optimise the description-generation prompt so that distances in the resulting text-embedding space correlate with distances in the frozen CLAY visual-embedding space. Queries are resolved in two stages, with a text-similarity search over the proxy subset followed by a visual nearest-neighbour search over worldwide CLAY embeddings On 76 disaster-location queries covering UK floods, US wildfires, and US droughts, GeoQuery achieves 31.6\\% accuracy within 50\\,km, with the strongest performance on floods (50\\% within 50\\,km) where terrain features are well captured by RGB embeddings. Deployed within a crisis response system called \\ECHO{}, GeoQuery identified vulnerable areas during Brisbane's 2025 Cyclone Alfred, with downstream flood simulations reproducing historical patterns. Prompt-aligned proxies offer a practical bridge between EO foundation models and operational retrieval when full contrastive training is out of reach.",
+      "authors": [
+        "James Walsh",
+        "William Fawcett",
+        "Grace Colvard",
+        "Raúl Ramos-Pollán"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-06T19:43:44+00:00",
+      "link": "https://arxiv.org/pdf/2605.05405v2",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "joint embeddings and semantic search for spatial data",
+      "llm_evidence_cn": "空间数据的联合嵌入与语义搜索",
+      "llm_evidence": "空间数据的联合嵌入与语义搜索",
+      "canonical_evidence": "空间数据的联合嵌入与语义搜索",
+      "llm_tldr_en": "Develops a zero-shot retrieval system for satellite imagery using joint semantic and visual embeddings.",
+      "llm_tldr_cn": "利用语义和视觉联合嵌入开发了一种卫星图像零样本检索系统。",
+      "llm_tldr": "利用语义和视觉联合嵌入开发了一种卫星图像零样本检索系统。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.05753v1",
+      "source": "arxiv",
+      "title": "Jointly Learning Structured Representations and Stabilized Affinity for Human Motion Segmentation",
+      "abstract": "Human Motion Segmentation (HMS), which aims to partition a video into non-overlapping segments corresponding to different human motions, has recently attracted increasing research attention. Existing HMS approaches are predominantly based on subspace clustering, which are grounded on the assumption that the distribution of high-dimensional temporal features well aligns with a Union-of-Subspaces (UoS). For videos in the real world, however, the raw frame-level features often violate the UoS assumption and yield unsatisfactory segmentation performance. To address this issue, we propose an efficient and effective approach for HMS, named Temporal Deep Self-expressive subspace Clustering (TDSC), which jointly learns temporally consistent structured representations and stabilized affinity for accurate and robust HMS. Specifically, in TDSC, we alternately learn structured representations of the input frame features and self-expressive coefficients via a properly regularized self-expressive model, in which a coding-rate maximization regularizer is incorporated to avoid representation collapse and conform the learned representations to span a desired UoS distribution, and meanwhile, temporal constraints are incorporated to promote temporally adjacent frames to be partitioned into the same groups. Moreover, we develop a temporal momentum averaging mechanism to stabilize affinity evolution and design a reparameterization strategy to enable efficient optimization. We conduct extensive experiments on five benchmark HMS datasets using both conventional (HoG) and up-to-date deep features (i.e., CLIP, DINOv2) to validate the effectiveness of our approach.",
+      "authors": [
+        "Xianghan Meng",
+        "Zhiyuan Huang",
+        "Zhengyu Tong",
+        "Chun-Guang Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-07T06:48:53+00:00",
+      "link": "https://arxiv.org/pdf/2605.05753v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "structured representations and subspace clustering for motion",
+      "llm_evidence_cn": "运动的结构化表示与子空间聚类",
+      "llm_evidence": "运动的结构化表示与子空间聚类",
+      "canonical_evidence": "运动的结构化表示与子空间聚类",
+      "llm_tldr_en": "Learns structured representations for human motion segmentation using deep self-expressive subspace clustering.",
+      "llm_tldr_cn": "利用深度自表达子空间聚类学习人体运动分割的结构化表示。",
+      "llm_tldr": "利用深度自表达子空间聚类学习人体运动分割的结构化表示。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.07933v1",
+      "source": "arxiv",
+      "title": "How to Train Your Latent Diffusion Language Model Jointly With the Latent Space",
+      "abstract": "Latent diffusion models offer an attractive alternative to discrete diffusion for non-autoregressive text generation by operating on continuous text representations and denoising entire sequences in parallel. The major challenge in latent diffusion modeling is constructing a suitable latent space. In this work, we present the Latent Diffusion Language Model (LDLM), in which the latent encoder, diffusion model, and decoder are trained jointly. LDLM builds its latent space by reshaping the representations of a pre-trained language model with a trainable encoder, yielding latents that are easy to both denoise and decode into tokens. We show that naive joint training produces a low-quality diffusion model, and propose a simple training recipe consisting of an MSE decoder loss, diffusion-to-encoder warmup, adaptive timestep sampling, and decoder-input noise. Ablations show that each component substantially impacts generation performance. On OpenWebText and LM1B, LDLM achieves better generation performance than existing discrete and continuous diffusion language models while being $2{\\text -}13\\times$ faster, indicating that jointly learning the latent space is a key step toward making latent diffusion competitive for text generation.",
+      "authors": [
+        "Viacheslav Meshchaninov",
+        "Alexander Shabalin",
+        "Egor Chimbulatov",
+        "Nikita Gushchin",
+        "Ilya Koziev",
+        "Alexander Korotin",
+        "Dmitry Vetrov"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-05-08T16:05:19+00:00",
+      "link": "https://arxiv.org/pdf/2605.07933v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "constructing a suitable latent space for continuous representations",
+      "llm_evidence_cn": "构建适用于连续表示的隐空间",
+      "llm_evidence": "构建适用于连续表示的隐空间",
+      "canonical_evidence": "构建适用于连续表示的隐空间",
+      "llm_tldr_en": "Proposes a Latent Diffusion Language Model that jointly trains a latent encoder and diffusion model for text generation.",
+      "llm_tldr_cn": "提出一种联合训练隐层编码器和扩散模型的潜空间扩散语言模型，用于非自回归文本生成。",
+      "llm_tldr": "提出一种联合训练隐层编码器和扩散模型的潜空间扩散语言模型，用于非自回归文本生成。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.06840v4",
+      "source": "arxiv",
+      "title": "Extracting Search Trees from LLM Reasoning Traces Reveals Myopic Planning",
+      "abstract": "Large language models (LLMs), especially reasoning models, generate extended chain-of-thought (CoT) reasoning that often contains explicit deliberation over future outcomes. Yet whether this deliberation constitutes genuine planning, how it is structured, and what aspects of it drive performance remain poorly understood. In this work, we introduce a new method to characterize LLM planning by extracting and quantifying search trees from reasoning traces in the four-in-a-row board game. By fitting computational models on the extracted search trees, we characterize how plans are structured and how they influence move decisions. We find that LLMs' search is shallower than humans', and that performance is predicted by search breadth rather than depth. Most strikingly, although LLMs expand deep nodes in their traces, their move choices are best explained by a myopic model that ignores those nodes entirely. A causal intervention study where we selectively prune CoT paragraphs further suggests that move selection is driven predominantly by shallow rather than deep nodes. These patterns contrast with human planning, where performance is driven primarily by deep search. Together, our findings reveal a key difference between LLM and human planning: while human expertise is driven by deeper search, LLMs do not act on deep lookahead. This dissociation offers targeted guidance for aligning LLM and human planning. More broadly, our framework provides a generalizable approach for interpreting the structure of LLM planning across strategic domains.",
+      "authors": [
+        "Sixing Chen",
+        "Ji-An Li",
+        "Saner Cakir",
+        "Sinan Akcali",
+        "Kayla Lee",
+        "Marcelo G. Mattar"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-05-07T18:45:46+00:00",
+      "link": "https://arxiv.org/pdf/2605.06840v4",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "extracting search trees to characterize planning and decision models",
+      "llm_evidence_cn": "提取搜索树以表征规划与决策模型",
+      "llm_evidence": "提取搜索树以表征规划与决策模型",
+      "canonical_evidence": "提取搜索树以表征规划与决策模型",
+      "llm_tldr_en": "Extracts search trees from LLM traces to analyze planning structures and decision-making.",
+      "llm_tldr_cn": "从LLM推理轨迹中提取搜索树，分析其规划结构与决策机制。",
+      "llm_tldr": "从LLM推理轨迹中提取搜索树，分析其规划结构与决策机制。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.13470v1",
+      "source": "arxiv",
+      "title": "Twincher: Bijective Representation Learning for Robust Inversion of Continuous Systems",
+      "abstract": "Recent advances in AI have been primarily driven by large-scale neural architectures that excel at function approximation, rather than by tailored inductive biases and inference or learning strategies that could be important for resource-efficient real-world perception and planning through the solution of inverse problems. In this work, we consider the possibility of enabling robust inversion of continuous forward processes $p \\mapsto y$ by learning representations of $y$ that are bijectively aligned with $p$ while remaining insensitive to perturbations in $y$ caused by noise or model mismatch. We propose Twincher, a class of architectures based on stacks of structured diffeomorphic transformations and tailored adversarial training strategies that enable learning such bijective representations. We provide a public API for training and inference and empirically demonstrate the ability of the proposed architecture to efficiently learn bijective representations of synthetic systems, thereby enabling robust and efficient iterative inverse inference. Compared to a baseline inverse-modeling approach, the method exhibits improved data efficiency and robustness, providing initial evidence for the potential of bijective representation learning in robotics, vision, and physical AI.",
+      "authors": [
+        "Arkady Gonoskov"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-05-13T12:57:17+00:00",
+      "link": "https://arxiv.org/pdf/2605.13470v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "representation learning for real-world perception and planning through inverse problems",
+      "llm_evidence_cn": "通过逆问题进行现实世界感知与规划的表示学习",
+      "llm_evidence": "通过逆问题进行现实世界感知与规划的表示学习",
+      "canonical_evidence": "通过逆问题进行现实世界感知与规划的表示学习",
+      "llm_tldr_en": "Proposes Twincher for bijective representation learning to enable robust inversion and planning in continuous systems.",
+      "llm_tldr_cn": "提出 Twincher 架构，通过双射表示学习实现连续系统的鲁棒反演与规划。",
+      "llm_tldr": "提出 Twincher 架构，通过双射表示学习实现连续系统的鲁棒反演与规划。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索表示学习在构建世界模型与导航中的运用",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.10288v1",
+      "source": "arxiv",
+      "title": "BROS: Bias-Corrected Randomized Subspaces for Memory-Efficient Single-Loop Bilevel Optimization",
+      "abstract": "Stochastic bilevel optimization (SBO) has become a standard framework for hyperparameter learning, data reweighting, representation learning, and data-mixture optimization in deep learning. Existing exact single-loop SBO methods and memory-efficient surrogate SBO methods either create severe memory pressure for large lower-level neural networks or lack competitive convergence guarantees under standard assumptions. In this paper, we propose BROS, a memory-efficient single-loop SBO method with the same convergence rate order as exact single-loop SBO methods. BROS performs lower and auxiliary updates in randomized subspaces with a Rademacher bi-probe correction that recovers an unbiased Hessian-action estimator. We prove that BROS preserves the $\\mathcal O(\\varepsilon^{-2})$ sample complexity of MA-SOBA for finding an $\\varepsilon$-stationary point under only standard assumptions. Experiments on hyper-data cleaning, data-mixture learning, hyper-representation learning, and ViT sample reweighting show that BROS reduces peak memory by up to 44.9% while closely matching full-space baseline performance.",
+      "authors": [
+        "Hengrui Zhang",
+        "Boao Kong",
+        "Engao Zhang",
+        "Kun Yuan"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "math.OC"
+      ],
+      "published": "2026-05-11T09:50:10+00:00",
+      "link": "https://arxiv.org/pdf/2605.10288v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "representation learning in randomized subspaces",
+      "llm_evidence_cn": "随机子空间中的表示学习",
+      "llm_evidence": "随机子空间中的表示学习",
+      "canonical_evidence": "随机子空间中的表示学习",
+      "llm_tldr_en": "Proposes a memory-efficient bilevel optimization method for representation learning and deep learning tasks.",
+      "llm_tldr_cn": "提出一种用于表示学习和深度学习任务的内存高效双层优化方法。",
+      "llm_tldr": "提出一种用于表示学习和深度学习任务的内存高效双层优化方法。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索表示学习在构建世界模型与导航中的运用",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

@@ -6,76 +6,55 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-05-13
-- 运行时间：2026-05-13 21:40:57 UTC
+- 最新运行日期：2026-05-14
+- 运行时间：2026-05-14 20:46:54 UTC
 - 运行状态：成功
-- 本次总论文数：18
-- 精读区：7
-- 速读区：11
+- 本次总论文数：11
+- 精读区：5
+- 速读区：6
 
 ### 今日简报（AI）
-聚焦未来驾驶与智能规划的一天，18 篇论文高效扫读完毕。  
-最亮点在以“前瞻驱动自动驾驶”和“潜几何规划”革新世界模型自主决策。  
-建议读者关注这些方法如何让 AI 更早洞察环境、提前行动。
-- 详情：[/202605/13/README](/202605/13/README)
+强化学习与通用导航模型成为今日研究亮点，重点聚焦联合嵌入与世界模型的最新突破。  
+最值得关注的是 JEDI 模型实现在线强化学习中的高效世界建模，以及统一导航基准推动多环境泛化。  
+建议读者关注联合嵌入在图像、语言及控制任务中的跨域能力，了解其如何连接智能决策与现实数据。
+- 详情：[/202605/14/README](/202605/14/README)
 
 ### 精读区论文标签
-1. [See Tomorrow, Act Today: Foresight-Driven Autonomous Driving](/202605/13/2605.07195v1-see-tomorrow-act-today-foresight-driven-autonomous-driving)  
+1. [JEDI: Joint Embedding Diffusion World Model for Online Model-Based Reinforcement Learning](/202605/14/2605.13013v1-jedi-joint-embedding-diffusion-world-model-for-online-model-based-reinforcement-learning)  
    标签：评分：10.0/10、query:navwm
-   evidence：以基础世界模型为核心的自动驾驶规划框架
-2. [Latent Geometry Beyond Search: Amortizing Planning in World Models](/202605/13/2605.08732v1-latent-geometry-beyond-search-amortizing-planning-in-world-models)  
-   标签：评分：10.0/10、query:navwm
-   evidence：利用世界模型的隐空间几何进行规划
-3. [3D-Belief: Embodied Belief Inference via Generative 3D World Modeling](/202605/13/2605.11367v1-3d-belief-embodied-belief-inference-via-generative-3d-world-modeling)  
-   标签：评分：10.0/10、query:navwm
-   evidence：用于具身信念推理的生成式3D世界建模
-4. [Reinforcing VLAs in Task-Agnostic World Models](/202605/13/2605.12334v1-reinforcing-vlas-in-task-agnostic-world-models)  
-   标签：评分：10.0/10、query:navwm
-   evidence：在任务无关的世界模型中通过强化学习训练视觉-语言-动作模型
-5. [Plan in Sandbox, Navigate in Open Worlds: Learning Physics-Grounded Abstracted Experience for Embodied Navigation](/202605/13/2605.10118v1-plan-in-sandbox-navigate-in-open-worlds-learning-physics-grounded-abstracted-experience-for-embodied-navigation)  
+   evidence：用于强化学习的联合嵌入扩散世界模型
+2. [Beyond Isolation: A Unified Benchmark for General-Purpose Navigation](/202605/14/2605.09441v1-beyond-isolation-a-unified-benchmark-for-general-purpose-navigation)  
    标签：评分：9.0/10、query:navwm
-   evidence：用于导航心理模拟的物理接地语义抽象
-6. [WorldComp2D: Spatio-semantic Representations of Object Identity and Location from Local Views](/202605/13/2605.11743v1-worldcomp2d-spatio-semantic-representations-of-object-identity-and-location-from-local-views)  
-   标签：评分：9.0/10、query:navwm
-   evidence：空间语义隐空间与物体身份表示
-7. [PriorZero: Bridging Language Priors and World Models for Decision Making](/202605/13/2605.12289v1-priorzero-bridging-language-priors-and-world-models-for-decision-making)  
-   标签：评分：9.0/10、query:navwm
-   evidence：将大语言模型先验集成到基于世界模型的规划中
+   evidence：复杂环境下通用导航与跨技能协作的基准测试
+3. [3D RL-DWA: A Hybrid Reinforcement Learning and Dynamic Window Approach for Goal-Directed Local Navigation in Multi-DoF Robots](/202605/14/2605.12689v1-3d-rl-dwa-a-hybrid-reinforcement-learning-and-dynamic-window-approach-for-goal-directed-local-navigation-in-multi-dof-robots)  
+   标签：评分：8.0/10、query:navwm
+   evidence：结合强化学习与动态窗口法的复杂环境局部导航
+4. [DynoJEPP: Joint Estimation, Prediction and Planning in Dynamic Environments](/202605/14/2605.12897v1-dynojepp-joint-estimation-prediction-and-planning-in-dynamic-environments)  
+   标签：评分：8.0/10、query:navwm
+   evidence：动态环境中的规划与导航
+5. [Embodied Multi-Agent Coordination by Aligning World Models Through Dialogue](/202605/14/2605.12920v1-embodied-multi-agent-coordination-by-aligning-world-models-through-dialogue)  
+   标签：评分：8.0/10、query:navwm
+   evidence：具身智能体世界模型的对齐
 
 ### 速读区论文标签
-1. [Beyond Isolation: A Unified Benchmark for General-Purpose Navigation](/202605/13/2605.09441v1-beyond-isolation-a-unified-benchmark-for-general-purpose-navigation)  
-   标签：评分：8.0/10、query:navwm
-   evidence：跨多种技能的通用导航统一基准
-2. [Do Agents Need to Plan Step-by-Step? Rethinking Planning Horizon in Data-Centric Tool Calling](/202605/13/2605.08477v1-do-agents-need-to-plan-step-by-step-rethinking-planning-horizon-in-data-centric-tool-calling)  
+1. [Zero-Shot Satellite Image Retrieval through Joint Embeddings: Application to Crisis Response](/202605/14/2605.05405v2-zero-shot-satellite-image-retrieval-through-joint-embeddings-application-to-crisis-response)  
    标签：评分：7.0/10、query:navwm
-   evidence：基于大语言模型智能体的规划时界与策略
-3. [Learning to Perceive "Where": Spatial Pretext Tasks for Robust Self-Supervised Learning](/202605/13/2605.09963v1-learning-to-perceive-where-spatial-pretext-tasks-for-robust-self-supervised-learning)  
+   evidence：空间数据的联合嵌入与语义搜索
+2. [How to Train Your Latent Diffusion Language Model Jointly With the Latent Space](/202605/14/2605.07933v1-how-to-train-your-latent-diffusion-language-model-jointly-with-the-latent-space)  
    标签：评分：7.0/10、query:navwm
-   evidence：在连续几何空间中建模部分与整体的关系以学习场景结构
-4. [ObjView-Bench: Rethinking Difficulty and Deployment for Object-Centric View Planning](/202605/13/2605.10707v1-objview-bench-rethinking-difficulty-and-deployment-for-object-centric-view-planning)  
+   evidence：构建适用于连续表示的隐空间
+3. [Twincher: Bijective Representation Learning for Robust Inversion of Continuous Systems](/202605/14/2605.13470v1-twincher-bijective-representation-learning-for-robust-inversion-of-continuous-systems)  
    标签：评分：7.0/10、query:navwm
-   evidence：机器人中的以物体为中心的视图规划和物理可达性约束
-5. [PIVOT: Bridging Planning and Execution in LLM Agents via Trajectory Refinement](/202605/13/2605.11225v1-pivot-bridging-planning-and-execution-in-llm-agents-via-trajectory-refinement)  
-   标签：评分：7.0/10、query:navwm
-   evidence：大模型智能体规划与执行中的轨迹优化
-6. [Spatial Adapter: Structured Spatial Decomposition and Closed-Form Covariance for Frozen Predictors](/202605/13/2605.11394v1-spatial-adapter-structured-spatial-decomposition-and-closed-form-covariance-for-frozen-predictors)  
-   标签：评分：7.0/10、query:navwm
-   evidence：残差场的结构化空间表示
-7. [Multi-Task Representation Learning for Conservative Linear Bandits](/202605/13/2605.12176v1-multi-task-representation-learning-for-conservative-linear-bandits)  
-   标签：评分：7.0/10、query:navwm
-   evidence：用于老虎机任务中保守决策的表示学习
-8. [SEMIR: Semantic Minor-Induced Representation Learning on Graphs for Visual Segmentation](/202605/13/2605.12389v1-semir-semantic-minor-induced-representation-learning-on-graphs-for-visual-segmentation)  
-   标签：评分：7.0/10、query:navwm
-   evidence：用于空间分割的拓扑保持隐图表示
-9. [Extracting Search Trees from LLM Reasoning Traces Reveals Myopic Planning](/202605/13/2605.06840v3-extracting-search-trees-from-llm-reasoning-traces-reveals-myopic-planning)  
+   evidence：通过逆问题进行现实世界感知与规划的表示学习
+4. [Jointly Learning Structured Representations and Stabilized Affinity for Human Motion Segmentation](/202605/14/2605.05753v1-jointly-learning-structured-representations-and-stabilized-affinity-for-human-motion-segmentation)  
    标签：评分：6.0/10、query:navwm
-   evidence：提取搜索树以分析推理模型中的规划
-10. [Latent Secret Spin: Keyed Orthogonal Rotations for Blind Speech Watermarking in Anisotropic Latent Spaces](/202605/13/2605.08431v1-latent-secret-spin-keyed-orthogonal-rotations-for-blind-speech-watermarking-in-anisotropic-latent-spaces)  
+   evidence：运动的结构化表示与子空间聚类
+5. [Extracting Search Trees from LLM Reasoning Traces Reveals Myopic Planning](/202605/14/2605.06840v4-extracting-search-trees-from-llm-reasoning-traces-reveals-myopic-planning)  
    标签：评分：6.0/10、query:navwm
-   evidence：编解码器隐空间中的几何操作
-11. [HOME-KGQA: A Benchmark Dataset for Multimodal Knowledge Graph Question Answering on Household Daily Activities](/202605/13/2605.09348v1-home-kgqa-a-benchmark-dataset-for-multimodal-knowledge-graph-question-answering-on-household-daily-activities)  
+   evidence：提取搜索树以表征规划与决策模型
+6. [BROS: Bias-Corrected Randomized Subspaces for Memory-Efficient Single-Loop Bilevel Optimization](/202605/14/2605.10288v1-bros-bias-corrected-randomized-subspaces-for-memory-efficient-single-loop-bilevel-optimization)  
    标签：评分：6.0/10、query:navwm
-   evidence：用于家庭活动和时空数据的多模态知识图谱
+   evidence：随机子空间中的表示学习
 
 
 <div class="dpr-home-promo-card">
