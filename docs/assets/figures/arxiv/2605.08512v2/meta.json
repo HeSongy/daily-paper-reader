@@ -1,0 +1,54 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.08512v2/fig-001.webp",
+      "caption": "Figure 1: Preference-conditioned planning in a risk-structured environment with four obstacles and a cost function reflecting obstacle proximity. Different scalar safety preferences (∆) modulate waypoint plans, ranging from low-risk detours to more direct, riskier routes.",
+      "page": 2,
+      "index": 1,
+      "width": 812,
+      "height": 225
+    },
+    {
+      "url": "assets/figures/arxiv/2605.08512v2/fig-002.webp",
+      "caption": "Figure 6: Summary of FiLM and transition matrix conditioning mechanism parameters for Ant Habitat environment. Across the preference spectrum, panels show the ∥.∥2 distance between FiLM generator outputs (top left), Frobenius norm ∥.∥F of the conditioned transition matrix (top right), path of FiLM generator outputs across the first two principal components (bottom left), and the path of the flattened transition matrix elements across the first two principal components (bottom right).",
+      "page": 18,
+      "index": 2,
+      "width": 531,
+      "height": 469
+    },
+    {
+      "url": "assets/figures/arxiv/2605.08512v2/fig-003.webp",
+      "caption": "Figure 4: Preference modulation and planning fidelity across six environments. For each environment, the left panel plots waypoint cost as a function of preference ∆; the right panel reports waypoint reconstruction MSE normalized by IvI’s MSE (vertical reference line at 1.0), where bars beyond 1.0 indicate baselines that fit the dataset’s waypoints worse than the preference-agnostic IvI. Dashed lines in the left panels show each method’s modulation trend. Bars labeled with multipliers (e.g., 28.8×) extend beyond the displayed axis range. MOMO produces a near-monotonic trend between ∆ and waypoint cost while maintaining MSE comparable to IvI; IvI is preference-agnostic and produces a flat trend; the SA baselines show inconsistent or non-monotonic responses with higher MSE.",
+      "page": 8,
+      "index": 3,
+      "width": 735,
+      "height": 628
+    },
+    {
+      "url": "assets/figures/arxiv/2605.08512v2/fig-004.webp",
+      "caption": "Table 1: Preference modulation profile metrics comparing MOMO to state augmentation baselines. ∆C measures endpoint contrast as the difference in total plan cost between ∆ = 1 and ∆ = 0 queries. ρ is Spearman correlation between ∆ and mean cost curve. Rnorm is cost-curve roughness defined as the sum of second-order finite differences in cost normalized by |∆C|.",
+      "page": 19,
+      "index": 4,
+      "width": 810,
+      "height": 290
+    },
+    {
+      "url": "assets/figures/arxiv/2605.08512v2/fig-005.webp",
+      "caption": "Figure 5: Matrix summaries of representation space manifold deformation for Point Four Obstacle environment under preference-conditioning. Plots characterize local changes via kNN overlap (left), global changes via Spearman coefficients (middle), and non-rigid transformation effects using residual latent distances (right).",
+      "page": 17,
+      "index": 5,
+      "width": 813,
+      "height": 228
+    },
+    {
+      "url": "assets/figures/arxiv/2605.08512v2/fig-006.webp",
+      "caption": "Table 2: Summary of training datasets with sufficient state-preference space coverage.",
+      "page": 20,
+      "index": 6,
+      "width": 756,
+      "height": 191
+    }
+  ]
+}

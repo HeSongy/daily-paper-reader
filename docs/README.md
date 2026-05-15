@@ -6,55 +6,55 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-05-14
-- 运行时间：2026-05-14 20:46:54 UTC
+- 最新运行日期：2026-05-15
+- 运行时间：2026-05-15 21:22:13 UTC
 - 运行状态：成功
 - 本次总论文数：11
-- 精读区：5
-- 速读区：6
+- 精读区：4
+- 速读区：7
 
 ### 今日简报（AI）
-强化学习与通用导航模型成为今日研究亮点，重点聚焦联合嵌入与世界模型的最新突破。  
-最值得关注的是 JEDI 模型实现在线强化学习中的高效世界建模，以及统一导航基准推动多环境泛化。  
-建议读者关注联合嵌入在图像、语言及控制任务中的跨域能力，了解其如何连接智能决策与现实数据。
-- 详情：[/202605/14/README](/202605/14/README)
+深入聚焦目标导向控制与偏好调节规划，共精读与速读 11 篇前沿论文。  
+Slot-MPC 与 MoMo 在模型预测控制与自监督规划中展现出创新的目标条件与特征对齐思路。  
+建议关注目标驱动智能体与轻量自监督模型在真实场景落地的结合潜力。
+- 详情：[/202605/15/README](/202605/15/README)
 
 ### 精读区论文标签
-1. [JEDI: Joint Embedding Diffusion World Model for Online Model-Based Reinforcement Learning](/202605/14/2605.13013v1-jedi-joint-embedding-diffusion-world-model-for-online-model-based-reinforcement-learning)  
+1. [Slot-MPC: Goal-Conditioned Model Predictive Control with Object-Centric Representations](/202605/15/2605.14937v1-slot-mpc-goal-conditioned-model-predictive-control-with-object-centric-representations)  
    标签：评分：10.0/10、query:navwm
-   evidence：用于强化学习的联合嵌入扩散世界模型
-2. [Beyond Isolation: A Unified Benchmark for General-Purpose Navigation](/202605/14/2605.09441v1-beyond-isolation-a-unified-benchmark-for-general-purpose-navigation)  
+   evidence：用于动作规划和场景动力学推理的以物体为中心的世界模型
+2. [MoMo: Conditioned Contrastive Representation Learning for Preference-Modulated Planning](/202605/15/2605.08512v2-momo-conditioned-contrastive-representation-learning-for-preference-modulated-planning)  
    标签：评分：9.0/10、query:navwm
-   evidence：复杂环境下通用导航与跨技能协作的基准测试
-3. [3D RL-DWA: A Hybrid Reinforcement Learning and Dynamic Window Approach for Goal-Directed Local Navigation in Multi-DoF Robots](/202605/14/2605.12689v1-3d-rl-dwa-a-hybrid-reinforcement-learning-and-dynamic-window-approach-for-goal-directed-local-navigation-in-multi-dof-robots)  
-   标签：评分：8.0/10、query:navwm
-   evidence：结合强化学习与动态窗口法的复杂环境局部导航
-4. [DynoJEPP: Joint Estimation, Prediction and Planning in Dynamic Environments](/202605/14/2605.12897v1-dynojepp-joint-estimation-prediction-and-planning-in-dynamic-environments)  
-   标签：评分：8.0/10、query:navwm
-   evidence：动态环境中的规划与导航
-5. [Embodied Multi-Agent Coordination by Aligning World Models Through Dialogue](/202605/14/2605.12920v1-embodied-multi-agent-coordination-by-aligning-world-models-through-dialogue)  
-   标签：评分：8.0/10、query:navwm
-   evidence：具身智能体世界模型的对齐
+   evidence：用于长程规划和偏好调节的隐空间结构
+3. [SleepWalk: A Three-Tier Benchmark for Stress-Testing Instruction-Guided Vision-Language Navigation](/202605/15/2605.10376v1-sleepwalk-a-three-tier-benchmark-for-stress-testing-instruction-guided-vision-language-navigation)  
+   标签：评分：9.0/10、query:navwm
+   evidence：3D环境中指令引导的视觉语言导航基准测试
+4. [Exploring Bottlenecks in VLM-LLM Navigation: How 3D Scene Understanding Capability Impacts Zero-Shot VLN](/202605/15/2605.14801v1-exploring-bottlenecks-in-vlm-llm-navigation-how-3d-scene-understanding-capability-impacts-zero-shot-vln)  
+   标签：评分：9.0/10、query:navwm
+   evidence：零样本视言导航中的三维场景理解
 
 ### 速读区论文标签
-1. [Zero-Shot Satellite Image Retrieval through Joint Embeddings: Application to Crisis Response](/202605/14/2605.05405v2-zero-shot-satellite-image-retrieval-through-joint-embeddings-application-to-crisis-response)  
+1. [GeoVista: Visually Grounded Active Perception for Ultra-High-Resolution Remote Sensing Understanding](/202605/15/2605.14475v1-geovista-visually-grounded-active-perception-for-ultra-high-resolution-remote-sensing-understanding)  
    标签：评分：7.0/10、query:navwm
-   evidence：空间数据的联合嵌入与语义搜索
-2. [How to Train Your Latent Diffusion Language Model Jointly With the Latent Space](/202605/14/2605.07933v1-how-to-train-your-latent-diffusion-language-model-jointly-with-the-latent-space)  
-   标签：评分：7.0/10、query:navwm
-   evidence：构建适用于连续表示的隐空间
-3. [Twincher: Bijective Representation Learning for Robust Inversion of Continuous Systems](/202605/14/2605.13470v1-twincher-bijective-representation-learning-for-robust-inversion-of-continuous-systems)  
-   标签：评分：7.0/10、query:navwm
-   evidence：通过逆问题进行现实世界感知与规划的表示学习
-4. [Jointly Learning Structured Representations and Stabilized Affinity for Human Motion Segmentation](/202605/14/2605.05753v1-jointly-learning-structured-representations-and-stabilized-affinity-for-human-motion-segmentation)  
+   evidence：大规模场景探索的规划驱动主动感知
+2. [TinySSL: Distilled Self-Supervised Pretraining for Sub-Megabyte MCU Models](/202605/15/2605.08241v1-tinyssl-distilled-self-supervised-pretraining-for-sub-megabyte-mcu-models)  
    标签：评分：6.0/10、query:navwm
-   evidence：运动的结构化表示与子空间聚类
-5. [Extracting Search Trees from LLM Reasoning Traces Reveals Myopic Planning](/202605/14/2605.06840v4-extracting-search-trees-from-llm-reasoning-traces-reveals-myopic-planning)  
+   evidence：用于空间表示的蒸馏自监督预训练
+3. [Hyperbolic Distillation: Geometry-Guided Cross-Modal Transfer for Robust 3D Object Detection](/202605/15/2605.09899v1-hyperbolic-distillation-geometry-guided-cross-modal-transfer-for-robust-3d-object-detection)  
    标签：评分：6.0/10、query:navwm
-   evidence：提取搜索树以表征规划与决策模型
-6. [BROS: Bias-Corrected Randomized Subspaces for Memory-Efficient Single-Loop Bilevel Optimization](/202605/14/2605.10288v1-bros-bias-corrected-randomized-subspaces-for-memory-efficient-single-loop-bilevel-optimization)  
+   evidence：用于3D空间感知的几何引导跨模态迁移
+4. [Urban-ImageNet: A Large-Scale Multi-Modal Dataset and Evaluation Framework for Urban Space Perception](/202605/15/2605.09936v1-urban-imagenet-a-large-scale-multi-modal-dataset-and-evaluation-framework-for-urban-space-perception)  
    标签：评分：6.0/10、query:navwm
-   evidence：随机子空间中的表示学习
+   evidence：城市空间感知与分类框架
+5. [Unsupervised learning of acquisition variability in structural connectomes via hybrid latent space modeling](/202605/15/2605.13933v1-unsupervised-learning-of-acquisition-variability-in-structural-connectomes-via-hybrid-latent-space-modeling)  
+   标签：评分：6.0/10、query:navwm
+   evidence：用于高维数据表示的混合隐空间建模
+6. [SPIN: Structural LLM Planning via Iterative Navigation for Industrial Tasks](/202605/15/2605.14051v1-spin-structural-llm-planning-via-iterative-navigation-for-industrial-tasks)  
+   标签：评分：6.0/10、query:navwm
+   evidence：通过迭代导航进行工业任务的结构化大模型规划
+7. [Thinking Ahead: Prospection-Guided Retrieval of Memory with Language Models](/202605/15/2605.14177v1-thinking-ahead-prospection-guided-retrieval-of-memory-with-language-models)  
+   标签：评分：6.0/10、query:navwm
+   evidence：利用想象的未来进行记忆检索与规划
 
 
 <div class="dpr-home-promo-card">

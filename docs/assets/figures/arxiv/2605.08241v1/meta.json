@@ -1,0 +1,78 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.08241v1/fig-001.webp",
+      "caption": "Table 1: Linear probe accuracy (%) on CIFAR-100 with MobileNetV2-0.35× backbone (396K params). Mean ± std over 3 seeds. Ratio = method accuracy / supervised accuracy.",
+      "page": 6,
+      "index": 1,
+      "width": 572,
+      "height": 223
+    },
+    {
+      "url": "assets/figures/arxiv/2605.08241v1/fig-002.webp",
+      "caption": "Figure 2: Linear probe accuracy on CIFAR-100. CA-DSSL reaches 94.0% of the supervised baseline while BYOL-Tiny and DINO-Tiny collapse to random performance. Error bars show ±1 std over 3 seeds.",
+      "page": 6,
+      "index": 2,
+      "width": 791,
+      "height": 491
+    },
+    {
+      "url": "assets/figures/arxiv/2605.08241v1/fig-003.webp",
+      "caption": "Table 11: Datasets used.",
+      "page": 21,
+      "index": 3,
+      "width": 732,
+      "height": 194
+    },
+    {
+      "url": "assets/figures/arxiv/2605.08241v1/fig-004.webp",
+      "caption": "Figure 1: CA-DSSL training pipeline. A frozen DINO ViT-S/16 teacher provides target representations for the MobileNetV2-0.35× student. The loss combines CLS-token distillation (Lcls), multi-scale feature distillation (Lms), and self-contrastive regularization (Lreg). A progressive augmentation curriculum gradually increases augmentation strength over three phases. At deployment, only the 378 KB student backbone is retained.",
+      "page": 3,
+      "index": 4,
+      "width": 807,
+      "height": 512
+    },
+    {
+      "url": "assets/figures/arxiv/2605.08241v1/fig-005.webp",
+      "caption": "Table 6: Consolidated hyperparameters for pretraining and evaluation.",
+      "page": 18,
+      "index": 5,
+      "width": 790,
+      "height": 717
+    },
+    {
+      "url": "assets/figures/arxiv/2605.08241v1/fig-006.webp",
+      "caption": "Figure 3: (a) Fine-tuning and (b) detection transfer results (mean ± std over 3 seeds). Teacherguided distillation provides the best SSL initialization for both classification (+28 pp over random) and detection (2.3× mAP improvement).",
+      "page": 8,
+      "index": 6,
+      "width": 807,
+      "height": 304
+    },
+    {
+      "url": "assets/figures/arxiv/2605.08241v1/fig-007.webp",
+      "caption": "Table 7: Training cost comparison (100 epochs on CIFAR-100, single RTX 4070 Ti). Backbone: 386K params in all methods. “Proj. head” = training-time-only parameters discarded at deployment.",
+      "page": 19,
+      "index": 7,
+      "width": 686,
+      "height": 183
+    },
+    {
+      "url": "assets/figures/arxiv/2605.08241v1/fig-008.webp",
+      "caption": "Figure 4: Ablation results. (a) Loss components: Lcls + Lms is optimal; Lreg hurts on small datasets. (b) Backbone width scales monotonically; progressive curriculum adds +3.4 pp.",
+      "page": 9,
+      "index": 8,
+      "width": 817,
+      "height": 281
+    },
+    {
+      "url": "assets/figures/arxiv/2605.08241v1/fig-009.webp",
+      "caption": "Figure 5: Pretraining loss curves (CIFAR-100, 100 epochs). BYOL-Tiny collapses to zero loss immediately; DINO-Tiny plateaus without learning. CA-DSSL converges to the lowest meaningful loss. Note: losses are not directly comparable across methods (different objectives).",
+      "page": 20,
+      "index": 9,
+      "width": 806,
+      "height": 554
+    }
+  ]
+}

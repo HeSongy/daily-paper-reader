@@ -1,0 +1,46 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.14801v1/fig-001.webp",
+      "caption": "Fig. 1. We study how 3D scene understanding capability affects zero-shot VLN in typical VLM-LLM frameworks, and derive statistical SR upper bounds for the slow LLM planner and the fast reactive navigator which is validated by experiments with state-of-the-art perception models.",
+      "page": 1,
+      "index": 1,
+      "width": 506,
+      "height": 252
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14801v1/fig-002.webp",
+      "caption": "Fig. 2. Overview of our analysis framework. We quantify how 3D scene understanding affects zero-shot VLN by studying two core modules in a typical VLM-LLM pipeline. For the slow LLM planner, we simulate missed detections with the retention ratio ρret and quantify semantic information retained in the degraded topological graph relative to the ideal graph using the matching score Smatch. For the fast reactive navigator, we simulate controlled bounding box drift with the target IoU φiou to measure the effect of localization drift on action execution. By analyzing the relationship between ρret , φiou, and the navigation success rate (SR), we reveal statistical upper bounds for both modules and show a clear perception saturation effect.",
+      "page": 2,
+      "index": 2,
+      "width": 829,
+      "height": 412
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14801v1/fig-003.webp",
+      "caption": "Fig. 3. Topological graphs and efficiency trade-offs under different perception performance. ρret , the topological integrity Smatch, and the navigation performance SR. Specifically, we analyze the correlation in three stages: (i) ρret vs. SR, to illustrate how semantic observation completeness affects navigation Success Rate; (ii) ρret vs. Smatch, to quantify how missed detections degrade the graph structure; and (iii) Smatch vs. SR, to reveal the minimum topological information required for successful reasoning. This multi-stage analysis provides detailed insight into how the decision-making process of the slow LLM planner responds to varying degrees of semantic information loss.",
+      "page": 3,
+      "index": 3,
+      "width": 497,
+      "height": 333
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14801v1/fig-004.webp",
+      "caption": "Fig. 4. Center offsets to ideal BBox and updated skills. alignment between the perturbed bounding box and its ideal counterpart. We use this protocol as a controlled probe of center localization drift, rather than as a complete model of all perception errors in real embodied systems.",
+      "page": 4,
+      "index": 4,
+      "width": 498,
+      "height": 302
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14801v1/fig-005.webp",
+      "caption": "Fig. 5. Impact of 3D scene understanding on navigation. Blue lines denote the statistical upper bounds of success rate (SR) under controlled corruption, and purple lines denote results of ESAM variants. From (a) to (c), ρret influences the intermediate matching score Smatch approximately linearly, while the mapping from Smatch to SR is saturating. Thus, SR becomes insensitive to further improvements in ρret beyond a certain range. The purple result is consistent with this upper bound trend. In (d), SR varies little with the control variable and the purple result again agrees with the upper bound behavior.",
+      "page": 5,
+      "index": 5,
+      "width": 1054,
+      "height": 733
+    }
+  ]
+}

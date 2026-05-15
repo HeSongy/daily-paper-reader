@@ -1,0 +1,102 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.14051v1/fig-001.webp",
+      "caption": "Table 1: Plan format validation results for _validate_plan_text. Each error cell reports the number of plan files in the directory that triggered the corresponding validation rule at least once, with percentage over 141 total plans per model in that directory. Columns B#* are [BASE] runs and V#* are [VALID] runs for each LLM model (Table 6).",
+      "page": 6,
+      "index": 1,
+      "width": 827,
+      "height": 226
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14051v1/fig-002.webp",
+      "caption": "Table 7: Four representative DAG plan examples (left: plan text; right: corresponding dependency structure).",
+      "page": 25,
+      "index": 2,
+      "width": 827,
+      "height": 1261
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14051v1/fig-003.webp",
+      "caption": "Table 9: Test Case 2: answer quality and token counts for the simulated output.",
+      "page": 26,
+      "index": 3,
+      "width": 827,
+      "height": 554
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14051v1/fig-004.webp",
+      "caption": "Figure 8: SimulatorAgent: retrieval-conditioned surrogate world-model component.",
+      "page": 30,
+      "index": 4,
+      "width": 826,
+      "height": 856
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14051v1/fig-005.webp",
+      "caption": "Figure 1: Working example of validation and SPIN system.",
+      "page": 2,
+      "index": 5,
+      "width": 826,
+      "height": 209
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14051v1/fig-006.webp",
+      "caption": "Figure 6: Critic Agent full prompt (system prompt + assembled context).",
+      "page": 29,
+      "index": 6,
+      "width": 829,
+      "height": 1194
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14051v1/fig-007.webp",
+      "caption": "Figure 2: System overview of validated DAG planning and prefix evaluation by Simulator and Critic.",
+      "page": 3,
+      "index": 7,
+      "width": 582,
+      "height": 395
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14051v1/fig-008.webp",
+      "caption": "Figure 5: Simulator Agent full prompt (system prompt + assembled context).",
+      "page": 28,
+      "index": 8,
+      "width": 829,
+      "height": 1014
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14051v1/fig-009.webp",
+      "caption": "Figure 4: Visualization of a four-step DAG plan for a maintenance decision on Chiller 9 (equipment ID: CWC04009). S1–S4 denote the DAG step indices referenced by the plan dependencies (#S1–#S4), corresponding to Tasks 1–4, respectively. The left panel shows the step-level dependency graph (arrows indicate prerequisite relations). The right panel summarizes each step as a compact workflow (query→ retrieve/analyze→ output). Each workflow is executed by its designated agent, which attempts to complete the task using the tools available to it. The color coding matches the highlighted blocks in the plan text.",
+      "page": 24,
+      "index": 9,
+      "width": 829,
+      "height": 1150
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14051v1/fig-010.webp",
+      "caption": "Figure 9: CriticAgent: rubric-based evaluation for early stopping.",
+      "page": 31,
+      "index": 10,
+      "width": 829,
+      "height": 579
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14051v1/fig-011.webp",
+      "caption": "Figure 10: Trajectory database used for retrieval (task summaries and embeddings).",
+      "page": 31,
+      "index": 11,
+      "width": 829,
+      "height": 224
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14051v1/fig-012.webp",
+      "caption": "Table 6: Mapping from our internal LLM IDs to the model strings used in ReActXen’s model_inference.py, together with provider and deployment notes. Unless explicitly stated, quantization and low level serving optimizations are provider managed and not disclosed. Decoding parameters follow our implementation defaults when no overrides are provided: temperature = 0.0 and max tokens = 8192 for text generation.",
+      "page": 16,
+      "index": 12,
+      "width": 830,
+      "height": 281
+    }
+  ]
+}

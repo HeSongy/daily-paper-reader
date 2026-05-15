@@ -1,0 +1,463 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-05-15T21:20:44.256736+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 4,
+    "deep_cap": 6,
+    "deep_selected": 4,
+    "quick_candidates": 7,
+    "quick_skim_target": 11,
+    "quick_selected": 7
+  },
+  "deep_dive": [
+    {
+      "id": "2605.14937v1",
+      "source": "arxiv",
+      "title": "Slot-MPC: Goal-Conditioned Model Predictive Control with Object-Centric Representations",
+      "abstract": "Predictive world models enable agents to model scene dynamics and reason about the consequences of their actions. Inspired by human perception, object-centric world models capture scene dynamics using object-level representations, which can be used for downstream applications such as action planning. However, most object-centric world models and reinforcement learning (RL) approaches learn reactive policies that are fixed at inference time, limiting generalization to novel situations. We propose Slot-MPC, an object-centric world modeling framework that enables planning through Model Predictive Control (MPC). Slot-MPC leverages vision encoders to learn slot-based representations, which encode individual objects in the scene, and uses these structured representations to learn an action-conditioned object-centric dynamics model. At inference time, the learned dynamics model enables action planning via MPC, allowing agents to adapt to previously unseen situations. Since the learned world model is differentiable, we can use gradient-based MPC to directly optimize actions, which is computationally more efficient than relying on gradient-free, sampling-based MPC methods. Experiments on simulated robotic manipulation tasks show that Slot-MPC improves both task performance and planning efficiency compared to non-object-centric world model baselines. In the considered offline setting with limited state-action coverage, we find that gradient-based MPC performs better than gradient-free, sampling-based MPC. Our results demonstrate that explicitly structured, object-centric representations provide a strong inductive bias for controllable and generalizable decision-making. Code and additional results are available at https://slot-mpc.github.io.",
+      "authors": [
+        "Jonathan Spieler",
+        "Angel Villar-Corrales",
+        "Sven Behnke"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.RO"
+      ],
+      "published": "2026-05-14T15:12:15+00:00",
+      "link": "https://arxiv.org/pdf/2605.14937v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Object-centric world models for action planning and scene dynamics reasoning",
+      "llm_evidence_cn": "用于动作规划和场景动力学推理的以物体为中心的世界模型",
+      "llm_evidence": "用于动作规划和场景动力学推理的以物体为中心的世界模型",
+      "canonical_evidence": "用于动作规划和场景动力学推理的以物体为中心的世界模型",
+      "llm_tldr_en": "Proposes Slot-MPC, a framework using object-centric world models and MPC for goal-conditioned planning.",
+      "llm_tldr_cn": "提出Slot-MPC框架，利用以物体为中心的世界模型和模型预测控制进行目标导向规划。",
+      "llm_tldr": "提出Slot-MPC框架，利用以物体为中心的世界模型和模型预测控制进行目标导向规划。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.08512v2",
+      "source": "arxiv",
+      "title": "MoMo: Conditioned Contrastive Representation Learning for Preference-Modulated Planning",
+      "abstract": "Temporally contrastive representation learning induces a latent structure capable of reducing long-horizon planning to inference in a low-dimensional linear system. However, existing contrastive planning work learns a single latent geometry which cannot distinguish multiple valid behaviors trading task efficiency against risk exposure for the same start-goal query. We introduce MoMo, a preference-conditioned contrastive planner allowing a scalar user preference to continuously modulate plan conservativeness at inference time, without retraining. MoMo learns a joint conditioning of the representation geometry and latent prediction operator via Feature-Wise Linear Modulation and low-rank neural modulation, respectively. We show that our formulation preserves the probability density ratio encoded in the representation space that is required for inference-driven contrastive planning, further retaining its inference-time efficiency. Across six environments, MoMo smoothly adapts plan safety according to user preferences, yielding improved temporal and preferential consistency over state augmentation baselines.",
+      "authors": [
+        "Yusuf Syed",
+        "Viraj Parimi",
+        "Brian Williams"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-05-08T21:44:26+00:00",
+      "link": "https://arxiv.org/pdf/2605.08512v2",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "latent structure for long-horizon planning and preference modulation",
+      "llm_evidence_cn": "用于长程规划和偏好调节的隐空间结构",
+      "llm_evidence": "用于长程规划和偏好调节的隐空间结构",
+      "canonical_evidence": "用于长程规划和偏好调节的隐空间结构",
+      "llm_tldr_en": "Proposes MoMo for preference-conditioned contrastive representation learning in latent space planning.",
+      "llm_tldr_cn": "提出 MoMo 框架，在隐空间规划中实现基于偏好调节的对比表示学习。",
+      "llm_tldr": "提出 MoMo 框架，在隐空间规划中实现基于偏好调节的对比表示学习。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.10376v1",
+      "source": "arxiv",
+      "title": "SleepWalk: A Three-Tier Benchmark for Stress-Testing Instruction-Guided Vision-Language Navigation",
+      "abstract": "Vision-Language Models (VLMs) have advanced rapidly in multimodal perception and language understanding, yet it remains unclear whether they can reliably ground language into spatially coherent, plausibly executable actions in 3D digital environments. We introduce SleepWalk, a benchmark for evaluating instruction-grounded trajectory prediction in single-scene 3D worlds generated from textual scene descriptions and filtered for navigability. Unlike prior navigation benchmarks centered on long-range exploration across rooms, SleepWalk targets localized, interaction-centric embodied reasoning: given rendered visual observations and a natural-language instruction, a model must predict a trajectory that respects scene geometry, avoids collisions, and terminates at an action-compatible location. The benchmark covers diverse indoor and outdoor environments and organizes tasks into three tiers of spatial and temporal difficulty, enabling fine-grained analysis of grounding under increasing compositional complexity. Using a standardized pointwise judge-based evaluation protocol, we evaluate three frontier VLMs on 2,472 curated 3D environments with nine instructions per scene. Results reveal systematic failures in grounded spatial reasoning, especially under occlusion, interaction constraints, and multi-step instructions: performance drops as the difficulty level of the tasks increase. In general, current VLMs can somewhat produce trajectories that are simultaneously spatially coherent, plausibly executable, and aligned with intended actions. By exposing failures in a controlled yet scalable setting, SleepWalk provides a critical benchmark for advancing grounded multimodal reasoning, embodied planning, vision-language navigation, and action-capable agents in 3D environments.",
+      "authors": [
+        "Niyati Rawal",
+        "Sushant Ravva",
+        "Shah Alam Abir",
+        "Saksham Jain",
+        "Aman Chadha",
+        "Vinija Jain",
+        "Suranjana Trivedy",
+        "Amitava Das"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-11T11:20:14+00:00",
+      "link": "https://arxiv.org/pdf/2605.10376v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Benchmark for instruction-guided vision-language navigation in 3D environments",
+      "llm_evidence_cn": "3D环境中指令引导的视觉语言导航基准测试",
+      "llm_evidence": "3D环境中指令引导的视觉语言导航基准测试",
+      "canonical_evidence": "3D环境中指令引导的视觉语言导航基准测试",
+      "llm_tldr_en": "Introduces SleepWalk, a benchmark for stress-testing instruction-grounded trajectory prediction in 3D worlds.",
+      "llm_tldr_cn": "引入SleepWalk基准，用于压力测试3D世界中基于指令的轨迹预测和导航能力。",
+      "llm_tldr": "引入SleepWalk基准，用于压力测试3D世界中基于指令的轨迹预测和导航能力。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.14801v1",
+      "source": "arxiv",
+      "title": "Exploring Bottlenecks in VLM-LLM Navigation: How 3D Scene Understanding Capability Impacts Zero-Shot VLN",
+      "abstract": "Zero-shot vision-and-language navigation (VLN) has gained significant attention due to its minimal data collection costs and inherent generalization. This paradigm is typically driven by the integration of pre-trained Vision-Language Models (VLMs) and Large Language Models (LLMs), where VLMs construct 3D scene graphs while LLMs handle high-level reasoning and decision-making. However, a critical bottleneck exists in this system: current 3D perception models prioritize pixel-level accuracy, directly conflicting with the strict computational limits and real-time efficiency demanded by embodied navigation. To address this gap, this paper quantifies the actual impact of 3D scene understanding capability on VLN performance. Based on typical VLM-LLM frameworks, we propose statistical success rate (SR) upper bounds for two core subsystems: 1) the slow LLM planner, which relies on topological mapping semantics, and 2) the fast reactive navigator, which utilizes spatial coordinates and bounding boxes to execute LLM decisions. Evaluations using state-of-the-art 3D scene understanding models validate our proposed bounds and reveal a perception saturation phenomenon, indicating that improvements in perception accuracy beyond a certain threshold yield diminishing returns in navigation success. Our findings suggest that 3D scene understanding for VLN should pivot away from strict pixel-level precision, prioritizing instead navigation-relevant core vocabularies and accurate bounding box proportions.",
+      "authors": [
+        "Ziyi Xia",
+        "Chaoran Xiong",
+        "Litao Wei",
+        "Xinhao Hu",
+        "Ling Pei"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-14T13:12:05+00:00",
+      "link": "https://arxiv.org/pdf/2605.14801v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "3D scene understanding for zero-shot vision-and-language navigation",
+      "llm_evidence_cn": "零样本视言导航中的三维场景理解",
+      "llm_evidence": "零样本视言导航中的三维场景理解",
+      "canonical_evidence": "零样本视言导航中的三维场景理解",
+      "llm_tldr_en": "Analyzes how 3D scene understanding impacts the efficiency and performance of zero-shot navigation agents.",
+      "llm_tldr_cn": "分析了三维场景理解能力如何影响零样本导航智能体的效率与性能。",
+      "llm_tldr": "分析了三维场景理解能力如何影响零样本导航智能体的效率与性能。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2605.14475v1",
+      "source": "arxiv",
+      "title": "GeoVista: Visually Grounded Active Perception for Ultra-High-Resolution Remote Sensing Understanding",
+      "abstract": "Interpreting ultra-high-resolution (UHR) remote sensing images requires models to search for sparse and tiny visual evidence across large-scale scenes. Existing remote sensing vision-language models can inspect local regions with zooming and cropping tools, but most exploration strategies follow either a one-shot focus or a single sequential trajectory. Such single-path exploration can lose global context, leave scattered regions unvisited, and revisit or count the same evidence multiple times. To this end, we propose GeoVista, a planning-driven active perception framework for UHR remote sensing interpretation. Instead of committing to one zooming path, GeoVista first builds a global exploration plan, then verifies multiple candidate regions through branch-wise local inspection, while maintaining an explicit evidence state for cross-region aggregation and de-duplication. To enable this behavior, we introduce APEX-GRO, a cold-start supervised trajectory corpus that reformulates diverse UHR tasks as Global-Region-Object interactive reasoning processes with a unified, scale-invariant spatial representation. We further design an Observe-Plan-Track mechanism for global observation, adaptive region inspection, and evidence tracking, and align the model with a GRPO-based strategy using step-wise rewards for planning, localization, and final answer correctness. Experiments on RSHR-Bench, XLRS-Bench, and LRS-VQA show that GeoVista achieves state-of-the-art performance. Code and dataset are available at https://github.com/ryan6073/GeoVista",
+      "authors": [
+        "Jiashun Zhu",
+        "Ronghao Fu",
+        "Jiasen Hu",
+        "Nachuan Xing",
+        "Xu Na",
+        "Xiao Yang",
+        "Zhiwen Lin",
+        "Weipeng Zhang",
+        "Lang Sun",
+        "Zhiheng Xue",
+        "Haoran Liu",
+        "Weijie Zhang",
+        "Bo Yang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-14T07:15:46+00:00",
+      "link": "https://arxiv.org/pdf/2605.14475v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "planning-driven active perception for large-scale scene exploration",
+      "llm_evidence_cn": "大规模场景探索的规划驱动主动感知",
+      "llm_evidence": "大规模场景探索的规划驱动主动感知",
+      "canonical_evidence": "大规模场景探索的规划驱动主动感知",
+      "llm_tldr_en": "GeoVista is a planning-driven framework for active perception and exploration in remote sensing images.",
+      "llm_tldr_cn": "GeoVista是一个用于遥感图像主动感知与探索的规划驱动框架。",
+      "llm_tldr": "GeoVista是一个用于遥感图像主动感知与探索的规划驱动框架。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.08241v1",
+      "source": "arxiv",
+      "title": "TinySSL: Distilled Self-Supervised Pretraining for Sub-Megabyte MCU Models",
+      "abstract": "Self-supervised learning (SSL) has transformed representation learning for large models, yet remains unexplored for microcontroller (MCU)-class models with fewer than 500K parameters. We identify three obstacles at this scale -- projection head dominance, representation bottleneck, and augmentation sensitivity -- and propose Capacity-Aware Distilled Self-Supervised Learning (CA-DSSL), a teacher-guided framework that overcomes them without labels or text supervision. CA-DSSL combines asymmetric distillation from a frozen DINO ViT-S/16 teacher, multi-scale feature distillation for spatial representations, and a progressive augmentation curriculum. On a MobileNetV2-0.35 backbone (396K parameters) pretrained on CIFAR-100, CA-DSSL reaches 62.7 0.5% linear-probe accuracy (3-seed mean) -- surpassing SimCLR-Tiny by 18 pp, matching SEED (61.7%) with 10 fewer projection parameters (426K vs. 3.15M), and reaching 94.0% of a supervised upper bound. Standard SSL methods (BYOL-Tiny, DINO-Tiny) collapse entirely at this scale. On Pascal VOC detection, CA-DSSL achieves 2.3 the mAP of random initialization and +3 pp over SEED, though SimCLR-Tiny matches CA-DSSL on detection mAP. The deployed backbone occupies 378 KB (INT8) with no inference overhead from pretraining. Preliminary ImageNet-100 experiments reveal that CA-DSSL's advantage is specific to small-data regimes; scaling to ImageNet-1K is discussed as future work.",
+      "authors": [
+        "Bibin Wilson"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-05-07T07:51:00+00:00",
+      "link": "https://arxiv.org/pdf/2605.08241v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "distilled self-supervised pretraining for spatial representations",
+      "llm_evidence_cn": "用于空间表示的蒸馏自监督预训练",
+      "llm_evidence": "用于空间表示的蒸馏自监督预训练",
+      "canonical_evidence": "用于空间表示的蒸馏自监督预训练",
+      "llm_tldr_en": "Proposes CA-DSSL for efficient representation learning on resource-constrained microcontrollers.",
+      "llm_tldr_cn": "提出 CA-DSSL，用于在资源受限的微控制器上进行高效的表示学习。",
+      "llm_tldr": "提出 CA-DSSL，用于在资源受限的微控制器上进行高效的表示学习。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索表示学习在构建世界模型与导航中的运用",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.09899v1",
+      "source": "arxiv",
+      "title": "Hyperbolic Distillation: Geometry-Guided Cross-Modal Transfer for Robust 3D Object Detection",
+      "abstract": "Cross-modal knowledge distillation has emerged as an effective strategy for integrating point cloud and image features in 3D perception tasks. However, the modality heterogeneity, spatial misalignment, and the representation crisis of multiple modalities often limit the efficient of these cross-modal distillation methods. To address these limitations in existing approaches, we propose a hyperbolic constrained cross-modal distillation method for multimodal 3D object detection (HGC-Det). The proposed HGC-Det framework includes an image branch and a point cloud branch to extract semantic features from two different modalities. The point cloud branch comprises three core components: a 2D semantic-guided voxel optimization component (SGVO), a hyperbolic geometry constrained cross-modal feature transfer component (HFT), and a feature aggregation-based geometry optimization component (FAGO). Specifically, the SGVO component adaptively refines the spatial representation of the 3D branch by leveraging semantic cues from the image branch, thereby mitigating the issue of inadequate representation fusion. The HFT component exploits the intrinsic geometric properties of hyperbolic space to alleviate semantic loss during the fusion of high-dimensional image features and low-dimensional point cloud features. Finally, the FAGO compensates for potential spatial feature degradation introduced by the 2D semantic-guided voxel optimization component. Extensive experiments on indoor datasets (SUN RGB-D, ARKitScenes) and outdoor datasets (KITTI, nuScenes) demonstrate that our method achieves a better trade-off between detection accuracy and computational cost.",
+      "authors": [
+        "Kanglin Ning",
+        "Wenrui Li",
+        "Houde Quan",
+        "Qifan Li",
+        "Xingtao Wang",
+        "Xiaopeng Fan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-05-11T02:44:08+00:00",
+      "link": "https://arxiv.org/pdf/2605.09899v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "geometry-guided cross-modal transfer for 3D spatial perception",
+      "llm_evidence_cn": "用于3D空间感知的几何引导跨模态迁移",
+      "llm_evidence": "用于3D空间感知的几何引导跨模态迁移",
+      "canonical_evidence": "用于3D空间感知的几何引导跨模态迁移",
+      "llm_tldr_en": "Uses hyperbolic geometry to constrain cross-modal distillation for robust 3D object detection in spatial environments.",
+      "llm_tldr_cn": "利用双曲几何约束跨模态蒸馏，以实现空间环境中鲁棒的3D目标检测。",
+      "llm_tldr": "利用双曲几何约束跨模态蒸馏，以实现空间环境中鲁棒的3D目标检测。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.09936v1",
+      "source": "arxiv",
+      "title": "Urban-ImageNet: A Large-Scale Multi-Modal Dataset and Evaluation Framework for Urban Space Perception",
+      "abstract": "We present Urban-ImageNet, a large-scale multi-modal dataset and evaluation benchmark for urban space perception from user-generated social media imagery. The corpus contains over 2 Million public social media images and paired textual posts collected from Weibo across 61 urban sites in 24 Chinese cities across 2019-2025, with controlled benchmark subsets at 1K, 10K, and 100K scale and a full 2M corpus for large-scale training and evaluation. Urban-ImageNet is organized by HUSIC, a Hierarchical Urban Space Image Classification framework that defines a 10-class taxonomy grounded in urban theory. The taxonomy is designed to distinguish activated and non-activated public spaces, exterior and interior urban environments, accommodation spaces, consumption content, portraits, and non-spatial social-media content. Rather than treating urban imagery as generic scene data, Urban-ImageNet evaluates whether machine perception models can capture spatial, social, and functional distinctions that are central to urban studies. The benchmark supports three tasks within one standardized library: (T1) urban scene semantic classification, (T2) cross-modal image-text retrieval, and (T3) instance segmentation. Our experiments evaluate representative vision, vision-language, and segmentation models, revealing strong performance on supervised scene classification but more challenging behavior in cross-modal retrieval and instance-level urban object segmentation. A multi-scale study further examines how model performance changes as balanced training data increases from 1K, 10K to 100K images. Urban-ImageNet provides a unified, theory-grounded, multi-city benchmark for evaluating how AI systems perceive and interpret contemporary urban spaces across modalities, scales, and task formulations. Dataset and benchmark are available at: huggingface.co/datasets/Yiwei-Ou/Urban-ImageNet and github.com/yiasun/dataset-2.",
+      "authors": [
+        "Yiwei Ou",
+        "Chung Ching Cheung",
+        "Jun Yang Ang",
+        "Xiaobin Ren",
+        "Ronggui Sun",
+        "Guansong Gao",
+        "Kaiqi Zhao",
+        "Manfredo Manfredini"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.IR",
+        "cs.LG"
+      ],
+      "published": "2026-05-11T03:33:49+00:00",
+      "link": "https://arxiv.org/pdf/2605.09936v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "urban space perception and classification framework",
+      "llm_evidence_cn": "城市空间感知与分类框架",
+      "llm_evidence": "城市空间感知与分类框架",
+      "canonical_evidence": "城市空间感知与分类框架",
+      "llm_tldr_en": "Introduces a large-scale dataset and taxonomy for perceiving and classifying complex urban environments.",
+      "llm_tldr_cn": "引入大规模数据集和分类框架，用于感知和分类复杂的城市空间环境。",
+      "llm_tldr": "引入大规模数据集和分类框架，用于感知和分类复杂的城市空间环境。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.13933v1",
+      "source": "arxiv",
+      "title": "Unsupervised learning of acquisition variability in structural connectomes via hybrid latent space modeling",
+      "abstract": "Acquisition differences across sites, scanners, and protocols in dMRI introduce variability that complicates structural connectome analysis. This motivates deep learning models that can represent high-dimensional connectomes in a low-dimensional space while explicitly separating acquisition-related effects from biological variation. Conventional dimensionality reduction methods model all variance as continuous, so acquisition effects often get absorbed into a continuous latent space. Recent hybrid latent-space models combine discrete and continuous components to address this, but typically require manual capacity tuning to ensure the discrete component captures the intended variability. We introduce an unsupervised framework that removes this manual tuning by architecturally annealing encoder outputs before decoding, allowing the model to adaptively balance discrete and continuous latent variables during training. To evaluate it, we curated a dataset of N=7,416 structural connectomes derived from dMRI, spanning ages 2 to 102 and 13 studies with 25 unique acquisition-parameter combinations. Of these, 5,900 are cognitively unimpaired, 877 have mild cognitive impairment (MCI), and 639 have Alzheimer's disease (AD). We compare against a standard VAE, PCA with k-means clustering, and hybrid models that anneal only through the loss function. Our architectural annealing produces stronger site learning (ARI=0.53, p<0.05) than these baselines. Results show that a hybrid continuous-discrete latent space, with architectural rather than loss-based annealing, provides a useful unsupervised mechanism for capturing acquisition variability in dMRI: by jointly modeling smooth and categorical structure, the Joint-VAE recovers clusters aligned with scanner and protocol differences.",
+      "authors": [
+        "Gaurav Rudravaram",
+        "Lianrui Zuo",
+        "Karthik Ramadass",
+        "Elyssa McMaster",
+        "Jongyeon Yoon",
+        "Aravind R. Krishnan",
+        "Adam M. Saunders",
+        "Chenyu Gao",
+        "Nancy R. Newlin",
+        "Praitayini Kanakaraj",
+        "Lori L. Beason Held",
+        "Murat Bilgel",
+        "Laura A. Barquero",
+        "Micah DArchangel",
+        "Tin Q. Nguyen",
+        "Laurie B. Cutting",
+        "Derek Archer",
+        "Timothy J. Hohman",
+        "Daniel C. Moyer",
+        "Bennett A. Landman"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "stat.ML"
+      ],
+      "published": "2026-05-13T16:11:49+00:00",
+      "link": "https://arxiv.org/pdf/2605.13933v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "hybrid latent space modeling for high-dimensional data representation",
+      "llm_evidence_cn": "用于高维数据表示的混合隐空间建模",
+      "llm_evidence": "用于高维数据表示的混合隐空间建模",
+      "canonical_evidence": "用于高维数据表示的混合隐空间建模",
+      "llm_tldr_en": "Introduces a hybrid latent-space model to separate acquisition variability from biological variation in connectomes.",
+      "llm_tldr_cn": "引入混合隐空间模型，在结构连接组分析中分离采集变异与生物变异。",
+      "llm_tldr": "引入混合隐空间模型，在结构连接组分析中分离采集变异与生物变异。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.14051v1",
+      "source": "arxiv",
+      "title": "SPIN: Structural LLM Planning via Iterative Navigation for Industrial Tasks",
+      "abstract": "Industrial LLM agent systems often separate planning from execution, yet LLM planners frequently produce structurally invalid or unnecessarily long workflows, leading to brittle failures and avoidable tool and API cost. We propose \\texttt{SPIN}, a planning wrapper that combines validated Directed Acyclic Graph (DAG) planning with prefix based execution control. \\texttt{SPIN} enforces a strict DAG contract through \\texttt{\\_validate\\_plan\\_text} and repair prompting, producing executable plans before downstream execution, and then evaluates DAG prefixes incrementally to stop when the current prefix is sufficient to answer the query. On AssetOpsBench, across 261 scenarios, \\texttt{SPIN} reduces executed tasks from 1061 to 623 and improves \\emph{Accomplished} from 0.638 to 0.706, while reducing tool calls from 11.81 to 6.82 per run. On MCP Bench, the same wrapper improves planning, grounding, and dependency related scores for both GPT OSS1 and Llama 4 Maverick.",
+      "authors": [
+        "Yusuke Ozaki",
+        "Dhaval Patel"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-05-13T19:12:24+00:00",
+      "link": "https://arxiv.org/pdf/2605.14051v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "structural LLM planning via iterative navigation for industrial tasks",
+      "llm_evidence_cn": "通过迭代导航进行工业任务的结构化大模型规划",
+      "llm_evidence": "通过迭代导航进行工业任务的结构化大模型规划",
+      "canonical_evidence": "通过迭代导航进行工业任务的结构化大模型规划",
+      "llm_tldr_en": "Introduces SPIN, a planning wrapper that enforces DAG structures for more reliable agent execution.",
+      "llm_tldr_cn": "引入 SPIN 规划包装器，通过强制执行 DAG 结构提高智能体执行的可靠性。",
+      "llm_tldr": "引入 SPIN 规划包装器，通过强制执行 DAG 结构提高智能体执行的可靠性。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.14177v1",
+      "source": "arxiv",
+      "title": "Thinking Ahead: Prospection-Guided Retrieval of Memory with Language Models",
+      "abstract": "Long-horizon personalization requires dialogue assistants to retrieve user-specific facts from extended interaction histories. In practice, many relevant facts often have low semanticsimilarity to the query under dense retrieval. Standard Retrieval-Augmented Generation (RAG) and GraphRAG systems are still largely retrospective: they rely on embedding similarity to the query or on fixed graph traversals, so they often miss facts that matter for the user's needs but lie far from the query in embedding space. Inspired by prospection, the human ability to use imagined futures as cues for recall, we introduce Prospection-Guided Retrieval (PGR), which decouples retrieval from how memories are stored. Given a user query, PGR first expands the goal into a short Tree-of-Thought (ToT) or linear chain of plausible next steps, and uses these steps as retrieval probes rather than relying on the original query alone. The facts retrieved by these probes are then used to personalize the next round of prospection, enabling PGR to uncover additional memories that become relevant only after the simulation is grounded in the user's history. We also introduce MemoryQuest, a challenging multi-session benchmark in which each query is annotated with 3--5 dated reference facts subject to a low query-reference similarity constraint. Across 1,625 queries spanning 185 user profiles from 3 publicly available datasets, PGR-TOT substantially improves retrieval, including nearly 3x recall on MemoryQuest over the strongest baseline. In pairwise LLM-as-judge comparisons against baselines, PGR-generated responses are preferred on 89--98% of queries, with blinded human annotations on held-out subsets showing the same trend. Overall, the results demonstrate that explicit prospection yields large gains in long-horizon retrieval and response quality relative to similarity-only baselines.",
+      "authors": [
+        "Harshita Chopra",
+        "Krishna Kant Chintalapudi",
+        "Suman Nath",
+        "Ryen W. White",
+        "Chirag Shah"
+      ],
+      "primary_category": "cs.IR",
+      "categories": [
+        "cs.IR",
+        "cs.AI",
+        "cs.CL"
+      ],
+      "published": "2026-05-13T22:57:54+00:00",
+      "link": "https://arxiv.org/pdf/2605.14177v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "imagined futures for memory retrieval and planning",
+      "llm_evidence_cn": "利用想象的未来进行记忆检索与规划",
+      "llm_evidence": "利用想象的未来进行记忆检索与规划",
+      "canonical_evidence": "利用想象的未来进行记忆检索与规划",
+      "llm_tldr_en": "Uses prospection-guided retrieval to improve long-horizon task performance by imagining future states.",
+      "llm_tldr_cn": "利用前瞻引导检索，通过想象未来状态来提升长程任务的记忆检索与执行性能。",
+      "llm_tldr": "利用前瞻引导检索，通过想象未来状态来提升长程任务的记忆检索与执行性能。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
