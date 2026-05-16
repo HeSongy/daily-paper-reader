@@ -6,55 +6,61 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-05-15
-- 运行时间：2026-05-15 21:22:13 UTC
+- 最新运行日期：2026-05-16
+- 运行时间：2026-05-16 20:50:29 UTC
 - 运行状态：成功
-- 本次总论文数：11
-- 精读区：4
-- 速读区：7
+- 本次总论文数：13
+- 精读区：8
+- 速读区：5
 
 ### 今日简报（AI）
-深入聚焦目标导向控制与偏好调节规划，共精读与速读 11 篇前沿论文。  
-Slot-MPC 与 MoMo 在模型预测控制与自监督规划中展现出创新的目标条件与特征对齐思路。  
-建议关注目标驱动智能体与轻量自监督模型在真实场景落地的结合潜力。
-- 详情：[/202605/15/README](/202605/15/README)
+今天聚焦自动驾驶未来预测与世界模型演进，共精读8篇、速读5篇论文。  
+最值得关注的是基于前瞻推理的自主驾驶系统与具备未来理解能力的EponaV2模型。  
+建议普通读者重点关注AI在驾驶安全与场景推理方面的融合趋势。
+- 详情：[/202605/16/README](/202605/16/README)
 
 ### 精读区论文标签
-1. [Slot-MPC: Goal-Conditioned Model Predictive Control with Object-Centric Representations](/202605/15/2605.14937v1-slot-mpc-goal-conditioned-model-predictive-control-with-object-centric-representations)  
+1. [See Tomorrow, Act Today: Foresight-Driven Autonomous Driving](/202605/16/2605.07195v1-see-tomorrow-act-today-foresight-driven-autonomous-driving)  
    标签：评分：10.0/10、query:navwm
-   evidence：用于动作规划和场景动力学推理的以物体为中心的世界模型
-2. [MoMo: Conditioned Contrastive Representation Learning for Preference-Modulated Planning](/202605/15/2605.08512v2-momo-conditioned-contrastive-representation-learning-for-preference-modulated-planning)  
+   evidence：通过未来场景想象进行以世界模型为中心的自动驾驶规划
+2. [EponaV2: Driving World Model with Comprehensive Future Reasoning](/202605/16/2605.14696v1-eponav2-driving-world-model-with-comprehensive-future-reasoning)  
+   标签：评分：10.0/10、query:navwm
+   evidence：用于自动驾驶和规划的驾驶世界模型
+3. [Multi-scale Predictive Representations for Goal-conditioned Reinforcement Learning](/202605/16/2605.09364v1-multi-scale-predictive-representations-for-goal-conditioned-reinforcement-learning)  
    标签：评分：9.0/10、query:navwm
-   evidence：用于长程规划和偏好调节的隐空间结构
-3. [SleepWalk: A Three-Tier Benchmark for Stress-Testing Instruction-Guided Vision-Language Navigation](/202605/15/2605.10376v1-sleepwalk-a-three-tier-benchmark-for-stress-testing-instruction-guided-vision-language-navigation)  
+   evidence：用于隐空间目标导向对齐的多尺度预测表示学习
+4. [Neural Distance-Guided Path Integral Control for Tractor-Trailer Navigation](/202605/16/2605.09939v1-neural-distance-guided-path-integral-control-for-tractor-trailer-navigation)  
    标签：评分：9.0/10、query:navwm
-   evidence：3D环境中指令引导的视觉语言导航基准测试
-4. [Exploring Bottlenecks in VLM-LLM Navigation: How 3D Scene Understanding Capability Impacts Zero-Shot VLN](/202605/15/2605.14801v1-exploring-bottlenecks-in-vlm-llm-navigation-how-3d-scene-understanding-capability-impacts-zero-shot-vln)  
+   evidence：利用神经编码器进行几何推理，在复杂环境中进行导航
+5. [NavOL: Navigation Policy with Online Imitation Learning](/202605/16/2605.11762v1-navol-navigation-policy-with-online-imitation-learning)  
    标签：评分：9.0/10、query:navwm
-   evidence：零样本视言导航中的三维场景理解
+   evidence：基于在线模仿学习的导航策略
+6. [EvoNav: Evolutionary Reward Function Design for Robot Navigation with Large Language Models](/202605/16/2605.11859v1-evonav-evolutionary-reward-function-design-for-robot-navigation-with-large-language-models)  
+   标签：评分：9.0/10、query:navwm
+   evidence：机器人导航的进化奖励函数设计
+7. [What Limits Vision-and-Language Navigation ?](/202605/16/2605.13328v1-what-limits-vision-and-language-navigation-)  
+   标签：评分：9.0/10、query:navwm
+   evidence：用于增强真实世界导航一致性的视觉语言导航框架
+8. [Agentifying Patient Dynamics within LLMs through Interacting with Clinical World Model](/202605/16/2605.14723v1-agentifying-patient-dynamics-within-llms-through-interacting-with-clinical-world-model)  
+   标签：评分：9.0/10、query:navwm
+   evidence：用于治疗建议的世界模型增强型LLM智能体
 
 ### 速读区论文标签
-1. [GeoVista: Visually Grounded Active Perception for Ultra-High-Resolution Remote Sensing Understanding](/202605/15/2605.14475v1-geovista-visually-grounded-active-perception-for-ultra-high-resolution-remote-sensing-understanding)  
+1. [Urban Risk-Aware Navigation via VQA-Based Event Maps for People with Low Vision](/202605/16/2605.11782v1-urban-risk-aware-navigation-via-vqa-based-event-maps-for-people-with-low-vision)  
+   标签：评分：8.0/10、query:navwm
+   evidence：基于VQA事件地图的城市导航
+2. [Beyond Spatial Compression: Interface-Centric Generative States for Open-World 3D Structure](/202605/16/2605.10438v1-beyond-spatial-compression-interface-centric-generative-states-for-open-world-3d-structure)  
    标签：评分：7.0/10、query:navwm
-   evidence：大规模场景探索的规划驱动主动感知
-2. [TinySSL: Distilled Self-Supervised Pretraining for Sub-Megabyte MCU Models](/202605/15/2605.08241v1-tinyssl-distilled-self-supervised-pretraining-for-sub-megabyte-mcu-models)  
+   evidence：用于3D结构表示的以接口为中心的生成状态
+3. [3D Primitives are a Spatial Language for VLMs](/202605/16/2605.12586v1-3d-primitives-are-a-spatial-language-for-vlms)  
+   标签：评分：7.0/10、query:navwm
+   evidence：3D几何原语作为空间理解的中间表示
+4. [Evo-Depth: A Lightweight Depth-Enhanced Vision-Language-Action Model](/202605/16/2605.14950v1-evo-depth-a-lightweight-depth-enhanced-vision-language-action-model)  
+   标签：评分：7.0/10、query:navwm
+   evidence：视觉-语言-动作模型中的空间理解
+5. [WISTERIA: Learning Clinical Representations from Noisy Supervision via Multi-View Consistency in Electronic Health Records](/202605/16/2605.09765v1-wisteria-learning-clinical-representations-from-noisy-supervision-via-multi-view-consistency-in-electronic-health-records)  
    标签：评分：6.0/10、query:navwm
-   evidence：用于空间表示的蒸馏自监督预训练
-3. [Hyperbolic Distillation: Geometry-Guided Cross-Modal Transfer for Robust 3D Object Detection](/202605/15/2605.09899v1-hyperbolic-distillation-geometry-guided-cross-modal-transfer-for-robust-3d-object-detection)  
-   标签：评分：6.0/10、query:navwm
-   evidence：用于3D空间感知的几何引导跨模态迁移
-4. [Urban-ImageNet: A Large-Scale Multi-Modal Dataset and Evaluation Framework for Urban Space Perception](/202605/15/2605.09936v1-urban-imagenet-a-large-scale-multi-modal-dataset-and-evaluation-framework-for-urban-space-perception)  
-   标签：评分：6.0/10、query:navwm
-   evidence：城市空间感知与分类框架
-5. [Unsupervised learning of acquisition variability in structural connectomes via hybrid latent space modeling](/202605/15/2605.13933v1-unsupervised-learning-of-acquisition-variability-in-structural-connectomes-via-hybrid-latent-space-modeling)  
-   标签：评分：6.0/10、query:navwm
-   evidence：用于高维数据表示的混合隐空间建模
-6. [SPIN: Structural LLM Planning via Iterative Navigation for Industrial Tasks](/202605/15/2605.14051v1-spin-structural-llm-planning-via-iterative-navigation-for-industrial-tasks)  
-   标签：评分：6.0/10、query:navwm
-   evidence：通过迭代导航进行工业任务的结构化大模型规划
-7. [Thinking Ahead: Prospection-Guided Retrieval of Memory with Language Models](/202605/15/2605.14177v1-thinking-ahead-prospection-guided-retrieval-of-memory-with-language-models)  
-   标签：评分：6.0/10、query:navwm
-   evidence：利用想象的未来进行记忆检索与规划
+   evidence：将标签建模为潜在临床状态的随机观测
 
 
 <div class="dpr-home-promo-card">

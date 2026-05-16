@@ -1,0 +1,527 @@
+Title: Multi-scale Predictive Representations for Goal-conditioned Reinforcement Learning
+
+URL Source: https://arxiv.org/pdf/2605.09364v1
+
+Published Time: Tue, 12 May 2026 01:24:28 GMT
+
+Number of Pages: 12
+
+Markdown Content:
+# Multi-scale Predictive Representations for Goal-conditioned Reinforcement Learning 
+
+Valliappan Chidambaram Adaikkappan ∗
+
+Mila, McGill University 
+
+David Meger †
+
+Mila, McGill University 
+
+Sai Rajeswar †
+
+ServiceNow Research 
+
+Pietro Mazzaglia †
+
+Qualcomm Research 
+
+Abstract 
+
+This paper investigates robust representation learning in offline goal-conditioned reinforcement learning (GCRL). Particularly in sparse reward scenarios, learning representations that align state and goal latents is a challenge that frequently culminates in representation divergence where the encoder drifts toward a low-dimensional, goal-agnostic subspace that desta-bilizes policy learning. We address this issue by showing that an agent must acquire a fundamental understanding of its environment across multiple scales, from local physical dynamics to long-horizon goal-directed structure. Building on this insight, we propose Ms.PR, a framework that leverages multi-scale predictive supervision to enforce goal-directed alignment within the latent space. We demonstrate that Ms.PR leads to improved representa-tion quality and strong performance on both vision and state-based tasks. Furthermore, we show that our approach is exceptionally resilient under re-alistic, challenging data regimes, maintaining state-of-the-art performance across a wide variety of tasks, trajectory stitching scenarios, and extreme noise conditions. 
+
+1 INTRODUCTION 
+
+Advancements in representation learning have fundamentally expanded the capabilities of deep reinforcement learning(RL). Self-supervised objectives [ 34 , 35 ] and predictive world models [ 15 , 18 ], enables agents to capture underlying environment dynamics rather than memorizing trajectories [ 17 , 18 , 34 , 35 ]. Yet deploying RL in real-world scenarios exposes a critical bottleneck: dense, task-specific rewards are notoriously difficult to design and collect. Agents must increasingly learn from offline datasets guided only by sparse, task-agnostic success signals. Goal-conditioned RL (GCRL) provides a principled framework for this paradigm, tasking an agent to reach any specified goal from any starting state [ 28 ]. Yet GCRL introduces profound representation challenges. To succeed, an agent must align its state and goal representations to understand not just what actions are physically possible, but how those actions contribute to maximizing the goal conditioned cumulative reward. Under sparse rewards, standard methods lack the gradient feedback required to enforce this alignment, resulting in encoders that produce goal-agnostic features leading to value overestimation, poor trajectory stitching, and brittle performance. To learn effective goal-aware representations, we argue they must satisfy three necessary conditions. 1. Dynamical alignment requires the encoder to capture immediate transition dynamics, grounding     
+
+> ∗Correspondence to valliappan.chidambaramadaikkappa@mail.mcgill.ca .†Equal Advising . Preprint.
+> arXiv:2605.09364v1 [cs.LG] 10 May 2026
+
+the agent in what actions are physically feasible. 2. Behavioral alignment requires the encoder to organize state-goal pairs such that goal-directed actions and successor states are predictable from their latent representations. 3. Temporal alignment requires the latent geometry to reflect goal conditioned returns, providing the critic with a pre-organized substrate rather than requiring it to discover this structure from sparse rewards alone. Existing GCRL methods satisfy at most two of these conditions. Model-free methods such as GCBC [ 23 ], GCIVL [ 29 ], and GCIQL [ 20 ] prioritize behavioral relations but bypass physical and temporal dynamics entirely. Existing methods like Dual [ 31 ] and VIP [ 25 ] target temporal alignment by leveraging value-based objectives and reward-distance estimation, respectively, where VIP specifically treats the distance between state and goal embeddings as a reward signal. However, lacks physical grounding and become brittle under high-dimensional observations, action noise, or suboptimal data. To address these limitations, we introduce Multi- scale Predictive Representations (Ms.PR), a unified framework that jointly enforces all three alignment conditions. Ms.PR operates at two complementary temporal granularities: at the local scale, it predicts immediate single-step transitions, grounding the encoder in physical dynamics; and at the global scale, it predicts goal-conditioned transitions and actions toward distant objectives, aligning the encoder with goal-directed intent. An end-to-end actor-critic agent trained on this structured representation benefits from a latent space where value approximation is substantially simplified. 
+
+Contribution. We propose Ms.PR, an end-to-end, multi-scale predictive framework that explicitly satisfies all three conditions. Unlike prior representation learning approaches that suffer from algorithmic brittleness, Ms.PR constructs a robust latent space that maintains stability across diverse tasks. Ms.PR demonstrates exceptional performance on the challenging OGBench benchmark, achieving an average success rate of 59% on state-based tasks and 65% on pixel-based tasks. Notably, it significantly outperforms the current state-of-the-art hierarchical method, HIQL [ 30 ], on state-based environments (50%) while remaining highly competitive in the visual domain (67%).Ms.PR demonstrates exceptional robustness under realistic, scenarios, such as suboptimal trajectory stitching, noisy transitions, and limited data. Through extensive empirical analysis, we show that each alignment condition is strictly necessary for a specific performance regime, collectively mitigating value overestimation and yielding a temporally-grounded, high-rank latent space. 
+
+2 RELATED WORKS 
+
+Dynamics-based Representation Learning. Leveraging system dynamics is a foundational approach for shaping representations in complex, partially observable environments [ 22 , 32 ]. Both auxiliary model-free tasks [ 2, 11 , 26 , 34 ] and latent world models [ 13 , 14 , 15 , 16 , 17 , 33 , 35 ] rely on forward prediction to force the agent to understand state transitions and action effects. Recently, MRQ [ 10 ]explicitly leveraged this predictive signal to construct highly effective latent spaces for standard Q-learning in dense-reward settings. However, because these formulations are inherently task-agnostic, they satisfy only dynamical alignment , and transitional reward modelling. They entirely lack the goal-directed supervision necessary to achieve behavioral alignment . Consequently, we observe that directly applying MRQ-style, purely forward-predictive objectives to sparse-reward offline GCRL fails to map the requisite state-goal relationships, inevitably leading to poor representation. 
+
+Goal-Conditioned RL (GCRL). GCRL extends standard RL by conditioning policies on specific ob-jectives to generalize across tasks [ 12 , 19 , 23 ]. Standard approaches leverage hindsight relabeling [ 1], contrastive objectives [ 5, 6], or state-occupancy matching [ 24 ]. In offline settings, methods like GCIVL, GCIQL, and QRL [ 36 ] apply offline RL algorithms directly with goal-conditioned reward functions. Hierarchical methods such as HIQL [ 30 ] decompose goal-reaching into subgoal selection and low-level control, achieving strong results but at the cost of requiring a separate high-level policy. 
+
+Goal Representation Learning. A principled approach to GCRL involves learning latent spaces that inherently encode the geometric structure of goal-reaching. Recent works emphasize temporal consistency within Behavioral Cloning (BC): TRA [ 27 ] employs a temporal alignment loss for compositional generalization, while BYOL-γ [ 21 ] approximates successor representations to improve performance in GCBC. However, as purely imitation-based methods, they lack the robust value esti-mation required to stitch suboptimal trajectories or learn from noisy offline RL datasets. Most related to our work is Dual Goal Representations [ 31 ], which explicitly models temporal distances to provide 2a theoretically grounded, goal-aware representation. While elegant, tying the latent representation directly to value approximation deprives it of physical grounding. Consequently, this formulation becomes highly brittle, when exposed to high-dimensional state spaces, suboptimal trajectory data. In contrast, Ms.PR strictly decouples representation learning from value approximation by explicitly enforcing dynamical and behavioral alignment through a multi-scale predictive objective, yielding representations that remain stable under high-dimensional observations and suboptimal data. 
+
+3 Representation Learning for Offline GCRL 
+
+Background. We model the environment as a Goal-Conditioned Markov Decision Process (GC-MDP), defined by the tuple M = ( S, A, P, r, γ, G). Here, S denotes the high-dimensional state space, A the action space, and P(st+1 |st, a t) the transition dynamics. The goal space G ⊆ S consists of desired configurations the agent seeks to reach. Unlike standard RL, the reward function r(s, a, g )
+
+is conditioned on a specific goal g ∈ G , typically formulated as a binary signal where r = 0 if the goal is achieved and r = −1 otherwise. The objective is to learn a policy π(a|s, g ) that maximizes the expected cumulative discounted return J(π) = Eπ, P [P∞ 
+
+> t=0
+
+γtr(st, a t, g )] . In the rest of the manuscript, timestep subscripts are generally omitted to simplify the notation; instead, we use (s, s ′)
+
+to indicate the current and next states. We consider the offline setting where an agent learns from a fixed dataset D = {(s, a, r, s ′, g )}
+
+without further environment interaction. Our objective is to decouple learning of the environment’s structural geometry from the RL objective; a strategy proven to stabilize training in high-dimensional, sparse-reward settings [ 9, 10 , 17 ]. Formally, we define a shared state encoder Esψ : S → Z such that zs = Esψ (s) and zg = Esψ (g), placing states and goals in a common latent space Z. A joint state-action representation is computed as zsa = Esa ψ (zs, a ). The downstream policy and value function operate entirely within this latent space: 
+
+Actor: πϕ(zs, zg ), Critic: Qθ (zsa , zg ). (1) Ms.PR constructs this latent space by jointly enforcing the three alignment conditions introduced in Sec-1. We describe the predictive modules that implement each condition in turn.                                                  
+
+> Encoders
+> State representation zs=Esψ(s)
+> State-action representation zsa =Esa ψ(zs, a )
+> Goal representation zg=Esψ(zg)
+> Multi-scale Predictors
+> Forward dynamics ˜zs′=fdyn (zsa )
+> Inverse dynamics ˜a=finv (zs,zs′)
+> Goal-level dynamics ˜zgoal s′=fg−dyn (zs,zg)
+> Goal-conditioned action ˜agoal =fg−act (zs,zg)
+> Reward predictor ˜r=frew (zsa ,zg)
+> Goal-Conditioned RL
+> Critic function ˜Q=Qθ(zsa ,zg)
+> Policy a∼πϕ(zs,zg)Latent Rollout
+> action
+> Encoder
+> State
+> Encoder
+> Goal
+> +
+> zs
+> ++
+> Dynamics Model
+> zsa
+> z′
+> s
+> Goal-Level Model
+> ˆaˆzs
+> Reward Model
+> ˆr
+> zg
+
+Figure 1: Multi-scale Predictive Representations. (Left ) Notation summary of Ms.PR encoders, predictors, and RL modules. ( Right ) Architecture overview of the proposed framework. 
+
+3.1 Dynamical Alignment 
+
+Dynamical alignment grounds the encoder in the causal physics of the environment, ensuring it captures what transitions are physically possible under any action. We enforce this through two complementary predictive modules operating on consecutive state transitions. 
+
+Forward Dynamics ( fdyn ). Given the current state-action representation zsa , this module predicts the next latent state ˜zs′ . Minimizing the forward prediction error enforces transition consistency-the encoder must retain action-relevant features to predict how the environment evolves. 
+
+Inverse Dynamics ( finv ). Given consecutive latent states (zs, zs′ ), this module reconstructs the executed action ˜a. This guarantees action discriminability: the latent space must retain sufficient motor features to distinguish structurally different transitions. 3Ldyn = ∥˜zs′ − zs′ ∥22, Linv = ∥˜a − a∥22. (2) 
+
+Stability via Target Encoder. Both objectives use targets computed by a slow-moving target encoder Es 
+
+> ¯ψ
+
+with stopped gradients. For the forward dynamics loss, zs′ = Es 
+
+> ¯ψ
+
+(s′) prevents the online encoder from chasing its own moving targets. similarly in the case of inverse dynamics loss, computing zs′ via the target encoder. This ensures that the next-state latent is a stable regression target across updates, preventing the encoder from collapsing. 
+
+3.2 Temporal Alignment 
+
+While dynamical alignment captures local transition structure, it provides no signal about the cumulative cost of reaching a goal - information the critic cannot recover from sparse binary rewards alone. Temporal alignment addresses this by pre-organizing the latent space to re-flect goal-conditioned return structure, reducing the burden on value estimation under sparse feedback. 
+
+Reward Predictor ( frew ). Given the current state-action representation zsa and goal embedding 
+
+zg , this module predicts the cumulative return ˜r. Rather than predicting single-step rewards, which carry no useful signal under sparse binary feedback, we train frew on Monte Carlo returns [ 3, 4]. This provides a dense temporal signal proportional to the actual cost-to-go, grounding the encoder in long-horizon goal proximity even when individual transitions yield no reward. 
+
+Lrew = ∥˜r − rMC ∥22, ˜r = frew (zsa , zg ). (3) 
+
+3.3 Behavioral Alignment 
+
+Dynamical and temporal alignment together ground the encoder in physical transitions and return structure, but neither explicitly models the relationship between a current state and a distant goal. 
+
+Behavioral alignment bridges this gap by supervising the encoder with goal-conditioned predictions, coupling the representation directly to the control objective. 
+
+Goal-level Dynamics ( fg-dyn ). Given the current state zs and goal embedding zg , this module predicts the next latent state ˜zgoal  
+
+> s′
+
+implied by an optimal goal-reaching policy. This forces the encoder to organize states such that goal-directed transitions are predictable - directly encoding the relational structure between states and goals. 
+
+Goal-conditioned Action Prediction ( fg-act ). Given (zs, zg ), this module predicts the action ˜agoal 
+
+required to move toward the goal. Unlike the inverse dynamics module, which infers actions from observed consecutive state pairs (s, s ′), this predictor infers actions directly from (s, g ), serving as a goal-conditioned behavioral cloning auxiliary task that couples the representation to the policy’s intent. 
+
+Lg-dyn = ∥˜zgoal  
+
+> s′
+
+− zs′ ∥22, Lg-act = ∥˜agoal − a∥22, (4) where ˜zgoal  
+
+> s′
+
+= fg-dyn (zs, zg ) and ˜agoal = fg-act (zs, zg ).
+
+Algorithm 1 Representation and Policy Learning  
+
+> 1:
+
+Input: Replay buffer D, horizon H, target update frequency K 
+
+> 2:
+
+Initialize: Encoders ψ, predictors ω, actor ϕ, critic θ; targets ¯ψ, ¯ϕ, ¯θ 
+
+> 3:
+
+for t = 1 . . . T do  
+
+> 4:
+
+if t mod K = 0 then  
+
+> 5:
+
+Update targets: ¯ψ ← ψ, ¯ϕ ← ϕ, ¯θ ← θ 
+
+> 6:
+
+Sample trajectory chunk τ ∼ D  
+
+> 7:
+
+Update representation (ψ, ω ) by minimizing LMs.PR (τ ) (Eq. 5)  
+
+> 8:
+
+end if  
+
+> 9:
+
+Sample batch (s, a, r, s ′, g ) ∼ D  
+
+> 10:
+
+Update critic θ using TD loss LQ (Eq. 6)  
+
+> 11:
+
+Update actor ϕ using Lπ (Eq. 7)  
+
+> 12:
+
+end for 
+
+43.4 Agent Training 
+
+We jointly optimize the multi-scale representation and the policy using offline data. The training process alternates between (i) horizon-based representation learning on trajectory chunks and (ii) standard actor-critic updates using random batches. Algorithm 1 summarizes the procedure. 
+
+Representation Learning Objective. Given a trajectory chunk τ = {(sh, a h, r h, s h+1 )}H−1
+
+> h=0
+
+sampled from D and a goal g, we encode the initial state and goal as z0 
+
+> s
+
+= Esψ (s0) and zg = Esψ (g).We unroll the latent dynamics model for H steps, computing at each step h the action-conditioned latent zhsa = Esa ψ (zhs , a h). Regression targets for state predictions are computed by the target encoder 
+
+zh+1  
+
+> s
+
+= Es 
+
+> ¯ψ
+
+(sh+1 ). The total representation learning objective aggregates prediction errors over the horizon H:
+
+LM s.P R =
+
+> H−1
+
+X
+
+> h=0
+
+[λdyn Ldyn + λinv Linv + λg-dyn Lg-dyn + λg-act Lg-act + λrew Lrew ] . (5) 
+
+Goal-conditioned RL For value learning in the critic, we minimize the Huber loss [ 10 ] against an n-step TD target. Let R(n) 
+
+> t
+
+= Pn−1 
+
+> k=0
+
+γkrt+k denote the n-step discounted return and z′ 
+
+> sa
+
+the representation of the state-action pair at step t + n. The critic loss is defined as: 
+
+LQ = Qθ (zsa , zg) −
+
+
+
+R(n) 
+
+> t
+
++ γnQθ′ (z′
+
+> sa
+
+, zg)
+
+
+
+> δ
+
+, (6) where Qθ′ denotes the target critic. The actor is trained to find the action policy that maximizes the estimated value while staying close to the behavior distribution of the offline dataset, akin to Fujimoto and Gu [7]: 
+
+Lπ = −Qθ (zsa , zg) + λBC ∥πϕ(zs, zg) − a∥22. (7) 
+
+Optimization. As shown in Algorithm 1, representation updates are performed every K steps using trajectory chunks, while the actor and critic are updated at every step. Target networks are updated periodically via hard updates. 
+
+4 EXPERIMENTS 
+
+Our experimental evaluation assesses the representations learned by Ms.PR across state-based and pixel-based offline GCRL tasks from OGBench [ 28 ]. We specifically investigate: (1) overall performance relative to GCRL baselines and goal representation technique; (2) robustness under realistic conditions, including trajectory stitching, limited data, and suboptimal expert demonstrations. 
+
+Tasks and Datasets. We evaluate on 12 state-based and 7 pixel-based environments from OG-Bench [ 28 ], covering two domains: locomotion (AntMaze, PointMaze, HumanoidMaze) and ma-nipulation (Cube, Scene, Puzzle). Locomotion tasks require long-horizon navigation across large, sparse-reward mazes, while manipulation tasks demand precise contact-rich interactions with ob-jects. Together they provide a diverse and challenging test bed for goal-conditioned representations. Datasets consist of fixed offline trajectory collections without any online interaction. 
+
+Baselines. We compare against five non-hierarchical GCRL methods: GCBC [23 ], GCIVL [29 ], 
+
+GCIQL [ 20 ], QRL , and CRL [6]. As the primary goal-representation comparison, we include Dual Goal Representations [ 31 ] paired with three diverse backbones (GCIQL, GCIVL, CRL), forming Dual GCIQL , Dual GCIVL , and Dual CRL . We additionally include the hierarchical method HIQL [ 30 ] as an upper-bound reference. 
+
+4.1 Main Results 
+
+As shown in Table 1, Ms.PR consistently achieves the strongest overall performance among all non-hierarchical and goal-representation methods across both state-based and pixel-based environments. A clear specialization pattern emerges among the baselines: methods such as GCIVL and GCIQL excel on manipulation tasks where contact-rich interactions benefit from strong behavioral cloning, whereas CRL and the hierarchical HIQL perform comparatively better on long-horizon locomotion. No single baseline achieves strong performance across both domains simultaneously. In contrast, Ms.PR provides uniformly competitive performance across locomotion 5Non-Hierarchical Goal Representation Hierarchical Environment GCBC GCIVL GCIQL QRL CRL Dual GCIQL Dual GCIVL Dual CRL OURS HIQL State-based environments 
+
+pointmaze-medium-navigate 9 ±6 63 ±6 53 ±8 82 ±5 29 ±7 78 ±4 76 ±7 33 ±10 64 ±9 79 ±5
+
+pointmaze-large-navigate 29 ±6 45 ±5 34 ±3 86 ±9 39 ±7 36 ±9 46 ±6 39 ±12 54 ±9 58 ±5
+
+antmaze-medium-navigate 29 ±4 72 ±8 71 ±4 88 ±3 95 ±1 73 ±4 75 ±4 93 ±3 96 ±6 96 ±1
+
+antmaze-large-navigate 24 ±2 16 ±5 34 ±4 75 ±6 83 ±4 41 ±8 28 ±11 87 ±2 96 ±3 91 ±2
+
+antmaze-giant-navigate 0 ±0 0 ±0 0 ±0 14 ±3 16 ±3 2 ±1 0 ±0 21 ±4 48 ±6 65 ±5
+
+humanoidmaze-medium-navigate 8 ±2 24 ±2 27 ±2 21 ±8 60 ±4 37 ±5 29 ±3 57 ±4 55 ±4 89 ±2
+
+humanoidmaze-large-navigate 1 ±0 2 ±1 2 ±1 5 ±1 24 ±4 4 ±2 3 ±2 18 ±4 41 ±14 49 ±4
+
+cube-single-play 6 ±2 53 ±4 68 ±6 5 ±1 19 ±2 89 ±6 89 ±3 60 ±1 65 ±8 15 ±3
+
+cube-double-play 1 ±1 36 ±3 40 ±5 1 ±0 10 ±2 51 ±4 60 ±4 24 ±5 12 ±4 6 ±2
+
+scene-play 5 ±1 42 ±4 51 ±4 5 ±1 19 ±2 60 ±3 72 ±6 44 ±5 49 ±8 38 ±3
+
+puzzle-3x3-play 2 ±0 6 ±1 95 ±1 1 ±0 3 ±1 57 ±5 5 ±1 6 ±1 75 ±5 12 ±2
+
+puzzle-4x4-play 0 ±0 13 ±2 26 ±3 0 ±0 0 ±0 31 ±6 23 ±3 2 ±0 47 ±7 7 ±2
+
+Avg. State 15 ±3 31 ±3 42 ±1 32 ±2 33 ±1 47 ±2 42 ±2 41 ±2 59 ±2 50 ±1
+
+Pixel-based environments 
+
+v-antmaze-medium-navigate 11 ±2 22 ±2 11 ±1 0 ±0 95 ±1 71 ±4 78 ±4 85 ±3 94 ±2 93 ±4
+
+v-antmaze-large-navigate 4 ±0 5 ±1 4 ±1 0 ±0 84 ±1 51 ±10 40 ±4 43 ±3 77 ±6 53 ±9
+
+v-antmaze-medium-stitch 67 ±4 6 ±2 2 ±0 0 ±0 69 ±2 26 ±8 37 ±4 20 ±4 87 ±4 87 ±2
+
+v-antmaze-large-stitch 24 ±3 1 ±1 0 ±0 1 ±1 11 ±3 1 ±0 10 ±0 1 ±1 20 ±2 28 ±2
+
+v-cube-single-play 5 ±1 60 ±4 30 ±5 41 ±15 31 ±15 15 ±6 58 ±5 14 ±8 86 ±4 89 ±0
+
+v-scene-play 12 ±2 25 ±2 12 ±2 10 ±1 11 ±2 7 ±5 26 ±5 15 ±1 56 ±5 49 ±4
+
+v-puzzle-3x3-play 0 ±0 21 ±2 1 ±2 1 ±1 0 ±0 0 ±0 0 ±0 0 ±0 37 ±5 73 ±8
+
+Avg. Pixel 18 ±1 20 ±1 10 ±1 9 ±1 43 ±2 25 ±2 36 ±1 25 ±1 65 ±2 67 .0 ±2
+
+Table 1: Combined OGBench results across state-based (12 environments) and pixel-based (7 environments) settings. Methods are grouped as: Non-Hierarchical, Goal Representation approach (Dual), Ms.PR, and Hierarchical (gray). Bold: within 95% of the row best. and manipulation, demonstrating that our predictive representation generalizes across tasks. The advantage of Ms.PR becomes more pronounced in the pixel-based setting. Although Dual Goal Representations [ 31 ] are specifically designed for goal-aware representation learning, their performance degrades substantially when scaling to high-dimensional visual observations, particularly for Dual GCIQL and Dual CRL , which drops in performance, especially in manipulation environments. Ms.PR, by contrast, maintains strong and stable performance in the visual setting, demonstrating superior generalization capability across observation modalities. This gap underscores a fundamental limitation of value-function-based distance representations: when value estimates are unreliable in high-dimensional pixel spaces, representations built on those estimates inherit and compound the underlying instability. Ms.PR avoids this failure mode entirely by grounding the encoder in predictive objectives that are independent of value estimation. 
+
+4.2 Robustness and Generalization 
+
+To rigorously stress-test the representations learned by Ms.PR, we evaluate under three challenging distributional conditions: trajectory stitching, limited data, and noisy expert demonstrations. In each setting, we compare against Dual GCIQL , Dual GCIVL , and Dual CRL : the most recent goal-representation baselines to isolate the effect of representation quality from algorithmic differences. AntMaze 
+
+Medium 
+
+HumanoidMaze 
+
+Medium 
+
+PointMaze 
+
+Medium 
+
+> 0
+> 20
+> 40
+> 60
+> 80
+> 100
+> Success Rate (%)
+> State-Based Environments (STITCH)
+> Ours
+> Ours
+> Ours
+
+v-AntMaze 
+
+Medium 
+
+v-AntMaze 
+
+Large    
+
+> 0
+> 20
+> 40
+> 60
+> 80
+> 100
+> Success Rate (%)
+> Pixel-Based Environments (STITCH)
+> Ours
+> Ours
+> Dual_CRL Dual_GCIQL Dual_GCIVL Ours
+
+Figure 2: Stitching robustness. Ms.PR consistently outperforms all Dual configurations in state-based and pixel-based stitching environments. 
+
+Learning from Stitched Datasets. Many realistic offline datasets consist of fragmented, suboptimal trajectories that individually fail to reach goals. Generalizing across such datasets requires the 6representation to bridge overlapping local segments, a property known as trajectory stitching . As shown in Figure 2, Ms.PR generalizes substantially better than all Dual configurations in both state-based and pixel-based environments. Value-function-based distance representations struggle in stitching regimes because their distance estimates are unreliable for state pairs not directly connected by observed trajectories. Ms.PR overcomes this failure mode by grounding the encoder in predictive transition objectives rather than value estimates, learning structural features from locally observed dynamics that generalize across trajectory boundaries (stitch). 25% 50% 75% 100%          
+
+> Dataset (%)
+> 0
+> 20
+> 40
+> 60
+> 80
+> 100
+> Success Rate (%)
+> AntMaze-Large
+> 25% 50% 75% 100%
+> Dataset (%)
+> 0
+> 20
+> 40
+> 60
+> 80
+> Cube-Single
+> 25% 50% 75% 100%
+> Dataset (%)
+> 0
+> 10
+> 20
+> 30
+> 40
+> 50
+> Puzzle-4×4
+> Dual CRL Dual GCIQL Dual GCIVL Ours
+
+Figure 3: Data efficiency. Ms.PR maintains strong performance under reduced training data ( 25% ,
+
+50% , 75% , and 100% ), outperforming Dual variants across environments. 
+
+Data Efficiency. We evaluate how efficiently each method extracts structural information by training on reduced fractions ( 25% , 50% , 75% , and 100% ) of the original offline datasets. As shown in Figure 3, Ms.PR maintains strong performance even under significant data reduction, while Dual configurations degrade more steeply. The multi-scale predictive objectives provide a rich self-supervised signal that compensates for dataset size, enabling the representation to generalize well even in data-scarce regimes. Base(σ=0.2) σ=0.3 σ=0.4 σ=0.5          
+
+> 0
+> 20
+> 40
+> 60
+> 80
+> 100
+> Success Rate (%)
+> AntMaze-Medium-Navigate (Noisy Dataset)
+> Ours Ours Ours Ours
+> Base(σ=0.1) σ=0.2 σ=0.3 σ=0.4
+> 0
+> 10
+> 20
+> 30
+> 40
+> 50
+> 60
+> Success Rate (%)
+> Puzzle-4x4-Play (Noisy Dataset)
+> Ours
+> Ours
+> Ours
+> Ours
+> Dual_CRL Dual_GCIQL Dual_GCIVL Ours
+
+Figure 4: Resilience to action noise. Ms.PR degrades more gracefully under increasing action noise than Dual Goal Representation baselines, evaluated across representative manipulation and locomotion environments. 
+
+Resilience to Noisy Expert Data. Offline datasets are frequently collected by suboptimal or noisy behavior policies. To simulate this, we inject Gaussian action noise at increasing standard deviations into the expert policy during data collection. For manipulation tasks we use σ ∈ { 0.1, 0.2, 0.3, 0.4}
+
+and for locomotion tasks σ ∈ { 0.2, 0.3, 0.4, 0.5}. We evaluate on a balanced selection of envi-ronments covering both domains. As shown in Figure 4, Ms.PR degrades more gracefully than all Dual configurations as noise increases. Where Dual representations relying on value-estimated temporal distances collapse as expert quality degrades, the predictive structure of Ms.PR captures the underlying environment dynamics rather than overfitting to the flaws of a noisy expert, resulting in a more noise-resilient representation. 
+
+4.3 Ablations 
+
+We ablate key components of Ms.PR to understand their individual contributions, in Table-2 
+
+Dynamics Only ( D). Training solely on local forward dynamics yields the weakest overall performance across both state-based and pixel-based environments. Without goal-directed supervision, the encoder receives no signal to anchor its predictions to task-relevant structure. 7Environment D DI DIR DIR g−act DIR g−dyn OURS 
+
+Pixel-based environments 
+
+v-antmaze-medium-navigate 34 ±4 32 ±1 80 ±2 89 ±2 90 ±2 94 ±3
+
+v-antmaze-large-navigate 16 ±2 15 ±1 43 ±2 52 ±2 47 ±2 77 ±6
+
+v-antmaze-medium-stitch 6 ±1 7 ±1 65 ±10 72 ±2 74 ±1 87 ±4
+
+v-antmaze-large-stitch 1 ±0 1 ±0 5 ±1 9 ±1 11 ±2 20 ±2
+
+v-cube-single-play 8 ±0 15 ±2 32 ±7 73 ±6 75 ±3 86 ±4
+
+v-scene-play 26 ±1 32 ±3 28 ±1 45 ±6 27 ±3 56 ±5
+
+v-puzzle-3x3-play 6 ±2 13 ±2 14 ±3 30 ±3 21 ±3 37 ±5
+
+Average 14 ±1 16 ±1 38 ±2 53 ±2 49 ±1 65 ±2
+
+State-based environments 
+
+antmaze-large-navigate 9 ±4 0 ±0 90 ±4 91 ±4 96 ±2 96 ±3
+
+humanoidmaze-medium-navigate 0 ±0 0 ±0 61 ±5 60 ±3 52 ±4 55 ±4
+
+cube-single-play 48 ±7 55 ±5 52 ±5 54 ±7 53 ±6 60 ±1
+
+scene-play 46 ±7 50 ±3 47 ±6 45 ±6 48 ±7 44 ±5
+
+Average 25 ±3 49 ±1 63 ±3 63 ±3 62 ±3 64 ±2
+
+Table 2: Ablation study. Each cell shows the variant’s score. Red ( ) and green ( )indicate worse and better performance than Ms.PR, respectively, by ≥ 15 , [5 , 15) , and [0 , 5) success rate. 
+
+Dynamics + Inverse ( DI ). Adding inverse dynamics provides essential physical grounding by forcing the encoder to retain action-discriminative features. Gains are consistent in both state and pixel-based environments. The improvement is modest in locomotion, and better in manipulation environment (contact rich tasks). 
+
+Dynamics + Inverse + Temporal Alignment ( DIR ). Incorporating temporal alignment produces the single largest jump in long-horizon locomotion, with antmaze-large improving from near-zero to 90% in the state-based setting. This confirms that temporal alignment is the primary signal for navigation tasks where cumulative return structure cannot be recovered from sparse binary rewards alone. Gains in manipulation are modest, consistent with our hypothesis that contact-rich control is locally determined and less dependent on long-horizon return structure. 
+
+Goal-Level Components ( DIR g-act & DIR g-dyn ). Independently adding either goal-conditioned action prediction or goal-level dynamics drives substantial gains across manipulation and pixel-based environments, confirming that explicit behavioral alignment is necessary where temporal distance alone provides an uninformative learning signal. The overall trend is consistent: each alignment condition contributes positively to the average. We note that individual environments, particularly 
+
+scene-play in the state-based setting, show non-monotonic behavior. These exceptions do not affect the aggregate trend and fall within the variance of the full model. 
+
+Figure 5: (Left) Goal-level dynamics error vs task success. (Center) Critic Q-value trajectories for successful and failed episodes, and ( Right ) Latent distance to goal ∥zt − zg ∥ over the episode 
+
+Representation quality predicts downstream success. Figure 5 provides three complementary views of representation quality. The scatter plot (left) reveals a strong correlation between goal-level dynamics prediction error Lg-dyn and task success across environments: lower prediction error 8consistently corresponds to higher success rates. At the episode level, successful trajectories show Q-values increasing steadily toward zero while latent distance to the goal ∥zt − zg ∥ decreases monotonically, confirming the encoder tracks goal proximity in real time. In failure episodes, both signals stagnate: Q-values plateau and latent distance remains high throughout, indicating the representation fails to register progress despite continued agent activity. 
+
+Figure 6: Value estimation error (Q-estimate minus ground-truth MC return) for a fixed goal position across antmaze-large-navigate . Darker regions indicate higher overestimation. Ms.PR maintains uniformly low error across the maze 
+
+Value estimation quality. To trace the performance advantage to a concrete mechanism, we compare Q-value estimates against ground-truth Monte Carlo returns for a fixed goal in 
+
+antmaze-large-navigate . As shown in Figure 6, GCIQL and GCIVL exhibit systematic value overestimation [ 8] (dark regions), which blinds the policy to viable paths. Ms.PR maintains consis-tently low estimation error across the maze, confirming that a goal-organized latent space directly suppresses the overestimation bias that is the primary failure mode for long-horizon offline GCRL. 
+
+5 CONCLUSION 
+
+Robust offline goal-conditioned reinforcement learning demands more than an expressive policy or a well-tuned value function. It requires a representation that captures the environment at multiple scales simultaneously. Through extensive evaluation across diverse state and pixel-based domains, we demonstrated that Ms.PR extracts maximal structure from fixed offline datasets while remaining highly resilient to noise and suboptimal expert trajectories. Our results establish that dynamical, behavioral, and temporal alignment are jointly necessary for robust GCRL, though their relative importance is inherently task-dependent. While temporal alignment is crucial for establishing the long-horizon structure needed in navigation tasks, dynamical and behavioral alignments are strictly required for complex manipulation. Methods relying primarily on temporal distance signals degrade sharply in manipulation and high-dimensional pixel settings, underscoring the necessity of a unified, multi-scale approach. Traditional offline GCRL methods suffer from value overestimation due to unstructured features[ 37 ], Ms.PR addresses this by decoupling representation learning from value estimation, providing the critic with a geometrically sound, goal-aware latent space where overestimation is naturally suppressed. Furthermore, while prior dynamics-based methods like MRQ learn effective predictive representations for dense-reward tasks, they lack the intent-driven structure required for sparse-reward GCRL. Without explicit goal-directed objectives, their encoders generate uninformative features and cannot scale to diverse tasks. Goal directed objectives lead to more expressive representations, leading to significantly more robust generalization. The core strengths of Ms.PR, resilience to suboptimal data, severe action noise, and limited sample sizes, are precisely the properties demanded by practical offline RL. By successfully constructing structured representations from imperfect data, our approach extends the capabilities of offline GCRL beyond highly curated benchmarks and toward complex real-world robotic tasks. We hope the alignment framework introduced here provides a useful foundation for future work on representation learning for goal-conditioned agents. 
+
+Limitations While Ms.PR demonstrates strong performance across the diverse tasks of OGBench, the benchmark represents a controlled setting with curated environment and dataset combinations. The broader offline GCRL community currently lacks large-scale, heterogeneous robotic datasets 9that would fully stress-test goal-conditioned representations in real-world conditions. Validating Ms.PR on such datasets remains an important direction, as the structured latent space it constructs is precisely the kind of representation that should generalize to diverse, unstructured data regimes. Additionally, tasks requiring explicit sub-goal generation or hierarchical planning may benefit from combining Ms.PR’s representation with hierarchical policy structures, which we identify as a natural extension. 
+
+References 
+
+[1] Marcin Andrychowicz, Filip Wolski, Alex Ray, Jonas Schneider, Rachel Fong, Peter Welinder, Bob McGrew, Josh Tobin, Pieter Abbeel, and Wojciech Zaremba. Hindsight experience replay, 2018. URL https://arxiv.org/abs/1707.01495 .[2] Marco Bagatella, Matteo Pirotta, Ahmed Touati, Alessandro Lazaric, and Andrea Tirinzoni. Td-jepa: Latent-predictive representations for zero-shot reinforcement learning, 2025. URL 
+
+https://arxiv.org/abs/2510.00739 .[3] Pablo Samuel Castro, Tyler Kastner, Prakash Panangaden, and Mark Rowland. Mico: Improved representations via sampling-based state similarity for markov decision processes, 2022. URL 
+
+https://arxiv.org/abs/2106.08229 .[4] Ayoub Echchahed and Pablo Samuel Castro. A survey of state representation learning for deep reinforcement learning, 2025. URL https://arxiv.org/abs/2506.17518 .[5] Benjamin Eysenbach, Ruslan Salakhutdinov, and Sergey Levine. C-learning: Learning to achieve goals via recursive classification, 2021. URL https://arxiv.org/abs/2011. 08909 .[6] Benjamin Eysenbach, Tianjun Zhang, Ruslan Salakhutdinov, and Sergey Levine. Contrastive learning as goal-conditioned reinforcement learning, 2023. URL https://arxiv.org/abs/ 2206.07568 .[7] Scott Fujimoto and Shixiang Shane Gu. A minimalist approach to offline reinforcement learning. In Thirty-Fifth Conference on Neural Information Processing Systems , 2021. [8] Scott Fujimoto, Herke Hoof, and David Meger. Addressing function approximation error in actor-critic methods. In International conference on machine learning , pages 1587–1596. PMLR, 2018. [9] Scott Fujimoto, Wei-Di Chang, Edward J. Smith, Shixiang Shane Gu, Doina Precup, and David Meger. For sale: State-action representation learning for deep reinforcement learning, 2023. URL https://arxiv.org/abs/2306.02451 .[10] Scott Fujimoto, Pierluca D’Oro, Amy Zhang, Yuandong Tian, and Michael Rabbat. Towards general-purpose model-free reinforcement learning, 2025. URL https://arxiv.org/abs/ 2501.16142 .[11] Carles Gelada, Saurabh Kumar, Jacob Buckman, Ofir Nachum, and Marc G. Bellemare. Deepmdp: Learning continuous latent space models for representation learning, 2019. URL 
+
+https://arxiv.org/abs/1906.02736 .[12] Dibya Ghosh, Abhishek Gupta, Ashwin Reddy, Justin Fu, Coline Devin, Benjamin Eysenbach, and Sergey Levine. Learning to reach goals via iterated supervised learning, 2020. URL 
+
+https://arxiv.org/abs/1912.06088 .[13] David Ha and Jürgen Schmidhuber. World models. 2018. doi: 10.5281/ZENODO.1207631. URL https://zenodo.org/record/1207631 .[14] Danijar Hafner, Timothy Lillicrap, Ian Fischer, Ruben Villegas, David Ha, Honglak Lee, and James Davidson. Learning latent dynamics for planning from pixels, 2019. URL https: //arxiv.org/abs/1811.04551 .10 [15] Danijar Hafner, Timothy Lillicrap, Jimmy Ba, and Mohammad Norouzi. Dream to con-trol: Learning behaviors by latent imagination, 2020. URL https://arxiv.org/abs/1912. 01603 .[16] Danijar Hafner, Kuang-Huei Lee, Ian Fischer, and Pieter Abbeel. Deep hierarchical planning from pixels. Advances in Neural Information Processing Systems , 35:26091–26104, 2022. [17] Danijar Hafner, Jurgis Pasukonis, Jimmy Ba, and Timothy Lillicrap. Mastering diverse domains through world models. arXiv preprint arXiv:2301.04104 , 2023. [18] Nicklas Hansen, Hao Su, and Xiaolong Wang. Td-mpc2: Scalable, robust world models for continuous control. arXiv preprint arXiv:2310.16828 , 2023. [19] Leslie Pack Kaelbling. Learning to achieve goals. In International Joint Conference on Artificial Intelligence , 1993. URL https://api.semanticscholar.org/CorpusID:5538688 .[20] Ilya Kostrikov, Ashvin Nair, and Sergey Levine. Offline reinforcement learning with implicit q-learning, 2021. URL https://arxiv.org/abs/2110.06169 .[21] Daniel Lawson, Adriana Hugessen, Charlotte Cloutier, Glen Berseth, and Khimya Khetarpal. Self-predictive representations for combinatorial generalization in behavioral cloning, 2025. URL https://arxiv.org/abs/2506.10137 .[22] Michael L. Littman, Richard S. Sutton, and Satinder Singh. Predictive representations of state. In Proceedings of the 15th International Conference on Neural Information Processing Systems: Natural and Synthetic , NIPS’01, page 1555–1561, Cambridge, MA, USA, 2001. MIT Press. [23] Corey Lynch, Mohi Khansari, Ted Xiao, Vikash Kumar, Jonathan Tompson, Sergey Levine, and Pierre Sermanet. Learning latent plans from play, 2019. URL https://arxiv.org/abs/ 1903.01973 .[24] Yecheng Jason Ma, Jason Yan, Dinesh Jayaraman, and Osbert Bastani. How far i’ll go: Offline goal-conditioned reinforcement learning via f -advantage regression, 2022. URL https: //arxiv.org/abs/2206.03023 .[25] Yecheng Jason Ma, Shagun Sodhani, Dinesh Jayaraman, Osbert Bastani, Vikash Kumar, and Amy Zhang. Vip: Towards universal visual reward and representation via value-implicit pre-training, 2023. URL https://arxiv.org/abs/2210.00030 .[26] Jelle Munk, Jens Kober, and Robert Babuška. Learning state representation for deep actor-critic control. In 2016 IEEE 55th Conference on Decision and Control (CDC) , pages 4667–4673, 2016. doi: 10.1109/CDC.2016.7798980. [27] Vivek Myers, Bill Chunyuan Zheng, Anca Dragan, Kuan Fang, and Sergey Levine. Tempo-ral representation alignment: Successor features enable emergent compositionality in robot instruction following, 2025. URL https://arxiv.org/abs/2502.05454 .[28] Seohong Park, Kevin Frans, Benjamin Eysenbach, and Sergey Levine. Ogbench: Benchmarking offline goal-conditioned rl. arXiv preprint arXiv:2410.20092 , 2024. [29] Seohong Park, Kevin Frans, Sergey Levine, and Aviral Kumar. Is value learning really the main bottleneck in offline rl?, 2024. URL https://arxiv.org/abs/2406.09329 .[30] Seohong Park, Dibya Ghosh, Benjamin Eysenbach, and Sergey Levine. Hiql: Offline goal-conditioned rl with latent states as actions, 2024. URL https://arxiv.org/abs/2307. 11949 .[31] Seohong Park, Deepinder Mann, and Sergey Levine. Dual goal representations, 2025. URL 
+
+https://arxiv.org/abs/2510.06714 .[32] Ronald Parr, Lihong Li, Gavin Taylor, Christopher Painter-Wakefield, and Michael L. Littman. An analysis of linear models, linear value-function approximation, and feature selection for reinforcement learning. In Proceedings of the 25th International Conference on Machine Learning , ICML ’08, page 752–759, New York, NY, USA, 2008. Association for Computing Machinery. ISBN 9781605582054. doi: 10.1145/1390156.1390251. URL https://doi.org/ 10.1145/1390156.1390251 .11 [33] Julian Schrittwieser, Ioannis Antonoglou, Thomas Hubert, Karen Simonyan, Laurent Sifre, Simon Schmitt, Arthur Guez, Edward Lockhart, Demis Hassabis, Thore Graepel, Timothy Lil-licrap, and David Silver. Mastering atari, go, chess and shogi by planning with a learned model. Nature , 588(7839):604–609, December 2020. ISSN 1476-4687. doi: 10.1038/ s41586-020-03051-4. URL http://dx.doi.org/10.1038/s41586-020-03051-4 .[34] Max Schwarzer, Ankesh Anand, Rishab Goel, R Devon Hjelm, Aaron Courville, and Philip Bachman. Data-efficient reinforcement learning with self-predictive representations, 2021. URL 
+
+https://arxiv.org/abs/2007.05929 .[35] Aravind Srinivas, Michael Laskin, and Pieter Abbeel. Curl: Contrastive unsupervised represen-tations for reinforcement learning, 2020. URL https://arxiv.org/abs/2004.04136 .[36] Tongzhou Wang, Antonio Torralba, Phillip Isola, and Amy Zhang. Optimal goal-reaching reinforcement learning via quasimetric learning, 2023. URL https://arxiv.org/abs/2304. 01203 .[37] Xiangyu Yin, Sihao Wu, Jiaxu Liu, Meng Fang, Xingyu Zhao, Xiaowei Huang, and Wenjie Ruan. Rerogcrl: Representation-based robustness in goal-conditioned reinforcement learning, 2023. URL https://arxiv.org/abs/2312.07392 .12

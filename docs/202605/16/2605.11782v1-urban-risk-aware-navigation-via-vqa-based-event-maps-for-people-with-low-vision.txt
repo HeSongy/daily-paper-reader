@@ -1,0 +1,285 @@
+Title: Urban Risk-Aware Navigation via VQA-Based Event Maps for People with Low Vision
+
+URL Source: https://arxiv.org/pdf/2605.11782v1
+
+Published Time: Wed, 13 May 2026 01:08:06 GMT
+
+Number of Pages: 10
+
+Markdown Content:
+> 1
+
+# Urban Risk-Aware Navigation via VQA-Based Event Maps for People with Low Vision 
+
+Antoni Valls , Jordi Sanchez-Riera 
+
+Abstract —Visual impairment affects hundreds of millions of people worldwide, severely limiting their ability to navigate urban environments safely and independently. While wearable assistive devices offer a promising platform for real-time hazard detection, existing approaches rely on task-specific vision pipelines that lack flexibility and generalizability. In this work, we propose an event map framework based on visual question answering that leverages Vision-Language Models (VLMs) for pedestrian scene description and hazard identification across diverse real-world environments, using a three-level hierarchical query structure to enable fine-grained scene understanding without task-specific retraining. Model responses are aggregated into a weighted risk scoring system that maps street segments into four discrete safety categories, producing navigable risk-aware event maps for route planning. To support evaluation and future research, we intro-duce a geographically diverse dataset spanning 20 cities across six continents, comprising over 800 annotated images and 18,000 answered questions. We benchmark four VQA architectures— ViLT, LLaVA, InstructBLIP, and Qwen-VL—and find that gen-erative Multimodal Large Language Models (MLLMs) substan-tially outperform classification-based approaches, with Qwen-VL achieving the best overall balance of precision and recall. These results demonstrate the viability of MLLMs as a flexible and generalizable foundation for assistive navigation systems for visually impaired people. 
+
+Index Terms —Assistive navigation, Computer vision, Methods for safety, Pedestrian flows and crowds, Road transportation, Visual question answering. 
+
+I. I NTRODUCTION 
+
+# VISUAL impairment represents a major global challenge affecting millions of individuals worldwide. As of 2015, approximately 253 million people were living with visual im-pairment, including 36 million who were blind and 217 million with moderate to severe vision loss [1]. Unlike common refrac-tive errors such as myopia or astigmatism that can be readily corrected with glasses, these numbers reflect functional vision loss that significantly impacts daily activities and quality of life. Projections suggest that the number of blind and visually impaired individuals could reach 703 million by 2050 , driven by population aging and growth [1]. This demographic shift creates an urgent need for innovative assistive technologies that can support independent navigation and enhance the safety of visually impaired individuals in their daily activities. For people with visual impairments (VIPs), navigating ur-ban environments presents substantial challenges that directly impact their mobility and independence. The inability to                     
+
+> This work has been submitted to the IEEE for possible publication. Copyright may be transferred without notice, after which this version may no longer be accessible. Both authors are with the Institut de Rob` otica iInform` atica Indus-trial, CSIC-UPC, Llorens i Artigas 4-6, 08028 Barcelona, Spain (e-mail: avallsc@iri.upc.edu; jsanchez@iri.upc.edu).
+
+visually assess potential hazards—such as obstacles in path-ways, unmarked stairs, approaching vehicles, crowded areas, or ongoing constructions—limits their ability to move safely through city streets. Wearable devices like smartphones and smart glasses have emerged as promising platforms to address these challenges, offering the potential to detect both static and dynamic elements in real-time and provide timely warn-ings or guidance. However, implementing effective detection systems on these devices requires balancing accuracy with computational efficiency, as the solutions must operate within the constraints of limited processing power and battery life to remain practical for extended daily use. To date, various approaches have attempted to address these detection challenges in assistive navigation systems. A common strategy involves integrating separate computer vision algorithms into path planning frameworks, where individual algorithms are activated or deactivated as needed to optimize computational resources and battery consumption [2]. For instance, specialized algorithms can be deployed to identify specific features such as stairs using vanishing line detection [3] or analyze the safety of detected crosswalks through vision-language models [4]. While this modular approach offers some flexibility, it suffers from several significant drawbacks. Each detection task requires separate model training and opti-mization, increasing development complexity and maintenance overhead. Moreover, algorithms must be carefully tailored to specific detection scenarios, limiting their adaptability to new or unexpected situations. Perhaps most critically, the system cannot dynamically anticipate which objects or hazards will need to be detected in advance, potentially missing critical environmental information. These limitations underscore the need for more flexible and generalizable approaches to visual scene understanding in assistive technologies. Visual Question Answering (VQA) models offer a promis-ing alternative paradigm that addresses many of these limita-tions. As a multimodal Visual-Language (VL) task [5], VQA combines computer vision and natural language processing (NLP) to enable machines to answer questions about visual content [6]. By leveraging large language models (LLMs), VQA systems can generalize across diverse questions and con-texts without requiring task-specific model training, making them well-suited for identifying various objects, hazards, and environmental conditions on demand. Rather than maintaining separate detection pipelines for each potential hazard type, a VQA-based approach queries the visual scene flexibly through natural language questions about the environment. This flexi-bility enables the discovery of high-level concepts [7], [8] and events that can be directly utilized for navigation guidance and safety warnings.           
+
+> arXiv:2605.11782v1 [cs.CV] 12 May 2026 2
+> Fig. 1. Overview of the proposed framework. Time-sequential keyframes extracted from video streams are fed into a three-level Hierarchical Multi-category Query Structure (orange), where Level-1 primary questions trigger conditional follow-up queries at Levels 2and 3, progressively refining hazard characterization across eight pedestrian safety categories. Queries are processed by four VQA model architectures—ViLT, LLaVA, InstructBLIP, and Qwen-VL—which produce binary Yes/No responses per hazard category (blue). Model outputs are aggregated via a weighted risk scoring formulation and spatially mapped into a Risk Event Map (green), color-coded into four safety levels: Safe, Caution, Danger, and High Risk.
+
+Building on these capabilities, we proposes a VQA-based navigation framework designed to enhance generalization, descriptive granularity, and practical applicability for assistive mobility (see figure 1). To support comprehensive evaluation, we curate a large-scale and geographically diverse dataset, comprising urban scenes from 20 cities across multiple conti-nents, sourced from Mapillary 1 and complemented with self-
+
+> 1www.mapillary.com
+
+recorded data captured using Biel Glasses smart glasses 2 .This combination of globally distributed and device-specific imagery enables robust assessment across heterogeneous urban environments and real-world assistive scenarios. To move beyond flat binary questioning, we introduce a three-level hierarchical query structure in which Level-1 questions trigger conditional follow-up queries at Levels 2 and 3. This design allows the system to progressively extract detailed semantic information about environmental features ( e.g. , not only de-tecting a crossing but also characterizing its traffic conditions and signalization). Furthermore, we develop a weighted risk scoring mecha-nism that aggregates VQA responses into normalized segment-level risk values, transforming discrete detections into navi-gable risk maps with four safety categories: Safe, Caution, Danger, and High Risk. This risk-aware event map genera-tion provides route planners with quantitative safety metrics rather than simple presence indicators. Finally, we conduct a comprehensive evaluation of multiple state-of-the-art VQA architectures—including ViLT [9], LLaVA [10], InstructBLIP [11], and Qwen-VL [12]—to determine the most effective approaches for safety-critical perception tasks in assistive navigation. The remainder of this paper is organized as follows. Section II reviews related work on assistive navigation technologies and VQA systems. Section III presents the proposed method-ology, including dataset construction and the application of VQA models. Section IV describes the evaluation framework, risk assessment formulation and event map generation process. Finally, Section V concludes the paper by summarizing the main contributions and discussing their potential impact on assistive technologies for navigation by VIPs. II. R ELATED WORK 
+
+A. Assistive Navigation 
+
+Independent mobility remains one of the most significant challenges facing VIPs. Traditional pedestrian navigation sys-tems have primarily focused on core perception tasks required for safe movement in urban environments, including real-time detection of surrounding pedestrians [13]–[15], walk-able surface segmentation [16], and robust self-localization in GPS-denied or degraded settings [17]–[19]. Even routine activities—such as determining whether it is safe to cross a street or identifying stairs—can pose substantial risks for VIPs [3], [4]. However, these perception modules are typically developed and evaluated in isolation, rather than as tightly inte-grated components of end-to-end assistive navigation systems. Beyond core perception, several works have explored com-plementary modalities and representations to enrich naviga-tion support. Augmented reality interfaces [20] offer intuitive visual overlays for users with partial vision, while landmark-based systems [21], [22] leverage salient environmental fea-tures to improve route following and spatial orientation. More recently, research has shifted toward personalized navigation 
+
+> 2https://bielglasses.com 3
+
+by jointly modeling pavement infrastructure, walking environ-ments, and individual pedestrian profiles to enable constraint-aware, preference-sensitive path planning [23]–[25]. Despite these advances, existing methods struggle to cope with the inherent unpredictability of real-world urban environ-ments. Dynamic obstructions—such as construction barriers, potholes, or unexpected crowds—are difficult to anticipate and encode within fixed perception pipelines, and no existing system provides a persistent, risk-aware spatial representation that can inform route planning decisions. This motivates the use of a flexible, query-driven VQA model capable of reasoning about novel environmental conditions without task-specific retraining. 
+
+B. Vision-Language Models 
+
+Vision-Language Models (VLMs) represent a paradigm shift in how machines interpret visual content by bridging computer vision and NLP. CLIP [26] pioneered the use of contrastive learning to align image and text embeddings in a shared semantic space, enabling zero-shot classification and retrieval tasks. Building on this foundation, VQA models extend the interaction paradigm by generating free-form tex-tual responses conditioned on both visual input and natural language queries. Modern VQA architectures can be broadly categorized into discriminative and generative approaches. Discriminative models such as ViLT [9] frame VQA as a classification task, predicting answers from a fixed vocabulary using vision-language transformers. In contrast, generative approaches such as BLIP-2 [27] and LLaVA [10]—representative of the broader family of Multimodal Large Language Models (MLLMs)— leverage autoregressive decoding to produce open-ended re-sponses, offering greater flexibility across diverse question types. The generalization capabilities of VQA models have en-abled diverse applications beyond traditional question answer-ing. Recent efforts have demonstrated their utility in open-vocabulary object detection [28]–[30], where natural language descriptions replace fixed category labels, and visual ground-ing [31], [32], which localizes objects or regions based on textual queries. Latest work applies VLMs to blind and low-vision (BLV) assistance [10], [33], [34]. For example, [33] demon-strated context-aware navigation guidance, while [10] fine-tuned VLMs for practical suggestions using LoRA. Appli-cations such as Be My AI [35] adopt a reactive question-answering paradigm. WalkVLM [36] advances this further via hierarchical reasoning (perception–comprehension–decision) and temporal-aware prediction to reduce redundancy— demonstrating strong results on walking guidance tasks. How-ever, WalkVLM is optimized for generating concise, reactive walking reminders from video streams, and does not produce a persistent spatial representation of the environment. As such, it cannot support proactive route planning or risk-aware path selection, which require reasoning over accumulated environmental information across a trajectory. Complementing these efforts, [37] propose a VQA-based assistive navigation framework for low-vision users that takes a fundamentally different direction: rather than generating per-frame walking instructions, it aggregates VQA outputs into a persistent se-mantic event map georeferenced via GPS data. By relying on a unified, query-driven VQA backbone, their system han-dles diverse urban challenges—from detecting construction hazards to identifying traffic light states—without requiring task-specific vision pipelines, validated on a custom dataset of over 1,300 annotated images collected in Barcelona. Our work extends this spatial reasoning paradigm to a geograph-ically diverse setting, introducing a richer hierarchical query structure, a weighted risk scoring formulation, and a large-scale evaluation spanning 20 cities across six continents. 
+
+C. Assistive Datasets 
+
+Progress in assistive navigation depends on representative datasets. Accessibility-focused datasets such as VizWiz [38], [39] collect real-world questions from visually impaired users, yet are largely object-centric rather than navigation-driven. Other semantic datasets ( e.g. , VIALM [34] and small-scale user studies [33]) remain limited in size and diversity. Recent large-scale efforts improve coverage and standard-ization. The Walking Awareness Dataset (WAD) [36] contains 12,000 video-annotation pairs across multiple regions, but is designed primarily to train and evaluate models for gener-ating walking reminders, rather than to support spatial risk assessment. GUIDE DOG [40] introduces 22,000 pedestrian-view image–description pairs with a human-AI collaborative annotation pipeline for fine-grained perception evaluation. However, GUIDE DOG annotations follow a guidance gen-eration paradigm—describing surroundings and obstacles to a user in motion—and do not provide the hazard-level labels or georeferenced spatial structure required for route-level risk mapping. Neither dataset supports the aggregation of scene-level VQA outputs into navigable risk event maps, which is the objective of our work. Our dataset is therefore designed from the ground up around a hierarchical multicategory query struc-ture targeting pedestrian safety categories, with annotations structured to feed directly into a weighted risk scoring and event map generation pipeline, validated across geographically diverse urban environments. 
+
+D. Scene Representation 
+
+Scene graphs provide structured, semantic representations of environments by encoding objects as nodes and their relationships as edges [41]. This abstraction enables efficient spatial reasoning and supports natural language interfaces for scene querying. Originally developed for indoor robotic applications—where controlled environments and static infras-tructure make graph construction tractable—scene graphs have been employed for semantic guidance [42], object search and task planning [8], and viewpoint-aware scene understanding [43]. The dynamic nature of real-world environments—where objects like furniture or personal items may relocate—has motivated extensions to scene graphs that model temporal object persistence [44]. Recent work has further integrated 4
+
+scene graphs with LLMs such as GPT-3.5, enabling natural language queries over structured spatial data and allowing agents to dynamically retrieve context-relevant information encoded in graph nodes [7]. However, despite these advances, scene graph construction remains largely confined to indoor settings, where the bounded spatial extent and predictable structure of environments simplify node definition and edge inference. Outdoor urban environments, by contrast, present open-ended, constantly changing scenes that make exhaustive graph construction prohibitively expensive for real-time wear-able deployment. While scene graphs offer rich semantic structure, many navi-gation applications require simpler, more computationally effi-cient representations. Event maps—a lightweight alternative— maintain spatial information without the full complexity of object-relationship graphs [37]. By encoding discrete events (e.g ., detected hazards, crosswalks, obstacles) at specific geo-graphic coordinates, event maps provide a pragmatic middle ground between detailed scene graphs and raw image streams. This representation is particularly well-suited for real-time assistive navigation on resource-constrained wearable devices. Our approach adopts the event map paradigm as its spatial backbone, extending it with multi-level, VLM-derived risk scores rather than simple binary hazard flags. This produces semantically enriched, georeferenced risk maps that are both computationally tractable for wearable deployment and expres-sive enough to support meaningful route selection for VIPs. III. M ETHOD 
+
+We propose a VQA-based framework for assistive urban navigation that extends the event map paradigm introduced by [37]. Our methodology advances along three axes: a three-level hierarchical query structure that enables fine-grained scene understanding, a geographically diverse dataset spanning 20 cities across six continents that enables robust model evalu-ation under heterogeneous urban conditions, and a weighted risk scoring formulation that transforms discrete VQA outputs into normalized segment-level risk values. Together, these contributions yield semantically enriched, navigable risk event maps that provide VIPs with actionable spatial guidance for route selection. 
+
+A. Hierarchical Query Structure Design 
+
+To obtain comprehensive and fine-grained scene descrip-tions, we designed a three-level hierarchical query structure— exemplified in figure 2—in which coarse, categorical questions at Level-1 trigger conditional follow-up queries at Levels 2 and 3, progressively narrowing the semantic scope of the assess-ment. This conditional structure avoids redundant questioning and ensures that descriptive depth is allocated only where hazards are actually present. 
+
+Level-1 questions establish the primary scene categories relevant to pedestrian safety for VIPs. Each question targets a distinct hazard class: (i) Stairs — whether steps or changes in ground level are visible on the current path; (ii) Crossings 
+
+— whether a street crossing exists within approximately 10 meters; (iii) Construction — whether construction activity or pathway detours are visible; (iv) Obstacles — whether any object in the walking path ahead requires the pedestrian’s attention; (v) Crowding — whether multiple pedestrians are visible in the walking area; (vi) Vehicles — whether any vehicle is within 10 meters of the path; (vii) Surface —whether the path surface shows abnormal conditions such as wetness, damage, or significant slope; and (viii) Non-Sidewalk 
+
+— whether the visible path lies outside a designated sidewalk or pedestrian crossing. A positive response to any Level-1 question unlocks a targeted set of Level-2 follow-up queries specific to that category. 
+
+Levels 2 and 3 provide increasingly detailed character-ization of any detected element. Level-2 questions charac-terize the detected element in greater detail—for instance, distinguishing whether a detected vehicle is a bicycle, car, or motorcycle, or determining whether a crossing is signalized and currently occupied by traffic. Where Level-2 confirms a specific condition, Level-3 refines it further: a detected vehicle in a crossing lane triggers a question about whether it is moving or stationary, and a bicycle triggers queries about its direction of travel and whether it occupies a dedicated bike lane. Note that not all hazard categories extend to Level-3; deeper questioning is reserved for those cases where addi-tional granularity has direct safety implications. This cascading structure ensures that hazard descriptions are both precise and contextually grounded, while keeping the total number of questions minimal. This hierarchical design allows the system to produce semantically rich scene representations—from coarse hazard presence to fine-grained characterization—using a compact, conditionally-evaluated question set. 
+
+B. VQA Models Application 
+
+We employ two distinct architectural paradigms to assess their efficacy in identifying pedestrian hazards:  
+
+> •
+
+Classification-based Models: Represented by ViLT [9], this architecture treats VQA as a discriminative task. In our framework, it operates as a binary classifier, yielding a confidence score based on the output logits for each response.  
+
+> •
+
+Generative MLLMs: This category includes LLaVA [10], InstructBLIP [11], and Qwen-VL [12]. These MLLMs utilize an autoregressive backbone to interpret visual and textual inputs. This allows for a more flexible and context-aware understanding of urban scenes com-pared to classification-only approaches. To maintain a uniform instruction-following environment and prioritize safety, all models are provided with a base context prepended to every question. This prompt establishes a specialized expert persona to ground the model’s reasoning: 
+
+“You are an expert at detecting pedestrian obstacles for people with low vision. Answer only with Yes or No.” 
+
+By applying this base context to both the discriminative classification model and the generative MLLMs, we ensure that all outputs are constrained to a concise, actionable binary format. This uniformity is critical for direct performance 5  
+
+> Fig. 2. Example of the hierarchical multicategory query structure application for a street scene in Buenos Aires. The hierarchy begins with Level-1 (Primary Questions)—blue—to detect the presence of broad hazard categories. Affirmative detections trigger conditional follow-up queries at Level-2 (Detailed Characterization)—green—and Level-3 (Fine-grained Refinement)—purple—, ensuring high semantic density where hazards exist. Potential hazards are marked with orange warning signs, while safe conditions are indicated with green check marks. The aggregated responses result in a normalized risk score ( 0.66 in this example), which serves as the foundational data point for generating risk event maps.
+
+comparison against the manually annotated ground truth. Eval-uation metrics are detailed in Section IV-B. 
+
+C. Segmented Risk Assessment Formulation 
+
+To translate the hierarchical VQA responses into actionable navigation guidance, we developed a weighted risk scoring system that maps street segments to normalized risk values in the range [0, 1]. This formulation enables spatial visualization of hazard distribution and supports route planning for VIPs. Let S be a specific temporal segment of the traveled route, and MS be the set of keyframes contained within that segment. The total risk for the segment, Rseg , is defined as the maximum risk score found among its constituent images: 
+
+Rseg = max 
+
+> m∈MS
+
+(Rimg (m)) (1) This max-aggregation strategy implements a conservative safety principle: a segment is only as safe as its most hazardous point. This approach ensures that even a single dangerous lo-cation (such as a construction zone or highly sloped sidewalk) elevates the entire segment’s risk classification, preventing users from being routed through partially unsafe areas. The risk for an individual image m, denoted as Rimg (m),is calculated using a weighted sum of hazard penalties and safety rewards, normalized by the total theoretical hazards: 
+
+Rimg (m) = max 
+
+
+
+0, P 
+
+> i∈Q
+
+wi · xi
+
+P 
+
+> i∈Q
+
+wi
+
+(2) 
+
+Where:  
+
+> •
+
+Q is the set of primary (Level-1) questions evaluated for the image, which serve as the foundation for risk assessment.  
+
+> •
+
+wi is the weight determined by the hazard tier T of question i, reflecting the severity and immediacy of 6
+
+different hazard categories: 
+
+wi =
+
+
+
+1.0 if i ∈ Tcritical  
+
+> Construction ,Surface ,
+> Non-Sidewalk
+
+0.6 if i ∈ Thigh Crossings , Stairs , Obstacles 
+
+0.3 if i ∈ Tlow Crowding , Vehicles 
+
+(3) Critical hazards ( wi = 1 .0) represent immediate threats to safe navigation, such as construction zones that may block the entire sidewalk, hazardous surface conditions like broken pavement or ice, and pedestrians walking in the roadway. High-priority hazards ( wi = 0 .6) include features requiring careful navigation such as crossings, stairways, and path-blocking obstacles. Low-priority in-dicators ( wi = 0 .3) encompass dynamic elements like nearby pedestrians and vehicles that require awareness but do not directly impede travel.  
+
+> •
+
+xi is the answer coefficient for question i in image m,implementing a penalty-reward mechanism: 
+
+xi =
+
+
+
+1 if answer is ‘Yes’ (Hazard) 
+
+− 1 
+
+> ∥Q∥
+
+if answer is ‘No’ (Safety Reward) 
+
+0 if unanswered/skipped (4) Positive answers ( xi = 1 ) add the full hazard weight to the risk score, while negative answers provide asmall safety reward ( xi = −1/∥Q∥) that reduces the overall risk. This asymmetric reward ratio reflects the safety-first design principle: detecting a hazard increases risk substantially, but confirming safety provides only modest credit. The floor function max(0 , ·) in Equation (2) ensures that highly safe environments (many negative answers) do not produce negative risk scores, clamping the lower bound to zero. 
+
+D. Risk Event Maps Generation 
+
+In order to transition from discrete image analysis to a con-tinuous navigation aid, we aggregate VQA model outputs into a persistent, georeferenced representation of the environment. The pipeline is structured around three conceptual layers that progressively transform raw visual embeddings into actionable spatial guidance. The Embedding Store replaces raw high-resolution images with compact visual embeddings generated by the model encoder, each anchored to specific GPS coordinates ( lat,lon ). This enables efficient spatial re-querying without the storage overhead of full image retention. Built on top of this, the 
+
+Event Layer assigns semantic labels ( e.g. , crosswalk detected, obstacle present, construction zone) to each georeferenced node based on the hierarchical VQA responses at that location. Alongside these semantic labels, the risk score is stored in accordance with Equation 2. Finally, the Event Map integrates the GPS trajectory with the Event Layer into a unified spatial visualization, mapping the cumulative risk distribution across the traveled route. To construct the risk event map, each keyframe’s GPS position is matched to its nearest street segment in the Open-StreetMap (OSM) graph. Where multiple keyframes map to  
+
+> Fig. 3. Geographic distribution of the dataset across 20 cities spanning six continents. Representative street-view images from each location illustrate the diversity of urban environments. Color-coded markers indicate different continents.
+
+the same segment, we apply a conservative worst-case aggre-gation strategy, retaining the maximum risk score per segment as defined in Equation 1. This ensures that a single high-risk observation elevates the entire segment’s classification, preventing the system from routing users through partially unsafe areas. IV. E XPERIMENTS 
+
+We evaluate the effectiveness of the proposed framework at three levels: dataset robustness, binary hazard detection reliability, and spatial risk estimation accuracy. 
+
+A. Dataset Construction 
+
+The dataset is designed to promote global generalization across diverse urban contexts. To this end, we collected image sequences from 20 cities across multiple continents, covering a wide range of environments, from dense metropolitan down-town areas to unpaved roads in rural regions (see figure 3). The resulting dataset comprises over 40 sequences. The images were obtained from two sources: (i) the Mapillary platform and (ii) self-recorded sequences captured in Barcelona using Biel Glasses smart glasses. To generate the ground truth (GT), all annotations were manually performed by human annotators. From each se-quence, 20 images were uniformly sampled and annotated us-ing the hierarchical multicategory query structure described in Section III-A, resulting in over 800 labeled images, associated with a total of over 18,000 answered questions. 7
+
+B. VQA Model Evaluation 
+
+The performance of each model is quantitatively assessed by comparing its automated responses against the manually annotated GT. We employ a comprehensive suite of binary classification metrics to evaluate the reliability of the system in hazard-sensitive urban scenarios:  
+
+> •
+
+Accuracy: The proportion of total predictions (both pos-itive and negative) that were correct, providing an overall measure of model reliability.  
+
+> •
+
+Precision: The ability of the model to avoid false alarms, calculated as the ratio of true positives to all positive predictions. This metric is crucial for preventing user alert fatigue.  
+
+> •
+
+Recall: A critical safety metric representing the model’s ability to detect all existing hazards ( e.g. , ensuring no stairs or vehicles are missed). High recall is paramount in assistive navigation where undetected hazards pose direct physical risks.  
+
+> •
+
+Specificity: The model’s ability to correctly identify the absence of a feature, which is essential to avoid over-alerting the user and maintaining system trust.  
+
+> •
+
+F1-score: The harmonic mean of precision and recall, providing a single balanced metric for model comparison that accounts for both false positives and false negatives. A significant challenge in evaluating hierarchical VQA is the conditional nature of the questions. If a model incorrectly identifies a feature at Level-1 (a false positive), it will trigger subsequent Level-2 and Level-3 questions that probe for descriptive details. However, because the human annotators correctly identified the absence of that feature, no GT exists for those deeper levels in that specific image, as the follow-up questions were never asked during annotation. To maintain a fair assessment of descriptive granularity, the performance metrics for Level-2 and Level-3 are calculated exclusively on the subset of questions where a corresponding GT answer exists. This conditional evaluation ensures that we measure the model’s ability to describe a feature ( e.g. , the condition of a crosswalk or the type of stairs) only when the feature is actually present in the scene, preventing artificial inflation of error rates due to cascading misclassifications. Results are averaged across all annotated samples.                                
+
+> TABLE I VQA MODELS PERFORMANCE OVER ALL CITIES
+> Model Acc. F1 Prec. Rec. Spec. MAE R
+> InstructBLIP 0.70 0.45 0.69 0.34 0.91 0.12
+> LLaVA 0.73 0.55 0.68 0.49 0.86 0.14 Qwen-VL 0.77 0.69 0.68 0.70 0.81 0.14 ViLT 0.33 0.47 0.33 0.87 0.04 0.76
+
+As shown in Table I, Qwen-VL achieves the best overall performance with the highest accuracy (0.77) and F1-score (0.69), while maintaining strong precision (0.69) and recall (0.70). This balanced profile is critical for assistive navigation, where both hazard detection and user trust are essential. In contrast, ViLT exhibits a severe overprotective behavior despite its high recall (0.87): with a specificity of only 0.04, the classification-based model predicts hazards indiscriminately, resulting in accuracy below random chance (0.33). Such be-havior would overwhelm users with false alarms, rendering the system unusable. Conversely, InstructBLIP’s low recall (0.34) represents an equally critical but opposite failure—missing two-thirds of actual hazards poses unacceptable safety risks for users with low vision. LLaVA achieves moderate performance across all metrics but still fails to detect half of the hazards present. These results underscore the precision-recall trade-off inherent in safety-critical VQA: Qwen-VL’s ability to balance both metrics demonstrates the superiority of modern generative MLLMs over discriminative approaches for complex urban scene understanding. Given Qwen-VL’s superior performance, we conduct afurther disaggregated analysis exclusively with this model to identify geographic and categorical performance variations that may inform deployment strategies.                                      
+
+> TABLE II QWEN -VL PERFORMANCE BY CONTINENT
+> Region Acc. F1 Prec. Rec. Spec. MAE R
+> Africa 0.75 0.66 0.70 0.63 0.82 0.17 America 0.78 0.71 0.66 0.77 0.78 0.14 Asia 0.77 0.73 0.70 0.77 0.77 0.14 Europe 0.78 0.67 0.68 0.68 0.83 0.12
+> Oceania 0.77 0.72 0.64 0.84 0.73 0.19
+
+Table II demonstrates consistent performance across geo-graphic regions, with F1-scores ranging from 0.66 to 0.73. This modest variation suggests that Qwen-VL generalizes well to diverse urban infrastructure and visual contexts worldwide.                                               
+
+> TABLE III QWEN -VL PERFORMANCE BY HAZARD CATEGORY
+> Hazard Acc. F1 Prec. Rec. Spec.
+> Construction 0.92 0.15 0.13 0.17 0.94 Crossings 0.84 0.56 0.57 0.57 0.88 Obstacles 0.66 0.61 0.71 0.57 0.77 Non-Sidewalk 0.42 0.16 0.14 0.24 0.39 Crowding 0.76 0.68 0.62 0.77 0.60 Stairs 0.95 0.18 0.17 0.20 0.96 Surface 0.90 0.26 0.33 0.24 0.97
+> Vehicles 0.82 0.75 0.83 0.70 0.92
+
+Table III reveals substantial performance variation across hazard categories. Vehicle and pedestrian detection achieve the strongest overall results, likely due to their distinct visual sig-natures and greater prevalence in training data. However, the most safety-critical categories exhibit concerning weaknesses. Non-sidewalk paths—where images capture roads or un-paved terrain rather than designated pedestrian infrastructure— present the greatest challenge (accuracy: 0.42, F1: 0.16, recall: 0.24), yet represent the most dangerous navigation scenario for users with low vision. Construction zones (recall: 0.17) and surface hazards (recall: 0.24) similarly suffer from dangerously low detection rates despite their severe safety implications. Crossings (F1: 0.56) and obstacles (F1: 0.61) perform more moderately, though still fall short of the reliability required for hazard-sensitive assistive applications. Stairs achieve the 8
+
+highest accuracy (0.95), yet this figure is misleading: the near-zero F1 (0.18) exposes a strong negative bias, with the model defaulting to predicting absence rather than genuinely detecting the hazard. This inverse relationship between safety criticality and model performance—where the most dangerous scenarios yield the poorest detection rates—underscores the need for targeted data augmentation and class-balanced training strate-gies in underrepresented but safety-critical categories before deployment. 
+
+C. Event Maps Creation and Risk Evaluation 
+
+To transition from discrete image-level risk assessments to a continuous navigation aid, we aggregate the VQA-derived risk scores into persistent, georeferenced risk event maps that visualize hazard distribution along traveled routes. Street segments are color-coded into four discrete risk categories based on their aggregated score ( Rseg ):  
+
+> •
+
+Safe : Rseg ≤ 0.15  
+
+> •
+
+Caution : 0.15 < R seg < 0.4 
+
+> •
+
+Danger : 0.4 ≤ Rseg < 0.7 
+
+> •
+
+High Risk : Rseg ≥ 0.7
+
+Segments without associated image data remain gray to explicitly distinguish unobserved areas from verified low-risk zones. The continuous GPS trajectory is overlaid as a dashed blue line, with circular markers indicating the precise capture locations of analyzed keyframes. Figure 4 presents risk event maps generated by Qwen-VL for routes in Barcelona and Mumbai, demonstrating how hierarchical VQA outputs translate into spatially coherent, route-level safety assessments across geographically diverse urban environments. The visual representation enables route planners to identify hazardous segments at a glance and pro-vides visually impaired users with actionable spatial context for navigation decisions. To quantitatively evaluate the precision of these automated risk assessments, we define the Risk Mean Absolute Error (MAE R), which measures the average deviation between model-generated risk scores ( Rpred img ) and ground truth scores (Rgt img ) derived from human annotations across N images: MAE R = 1
+
+N
+
+> N
+
+X
+
+> m=1
+
+|Rgt img (m) − Rpred img (m)| (5) As synthesized in Table I, the MAE R offers an informa-tive look at the stability of risk estimation across different architectures. The generative models—InstructBLIP, LLaVA, and Qwen-VL—exhibit a high degree of convergence in this metric, with scores ranging narrowly between 0.12 and 0.14. This indicates that while these models vary in their internal precision and recall trade-offs, their overall ability to estimate environmental risk remains consistently within a similar mar-gin of error. In contrast, the substantially larger MAE R of ViLT (0.76) highlights the severe impact of its low specificity; by pre-dicting hazards where none exist, it generates risk scores that are consistently over-inflated, which would lead to constant,  
+
+> Fig. 4. Risk event maps generated by Qwen-VL for routes in Barcelona (top) and Mumbai (bottom). Street segments are color-coded into four safety categories—Safe (green), Caution (yellow), Danger (orange), and High Risk (red)—based on the aggregated weighted risk scores derived from hierarchical VQA responses. Circular markers denote keyframe capture locations. Repre-sentative street-level images illustrate the visual conditions corresponding to each risk level: a clear unobstructed sidewalk (Safe), a pedestrian crossing approach (Caution), broken pavement (Danger), and a congested mixed-traffic zone with damaged surface and crowding (High Risk). Gray segments indicate street areas without image coverage.
+
+unnecessary route recalculations in a real-world navigation system. Furthermore, the geographic disaggregation in Table II re-veals that risk prediction accuracy is largely stable worldwide. The MAE R shows only minor fluctuations across regions, with the lowest error observed in Europe (0.12) and slightly higher deviations in Oceania (0.19) and Africa (0.17). This suggests that the underlying hazard weights wi and the model’s per-ception of risk are relatively robust to regional infrastructure differences, though slight recalibrations may be beneficial for specific non-European contexts to align more closely with local navigation norms. V. C ONCLUSIONS 
+
+We investigated the applicability of VQA models for assistive navigation of visually impaired people in real-world urban en-9
+
+vironments, introducing several key contributions that advance the state of the art in this domain. The results demonstrate that modern generative MLLMs— and Qwen-VL in particular—are well-suited for risk-sensitive pedestrian hazard detection, offering a unified, query-driven interface that generalizes across diverse urban scenarios with-out task-specific retraining. Qwen-VL achieved the best overall balance between precision and recall (F1: 0.69, accuracy: 0.77), whereas classification-based approaches such as ViLT exhibited fundamental limitations through systematic hazard over-prediction. Per-category analysis revealed an inverse re-lationship between hazard severity and detection performance: the most safety-critical categories—non-sidewalk paths, sur-face hazards, and construction zones—exhibited the weakest recall, identifying a clear direction for future work through targeted data augmentation and class-balanced fine-tuning. We further introduced a weighted risk scoring formulation that transforms discrete VQA outputs into normalized, spa-tially aggregated risk maps, providing route planners with quantitative safety metrics rather than simple binary hazard flags. Finally, the geographically diverse dataset spanning 20 cities across six continents—comprising over 800 annotated images and 18,000 answered questions—represents a signif-icant contribution to the assistive navigation research com-munity. Future work could focus on improving detection of high-risk edge cases, fine-tuning on domain-specific data, and integrating the framework into real-time wearable navigation pipelines. ACKNOWLEDGMENTS 
+
+Project CPP2021-008760 funded by MCIU/ AEI /10.13039/501100011033 and by the ”European Union NextGenerationEU/PRTR” REFERENCES [1] P. Ackland, S. Resnikoff, and R. Bourne, “World blindness and visual impairment: despite many successes, the problem is growing,” Commu-nity Eye Health , vol. 30, no. 100, pp. 71–73, 2018. [2] S. Teng, X. Hu, P. Deng, B. Li, Y. Li, Y. Ai, D. Yang, L. Li, Z. Xuanyuan, F. Zhu, and L. Chen, “Motion planning for autonomous driving: The state of the art and future perspectives,” IEEE Transactions on Intelligent Vehicles , vol. 8, no. 6, pp. 3692–3711, 2023. [3] C. Wang, Z. Pei, S. Qiu, and Z. Tang, “Deep leaning-based ultra-fast stair detection,” Scientific Reports , vol. 12, no. 1, p. 16124, 2022. [4] H. Hwang, S. Kwon, Y. Kim, and D. Kim, “Is it safe to cross? inter-pretable risk assessment with gpt-4v for safety-aware street crossing,” 
+
+2024 21st International Conference on Ubiquitous Robots (UR) , pp. 281–288, 2024. [5] S.-M. Park and Y.-G. Kim, “Visual language integration: A survey and open challenges,” Computer Science Review , vol. 48, p. 100548, 2023. [6] S. Antol, A. Agrawal, J. Lu, M. Mitchell, D. Batra, C. L. Zitnick, and D. Parikh, “Vqa: Visual question answering,” in ICCV , 2015, pp. 2425– 2433. [7] A. Werby, C. Huang, M. B¨ uchner, A. Valada, and W. Burgard, “Hi-erarchical Open-Vocabulary 3D Scene Graphs for Language-Grounded Robot Navigation,” in Proceedings of Robotics: Science and Systems ,Delft, Netherlands, July 2024. [8] C. Agia, K. M. Jatavallabhula, M. Khodeir, O. Miksik, V. Vineet, M. Mukadam, L. Paull, and F. Shkurti, “Taskography: Evaluating robot task planning over large 3d scene graphs,” in Proceedings of the 5th Conference on Robot Learning , vol. 164, 2022, pp. 46–58. [9] W. Kim, B. Son, and I. Kim, “Vilt: Vision-and-language transformer without convolution or region supervision,” in ICML , vol. 139, 2021, pp. 5583–5594. [10] H. Liu, C. Li, Q. Wu, and Y. J. Lee, “Visual instruction tuning,” in 
+
+NeurIPS , vol. 36, 2023, pp. 34 892–34 916. [11] W. Dai, J. Li, D. Li, A. M. H. Tiong, J. Zhao, W. Wang, B. Li, P. Fung, and S. Hoi, “Instructblip: towards general-purpose vision-language models with instruction tuning,” in NeurIPS , 2023. [12] P. Wang, S. Bai, S. Tan, S. Wang, Z. Fan, J. Bai, K. Chen, X. Liu, J. Wang, W. Ge, Y. Fan, K. Dang, M. Du, X. Ren, R. Men, D. Liu, C. Zhou, J. Zhou, and J. Lin, “Qwen2-vl: Enhancing vision-language model’s perception of the world at any resolution,” arXiv preprint arXiv:2409.12191 , 2024. [13] S. Buckeridge, P. Carreno-Medrano, A. Cosgun, E. Croft, and W. P. Chan, “Mapless urban robot navigation by following pedestrians,” in 
+
+IROS , 2023, pp. 6787–6792. [14] C. Cao, P. Trautman, and S. Iba, “Dynamic channel: A planning framework for crowd navigation,” in ICRA , 2019, pp. 5551–5557. [15] A. Brunetti, D. Buongiorno, G. F. Trotta, and V. Bevilacqua, “Com-puter vision and deep learning techniques for pedestrian detection and tracking: A survey,” Neurocomputing , vol. 300, pp. 17–33, 2018. [16] Y. Du, N. J. Hetherington, C. L. Oon, W. P. Chan, C. P. Quintero, E. Croft, and H. Machiel Van der Loos, “Group surfing: A pedestrian-based approach to sidewalk robot navigation,” in ICRA , 2019, pp. 6518– 6524. [17] H. Fu, V. Renaudin, Y. Kone, and N. Zhu, “Analysis of the recent ai for pedestrian navigation with wearable inertial sensors,” IEEE Journal of Indoor and Seamless Positioning and Navigation , vol. 1, pp. 26–38, 2023. [18] J. Zhang, X. Yu, S. Ha, P. T. Mor´ on, S. Salimpour, F. Keramat, H. Zhang, and T. Westerlund, “Seamless outdoor-indoor pedestrian positioning system with gnss/uwb/imu fusion: A comparison of ekf, fgo, and pf,” 
+
+ArXiv , vol. abs/2512.10480, 2025. [19] T. Moisan, H. Fu, V. Renaudin, and M. I. Sayyaf, “From research to app: Personalized inertial navigation for the visually impaired,” in 
+
+Proceedings of the 2025 International Conference on Indoor Positioning and Indoor Navigation (IPIN) . Tampere, Finland: Tampere University, 2025. [20] D. Kumar, S. Iyer, E. Raja, R. Kumar, and V. P. Kafle, “Improving pedestrian navigation in urban environment using augmented reality and landmark recognition,” IEEE Communications Standards Magazine ,vol. 8, no. 1, pp. 20–26, 2024. [21] H. Hile, R. Vedantham, G. Cuellar, A. Liu, N. Gelfand, R. Grzeszczuk, and G. Borriello, “Landmark-based pedestrian navigation from collec-tions of geotagged photos,” in Proceedings of the 7th International Conference on Mobile and Ubiquitous Multimedia , 12 2008, pp. 145– 152. [22] L. Zhu, J. Shen, J. Zhou, Z. Stachoˇ n, S. Hong, and X. Wang, “Person-alized landmark adaptive visualization method for pedestrian navigation maps: Considering user familiarity,” Transactions in GIS , vol. 26, no. 2, pp. 669–690, 2022. [23] U. Shah and J. Wang, “A Personalised Pedestrian Navigation System,” in 12th International Conference on Geographic Information Science ,ser. Leibniz International Proceedings in Informatics (LIPIcs), vol. 277, 2023, pp. 67:1–67:6. [24] Z. Fang, Q. Li, and S.-L. Shaw, “What about people in pedestrian navigation?” Geo-spatial Information Science , vol. 18, no. 4, pp. 135– 150, 2015. [25] T. Novack, Z. Wang, and A. Zipf, “A system for generating customized pleasant pedestrian routes based on openstreetmap data,” Sensors ,vol. 18, p. 3794, 2018. [26] A. Radford, J. W. Kim, C. Hallacy, A. Ramesh, G. Goh, S. Agarwal, G. Sastry, A. Askell, P. Mishkin, J. Clark, G. Krueger, and I. Sutskever, “Learning transferable visual models from natural language supervi-sion,” in ICML , vol. 139, 2021, pp. 8748–8763. [27] J. Li, D. Li, C. Xiong, and S. Hoi, “BLIP: Bootstrapping language-image pre-training for unified vision-language understanding and generation,” in ICML , vol. 162, 2022, pp. 12 888–12 900. [28] W. Kuo, Y. Cui, X. Gu, A. Piergiovanni, and A. Angelova, “Open-vocabulary object detection upon frozen vision and language models,” in ICLR , 2023. [29] P. Du, Y. Wang, Y. Sun, L. Wang, Y. Liao, G. Zhang, E. Ding, Y. Wang, J. Wang, and S. Liu, “Lami-detr: Open-vocabulary detection with language model instruction,” in ECCV , 2024. [30] C. Zhu and L. Chen, “A survey on open-vocabulary detection and segmentation: Past, present, and future,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 46, no. 12, p. 8954–8975, 2024. [31] L. Xiao, X. Yang, F. Peng, M. Yan, Y. Wang, and C. Xu, “Clip-vg: Self-paced curriculum adapting of clip for visual grounding,” IEEE Transactions on Multimedia , vol. 26, p. 4334–4347, 2024. 10 
+
+[32] W. Zhao, Y. Rao, Z. Liu, B. Liu, J. Zhou, and J. Lu, “Unleashing text-to-image diffusion models for visual perception,” in ICCV , October 2023, pp. 5729–5739. [33] Z. Merchant, A. Anwar, E. H. Wang, S. Chattopadhyay, and J. Thoma-son, “Generating contextually-relevant navigation instructions for blind and low vision people,” in The 1st InterAI Workshop: Interactive AI for Human-centered Robotics , 2024. [34] Y. Zhao, Y. Zhang, R. Xiang, J. Li, and H. Li, “Vialm: A survey and benchmark of visually impaired assistance with large models,” ArXiv ,vol. abs/2402.01735, 2024. [35] Be My Eyes, “Be My AI,” https://www.bemyeyes.com/. [36] Z. Yuan, T. Zhang, Y. Zhu, J. Zhang, Y. Deng, Z. Jia, P. Luo, X. Duan, J. Zhou, and J. Zhang, “Walkvlm: Aid visually impaired people walking by vision language model,” in ICCV , October 2025, pp. 9845–9854. [37] J. Morales, B. Gebregziabher, A. Caba˜ neros, and J. Sanchez-Riera, “Vqa-driven event maps for assistive navigation for people with low vision in urban environments,” in ICRA , 2025, pp. 12 458–12 464. [38] D. Gurari, Q. Li, A. J. Stangl, A. Guo, C. Lin, K. Grauman, J. Luo, and J. P. Bigham, “Vizwiz grand challenge: Answering visual questions from blind people,” in CVPR , 2018. [39] D. Gurari, Q. Li, C. Lin, Y. Zhao, A. Guo, A. Stangl, and J. P. Bigham, “Vizwiz-priv: A dataset for recognizing the presence and purpose of private visual information in images taken by blind people,” in CVPR ,2019, pp. 939–948. [40] J. Kim, J. Park, J. Park, S. Lee, J. Chung, J. Kim, J. H. Joung, and Y. Yu, “Guidedog: A real-world egocentric multimodal dataset for blind and low-vision accessibility-aware guidance,” 2025. [41] A. Rosinol, A. Gupta, M. Abate, J. Shi, and L. Carlone, “3D dynamic scene graphs: Actionable spatial perception with places, objects, and humans,” in Robotics: Science and Systems (RSS) , 2020. [42] Z. Dai, A. Asgharivaskasi, T. Duong, S. Lin, M.-E. Tzes, G. Pappas, and N. Atanasov, “Optimal scene graph planning with large language model guidance,” in ICRA , 2024, pp. 14 062–14 069. [43] R. Liu, X. Wang, W. Wang, and Y. Yang, “Bird’s-eye-view scene graph for vision-language navigation,” in ICCV , October 2023, pp. 10 968– 10 980. [44] F. Zhou, H. Liu, H. Zhao, and L. Liang, “Long-term object search using incremental scene graph updating,” Robotica , vol. 41, no. 3, p. 962–975, 2023. 
+
+Antoni Valls received the B.Sc. degree in theoretical physics from the Universitat de Barcelona, Spain, in 2022, and the M.Sc. degree in data science from the University of Padua, Italy, in 2024. He has pre-viously collaborated with the Institut d’Investigaci´ oen Intel·lig` encia Artificial (IIIA), CSIC, Barcelona, Spain, on natural language processing research. He is currently a Robotic Engineer with the Institut de Rob` otica i Inform` atica Industrial (IRI), CSIC-UPC, Barcelona, Spain, where he workson the SMARTGAZE II project in collaboration with Biel Glasses, developing AI-powered assistive systems to enhance the mobility of people with low vision. His research interests include computer vision, vision-language models, assistive and pedestrian navigation, localization in dynamic environments, and deep learning. 
+
+Jordi Sanchez-Riera is an associate researcher at the Spanish Scientific Research Council (CSIC) in Barcelona. He earned his B.S. in computer science and M.S. in electronic engineering from UPC, and a Ph.D. from the University of Grenoble. His research focuses on robotics, computer vision, and machine learning. He has published in top journals and con-ferences and received prestigious awards, including a Google Scholarship, Academia Sinica Post-Doc Fellowship, and Juan de la Cierva Incorporaci´ on grant.
