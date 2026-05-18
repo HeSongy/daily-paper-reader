@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.10818v2/fig-001.webp",
+      "caption": "Figure 1: Average approximations of the normalized periodic Gaussian and normalized Dirichlet kernels using normal and uniform sampling for 𝐴 ∈ R𝑑×1 respectively (𝑁 = 500, 𝑑 = 100, 𝐵 = 5, 𝑡◦ = 2𝜋, and 𝜎 = 1).",
+      "page": 2,
+      "index": 1,
+      "width": 510,
+      "height": 416
+    }
+  ]
+}

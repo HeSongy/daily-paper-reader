@@ -1,0 +1,62 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.13266v1/fig-001.webp",
+      "caption": "Figure 6: Results of a Monte Carlo simulation with 50 different realizations of randomized initial states, process noise, and measurement noise, comparing EqF and EKF with online time-delay estimation for increasing measurement delays: (a) δ = 100ms, (b) δ = 200ms, (c) δ = 300ms, and (d) δ = 500ms. From top to bottom, the rows show the absolute rotation, velocity, position, and time-delay errors, followed by the NEES. Semi-transparent lines correspond to individual runs, while thick lines indicate the median across all runs. As the delay increases, the EKF exhibits growing oscillations, loss of consistency, and increased estimation error, ultimately diverging in the (d) case. In contrast, the EqF maintains stable, low-error, and consistent performance across all delays.",
+      "page": 11,
+      "index": 1,
+      "width": 1051,
+      "height": 425
+    },
+    {
+      "url": "assets/figures/arxiv/2605.13266v1/fig-002.webp",
+      "caption": "Figure 1: Overview of the real-world flight experiments. The top row shows the two fixed-wing UAVs used for data collection, the Makeflyeasy Striver (left) and Hero (right). The remaining panels show the trajectories of the three dataset sequences (a) striver, (b) hero-1, and (c) hero-2, visualized in map view (middle row) and as 3D trajectory reconstructions (bottom rows).",
+      "page": 2,
+      "index": 2,
+      "width": 633,
+      "height": 693
+    },
+    {
+      "url": "assets/figures/arxiv/2605.13266v1/fig-003.webp",
+      "caption": "Figure 4: Representation of the time-varying Galilean frames between bodies A and B illustrated in Fig. 3. The complex frame-dependent notation is replaced with compact notation: Γ(t) and Υ(t) denote the intra-body transformations (blue) for bodies A and B respectively, while F(t) denotes the cross-body transformation (red) between the two rigid bodies. T(t) and T(t − δ) denote isochronous Galilean frames, equivalent to extended poses, which encode the spatial transformation between inertial frames at the same time instant.",
+      "page": 7,
+      "index": 3,
+      "width": 633,
+      "height": 450
+    },
+    {
+      "url": "assets/figures/arxiv/2605.13266v1/fig-004.webp",
+      "caption": "Table 1: Summary of real-world experiments with RMSEs for EKF and EqF under different time-delay settings.",
+      "page": 10,
+      "index": 4,
+      "width": 1054,
+      "height": 433
+    },
+    {
+      "url": "assets/figures/arxiv/2605.13266v1/fig-005.webp",
+      "caption": "Figure 5: Real-world comparison of the proposed EqF (solid blue) against three EKF baselines: a standard EKF without delay compensation (dashed grey), an EKF with offline delay estimate (dashed red), and an EKF with online time-delay estimation (dotted green). The top row illustrates the online time-delay estimation: (a) striver shows rapid, near-perfect convergence of our EqF to the 120 ms delay reference, while EKF (online) shows a slower transient and a worse asymptotic; (b) hero-1 shows a small ∼8 ms residual bias of the EqF, suggesting the EqF estimate may be more accurate than the nominal 90 ms delay, consistent with its superior performance in all other metrics in this specific dataset sequence; (c) hero-2 shows a slower transient of both EqF and EKF (online), but ultimately the EqF converges to the 90 ms delay reference. Overall, the proposed EqF consistently outperforms the EKF without delay compensation across all sequences, and matches or exceeds the accuracy of the EKF with offline and online delay compensation. Experiments metadata and RMSE values are reported in Tab. 1. For this magnitude of time delay, the real-world results are consistent with the simulation results illustrated in Fig. 6a.",
+      "page": 10,
+      "index": 5,
+      "width": 1038,
+      "height": 283
+    },
+    {
+      "url": "assets/figures/arxiv/2605.13266v1/fig-006.webp",
+      "caption": "Figure 2: Galilean transformations for a rigid body A in a gravity field. {I0} is an inertial frame of reference, defined as an arbitrary free-falling Galilean frame at zero time. The transformations I0FAt−δ and I0FAt map spatial and temporal coordinates from the body frame at times t − δ and t to the inertial frame. The blue arrow At−δFAt illustrates the intra-body transformation in the temporal interval δ. Intra-body Galilean frames are independent of the choice of inertial frame {I0}, and are a key concept for the geometric spatial-temporal estimation framework presented in this paper.",
+      "page": 4,
+      "index": 6,
+      "width": 633,
+      "height": 258
+    },
+    {
+      "url": "assets/figures/arxiv/2605.13266v1/fig-007.webp",
+      "caption": "Figure 3: Galilean transformations between two rigid bodies A and B in a gravity field. This setup extends the single-body case of Fig. 2 to account for the relative motion between two different rigid bodies. The blue arrows represent the intra-body transformations At−δFAt and Bt−δFBt over the temporal interval δ. The red arrow illustrates the cross-body transformation At−δFBt , mapping coordinates from body B at current time t to body A at an earlier time t − δ. The key idea is to filter for the cross-body Galilean frame, enabling joint estimation of spatial navigation states and time delay δ.",
+      "page": 5,
+      "index": 7,
+      "width": 633,
+      "height": 466
+    }
+  ]
+}

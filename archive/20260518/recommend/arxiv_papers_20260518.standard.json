@@ -1,0 +1,703 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-05-18T20:26:31.365828+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 11,
+    "deep_cap": 6,
+    "deep_selected": 6,
+    "quick_candidates": 14,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2605.11550v1",
+      "source": "arxiv",
+      "title": "The DAWN of World-Action Interactive Models",
+      "abstract": "A plausible scene evolution depends on the maneuver being considered, while a good maneuver depends on how the scene may evolve. Existing World Action Models (WAMs) largely miss this reciprocity, treating world prediction and action generation as either isolated parallel branches or rigid predict-then-plan pipelines. We formalize this perspective as World-Action Interactive Models (WAIMs), and instantiate it in autonomous driving with \\textbf{DAWN} (\\textbf{D}enoising \\textbf{A}ctions and \\textbf{W}orld i\\textbf{N}teractive model), a simple yet strong latent generative baseline. DAWN operates in a compact semantic latent space and couples a \\emph{World Predictor} with a \\emph{World-Conditioned Action Denoiser}: the predicted world hypothesis conditions action denoising, while the denoised action hypothesis is fed back to update the world prediction, so that both are recursively refined during inference. Rather than eliminating test-time world evolution altogether or rolling out the full future in pixel space, DAWN performs a short explicit latent rollout that is sufficient to support long-horizon trajectory generation in complex interactive scenes. Experiments show that DAWN achieves strong planning performance and favorable safety-related results across multiple autonomous driving benchmarks. More broadly, our results suggest that interactive world-action generation is a principled path toward truly actionable world models.",
+      "authors": [
+        "Hongbo Lu",
+        "Liang Yao",
+        "Chenghao He",
+        "Haoyu Wang",
+        "Xiang Gu",
+        "Xianfei Li",
+        "Wenlong Liao",
+        "Tao He",
+        "Pai Peng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-12T05:30:00+00:00",
+      "link": "https://arxiv.org/pdf/2605.11550v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "world-action interactive models in compact semantic latent space",
+      "llm_evidence_cn": "紧凑语义隐空间中的世界-动作交互模型",
+      "llm_evidence": "紧凑语义隐空间中的世界-动作交互模型",
+      "canonical_evidence": "紧凑语义隐空间中的世界-动作交互模型",
+      "llm_tldr_en": "Formalizes World-Action Interactive Models (WAIMs) for autonomous driving using a latent generative baseline.",
+      "llm_tldr_cn": "为自动驾驶形式化了世界-动作交互模型，并在紧凑隐空间中实现了生成式基准。",
+      "llm_tldr": "为自动驾驶形式化了世界-动作交互模型，并在紧凑隐空间中实现了生成式基准。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.15705v1",
+      "source": "arxiv",
+      "title": "Feedback World Model Enables Precise Guidance of Diffusion Policy",
+      "abstract": "World models aim to improve robotic decision making by predicting the consequences of actions. However, in practice, their predictions often become unreliable once the robot encounters states outside the training distribution, limiting their effectiveness at deployment. We observe that execution itself provides a natural but underutilized signal: after each action, the robot directly observes the true next state, revealing the mismatch between predicted and actual outcomes. Building on this insight, we propose feedback world model, a new paradigm that closes the loop between prediction and observation at inference time. Instead of treating the world model as a static open-loop predictor, our method maintains a lightweight feedback state that is updated online to iteratively correct future predictions, compensating for model errors using real-time observations without additional training data or parameter updates. We show that this process can be interpreted as a latent-space observer and admits convergence guarantees under mild conditions. We further introduce action-aware guidance to better translate corrected predictions into control by emphasizing action-controllable components while suppressing irrelevant variations. Experiments on LIBERO-Plus, Robomimic, and real-world manipulation tasks demonstrate that our method substantially improves both prediction accuracy and policy performance under distribution shift. In particular, it reduces world model prediction error by up to 76.4% and improves out-of-distribution (OOD) success rate by 30%. These results show that incorporating real-time feedback at inference time provides a simple yet powerful alternative to static world modeling.",
+      "authors": [
+        "Tuo An",
+        "Jindou Jia",
+        "Gen Li",
+        "Jingliang Li",
+        "Chuhao Zhou",
+        "Pengfei Liu",
+        "Bofan Lyu",
+        "Jiaqi Bai",
+        "Xinying Guo",
+        "Geng Li",
+        "Jianfei Yang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-05-15T07:52:13+00:00",
+      "link": "https://arxiv.org/pdf/2605.15705v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "feedback world model for precise guidance of diffusion policy",
+      "llm_evidence_cn": "用于扩散策略精确引导的反馈世界模型",
+      "llm_evidence": "用于扩散策略精确引导的反馈世界模型",
+      "canonical_evidence": "用于扩散策略精确引导的反馈世界模型",
+      "llm_tldr_en": "Introduces a feedback world model that updates its state online to improve robotic decision-making accuracy.",
+      "llm_tldr_cn": "引入一种反馈世界模型，通过在线更新状态来提高机器人决策的准确性。",
+      "llm_tldr": "引入一种反馈世界模型，通过在线更新状态来提高机器人决策的准确性。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "寻找利用世界模型进行强化学习或规划的最新研究",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.14810v1",
+      "source": "arxiv",
+      "title": "CaMeRL: Collision-Aware and Memory-Enhanced Reinforcement Learning for UAV Navigation in Multi-Scale Obstacle Environments",
+      "abstract": "In obstacle avoidance navigation of unmanned aerial vehicles (UAVs), variations in obstacle scale have received strangely less attention than obstacle number or density. Existing methods typically extract purely geometric features from single-frame depth observations. Such representations tend to neglect small obstacles and lose spatial context under occlusions caused by large obstacles, leading to noticeable degradation in environments with multi-scale obstacles. To address this issue, we propose CaMeRL, a Collision-aware and Memory-enhanced Reinforcement Learning framework for UAV navigation. The collision-aware latent representation encodes risk-sensitive depth cues to preserve fine-grained obstacle structures, thereby improving sensitivity to small obstacles. The temporal memory module integrates observations across frames, mitigating partial observability caused by large-obstacle occlusions. We evaluate CaMeRL with multi-scale obstacles, including ultra-small and extra-large obstacle settings. Results show that CaMeRL outperforms state-of-the-art baselines across all scales, with success rate gains of 0.48 and 0.28 in the ultra-small and extra-large settings, respectively. More importantly, CaMeRL achieves reliable navigation in cluttered outdoor environments.",
+      "authors": [
+        "Hong Hong",
+        "Feiyu Liao",
+        "Yongheng Liang",
+        "Boning Zhang",
+        "Haitao Wang",
+        "Hejun Wu"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-14T13:22:40+00:00",
+      "link": "https://arxiv.org/pdf/2605.14810v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "collision-aware latent representation for UAV navigation",
+      "llm_evidence_cn": "用于无人机导航的碰撞感知隐空间表示",
+      "llm_evidence": "用于无人机导航的碰撞感知隐空间表示",
+      "canonical_evidence": "用于无人机导航的碰撞感知隐空间表示",
+      "llm_tldr_en": "Proposes a latent representation framework for UAV navigation to handle multi-scale obstacles via RL.",
+      "llm_tldr_cn": "提出一种无人机导航隐空间表示框架，通过强化学习处理多尺度障碍物避障。",
+      "llm_tldr": "提出一种无人机导航隐空间表示框架，通过强化学习处理多尺度障碍物避障。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索智能体如何利用隐空间进行导航与环境理解",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.15477v1",
+      "source": "arxiv",
+      "title": "EgoExo-WM: Unlocking Exo Video for Ego World Models",
+      "abstract": "Egocentric world models present a promising direction for enabling agents to predict and plan, but their performance is constrained by the limited availability of egocentric training data and its inherent partial observability of humans' physical actions. In contrast, exocentric video is abundant and reveals body poses well, but lacks direct alignment with an agent's action space -- and is not egocentric. We propose a method to bridge this gap by extracting structured body pose from exocentric video as a representation of action and transforming the exocentric video to egocentric video, informed by a human kinematics prior. This process unlocks the integration of in-the-wild exocentric data for egocentric world model training. We show that training whole-body action-conditioned egocentric world models with our converted data significantly improves both prediction quality and downstream planning performance, where we infer the sequence of body poses needed to achieve a visual goal state. Our approach paves the way to enlist arbitrary in-the-wild videos for building powerful egocentric world models, furthering applications in robot planning and augmented-reality guidance.",
+      "authors": [
+        "Danny Tran",
+        "Roberto Martín-Martín",
+        "Kristen Grauman"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-14T23:35:54+00:00",
+      "link": "https://arxiv.org/pdf/2605.15477v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "egocentric world models for prediction and planning",
+      "llm_evidence_cn": "用于预测与规划的第一视角世界模型",
+      "llm_evidence": "用于预测与规划的第一视角世界模型",
+      "canonical_evidence": "用于预测与规划的第一视角世界模型",
+      "llm_tldr_en": "Bridges exocentric and egocentric video data to train robust world models for agent planning.",
+      "llm_tldr_cn": "通过桥接第三视角与第一视角视频数据，训练用于智能体规划的鲁棒世界模型。",
+      "llm_tldr": "通过桥接第三视角与第一视角视频数据，训练用于智能体规划的鲁棒世界模型。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.15559v1",
+      "source": "arxiv",
+      "title": "NavRL++: A System-Level Framework for Improving Sim-to-Real Transfer in Reinforcement Learning-Based Robot Navigation",
+      "abstract": "Recent years have witnessed significant progress in autonomous navigation using reinforcement learning. However, existing approaches largely emphasize reinforcement learning framework design, such as input representations, action spaces, and reward functions, while providing limited analysis of sim-to-real transfer and insufficient insight into how training strategies affect real-world deployment performance. To bridge this gap, we not only introduce an effective RL framework but also present a complete training and deployment pipeline, along with a systematic empirical study that disentangles the key factors affecting sim-to-real transfer in reinforcement learning-based navigation, including sensor noise, perception failures, system latency, and control response. Building on insights from this analysis, we introduce perturbation-aware fine-tuning, a post-training adaptation strategy that improves transfer robustness by explicitly accounting for empirically identified domain discrepancies. To further mitigate perception degradation and enhance control smoothness in real-world deployment, we propose a Transformer-based temporal reasoning policy that leverages short-horizon observation for navigation control. We quantitatively evaluate how individual sim-to-real perturbations and training design choices impact navigation performance across environments. Experimental results demonstrate that the proposed training strategy and policy architecture outperform learning-based baselines in both static and dynamic environments, while achieving performance comparable to optimization-based planners in static settings. We validate our approach through real-world deployment on multiple robotic platforms, including aerial and legged robots, across navigation-centric tasks such as exploration and inspection, demonstrating zero-shot sim-to-real transfer.",
+      "authors": [
+        "Zhefan Xu",
+        "Hanyu Jin",
+        "Kenji Shimada"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-15T02:58:25+00:00",
+      "link": "https://arxiv.org/pdf/2605.15559v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "reinforcement learning-based robot navigation and sim-to-real transfer",
+      "llm_evidence_cn": "基于强化学习的机器人导航与虚实迁移",
+      "llm_evidence": "基于强化学习的机器人导航与虚实迁移",
+      "canonical_evidence": "基于强化学习的机器人导航与虚实迁移",
+      "llm_tldr_en": "A framework to improve sim-to-real transfer for RL-based autonomous robot navigation.",
+      "llm_tldr_cn": "一种提升基于强化学习的自主机器人导航虚实迁移效果的系统级框架。",
+      "llm_tldr": "一种提升基于强化学习的自主机器人导航虚实迁移效果的系统级框架。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.15618v1",
+      "source": "arxiv",
+      "title": "Latent Video Prediction Learns Better World Models",
+      "abstract": "Self-supervised video models are increasingly framed as world models, yet their evaluation remains largely confined to a single top-1 accuracy score on clean benchmarks. This leaves a major gap in comprehending their potential as world models. We present the first systematic study addressing this gap, analyzing four matched-capacity frontier video foundation models, V-JEPA 2.1, V-JEPA 2, VideoPrism, and VideoMAEv2, across five robustness axes relevant to their deployment as video world models: feature discriminability, corruption robustness, fine-grained discrimination, occlusion robustness, and sensitivity to temporal direction. Our evaluations establish that across all five axes, latent-prediction models form a distinct and consistent profile. They degrade more gracefully under pixel corruption, preserve usable class structure rather than mere geometric stability under occlusion, capture fine-grained physical contact cues without reconstructing pixels, and uniquely encode the arrow of time. These advantages can even survive task adaptation: a frozen V-JEPA 2 backbone with a lightweight attentive probe outperforms a fully fine-tuned VideoMAE and a supervised TimeSformer on corruption and occlusion robustness. Our extensive results offer concrete new evidence in favor of latent prediction for robust world modeling.",
+      "authors": [
+        "Ali J Alrasheed",
+        "Aryan Yazdan Parast",
+        "Basim Azam",
+        "James Bailey",
+        "Naveed Akhtar"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-05-15T04:59:30+00:00",
+      "link": "https://arxiv.org/pdf/2605.15618v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "latent video prediction for world models evaluation",
+      "llm_evidence_cn": "用于世界模型评估的隐空间视频预测",
+      "llm_evidence": "用于世界模型评估的隐空间视频预测",
+      "canonical_evidence": "用于世界模型评估的隐空间视频预测",
+      "llm_tldr_en": "Systematically studies latent video prediction models to evaluate their robustness as world models.",
+      "llm_tldr_cn": "系统研究了隐空间视频预测模型，评估其作为世界模型的鲁棒性特征。",
+      "llm_tldr": "系统研究了隐空间视频预测模型，评估其作为世界模型的鲁棒性特征。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "检索关于隐空间表示在世界模型和导航中的研究论文",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2605.09801v1",
+      "source": "arxiv",
+      "title": "Efficient Multi-Robot Motion Planning with Precomputed Translation-Invariant Edge Bundles",
+      "abstract": "Solving multi-robot motion planning (MRMP) requires generating collision-free kinodynamically feasible trajectories for multiple interacting robots. We introduce Kinodynamic Translation-Invariant Edge Bundles or KiTE-Extend, a planner-agnostic action selection mechanism for sampling-based kinodynamic motion planning. KiTE-Extend uses a library of trajectory segments computed offline to guide action selection during online planning, improving the ability of existing planners to identify feasible motion segments without altering state propagation, collision checking, or cost evaluation, and without changing their theoretical guarantees. While KiTE-Extend can modestly improve single-agent planners, its benefits are most clear in the multi-agent setting, where it is able to explore more effectively and significantly improve planning through the dense spatiotemporal constraints introduced by robot-robot interaction. Through experiments on multiple kinodynamic systems and environments, we show that KiTE-Extend reduces planning time and improves scalability across the three most common MRMP paradigms: centralized, prioritized, and conflict-based.",
+      "authors": [
+        "Himanshu Gupta",
+        "Paul Motter",
+        "Aritra Chakrabarty",
+        "Rishabh Sodani",
+        "Srikrishna Bangalore Raghu",
+        "Alessandro Roncone",
+        "Bradley Hayes",
+        "Zachary Sunberg"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-10T22:44:19+00:00",
+      "link": "https://arxiv.org/pdf/2605.09801v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multi-robot motion planning and navigation in complex environments",
+      "llm_evidence_cn": "复杂环境下的多机器人运动规划与导航",
+      "llm_evidence": "复杂环境下的多机器人运动规划与导航",
+      "canonical_evidence": "复杂环境下的多机器人运动规划与导航",
+      "llm_tldr_en": "Introduces a library-based action selection mechanism to improve multi-robot kinodynamic motion planning.",
+      "llm_tldr_cn": "引入一种基于库的动作选择机制，以改进多机器人动力学约束下的运动规划。",
+      "llm_tldr": "引入一种基于库的动作选择机制，以改进多机器人动力学约束下的运动规划。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2605.12276v1",
+      "source": "arxiv",
+      "title": "NARA: Anchor-Conditioned Relation-Aware Contextualization of Heterogeneous Geoentities",
+      "abstract": "Geospatial foundation models have primarily focused on raster data such as satellite imagery, where self-supervised learning has been widely studied. Vector geospatial data instead represent the world as discrete geoentities with explicit geometry, semantics, and structured spatial relations, including metric proximity and topological relationships. These relations jointly determine how entities interact within space, yet existing representation learning methods remain fragmented, often restricted to specific geometry types or partial spatial relations, limiting their ability to capture unified spatial context across heterogeneous geoentities. We propose NARA (Neural Anchor-conditioned Relation-Aware representation learning), a self-supervised framework for vector geoentities. NARA learns context-dependent representations by jointly modeling semantics, geometry, and spatial relations within a unified framework and captures relational spatial structure beyond proximity alone, enabling rich contextualized representations across heterogeneous geoentities of points, polylines, and polygons. Evaluation on building function classification, traffic speed prediction, and next point-of-interest recommendation shows consistent improvements over prior methods, highlighting the benefit of unified relational modeling for vector geospatial data.",
+      "authors": [
+        "Jina Kim",
+        "Gengchen Mai",
+        "Lingyi Zhao",
+        "Khurram Shafique",
+        "Yao-Yi Chiang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-05-12T15:37:10+00:00",
+      "link": "https://arxiv.org/pdf/2605.12276v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "representation learning for capturing unified spatial context across geoentities",
+      "llm_evidence_cn": "用于捕获地理实体间统一空间上下文的表示学习",
+      "llm_evidence": "用于捕获地理实体间统一空间上下文的表示学习",
+      "canonical_evidence": "用于捕获地理实体间统一空间上下文的表示学习",
+      "llm_tldr_en": "Introduces NARA for self-supervised representation learning of structured spatial relations in vector geospatial data.",
+      "llm_tldr_cn": "引入NARA模型，用于矢量地理空间数据中结构化空间关系的自监督表示学习。",
+      "llm_tldr": "引入NARA模型，用于矢量地理空间数据中结构化空间关系的自监督表示学习。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.13266v1",
+      "source": "arxiv",
+      "title": "Galilean State Estimation for Inertial Navigation Systems with Unknown Time Delay",
+      "abstract": "Many Inertial Navigation Systems (INS) use Global Navigation Satellite System (GNSS) position as the primary measurement to drive filter performance and bound error growth. However, commercial-grade GNSS receivers introduce unknown measurement delays ranging from 50 ms to 300 ms depending on sensor quality and operating mode. Such time delays can significantly degrade INS performance unless they are explicitly compensated for. Existing algorithms commonly estimate this delay offline, run the filter concurrently with GNSS measurements using buffered Inertial Measurement Unit (IMU) data, and predict the current state by forward-integrating buffered inertial measurements via IMU preintegration. The state-of-the-art online method is an Extended Kalman Filter (EKF) that explicitly models the time delay as a state parameter, which defines the preintegration duration. This paper introduces a novel geometric framework for modeling time-delayed INS, in which Galilean symmetry is leveraged to provide a joint representation of space and time for consistent state estimation. An Equivariant Filter (EqF) is derived for the coupled estimation of navigation states and time delay. Validation is performed on two fixed-wing Uncrewed Aerial Vehicles (UAV) with GNSS time lags of 90 ms and 120 ms. The test flights last two to three minutes. Simulations further investigate delays up to 500 ms and provide a statistical comparison against the state-of-the-art EKF. Results show that the EqF preserves accuracy and consistency, while the EKF lacks consistency and its performance degrades significantly with increasing measurement delays.",
+      "authors": [
+        "Giulio Delama",
+        "Martin Scheiber",
+        "Yixiao Ge",
+        "Tarek Hamel",
+        "Stephan Weiss",
+        "Robert Mahony"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-13T09:46:18+00:00",
+      "link": "https://arxiv.org/pdf/2605.13266v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "State estimation for inertial navigation systems",
+      "llm_evidence_cn": "惯性导航系统的状态估计",
+      "llm_evidence": "惯性导航系统的状态估计",
+      "canonical_evidence": "惯性导航系统的状态估计",
+      "llm_tldr_en": "Proposes a method to compensate for time delays in GNSS-aided inertial navigation systems.",
+      "llm_tldr_cn": "提出了一种补偿GNSS辅助惯性导航系统中时间延迟的状态估计方法。",
+      "llm_tldr": "提出了一种补偿GNSS辅助惯性导航系统中时间延迟的状态估计方法。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.10818v2",
+      "source": "arxiv",
+      "title": "On periodic distributed representations using Fourier embeddings",
+      "abstract": "Periodic signals are critical for representing physical and perceptual phenomena. Scalar, real angular measures, e.g., radians and degrees, result in difficulty processing and distinguishing nearby angles, especially when their absolute difference exceeds pi. We can avoid this problem by using real-valued, periodic embeddings in high-dimensional space. These representations also allow us to control the nature of their dot product similarities, allowing us to construct a variety of different kernel shapes. In this work, we aim of highlight how these representations can be constructed and focus on the formalization of Dirichlet and periodic Gaussian kernels using the neurally-plausible representation scheme of Spatial Semantic Pointers.",
+      "authors": [
+        "Jakeb Chouinard"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "q-bio.NC"
+      ],
+      "published": "2026-05-11T16:35:32+00:00",
+      "link": "https://arxiv.org/pdf/2605.10818v2",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "high-dimensional periodic embeddings for spatial semantic pointers",
+      "llm_evidence_cn": "用于空间语义指针的高维周期性嵌入",
+      "llm_evidence": "用于空间语义指针的高维周期性嵌入",
+      "canonical_evidence": "用于空间语义指针的高维周期性嵌入",
+      "llm_tldr_en": "Explores periodic distributed representations using Fourier embeddings for neurally-plausible spatial mapping.",
+      "llm_tldr_cn": "探索使用傅里叶嵌入的周期性分布式表示，用于神经形态的空间映射。",
+      "llm_tldr": "探索使用傅里叶嵌入的周期性分布式表示，用于神经形态的空间映射。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2605.13448v1",
+      "source": "arxiv",
+      "title": "On the Limits of Latent Reuse in Diffusion Models",
+      "abstract": "Diffusion models are often trained in low-dimensional latent spaces, which are then reused for related but shifted datasets. In this work, we study when such latent reuse remains reliable under distribution shift. We consider a source-target setting in which both datasets are approximately low-dimensional but may lie near different subspaces. We show that freezing and reusing a source latent space induces a target-domain score error governed by two quantities: the principal-angle misalignment between the source and target subspaces, and the target ambient noise amplified by the diffusion time scale. Motivated by these limits, we further study mixed source-target training and characterize how the required shared latent dimension depends on the relative geometry of the two distributions. Our results provide theoretical guidance on when latent reuse is reliable and when learning a shared representation may be necessary.",
+      "authors": [
+        "Yifeng Yu",
+        "Lu Yu"
+      ],
+      "primary_category": "stat.ML",
+      "categories": [
+        "stat.ML",
+        "cs.LG",
+        "math.PR"
+      ],
+      "published": "2026-05-13T12:42:58+00:00",
+      "link": "https://arxiv.org/pdf/2605.13448v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "reliability of low-dimensional latent spaces under distribution shift",
+      "llm_evidence_cn": "分布偏移下低维隐空间的可靠性研究",
+      "llm_evidence": "分布偏移下低维隐空间的可靠性研究",
+      "canonical_evidence": "分布偏移下低维隐空间的可靠性研究",
+      "llm_tldr_en": "Analyzes the limits and reliability of reusing latent spaces in diffusion models under distribution shifts.",
+      "llm_tldr_cn": "分析了扩散模型在分布偏移下重用隐空间的限制与可靠性。",
+      "llm_tldr": "分析了扩散模型在分布偏移下重用隐空间的限制与可靠性。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.13534v1",
+      "source": "arxiv",
+      "title": "Scaling Retrieval-Augmented Reasoning with Parallel Search and Explicit Merging",
+      "abstract": "Deep search agents have proven effective in enhancing LLMs by retrieving external knowledge during multi-step reasoning. However, existing methods often generate a single query for retrieval at each reasoning step, limiting information coverage and introducing high noise. This may result in low signal-to-noise ratios (SNR) during search, degrading reasoning accuracy and leading to unnecessary reasoning steps. In this paper, we introduce MultiSearch, an RL-based framework that addresses these limitations through multi-query retrieval and explicit merging of retrieved information. At each reasoning step, MultiSearch generates queries from multiple perspectives and retrieves external information in parallel, expanding the scope of relevant information and mitigating the reliance on any single retrieval result. Then, the agent consolidates and refines retrieved information at the merging process, improving the SNR and ensuring more accurate reasoning. Additionally, we propose a reinforcement learning framework with a multi-process reward design to optimize agents for both multi-query retrieval and information consolidation. Extensive experiments on seven benchmarks demonstrate that MultiSearch outperforms baseline methods, enhancing the SNR of retrieval and improving reasoning performance in question-answering tasks.",
+      "authors": [
+        "Jiabei Liu",
+        "Wenyu Mao",
+        "Junfei Tan",
+        "Chunxu Shen",
+        "Lingling Yi",
+        "Jiancan Wu",
+        "Xiang Wang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-05-13T13:46:35+00:00",
+      "link": "https://arxiv.org/pdf/2605.13534v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "RL-based framework for multi-step reasoning and information retrieval",
+      "llm_evidence_cn": "基于强化学习的多步推理与信息检索框架",
+      "llm_evidence": "基于强化学习的多步推理与信息检索框架",
+      "canonical_evidence": "基于强化学习的多步推理与信息检索框架",
+      "llm_tldr_en": "Presents MultiSearch, an RL-based framework to scale retrieval-augmented reasoning via parallel search.",
+      "llm_tldr_cn": "提出MultiSearch，一种通过并行搜索扩展检索增强推理的强化学习框架。",
+      "llm_tldr": "提出MultiSearch，一种通过并行搜索扩展检索增强推理的强化学习框架。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "寻找利用世界模型进行强化学习或规划的最新研究",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.15120v2",
+      "source": "arxiv",
+      "title": "CLOVER: Closed-Loop Value Estimation and Ranking for End-to-End Autonomous Driving Planning",
+      "abstract": "End-to-end autonomous driving planners are commonly trained by imitating a single logged trajectory, yet evaluated by rule-based planning metrics that measure safety, feasibility, progress, and comfort. This creates a training--evaluation mismatch: trajectories close to the logged path may violate planning rules, while alternatives farther from the demonstration can remain valid and high-scoring. The mismatch is especially limiting for proposal-selection planners, whose performance depends on candidate-set coverage and scorer ranking quality. We propose CLOVER, a Closed-LOop Value Estimation and Ranking framework for end-to-end autonomous driving planning. CLOVER follows a lightweight generator--scorer formulation: a generator produces diverse candidate trajectories, and a scorer predicts planning-metric sub-scores to rank them at inference time. To expand proposal support beyond single-trajectory imitation, CLOVER constructs evaluator-filtered pseudo-expert trajectories and trains the generator with set-level coverage supervision. It then performs conservative closed-loop self-distillation: the scorer is fitted to true evaluator sub-scores on generated proposals, while the generator is refined toward teacher-selected top-$k$ and vector-Pareto targets with stability regularization. We analyze when an imperfect scorer can improve the generator, showing that scorer-mediated refinement is reliable when scorer-selected targets are enriched under the true evaluator and updates remain conservative. On NAVSIM, CLOVER achieves 94.5 PDMS and 90.4 EPDMS, establishing a new state of the art. On the more challenging NavHard split, it obtains 48.3 EPDMS, matching the strongest reported result. On supplementary nuScenes open-loop evaluation, CLOVER achieves the lowest L2 error and collision rate among compared methods. Code data will be released at https://github.com/WilliamXuanYu/CLOVER.",
+      "authors": [
+        "Sining Ang",
+        "Yuguang Yang",
+        "Canyu Chen",
+        "Yan Wang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI",
+        "cs.CV"
+      ],
+      "published": "2026-05-14T17:32:18+00:00",
+      "link": "https://arxiv.org/pdf/2605.15120v2",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "closed-loop value estimation for autonomous driving planning",
+      "llm_evidence_cn": "自动驾驶规划中的闭环价值估计",
+      "llm_evidence": "自动驾驶规划中的闭环价值估计",
+      "canonical_evidence": "自动驾驶规划中的闭环价值估计",
+      "llm_tldr_en": "A framework for ranking and selecting driving trajectories using closed-loop value estimation.",
+      "llm_tldr_cn": "一种利用闭环价值估计对自动驾驶轨迹进行排序和选择的规划框架。",
+      "llm_tldr": "一种利用闭环价值估计对自动驾驶轨迹进行排序和选择的规划框架。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2605.13565v1",
+      "source": "arxiv",
+      "title": "Qwen-Image-VAE-2.0 Technical Report",
+      "abstract": "We present Qwen-Image-VAE-2.0, a suite of high-compression Variational Autoencoders (VAEs) that achieve significant advances in both reconstruction fidelity and diffusability. To address the reconstruction bottlenecks of high compression, we adopt an improved architecture featuring Global Skip Connections (GSC) and expanded latent channels. Moreover, we scale training to billions of images and incorporate a synthetic rendering engine to improve performance in text-rich scenarios. To tackle the convergence challenges of high-dimensional latent space, we implement an enhanced semantic alignment strategy to make the latent space highly amenable to diffusion modeling. To optimize computational efficiency, we leverage an asymmetric and attention-free encoder-decoder backbone to minimize encoding overhead. We present a comprehensive evaluation of Qwen-Image-VAE-2.0 on public reconstruction benchmarks. To evaluate performance in text-rich scenarios, we propose OmniDoc-TokenBench, a new benchmark comprising a diverse collection of real-world documents coupled with specialized OCR-based evaluation metrics. Qwen-Image-VAE-2.0 achieves state-of-the-art reconstruction performance, demonstrating exceptional capabilities in both general domains and text-rich scenarios at high compression ratio. Furthermore, downstream DiT experiments reveal our models possess superior diffusability, significantly accelerating convergence compared to existing high-compression baselines. These establish Qwen-Image-VAE-2.0 as a leading model with high compression, superior reconstruction, and exceptional diffusability.",
+      "authors": [
+        "Zekai Zhang",
+        "Deqing Li",
+        "Kuan Cao",
+        "Yujia Wu",
+        "Chenfei Wu",
+        "Yu Wu",
+        "Liang Peng",
+        "Hao Meng",
+        "Jiahao Li",
+        "Jie Zhang",
+        "Kaiyuan Gao",
+        "Kun Yan",
+        "Lihan Jiang",
+        "Ningyuan Tang",
+        "Shengming Yin",
+        "Tianhe Wu",
+        "Xiao Xu",
+        "Xiaoyue Chen",
+        "Yan Shu",
+        "Yanran Zhang",
+        "Yilei Chen",
+        "Yixian Xu",
+        "Yuxiang Chen",
+        "Zhendong Wang",
+        "Zihao Liu",
+        "Zikai Zhou",
+        "Yiliang Gu",
+        "Yi Wang",
+        "Xiaoxiao Xu",
+        "Lin Qu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-13T14:04:56+00:00",
+      "link": "https://arxiv.org/pdf/2605.13565v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "high-compression VAEs and semantic alignment in latent space",
+      "llm_evidence_cn": "高压缩VAE与隐空间语义对齐策略",
+      "llm_evidence": "高压缩VAE与隐空间语义对齐策略",
+      "canonical_evidence": "高压缩VAE与隐空间语义对齐策略",
+      "llm_tldr_en": "Presents an improved VAE architecture for high-fidelity reconstruction and semantic alignment in latent spaces.",
+      "llm_tldr_cn": "提出了一种改进的VAE架构，用于实现隐空间中的高保真重建和语义对齐。",
+      "llm_tldr": "提出了一种改进的VAE架构，用于实现隐空间中的高保真重建和语义对齐。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.14290v1",
+      "source": "arxiv",
+      "title": "Web Agents Should Adopt the Plan-Then-Execute Paradigm",
+      "abstract": "ReAct has become the default architecture across LLM agents, and many existing web agents follow this paradigm. We argue that it is the wrong default for web agents. Instead, web agents should default to plan-then-execute: commit to a task-specific program before observing runtime web content, then execute it. The reason is that web content mixes inputs from many parties. An e-commerce product page may combine a seller's listing, customer reviews and sponsored advertisements. Under ReAct, all of this content flows into the model when deciding on the next action, creating a direct path for prompt injections to steer the agent's control flow. Plan-then-execute changes this boundary: untrusted data may influence values or branches inside a predefined execution graph, but it cannot redefine the user task or cause the model to synthesize new actions at runtime. We analyze WebArena, a popular web agent benchmark, and find that all tasks are compatible with plan-then-execute, while 80% can be completed with a purely programmatic plan, without any runtime LLM subroutine. We identify the main barrier to adopting plan-then-execute on the web: For it to work well, tools must map cleanly to semantic actions, with effects known before execution, so agents have enough information to plan. The web does not naturally expose that interface. Browser tools such as click, type, and scroll have page-dependent meanings. Planning at this layer is near-sighted: the agent can only see actions on the current page, and later actions appear only after it acts. Closing this gap requires typed interfaces that turn website interactions from clicks and keystrokes to task-level operations. This is an infrastructure problem, not a modeling problem. Web tasks do not need reactivity by default; they need typed, complete, auditable website APIs.",
+      "authors": [
+        "Julien Piet",
+        "Annabella Chow",
+        "Yiwei Hou",
+        "Muxi Lyu",
+        "Sylvie Venuto",
+        "Jinhao Zhu",
+        "Raluca Ada Popa",
+        "David Wagner"
+      ],
+      "primary_category": "cs.CR",
+      "categories": [
+        "cs.CR",
+        "cs.AI",
+        "cs.CL",
+        "cs.SE"
+      ],
+      "published": "2026-05-14T02:48:57+00:00",
+      "link": "https://arxiv.org/pdf/2605.14290v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "plan-then-execute paradigm for agent control flow and decision making",
+      "llm_evidence_cn": "智能体控制流与决策的先规划后执行范式",
+      "llm_evidence": "智能体控制流与决策的先规划后执行范式",
+      "canonical_evidence": "智能体控制流与决策的先规划后执行范式",
+      "llm_tldr_en": "Argues for a plan-then-execute paradigm in web agents to improve security and control flow reliability.",
+      "llm_tldr_cn": "主张在网络智能体中采用先规划后执行的范式，以提高安全性和控制流可靠性。",
+      "llm_tldr": "主张在网络智能体中采用先规划后执行的范式，以提高安全性和控制流可靠性。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.15517v1",
+      "source": "arxiv",
+      "title": "Terrain Consistent Reference-Guided RL for Humanoid Navigation Autonomy",
+      "abstract": "We present a method for training reference-guided, perceptive reinforcement learning locomotion policies for humanoid robots in which reference trajectories are modulated in training to be consistent with terrain geometry. Aiming to deploy our method with standard navigation autonomy infrastructure, we synthesize SE(2)-controllable reference trajectories inside the RL training loop, projecting desired footsteps onto valid footholds and adjusting swing-foot and center-of-mass trajectories to match the terrain. The resulting policy exposes a clean SE(2) velocity interface compatible with standard navigation planners. In simulation, environmentally-conditioned references significantly improve reference tracking performance compared to environment agnostic references. On hardware, we integrate the policy with an MPC + control barrier function planner and demonstrate long-horizon (>70m) closed-loop autonomous navigation on the Unitree G1 through outdoor environments containing rough terrain and consecutive flights of stairs, with all sensing and computation onboard.",
+      "authors": [
+        "William D. Compton",
+        "Zachary Olkin",
+        "Aaron D. Ames"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "eess.SY"
+      ],
+      "published": "2026-05-15T01:27:50+00:00",
+      "link": "https://arxiv.org/pdf/2605.15517v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "RL locomotion policies for humanoid navigation in complex terrain",
+      "llm_evidence_cn": "复杂地形下类人机器人导航的强化学习运动策略",
+      "llm_evidence": "复杂地形下类人机器人导航的强化学习运动策略",
+      "canonical_evidence": "复杂地形下类人机器人导航的强化学习运动策略",
+      "llm_tldr_en": "Develops a terrain-consistent RL method for humanoid navigation with standard planner compatibility.",
+      "llm_tldr_cn": "开发了一种地形一致的强化学习方法，用于类人机器人在复杂环境中的自主导航。",
+      "llm_tldr": "开发了一种地形一致的强化学习方法，用于类人机器人在复杂环境中的自主导航。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2605.13702v1",
+      "source": "arxiv",
+      "title": "Adaptive mine planning under geological uncertainty: A POMDP framework for sequential decision-making",
+      "abstract": "Strategic mine production scheduling under geological uncertainty is conventionally formulated as a stochastic optimization problem in which a fixed extraction sequence and routing decisions are computed ex ante. This plan-driven paradigm treats uncertainty as passive: decisions are hedged across geological scenarios, but planning does not anticipate how future observations will inform future decisions. We propose a different perspective by formulating mine scheduling as a Partially Observable Markov Decision Process (POMDP), in which extraction and routing decisions are made sequentially with planning explicitly integrating the expectation of future belief updates. To achieve computational tractability, we introduce a hybrid SA-POMDP architecture that combines simulated annealing-based (SA) value approximation with ensemble-based belief updating via ensemble smoother with multiple data assimilation (ES-MDA). At each decision epoch, candidate actions are evaluated through their expected long-term value under the current belief, and the belief is updated as mining observations are assimilated. This yields an adaptive policy rather than a fixed plan. We evaluate the framework on a copper-gold open-pit mining complex with multiple processing destinations. Under a statistically consistent prior, the SA-POMDP reduces the expectation-reality gap from 22.3% to 4.6%, improving realized NPV by USD8.4M relative to one-shot stochastic optimization. Under systematic prior misspecification of 10%, the adaptive framework outperforms static planning by up to USD44.6M (36.9%), demonstrating structural robustness beyond scenario hedging. These results show that sequential belief updating transforms geological uncertainty from a passive constraint into an active component of value creation.",
+      "authors": [
+        "Hamza Khalifi",
+        "Jef Caers",
+        "Yassine Taha",
+        "Mostafa Benzaazoua",
+        "Abdellatif Elghali"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-05-13T15:52:29+00:00",
+      "link": "https://arxiv.org/pdf/2605.13702v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "POMDP framework for sequential decision-making",
+      "llm_evidence_cn": "用于序列决策的POMDP框架",
+      "llm_evidence": "用于序列决策的POMDP框架",
+      "canonical_evidence": "用于序列决策的POMDP框架",
+      "llm_tldr_en": "Applies a POMDP framework to integrate future belief updates into sequential planning under uncertainty.",
+      "llm_tldr_cn": "应用POMDP框架将未来的信念更新整合到不确定性下的序列规划中。",
+      "llm_tldr": "应用POMDP框架将未来的信念更新整合到不确定性下的序列规划中。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

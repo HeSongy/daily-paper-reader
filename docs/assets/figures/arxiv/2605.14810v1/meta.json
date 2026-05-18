@@ -1,0 +1,78 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.14810v1/fig-001.webp",
+      "caption": "Fig. 1: (a) Representative trajectories of Agile-autonomy, MAVRL, and CaMeRL (ours) in ultra-small (left) and extralarge (right) obstacle settings. (b) Success rates of the three methods in the two scenarios.",
+      "page": 1,
+      "index": 1,
+      "width": 512,
+      "height": 523
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14810v1/fig-002.webp",
+      "caption": "TABLE III: BASELINE COMPARISON ACROSS OBSTACLE SCALES",
+      "page": 6,
+      "index": 2,
+      "width": 760,
+      "height": 220
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14810v1/fig-003.webp",
+      "caption": "TABLE II: REPRESENTATION ANALYSIS ACROSS OBSTACLE SCALES",
+      "page": 6,
+      "index": 3,
+      "width": 768,
+      "height": 227
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14810v1/fig-004.webp",
+      "caption": "Fig. 5: Representative multi-run trajectories of Agile-autonomy, MAVRL, and CaMeRL in extreme-scale environments. Top row: ultra-small. Bottom row: extra-large. Red circles indicate failed trajectories, and trajectory colors denote velocity.",
+      "page": 6,
+      "index": 4,
+      "width": 731,
+      "height": 638
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14810v1/fig-005.webp",
+      "caption": "Fig. 6: Grad-CAM attention visualizations of MAVRL and CaMeRL across obstacle scales. Warm colors indicate stronger influence on the policy output.",
+      "page": 7,
+      "index": 5,
+      "width": 894,
+      "height": 434
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14810v1/fig-006.webp",
+      "caption": "Fig. 7: Real-world outdoor experiments. (a) The deployed quadrotor platform. (b) A representative flight trajectory from the start to the goal, where the color indicates the flight speed. (c) The dense forest test environment with multi-scale obstacles, including thick tree trunks and slender poles.",
+      "page": 7,
+      "index": 6,
+      "width": 998,
+      "height": 250
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14810v1/fig-007.webp",
+      "caption": "Fig. 2: Overview of the CaMeRL architecture and training pipeline. A depth image is first encoded into a latent vector, which is then fused with temporal history by an LSTM to produce a memory-enhanced representation for policy prediction. The dashed box denotes the training-only branch, where collision-aware reconstruction is used to learn these representations.",
+      "page": 3,
+      "index": 7,
+      "width": 1052,
+      "height": 492
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14810v1/fig-008.webp",
+      "caption": "Fig. 3: Collision-aware preprocessing pipeline. Obstacle boundaries are inflated according to the UAV body size to obtain an edge-inflated depth map, while obstacle interiors are approximated by distance correction. The two results are fused to produce the final collision-aware depth image.",
+      "page": 3,
+      "index": 8,
+      "width": 1052,
+      "height": 417
+    },
+    {
+      "url": "assets/figures/arxiv/2605.14810v1/fig-009.webp",
+      "caption": "Fig. 4: Simulation environments with different obstacle scales. (a) Nominal-scale training environment. (b)–(g) Test environments with ultra-small (US), small (S), medium (M), large (L), extra-large (XL), and mixed-scale (MIX) obstacles.",
+      "page": 5,
+      "index": 9,
+      "width": 998,
+      "height": 381
+    }
+  ]
+}
