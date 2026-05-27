@@ -1,0 +1,771 @@
+Title: Elevator-LIO: Robust LiDAR-Inertial Odometry for Multi-Floor Navigation under Elevator-Induced Non-Inertial Motion
+
+URL Source: https://arxiv.org/pdf/2605.24495v1
+
+Published Time: Tue, 26 May 2026 00:47:27 GMT
+
+Number of Pages: 16
+
+Markdown Content:
+> 1
+
+# Elevator-LIO: Robust LiDAR-Inertial Odometry for Multi-Floor Navigation under Elevator-Induced Non-Inertial Motion 
+
+Yifan Zhang, Yudong Huang, Yuchong Zhang, Changze Li, Haoran Liu, Ming Yang, and Tong Qin* Shanghai Jiao Tong University, Shanghai, China 
+
+Abstract —This paper presents Elevator-LIO, a LiDAR-inertial odometry framework designed to achieve continuous robot localization during elevator travel, thereby supporting cross-floor robotic tasks. To address the state-estimation problem in non-inertial frames, Elevator-LIO establishes a decoupled state-estimation model that separately models the robot motion relative to the elevator and the elevator motion itself, and embeds it into a mode-dependent iterated error-state Kalman filter framework. This framework degenerates to conventional LIO estimation in ordinary indoor environments, while enabling the propagation and constrained update of elevator-related states in elevator non-inertial environments, thereby achieving continuous and stable localization. An elevator mode manager detects elevator entry and exit events using LiDAR ranging statistics and estimated states, and introduces event-triggered zero-velocity and zero-acceleration updates when the elevator stops to suppress accu-mulated vertical drift. In addition, this paper adopts an adaptive voxel downsampling strategy to maintain a stable number of effective points under significant environmental scale changes. We conduct extensive experiments on 20 real-world sequences containing 79 elevator rides, including practical challenges such as large-scale spaces, long vertical travel, dynamic pedestrian in-terference, and mirror reflections. The results show that Elevator-LIO maintains continuous localization accuracy in all sequences, with terminal height error below 1 cm in 17 sequences. In con-trast, existing representative localization systems perform poorly on these elevator sequences. Tests on the Hilti 2022/2023 datasets further show that the proposed method remains competitive in standard indoor scenarios. The project page is available at https://xiaofan4122.github.io/Elevator LIO Page/. 
+
+Index Terms —Multi-floor localization, LiDAR-inertial odom-etry, elevator travel, non-inertial environments, zero-velocity update 
+
+I. I NTRODUCTION 
+
+# MULTI-FLOOR mobility is a fundamental requirement for autonomous mobile robots (AMRs) deployed in modern buildings, where elevators serve as the primary means of vertical transportation between floors. Cross-floor nav-igation via elevators is indispensable for practical indoor autonomy. However, it remains a major challenge for robot localization and frequently acts as a critical failure point in real-world deployments. Over the past decade, vision-based SLAM systems [1]–[3] have achieved impressive accuracy but often struggle with illumination variations, motion blur, and high computational demands for dense mapping [4], [5]. LiDARs have been playing an increasingly important role in a wide range of autonomous robotic platforms, including autonomous ground vehicles (AGVs) navigating complex terrains [6] and un-manned aerial vehicles (UAVs) performing agile maneuvers in cluttered environments [7]. Particularly, in GPS-denied indoor environments, LiDAR-inertial odometry (LIO) has become a mainstream solution for robot state estimation because it combines the geometric accuracy of LiDAR with the high-rate motion sensing of the IMU [8]–[10]. However, their success relies on a basic as-sumption: the sensor platform operates in an inertial reference frame, so that IMU measurements can be consistently inter-preted as robot ego-motion and fused with LiDAR constraints. This assumption breaks down when the robot is inside a moving elevator. Once the robot enters the cabin, the platform is placed in a non-inertial environment, and the measured acceleration becomes contaminated by elevator motion. Mean-while, LiDAR observations inside the cabin mainly provide local geometric constraints relative to the elevator interior rather than the world frame. Consequently, a conventional LIO pipeline may incorrectly attribute elevator-induced motion to the robot itself, leading to severe drift, inconsistency, or even divergence. This mismatch makes reliable state estima-tion during elevator motion a key bottleneck for multi-floor localization. The difficulty arises from two aspects. First, from the esti-mation perspective, IMU measurements inside the cabin con-tain a superposition of elevator translational motion and robot motion relative to the elevator. Without explicitly separating these components, state propagation accumulates large integra-tion errors. Moreover, since LiDAR can only observe relative motion inside the cabin, it cannot update the corresponding absolute-motion states. These states therefore become unob-servable during elevator travel, and their uncertainty keeps increasing over time, making reliable estimation progressively more difficult. Second, from the front-end perspective, the robot experiences abrupt scene scale changes when moving between open floors and confined elevator cabins. Fixed-resolution downsampling then becomes unstable: overly dense observations impair real-time efficiency, whereas overly sparse observations can lead to rapid degradation or even failure in narrow elevator environments. Related multi-floor or elevator-aware systems typically fo-cus on mapping, navigation, or floor transition management [11]–[13], rather than maintaining continuous localization while the robot is physically inside a moving elevator. There-fore, a dedicated treatment of the non-inertial estimation problem is still missing. To address these challenges, we propose Elevator-LIO , a LiDAR-inertial localization framework for continuous oper-      
+
+> arXiv:2605.24495v1 [cs.RO] 23 May 2026 2
+> Fig. 1. Conceptual illustration of Elevator-LIO. a: cross-floor robotic navigation requires continuous localization while the robot is transported by an elevator.
+> b: inside the elevator cabin, the robot operates in a moving non-inertial frame, where the IMU captures motion affected by elevator transport, whereas the LiDAR observes cabin-relative geometry. Elevator-LIO addresses this sensing inconsistency by decoupling the robot-relative state from the elevator transport state. c: a representative real-world result showing continuous trajectory estimation and globally consistent multi-floor mapping across elevator traversal.
+
+ation across floor–elevator transitions. The key idea is to explicitly separate elevator motion from robot motion relative to the elevator and to estimate both within a unified state-estimation framework. By augmenting the elevator motion along the vertical direction into the system state and combining it with LiDAR relative constraints, the proposed method avoids directly treating elevator-induced acceleration as robot ego-motion, which is the main source of failure in conventional LIO during elevator traversal. Because the elevator-related state remains weakly observ-able, we introduce a zero-state update (velocity and acceler-ation) mechanism at elevator stops to suppress accumulated vertical drift. To make this correction reliable in practice, we design a lightweight elevator state detector that identifies the onset and termination of elevator motion solely from onboard sensing, without relying on external infrastructure, thereby providing robust triggers for state transition and ZUPT correction. In parallel, we develop a feedback-driven adaptive down-sampling front-end to cope with the drastic change in obser-vation scale between open floors and confined cabins. Instead of using a fixed voxel resolution, the front-end adjusts the downsampling scale online according to point-cloud feedback, so that the number of effective input points remains within a safe operating range. This design improves both computational stability and geometric conditioning across large scene transi-tions. The proposed system operates using only a LiDAR with an integrated IMU. Experiments across public datasets, real-world data and a dedicated simulator show that Elevator-LIO maintains continuous, divergence-free localization during all tested elevator transitions, yields accurate floor-level vertical estimation, and preserves competitive performance in standard inertial environments. The main contributions of this paper are summarized as follows: 1) We propose a LiDAR–inertial localization framework for robot operation in elevators, and derive the decoupled motion equations in the elevator-induced non-inertial frame for stable estimation of both the robot pose relative to the elevator and its absolute pose. 2) We develop a drift-suppression mechanism tailored to real elevator travel by combining zero state update correction with a lightweight elevator state detector, improving robustness against uncertainty accumulation during elevator motion. 3) We introduce a feedback-driven adaptive downsampling strategy that maintains a consistent point cloud density, thereby ensuring robust front-end geometric constraints across abrupt scene-scale transitions between open floors and confined elevator cabins. 4) We validate the proposed system through extensive experiments on public datasets, real-world elevator se-quences and a dedicated simulator, and provide bench-mark resources to support future research on non-inertial elevator localization. II. R ELATED WORK 
+
+Existing studies related to our problem mainly fall into two categories: LiDAR–inertial odometry (LIO) in inertial envi-ronments, and state estimation under moving-base or weakly observable conditions. 
+
+A. LiDAR–Inertial Odometry in Inertial Environments 
+
+Modern LIO systems can be broadly grouped into smoothing-based methods, such as LIOM [14], LIO-SAM [15], and LILI-OM [16], and filtering or direct-registration methods, such as FAST-LIO [8], FAST-LIO2 [9], Point-LIO [10], DLIO [17], LIO-EKF [18], and Faster-LIO [19]. Later works further improve efficiency, map rep-resentation, and robustness through voxel maps, adaptive 3 
+
+> Fig. 2. Qualitative comparison of the handheld data collection sequence. The left column illustrates the first-person view alongside our sensor suite, capturing the complete trajectory with two consecutive revisits. The middle column shows that Elevator-LIO maintains continuous and geometrically consistent cross-floor localization. The local zoom-in views in (a)–(f) sequentially highlight our motion process. In (a) and (d), the robot undergoes aggressive motion inside the elevator, yet Elevator-LIO can still accurately separate and estimate the true motion components. Further experiments demonstrate that the baseline methods fail to maintain reliable localization even when the robot remains stationary inside the elevator.
+
+filtering, intensity cues, or additional gravity/velocity con-straints [20]–[24]. Despite these advances, standard LIO methods generally assume that the sensor platform evolves in an inertial frame, so that IMU measurements can be interpreted as robot ego-motion and fused consistently with LiDAR geometric con-straints. This assumption breaks down inside a moving eleva-tor: elevator-induced acceleration is superimposed on the IMU measurements, while LiDAR observations mainly constrain the robot relative to the cabin. As a result, the motion prior and geometric observations become physically inconsistent, making conventional LIO prone to vertical drift, map incon-sistency, or divergence. 
+
+B. State Estimation under Moving-Base or Non-Inertial Con-ditions 
+
+State estimation under moving-base motion or weak observ-ability often relies on additional constraints or external aiding. Ground-Fusion [25] and VIWO [26] use wheel odometry or vehicle kinematic constraints, while other systems rely on external infrastructure to provide absolute observations. These assumptions are not well suited to elevator scenarios, where the robot may move within the cabin while the elevator un-dergoes significant vertical transport motion, and deployment should not depend on building-side infrastructure. Another line of work exploits physically meaningful state-transition events. Zero-velocity updates have been widely used in inertial navigation [27], and related contact or kine-matic constraints have been incorporated into legged and multi-sensor odometry systems such as VILENS [28], Leg-KILO [29], and LIKO [30]. These methods show that inter-mittent physical constraints can suppress drift under weak ob-servability. However, they do not explicitly model the coupling between elevator transport motion and robot motion relative to the cabin. Elevator motion also causes abrupt observation-scale changes between open floors and confined cabins. Prior work on degraded or adaptive LIO, such as LVIO-Fusion [31] and AD-LIO [32], improves robustness through multimodal observations or adaptive voxel resolution. In contrast, our work focuses on a dedicated LiDAR–inertial formulation for elevator-induced non-inertial motion, together with event-triggered constraints and adaptive front-end processing for continuous multi-floor localization. III. S YSTEM OVERVIEW 
+
+As illustrated in Fig. 3, Elevator-LIO consists of three main components: a pre-processing module, a state estimation module with elevator mode management, and a mapping module. 4
+
+> Fig. 3. Overview of the proposed Elevator-LIO framework. The system consists of pre-processing, elevator mode management, state estimation, and mapping.
+
+In the pre-processing stage, raw IMU and LiDAR mea-surements are first buffered and sorted by timestamp. Ahigh-frequency timer then continuously polls the buffer and pops the earliest available sensor measurement for processing. The system then performs static IMU initialization using the initial stationary segment, including gravity alignment and bias estimation, so as to accommodate different sensor mounting configurations. Meanwhile, the raw point cloud is processed by a feedback-based adaptive downsampling module to maintain stable front-end inputs across environments with significantly different spatial scales, such as open floors and confined elevator cabins. Unlike conventional LIO systems, Elevator-LIO re-derives the state-estimation formulation for elevator scenarios and elegantly integrates the resulting decoupled model with the original LIO estimation framework. During operation in ordi-nary inertial environments, the system behaves as a standard LIO pipeline. Once an elevator-induced non-inertial reference frame is detected, the estimator switches to the proposed non-inertial mode and explicitly distinguishes the motion of the moving reference frame from the robot’s own motion. After leaving the non-inertial mode, an additional correction step, termed the Exit Update , is applied to suppress accumulated errors and recover global-frame consistency. Finally, the posterior state is published as the odometry output, while the retained points of the current scan are incrementally inserted into the global map maintained by an ikd-Tree. IV. N OTATION AND PRELIMINARIES 
+
+A. Notation 
+
+The key symbols used in Elevator-LIO are summarized in Table I. We use lowercase italic letters for scalars (e.g., 
+
+∆t), lowercase bold letters for vectors (e.g., p and v), and uppercase bold letters for matrices (e.g., R and P). Coordinate frames are denoted by calligraphic letters with subscripts. For any frame FA and reference frame FB , pBA
+
+denotes the position of the origin of FA with respect to FB ,                                              
+
+> TABLE I KEY NOTATIONS USED IN ELEVATOR -LIO.
+> Symbol Definition
+> FW,FE,FIWorld, elevator-cabin, and IMU body frames
+> pEIIMU position in FErelative to elevator
+> pWEElevator position in FW
+> qBA,RBAQuaternion and rotation from frame Ato frame B
+> vEIIMU velocity in FErelative to elevator
+> pWEz , v WEz , a WEz Elevator z displacement, velocity, and acceleration in FW
+> am,ωmIMU specific-force and angular-rate measurements
+> IωEIAngular velocity of FIrelative to FE, expressed in FI
+> ba,bωAccelerometer and gyroscope biases
+> gGravity vector in FW
+> e3Unit z-axis vector, i.e., [0 ,0,1] T
+> ⌊·⌋ ∧Skew operator: R3→so (3)
+
+expressed in FB . The corresponding orientation is represented by the Hamilton quaternion qBA or the equivalent rotation matrix RBA .We also use ⌊·⌋ ∧ for the skew-symmetric operator and 
+
+Exp( ·) for the exponential map from so (3) to SO(3) .
+
+B. Standard IMU Kinematics 
+
+In classical LIO, the world frame FW is assumed to be inertial. Under this assumption, the system state can be written as 
+
+xstd = (pWI )T (qWI )T (vWI )T bTa bTω gT T (1) The corresponding continuous-time dynamics under the inertial-frame assumption are given by 
+
+
+
+˙pWI = vWI ,
+
+˙qWI = qWI ⊗
+
+ 0 
+
+> 12
+
+(ωm − bω − nω )
+
+
+
+,
+
+˙vWI = RWI (am − ba − na) + g,
+
+˙ba = nba , ˙bω = nbω ,
+
+(2) 5
+
+where nω and na are Gaussian white noises associated with the gyroscope and accelerometer measurements, respectively, and nba and nbω represent the corresponding bias random walks. The above model is valid only when the sensor platform evolves in an inertial frame. However, when the robot is carried by a moving elevator, the measured acceleration am contains both the robot’s relative motion and the elevator transport motion. Elevator-LIO addresses this limitation through the non-inertial formulation presented in the next section. V. E LEVATOR -LIO F RAMEWORK 
+
+This section presents the complete framework of Elevator-LIO shown in Fig. 3. We begin with the core estimator, including the non-inertial state representation and its elevator-specific simplification (V-A), the corresponding propagation and covariance model for both non-inertial (V-B) and inertial cases (V-C), and the LiDAR update together with the elevator-exit correction (V-D). We then introduce several supporting modules that are equally important to the practical operation of the system, including the elevator mode manager (V-E), static initialization (V-F), geometry-aware adaptive downsampling (V-G), and mapping (V-H). 
+
+A. Non-Inertial State Representation 
+
+Conventional tightly coupled LiDAR–IMU odometry typi-cally parameterizes the robot state directly in an inertial world frame. In non-inertial scenarios, however, such a formulation becomes inconsistent with the actual motion composition. To account for this effect, we introduce an augmented state de-fined with respect to a generalized moving non-inertial frame 
+
+FN , which decomposes the motion into the robot motion relative to FN and the motion of FN in the world frame. In the specific elevator scenario considered in this paper: 
+
+xaug = xTrel xTN
+
+T (3) with 
+
+xrel = (pNI )T (qNI )T (vNI )T bTa bTω gT T (4) and 
+
+xN = (pWN )T (qWN )T (vWN )T T . (5) Compared with conventional LIO, the robot state is no longer expressed directly in FW ; instead, the transport motion of the non-inertial frame is modeled explicitly. 
+
+1) Generalized Kinematic Propagation: According to the relative motion theorem, the IMU kinematics in the world frame satisfy 
+
+RWI = RWN RNI (6) and 
+
+
+
+pWI = pWN + RWN pNI ,
+
+vWI = vWN + RWN vNI + ωWN ×  RWN pNI
+
+ ,
+
+aWI = aWN + RWN aNI + 2 ωWN ×  RWN vNI
+
+
+
++ ˙ ωWN ×  RWN pNI
+
+ + ωWN ×  ωWN ×  RWN pNI
+
+ ,
+
+(7) where ωWN denotes the angular velocity of the non-inertial frame with respect to the world frame. The acceleration terms correspond to transport acceleration, relative accelera-tion, Coriolis acceleration, Euler acceleration, and centripetal acceleration, respectively. The above formulation describes the complete motion com-position in a general non-inertial setting. The actual estimator implemented in Elevator-LIO adopts a reduced parameteriza-tion tailored to elevator motion. 
+
+2) Elevator-Specific Simplification: At static initialization, the world frame FW is defined with its z-axis aligned with gravity. In the elevator scenario considered in this paper, the cabin undergoes vertical translation during a single elevator traversal, while its rotational motion is negligible. Therefore, the elevator orientation relative to FW can be regarded as constant, i.e., 
+
+ωWE ≈ 0. (8) The elevator frame FE is defined to remain parallel to the world frame FW . Therefore, 
+
+RWE = I. (9) Under this frame choice, the transport motion of the elevator reduces to pure translation along the vertical axis, and the acceleration composition simplifies to 
+
+aWI = aWE + RWE aEI = 0 0 aWEz 
+
+T + aEI . (10) To obtain a compact yet sufficient parameterization, constant and redundant terms are removed from the state representation. The final state adopted in Elevator-LIO is 
+
+x = xTrel xTelev 
+
+T (11) with 
+
+xrel = (pEI )T (qEI )T (vEI )T bTa bTω
+
+T (12) and 
+
+xelev = pWEz vWEz aWEz 
+
+T (13) Here, pWEz , vWEz , and aWEz denote the elevator displacement, velocity, and acceleration along the world-frame vertical axis, respectively. Among these transport states, the vertical velocity and position accumulate errors during in-elevator motion and is further corrected by the exit update introduced later. Since the elevator rotation is assumed negligible, the attitude evolu-tion is entirely represented by the robot orientation relative to the elevator frame. 
+
+3) Design rationale: We explicitly include aWEz in the state because recovering the robot’s true motion requires explicitly estimating the motion of the reference frame. We choose to model the elevator acceleration aWEz , rather than the robot-relative acceleration aEIz , because the former usually varies more smoothly during elevator operation. A somewhat counter-intuitive aspect is that the unmodeled component is immediately interpreted by the IMU propagation, whereas the modeled component is treated as a latent state with random-walk dynamics and is mainly corrected through LiDAR up-dates and exit-stage constraints. Since LiDAR updates are relatively low-frequency compared with IMU propagation, it is 6
+
+preferable to assign the smoother component to the estimated state. Therefore, Elevator-LIO models aWEz as a random walk and estimates it online. Introducing higher-order transport dynamics, such as jerk, would increase the state dimension and noise sensitivity, thereby degrading numerical robustness. The adopted param-eterization therefore provides a trade-off between representa-tional adequacy and estimator stability. In addition, gravity is fixed after static initialization rather than estimated online. In the elevator frame, gravity becomes strongly coupled with IMU bias, elevator transport accelera-tion, and robot-relative acceleration. Estimating gravity online would therefore aggravate parameter coupling and reduce numerical stability during the weakly observable in-elevator phase. We thus keep gravity fixed and let the remaining vertical transport effect be captured by the explicitly modeled elevator-motion states. 
+
+B. Non-Inertial State Propagation 1) IMU Measurement Model and Discrete-Time Kinemat-ics: Since the elevator rotational motion is neglected, the angular-velocity composition reduces to  
+
+> I
+
+ωWI = I ωWE + I ωEI ≈ I ωEI (14) Here, the left superscript I indicates that all angular ve-locities in this equation are expressed in the IMU frame 
+
+FI . Let ωm denote the gyroscope measurement and am the accelerometer specific-force measurement. The IMU measure-ment model under the non-inertial elevator formulation is then written as 
+
+(ωm = I ωEI + bω + nω ,
+
+am =  REI
+
+T  aEI + aWEz e3 − g + ba + na, (15) where nω and na are the Gaussian white noises of the gyroscope and accelerometer, respectively. Since the elevator frame is initialized to be aligned with the world frame during static initialization, the gravity vector g and the vertical unit vector e3 = [0 , 0, 1] T have identical coordinate representations in FE and FW .For discrete-time filtering, the above model is discretized over the sampling interval ∆t between time steps k and k + 1 .Define the effective relative acceleration in the elevator frame as 
+
+aEI,k = REI,k (am,k − ba,k ) + g − aWEz,k e3. (16) The corresponding nominal-state propagation equations are 
+
+
+
+pEI,k +1 = pEI,k + vEI,k ∆t + 12 aEI,k ∆t2,
+
+qEI,k +1 = qEI,k ⊗ Exp(( ωm,k − bω,k ) ∆ t) ,
+
+vEI,k +1 = vEI,k + aEI,k ∆t, 
+
+ba,k +1 = ba,k ,
+
+bω,k +1 = bω,k ,pWEz,k +1 = pWEz,k + vWEz,k ∆t + 12 aWEz,k ∆t2,vWEz,k +1 = vWEz,k + aWEz,k ∆t, aWEz,k +1 = aWEz,k .
+
+(17) In the nominal propagation, the accelerometer bias, gyro-scope bias, and elevator acceleration are treated as constant over one integration interval. Their uncertainties are modeled as random walks and injected through the process-noise co-variance in the error-state propagation described next. 
+
+2) Error-State Covariance Propagation: The error state is defined as 
+
+δx = δxTr δxTe
+
+T ∈ R18 , (18) where 
+
+δxr = (δpEI )T (δθEI )T (δvEI )T δbTa δbTω
+
+T ∈ R15 ,
+
+(19) and 
+
+δxe = δp WEz δv WEz δa WEz 
+
+T ∈ R3. (20) For brevity, the bias-corrected measurements are denoted by 
+
+ˆωk = ωm,k − bω,k , ˆak = am,k − ba,k . (21) For covariance propagation, the linearized error-state dynamics are written in discrete time as 
+
+δxk+1 = Fx,k δxk + Fw,k wk, (22) where Fx,k is the discrete-time error-state transition matrix, as shown in (26), Fw,k is the discrete-time noise injection matrix, and wk is the discretized process noise over one propagation interval. We model 
+
+wk ∼ N (0, Qw,k ), (23) with 
+
+Qw,k = diag  σ2 
+
+> a
+
+I3, σ 2 
+
+> ω
+
+I3, σ 2 
+
+> ba
+
+I3, σ 2 
+
+> bω
+
+I3, σ 2
+
+> aE
+
+ ∆t (24) Accordingly, the covariance is propagated as 
+
+Pk+1 = Fx,k Pk FTx,k + Fw,k Qw,k FTw,k . (25) The corresponding discrete-time noise injection matrix 
+
+Fw,k ∈ R18 ×13 is given by 
+
+Fw,k =
+
+
+
+03 03 03 03 03×1
+
+03 −I3 03 03 03×1
+
+−REI,k 03 03 03 03×1
+
+03 03 I3 03 03×1
+
+03 03 03 I3 03×1
+
+01×3 01×3 01×3 01×3 0
+
+01×3 01×3 01×3 01×3 0
+
+01×3 01×3 01×3 01×3 1
+
+
+
+(27) Here, σ2
+
+> a
+
+, σ2 
+
+> ω
+
+, σ2
+
+> ba
+
+, σ2 
+
+> bω
+
+, and σ2 
+
+> aE
+
+denote the continuous-time noise intensities of the accelerometer measurement noise, gy-roscope measurement noise, accelerometer-bias random walk, gyroscope-bias random walk, and elevator-acceleration ran-dom walk, respectively. 7
+
+Fx,k =
+
+
+
+I3 − 12 REI,k ⌊ˆak⌋∧∆t2 I3∆t − 12 REI,k ∆t2 0 03×1 03×1 − 12 e3∆t2
+
+0 Exp( − ˆωk∆t) 0 0 −I3∆t 03×1 03×1 03×1
+
+0 −REI,k ⌊ˆak⌋∧∆t I3 −REI,k ∆t 0 03×1 03×1 −e3∆t
+
+0 0 0 I3 0 03×1 03×1 03×1
+
+0 0 0 0 I3 03×1 03×1 03×1
+
+01×3 01×3 01×3 01×3 01×3 1 ∆t 12 ∆t2
+
+01×3 01×3 01×3 01×3 01×3 0 1 ∆t
+
+01×3 01×3 01×3 01×3 01×3 0 0 1
+
+
+
+(26) 
+
+Algorithm 1 State Estimation Pipeline of Elevator-LIO 
+
+Require: LiDAR scan zk or IMU frame Uk in buffer  
+
+> 1:
+
+Pop the oldest measurement from buffer  
+
+> 2:
+
+if measurement is IMU then 
+
+// IMU propagation  
+
+> 3:
+
+Propagate state ¯xk via (17)  
+
+> 4:
+
+Propagate covariance Pk via (25)  
+
+> 5:
+
+else if measurement is LiDAR then 
+
+// LiDAR update  
+
+> 6:
+
+Downsample, undistort, and reject outlier points  
+
+> 7:
+
+κ ← 0, ˆx(0)  
+
+> k
+
+← ¯xk 
+
+> 8:
+
+while κ < κ max do  
+
+> 9:
+
+Compute residual via (30)  
+
+> 10:
+
+Compute state increment δx(κ) 
+
+> k
+
+via (35)  
+
+> 11:
+
+ˆx(κ+1)  
+
+> k
+
+← ˆx(κ) 
+
+> k
+
+⊞ δx(κ) 
+
+> k
+> 12:
+
+if ˆx(κ+1)  
+
+> k
+
+⊟ ˆx(κ) 
+
+> k
+
+< ε then  
+
+> 13:
+
+break  
+
+> 14:
+
+κ ← κ + 1  
+
+> 15:
+
+ˆxk ← ˆx(κ+1)  
+
+> k
+> 16:
+
+Update covariance Pk via (37) // mode update  
+
+> 17:
+
+Check entry flag by LiDAR scan zk 
+
+> 18:
+
+Check exit flag by vWEz,k in ˆxk 
+
+> 19:
+
+if Flag Exit then 
+
+// Exit update  
+
+> 20:
+
+Apply exit prior update via (38)  
+
+> 21:
+
+Apply re-anchoring update via (43)  
+
+> 22:
+
+Reset elevator-related states 
+
+C. Inertial State Propagation 
+
+When the mode manager determines that the platform is no longer inside the elevator, the estimator switches back to the standard inertial propagation model. The elevator-related blocks in the error-state transition matrix Fx and the noise injection matrix Fw are disabled, as illustrated in Fig. 4. In par-ticular, the elevator-to-robot cross-coupling block is set to zero, and the elevator-motion substate [pWEz , v WEz , a WEz ]T no longer evolves through the propagation model. The corresponding elevator-related process-noise channel is also disabled. As a result, the active part of the estimator degenerates to a standard inertial-frame LIO pipeline, while the elevator-specific states remain frozen until they are reset by the subsequent exit-handling procedure. 
+
+D. State Update and Exit Constraint 
+
+To enable reliable operation in elevator scenarios, we intro-duce a tailored state-update procedure together with elevator-specific constraints. The state-estimation pipeline of Elevator-LIO is summarized in Algorithm 1.    
+
+> Fig. 4. Mode-dependent activation patterns of the error-state transition matrix
+> Fx,k and the noise injection matrix Fw,k . In non-inertial mode, the elevator-related coupling and transport-state blocks are enabled, whereas in inertial mode these elevator-related blocks are disabled.
+
+1) IESKF Update: For each valid point-to-plane correspon-dence, we construct the LiDAR residual in the elevator-local frame. Let pLj denote the jth valid LiDAR point in the current scan, uj the normal vector of the matched local plane, and qj
+
+a point on that plane. During in-elevator operation, scan-to-map registration is performed with respect to the elevator-local frame FE , whose geometry is attached to the cabin interior. Therefore, both uj and qj are expressed in FE .Let 
+
+pIj = RILpLj + pIL (28) be the LiDAR point transformed into the IMU frame, where 
+
+RIL and pIL are the pre-calibrated LiDAR-to-IMU extrinsics. The corresponding point coordinate in the elevator-local frame is 
+
+pEj = REI pIj + pEI (29) The point-to-plane residual is then defined as 
+
+rj (x) = uTj
+
+ REI
+
+ RILpLj + pIL
+
+ + pEI − qj
+
+ (30) It should be emphasized that this residual only constrains the robot state relative to the elevator-local frame. The elevator transport state does not appear in the local LiDAR residual. Instead, the global IMU position is obtained by composing the local relative position and the elevator vertical displacement: 
+
+pWI = pEI + pWEz e3 (31) Thus, during elevator traversal, the LiDAR registration remains in the local coordinate frame associated with the cabin geom-etry, whereas the world-frame odometry is lifted along the vertical direction by the elevator transport state. According to the 18-dimensional error-state ordering 
+
+δx = δpT , δ θT , δ vT , δ bTa , δ bTω , δp WEz , δv WEz , δa WEz 
+
+T (32) 8
+
+the Jacobian of the residual with respect to the error state is 
+
+Hj = uTj −uTj REI ⌊pIj ⌋∧ 01×12 
+
+ (33) This zero Jacobian can be intuitively explained by the fact that, inside a fully enclosed elevator cabin, the LiDAR only observes cabin-relative geometry. Therefore, the elevator trans-port motion itself does not directly contribute to the LiDAR measurement residual. This does not mean that the elevator transport states are numerically frozen during in-elevator operation. Rather, they are propagated by the IMU-driven process model, while their uncertainty gradually increases due to the lack of direct LiDAR observability. In other words, the estimator maintains a dynamically consistent prediction of the transport motion, but the corresponding covariance is expected to grow until an additional physical constraint becomes available. This is why a terminal correction at elevator exit is required. The posterior state is estimated in an IESKF maximum-a-posteriori framework. At iteration κ, the Kalman gain and the state update are 
+
+K =  HT R−1H + P−1−1 HT R−1 (34) and 
+
+ˆxκ+1 = ˆ xκ⊞ −Kr (ˆ xκ) − (I − KH )( Jκ)−1(ˆ xκ ⊟ ¯x) (35) where ¯x and P are the predicted prior state and covariance, respectively, and R is the observation-noise covariance. The operators ⊞ and ⊟ denote generalized addition and subtraction on the state manifold. Since the 18-dimensional state contains only one SO(3) 
+
+component, namely qEI , the manifold correction matrix Jκ
+
+simplifies to 
+
+Jκ =
+
+
+
+I3 03 03×12 
+
+03 A(δθκ)−T 03×12 
+
+012 ×3 012 ×3 I12 
+
+ (36) where A(·) is the right Jacobian of SO(3) and δθκ is the rotational error at the current iteration. The update is repeated until convergence, yielding the posterior estimate ˆxk = ˆ xκ+1 
+
+and covariance 
+
+ˆPk = ( I − KH )P(I − KH )T + KRK T (37) where the Joseph form is used for numerical stability. 
+
+2) Exit Constraint and State Reset: When the mode man-ager raises Flag_Exit , the estimator exits the non-inertial mode and returns to the standard inertial formulation. To sup-press the vertical drift accumulated during elevator traversal, we introduce an exit-stage physical-prior update together with a state re-anchoring procedure. 
+
+a) Zero velocity and zero acceleration update: Since the elevator is physically at rest at the exit stage, the transport velocity vWEz and acceleration aWEz should approach zero. We therefore construct a high-confidence prior observation and perform one last EKF-style update. For brevity, we omit the subscript “exit” in this paragraph. The residual and observation matrix are 
+
+r =
+
+0 − vWEz 
+
+0 − aWEz 
+
+
+
+, H =
+
+01×15 0 1 0
+
+01×15 0 0 1
+
+
+
+(38) The corresponding gain and correction are 
+
+K = PH T  HPH T + R−1 , δx = Kr (39) followed by 
+
+x ← x ⊞ δx, (40) 
+
+P ← (I − KH )P(I − KH )T + KRK T (41) In implementation, we set a small observation-noise covari-ance, e.g., R = diag(10 −5, 10 −4), to keep the update numer-ically stable while strongly suppressing residual vertical drift through the cross-covariance structure in P.
+
+b) Re-anchoring and transport-state absorption: After the zero-velocity and zero-acceleration update, the elevator displacement is absorbed into the relative position state. This operation is a state re-parameterization that preserves the global position while removing the auxiliary elevator transport state. Before reset, the global IMU position is represented as 
+
+pWI = pEI + pWEz e3 (42) To return to the standard inertial-frame LIO formulation, we re-anchor the relative position state as 
+
+pEI ← pEI + pWEz e3 (43) and then reset the elevator transport states: 
+
+pWEz ← 0, vWEz ← 0, aWEz ← 0. (44) After this re-anchoring, the state variable pEI is again inter-preted as the IMU position in the inertial world frame for subsequent standard LIO propagation. The global position is therefore kept unchanged across the reset. 
+
+c) Covariance decoupling and system reset: After the re-anchoring step, the elevator-specific states [pWEz , v WEz , a WEz ]T
+
+have completed their role and are reset to zero. To prevent the uncertainty accumulated during the non-inertial phase from contaminating subsequent conventional navigation, the corresponding cross-covariance blocks in P are zeroed, and the associated diagonal entries are reset to small prior values. This reset should be understood as the final step of the state re-parameterization: the elevator transport displacement has already been absorbed into the robot position state, while the auxiliary transport variables are removed before the estimator resumes standard inertial-frame operation. 
+
+E. Elevator Mode Manager 
+
+The elevator mode manager provides the switching signals required by the core estimator to enter and leave the non-inertial mode. The implementation is intentionally modular: only the generic interfaces Flag_Entry and Flag_Exit 
+
+are exposed to the estimator, while the underlying trigger logic can be replaced by alternative vision-based or multimodal detectors if desired. To avoid rollback while preserving the full non-inertial acceleration profile, the system should switch to the non-inertial model shortly before the elevator starts moving. 9             
+
+> Fig. 5. Entry and exit trigger managers for elevator mode switching.
+> Flag_Entry is triggered by the sharp drop of the LiDAR depth metric, and Flag_Exit is triggered by the variance pattern of the vertical motion during an elevator transition.
+
+1) Entry Trigger Based on Spatial Confinement: An eleva-tor has a very distinctive geometric convergence pattern. As the robot drives into the cabin, the surrounding space first becomes narrow in several directions; once the door closes, the last open direction is abruptly blocked as well. Based on this observation, we design an entry detector using the robust maximum depth of the LiDAR point cloud. To improve robustness against noise and dynamic occlu-sions, we use the 94th-percentile horizontal distance of all valid LiDAR points as the reference metric, denoted by dmax .The entry condition is defined as: 
+
+Fentry =
+
+(
+
+1, if dmax (t) < d th , ∀t ∈ [t0, t 0 + ∆ tdoor ]0, otherwise (45) where dth is the cabin-size threshold, set to 3.0 m in this paper, and ∆tdoor is the confirmation duration, set to 2.0 s. Only when dmax remains below dth throughout this interval do we declare that the elevator door has closed and emit 
+
+Flag_Entry , which triggers the switch to the non-inertial propagation model. 
+
+2) Exit Trigger Based on Kinematic Variance: Since exit detection allows a short confirmation delay after the elevator stops, we design the trigger directly from the motion estimate provided by LIO. As shown in Fig. 5, an elevator run typically consists of acceleration, constant-speed motion, and deceleration. We use the estimated elevator vertical velocity vWEz and compute its variance within a sliding window of length K:
+
+σ2 
+
+> vE
+
+(t) = 1
+
+K
+
+> K−1
+
+X
+
+> i=0
+
+ vWEz (t − i) − ¯vWEz (t)2 , (46) where ¯vWEz (t) is the mean elevator vertical velocity within the current sliding window: 
+
+¯vWEz (t) = 1
+
+K
+
+> K−1
+
+X
+
+> i=0
+
+vWEz (t − i). (47) The variance usually exhibits two peaks during acceleration and deceleration, with a low-variance interval in between cor-responding to approximately constant-speed motion. Based on this pattern, we use a finite-state machine to track the elevator cycle and declare the stop state once σ2 
+
+> vE
+
+(t) and vWEz (t)
+
+remain below predefined thresholds for a confirmation period after the two peaks. Once this condition is met, the finite-state machine resets and emits Flag_Exit . This signal activates the exit-update module, injects the stationary prior, and returns the robot safely to standard LIO mode with a clean state. 
+
+F. Static Initialization 
+
+At startup, Elevator-LIO performs a short static initialization stage using the first 100 IMU measurements by default, which corresponds to about 0.5 s at 200 Hz. The average accelerometer output and gyroscope bias are computed as 
+
+¯a = 1
+
+N
+
+> N
+
+X
+
+> k=1
+
+ak, bω0 = 1
+
+N
+
+> N
+
+X
+
+> k=1
+
+ωk (48) Let FW and FI denote the world and IMU frames, respec-tively. The world z-axis is defined upward, such that gW =[0 , 0, −g]T . The initial attitude is then obtained by aligning the normalized direction −¯a/∥¯a∥ with gW /∥gW ∥. After this alignment, the remaining state variables are initialized to zero, and the gravity state is assigned gW . Since gW is fixed after initialization and not updated during estimation, the state vector does not include a gravity state: 
+
+x0 = 0T (qWI )T 0T 0T bTω0 0 0 0T (49) 
+
+G. Geometry-Aware Adaptive Downsampling 
+
+To provide stable front-end observations for the estimator, Elevator-LIO adopts an adaptive downsampling strategy in-stead of using a fixed-resolution voxel grid. This design is motivated by the large scene-scale variations encountered in typical deployment, where the robot repeatedly moves between spacious areas (e.g., lobbies or corridors) and highly confined elevator cabins. Under such conditions, a fixed voxel size leads to a clear resolution mismatch: it excessively removes geometric details in narrow spaces, while retaining too many redundant points in open areas. To address this issue, we regulate the voxel size online such that the number of effective downsampled points in the current frame, denoted by Nt, remains close to a target value Ntarget .Specifically, the voxel size v is updated through a lightweight proportional feedback law: 
+
+vt+1 = vt
+
+ Nt
+
+Ntarget 
+
+ 1
+
+> α
+
+(50) where α is an empirical effective-dimension parameter. This form is motivated by the non-linear relationship be-tween point count and voxel resolution. When points are uniformly distributed in space, the number of retained points approximately scales as N ∝ v−3 for volumetric distributions and N ∝ v−2 for planar structures, while sparse LiDAR beam 10 
+
+sampling may further reduce the effective exponent. Since real scenes are typically composed of mixed geometric structures, we introduce α to capture this aggregate scaling behavior in a simple yet robust manner. In our implementation, α = 1 .2
+
+is used empirically. For robustness under abrupt viewpoint and scene changes, especially during elevator entry and exit, the updated voxel size is clamped to 
+
+vt+1 ∈ [vmin , v max ] (51) where vmin = 0 .05 m and vmax = 0 .8 m in our implementa-tion. By stabilizing the effective point count across large scene-scale changes, this adaptive strategy maintains informative observations for both IESKF updates and incremental map-ping, while avoiding unnecessary computation in open envi-ronments. 
+
+H. Mapping 
+
+As the downstream module of the state estimator, the mapping process registers valid points from the current LiDAR scan into the map once the IESKF update converges. To maintain a favorable balance between memory efficiency and nearest-neighbor search speed in large-scale multi-floor envi-ronments, we employ the incremental k-d tree (ikd-Tree) [33] as our core spatial data structure. For each downsampled LiDAR point pLj in the current scan, it is first transformed into the IMU frame and then represented in the elevator-local frame FE for local LiDAR registration: 
+
+pEj = REI
+
+ RILpLj + pIL
+
+ + pEI (52) This local representation is consistent with the point-to-plane residual used in the IESKF update and does not directly depend on the elevator transport state. For global map insertion and odometry publication, the point is further projected into the world frame FW by using the elevator’s global height estimate pWEz :
+
+pWj = REI
+
+ RILpLj + pIL
+
+ + pEI + pWEz e3 (53) where RIL and pIL denote the calibrated LiDAR-to-IMU extrinsics, and e3 = [0 , 0, 1] T is the unit vector mapping the scalar height to a 3-D displacement. The transformed point set {pWj } is then incrementally inserted into the ikd-Tree to maintain an up-to-date global map. VI. E XPERIMENTS 
+
+In this section, Elevator-LIO is evaluated on self-collected real-world elevator datasets, public inertial benchmarks, and simulation datasets. Since the main focus of this work is LiDAR–inertial localization under elevator-induced non-inertial motion, we first validate the proposed method in real-world elevator scenarios, then assess whether it preserves competitive performance in standard inertial environments. Finally, supplementary simulation experiments are conducted to analyze its sensitivity to controlled model deviations.  
+
+> Fig. 6. Synchronized handheld platform used for constructing the real-world elevator dataset. The platform records LiDAR–inertial measurements and visual context for reproducible evaluation of cross-floor elevator localization.
+
+Since existing public datasets contain few dedicated se-quences for cross-floor elevator operation, we construct a real-world elevator dataset covering Office, Dormitory, Campus, and Mall scenarios. As shown in Fig. 6, data are collected us-ing a synchronized handheld platform equipped with a Mid360 LiDAR, a Jetson Orin Nano, and an industrial camera. The platform records LiDAR–inertial data together with synchro-nized visual context, enabling reproducible evaluation under elevator travel, long vertical motion, pedestrian interference, and mirror reflections. The dataset, hardware design, and processing tools will be released publicly. The Office category includes both handheld and vehicle-mounted data acquisition, and is mainly used to evaluate robustness against additional in-cabin motion, local dynamic disturbances, and relatively complex indoor layouts. The Dor-mitory category typically involves larger floor spans and longer vertical round-trip motion, and is used to evaluate vertical con-sistency during long elevator traversals. The Campus category is characterized by long trajectories, repeated floor transitions, and large mapping ranges, making it suitable for assessing ro-bustness and global consistency in large-scale scenes. The Mall category corresponds to open public environments with denser pedestrian traffic and higher uncertainty, and is therefore used to test adaptability in challenging real-world scenarios. For conventional inertial environments, we use the Hilti 2022 and Hilti 2023 datasets, which cover representative indoor and outdoor scenes and are widely used for evaluating LiDAR–inertial odometry systems. In this work, they are mainly used to verify that Elevator-LIO preserves competitive localization performance in non-elevator scenarios. As supplementary experiments, we further use simulation datasets generated by our self-developed simulator to analyze the influence of controlled model deviations, including initial-ization errors, cabin-attitude perturbations, and time-varying gravity-axis drift. As baselines, we select Point-LIO, FAST-LIO2, VoxelMap, and LIO-SAM for comparison. These methods represent sev-eral typical LiDAR–inertial localization paradigms and pro-vide a broad reference for mainstream inertial-frame LIO methods in elevator-induced non-inertial scenarios. At the implementation level, necessary input adaptation is performed to ensure a fair comparison. Since Point-LIO and VoxelMap do not natively support the custom message format of the Mid360 sensor, we use an additional conversion node to 11                                  
+
+> TABLE II FAILURE -MODE STATISTICS IN REAL ELEVATOR SCENARIOS
+> Scenario FAST-LIO2 LIO-SAM Point-LIO Voxel-Map Elevator-LIO
+> Office 0/9/1 0/0/10 0/10/0 0/5/5 10/0/0
+> Dormitory 0/0/4 0/0/4 0/4/0 0/3/1 4/0/0
+> Campus 0/2/2 0/0/4 0/4/0 0/4/0 4/0/0
+> Mall 0/0/2 0/0/2 0/2/0 0/2/0 2/0/0 Overall 0/11/9 0/0/20 0/20/0 0/14/6 20/0/0
+> Note: Results are reported as Success /Type-I Failure (Drift) / Type-II Failure (Divergence).
+
+transform the Mid360 output into standard ROS point-cloud messages. Since the original LIO-SAM does not support a 6-axis IMU or solid-state LiDAR, we employ a community-adapted version for testing. Apart from these necessary in-terface adaptations, all baseline methods are kept as close as possible to their original configurations and intended usage. 
+
+A. Experimental Setup 
+
+Elevator-LIO is implemented in C++ and deployed on both ROS1 and ROS2. The system natively supports standard ROS point-cloud messages as well as the Livox custom message format. All real-world elevator sequences are evaluated using only a single Mid360 LiDAR, while the public benchmark datasets are tested directly using the officially released data packages. In all experiments, adaptive voxelization is enabled, with the target point number set to 20000 per second, the exponent factor set to 1.2, the minimum voxel size set to 0.05 m, the maximum voxel size set to 0.8 m, and the ikd-Tree voxel resolution set to 0.1 m. For elevator scenarios, the primary metric is the terminal vertical error, since the main concern of this work is the preservation of vertical consistency under elevator-induced non-inertial motion. Because complete trajectory-level ground truth is unavailable for the real-world sequences, we evaluate vertical consistency using same-floor revisit or stair–elevator cross-validation constraints. The terminal vertical error is defined as 
+
+ez = zend − zref , (54) where zend is the estimated terminal height and zref is the ref-erence height of the corresponding physical floor. For return-to-origin or same-floor revisit sequences, we set zref = 0 ,so the metric becomes ez = zend . In several sequences, the robot reaches the same floor through both elevator and stair routes, providing cross-validation for the estimated vertical displacement. In addition to localization accuracy, we also report the detection success rate of the elevator mode manager over elevator segments. For the very small number of sequences in which automatic state detection fails, mode switching is triggered manually to decouple estimator performance from detector failures; we analyze the causes of these detection failures later in this section. the corresponding trigger topic is also recorded in the rosbag files. Unless otherwise specified, the elevator mode manager uses the default configuration  
+
+> Fig. 7. Representative qualitative comparison in a real-world elevator sce-nario. The proposed Elevator-LIO achieves successful multi-floor localization. In contrast, Point-LIO shows a Type-I failure, where elevator motion is largely ignored and point clouds from different floors are incorrectly overlaid, while FAST-LIO2 shows a Type-II failure with strong pose inconsistency and eventual divergence.
+
+described in Section V-E, with a distance threshold of 3 m and a percentile setting of 94 For standard inertial scenarios, evaluation is conducted directly against the dataset ground truth. On these sequences, Elevator-LIO is compared with several representative LIO baselines. We slightly tune the parameters of VoxelMap to improve its performance under our evaluation settings, while all other methods are run with their default settings. All experiments are conducted on a desktop computer equipped with an Intel i5-14600KF CPU and 32 GB RAM. Real-time performance is further validated on a Jetson Orin Nano 4GB platform. 
+
+B. Performance in Non-Inertial Elevator Environments 
+
+We first evaluate the applicability of mainstream LIO meth-ods in non-inertial elevator scenarios, and the results are summarized in Table II. Owing to the lack of dedicated modeling for non-inertial environments such as elevator traver-sal, all four representative baseline methods exhibit evident failures across the tested scenarios. We categorize their failure behaviors into two types: Type-I failure, corresponding to estimation drift, and Type-II failure, corresponding to system divergence. All statistics in the table are reported in the format of Success / Type-I Failure / Type-II Failure. Type-I failure refers to an erroneously quasi-static pose es-timate during elevator traversal. When the non-inertial motion 12                                                                                                                                                              
+
+> TABLE III TERMINAL VERTICAL ERRORS OF ELEVATOR -LIO VARIANTS .
+> Scene Sequence Elevator Segs. (Detected/GT) Elev. Ratio (%) Traj. Length (m) Terminal z-error (m) No ZUPT Map Reset w/o Adapt. Full
+> Office Office1 2/2 29.2 26.4 0.386 0.096 0.010 0.002
+> Office2 2/2 14.9 50.6 1.665 0.223 -0.005 -0.002
+> Office3 2/2 3.1 274.5 0.777 0.541 -6.718 0.001
+> Office4 2/2 7.3 109.6 -3.074 0.448 0.016 -0.002
+> Office5 2/2 48.0 22.7 -1.877 0.218 2.397 0.117
+> Office6 2/2 6.1 179.3 -0.602 -0.244 ×0.006
+> Office7 3/3 44.5 41.8 -1.948 -0.206 -0.325 -0.136
+> Office8 3/3 97.4 19.1 0.337 0.212 1.632 -0.006
+> Office9 2/2 4.5 168.4 -0.131 0.160 0.862 -0.002
+> Office10 3/3 43.5 42.8 -1.877 0.032 0.031 -0.005
+> Dormitory Dormitory1 3/3 83.2 71.9 -0.003 -0.112 0.016 -0.003
+> Dormitory2 8/8 84.4 92.5 -2.310 -0.033 -1.857 -0.003
+> Dormitory3 8/8 85.9 97.5 -0.390 0.017 0.008 -0.004
+> Dormitory4 13/13 88.7 156.6 -0.172 -0.007 ×-0.007
+> Campus campus1 2/2 5.7 243.0 0.739 -0.214 0.501 -0.005
+> campus2 6/6 5.3 893.9 -0.781 -0.246 ×0.002
+> campus3 1/1 8.5 148.8 -1.124 -0.662 -0.827 -0.499
+> campus4 1/3 4.0 315.1 -0.989 -0.416 -0.002 0.002
+> Mall Mall1 6/7 66.4 70.18 -1.749 -0.105 -0.018 0.002
+> Mall2 5/5 68.9 67.45 0.738 0.158 3.230 0.002
+> Note: No ZUPT denotes the variant without the exit-time zero-state update; Map Reset clears and rebuilds the ikd-Tree after arriving at each new floor; w/o Adapt. disables the adaptive front-end and uses a fixed voxel resolution of 0.2 m; Full denotes the complete Elevator-LIO system. Bold and underlined values indicate the best and second-best absolute terminal z-errors. The symbol ×indicates that the absolute terminal z-error exceeds 10 m.
+
+is insufficient to break the LiDAR-dominant solution, conven-tional methods tend to prioritize geometric registration and fail to absorb the vertical motion information from the IMU. This trapping phenomenon is evident in the mild-acceleration Office sequences and is particularly common in Point-LIO, which strongly relies on LiDAR priors. Consequently, point clouds from different floors are incorrectly overlaid onto the same map without immediate divergence. Conversely, Type-II failure is characterized by severe IMU– LiDAR observation conflicts that incorrectly drive the state up-date, resulting in abrupt pose jumps and eventual divergence. This typically occurs under stronger non-inertial excitation, such as the higher acceleration in the Dormitory sequences that causes FAST-LIO2 to fail. Fundamentally, this reflects the inability of conventional LIO frameworks to simultaneously satisfy both inertial and geometric constraints under elevator-induced non-inertial motion. Fig. 7 presents representative qualitative comparisons of these failure modes. We then conduct a quantitative evaluation of Elevator-LIO and several ablated variants in elevator scenarios. Since this work primarily focuses on the state-estimation capability of the system under elevator-induced non-inertial motion, the terminal vertical error is adopted as the main evaluation metric, and all errors are reported in meters. In addition, we report the detection performance of the elevator mode manager by counting the number of automatically detected elevator segments over the annotated ground-truth elevator segments. The corresponding results are summarized in Table III, where the definitions of the ablated variants and table entries are provided in the table note. The ablation results show that the exit-time zero-state update is critical for suppressing vertical drift. Without this correction, accumulated height errors can reach meter scale in several sequences, whereas the full system keeps the terminal height error below 1 cm in most cases. The Map Reset variant removes the correction effect from historical-map revisits and therefore provides a more practical evaluation of the combined effect of forward non-inertial pre-diction and exit-time zero-state correction after each elevator transition. The millimeter-level terminal errors achieved by the full system should be interpreted as the combined outcome of local non-inertial estimation and historical-map alignment, rather than as evidence that sub-centimeter absolute height accuracy is maintained throughout the entire elevator traversal. The w/o Adapt. variant further demonstrates the importance of the adaptive front-end for system stability. When the adap-tive front-end is disabled and a fixed voxel resolution is used, the estimator becomes more sensitive to abrupt scene-scale changes between open areas and confined elevator cabins. As a result, the terminal vertical error increases significantly in several sequences, and some cases even exceed the valid error range. This indicates that maintaining an appropriate point-cloud resolution is critical for preserving effective geometric constraints during elevator entry, in-cabin operation, and cross-floor transitions. The tested sequences cover two dominant difficulties, as 13 
+
+Fig. 8. Representative large-scale real-world elevator sequences in the experimental dataset. This category emphasizes cross-floor mapping consistency over long trajectories in large multi-floor environments. Insets show representative elevator regions and local trajectory details. The numbers in the lower-right corners indicate the final world-frame positions of the corresponding trajectories. 14                                                                                                                     
+
+> TABLE IV ABSOLUTE TRANSLATIONAL ERRORS (RMSE, METERS )ON HILTI DATASET
+> Dataset Sequence Faster- LIO [19] LIO-SAM [15] Point-LIO [10] VoxelMap [34] FAST-LIO2 [9] Elevator-LIO (Ours) Hilti2023 Floor 0 0.016 0.046 0.011 0.017 0.023 0.024 Floor 1 0.028 ×0.025 0.058 0.008 0.017 Floor 2 0.019 0.265 0.087 0.077 0.046 0.107 Stair 0.864 ×0.173 ×0.124 1.262 Underground 1 0.019 0.080 0.041 0.068 0.031 0.013
+> Underground 2 0.167 ×0.106 0.049 0.125 0.084 Underground 3 0.117 ×0.108 0.075 0.038 0.106 Underground 4 0.022 0.161 0.060 0.036 0.034 0.019
+> Hilti2022 01 Construction Ground level 0.012 0.078 0.019 1.827 0.015 0.016 02 Construction Multilevel 0.037 1.889 0.059 ×0.026 0.033 03 Construction Stairs ××3.070 ×0.446 0.331
+> 07 Long Corridor 0.053 ×0.043 0.073 0.071 1.019 11 Lower Gallery 0.810 0.834 1.504 10.337 1.207 0.744
+> 15 Attic to Upper Gallery ××1.526 ××2.873 21 Outside Building 0.051 3.061 0.134 23.300 0.248 0.029
+> 06 Constr. Upper Level 2 0.034 0.085 0.030 1.288 0.041 0.047 14 Basement 2 0.166 33.723 0.107 0.622 0.064 0.063
+
+illustrated in Fig. 8. Dormitory and Mall sequences have high elevator ratios and mainly stress long-range vertical consistency under sustained elevator motion. In particular, the Dormitory sequences evaluate repeated floor-by-floor traversal and direct return to the starting floor, as shown in Fig. 9. For example, Dormitory4 accumulates 138.9 m of vertical travel and still returns close to the initial height. In contrast, Office and Campus sequences contain longer horizontal trajectories, repeated floor transitions, and larger mapping ranges, stressing cross-floor map consistency and robustness to additional in-cabin motion. Elevator-LIO remains stable in both categories, including handheld sequences with strong local motion distur-bances and public environments with pedestrian interference. Beyond localization accuracy, we also evaluate the per-formance of the elevator mode detector. Among the 79 an-notated elevator segments, the detector successfully identi-fies 76 segments. The occasional detection failures mainly occur in Campus4 and Mall1, where mirror reflections and multipath effects create pseudo-structures in the point cloud, causing the distance-threshold-based detector to miss some entry events. This behavior is expected for a lightweight heuristic detector, which cannot guarantee a 100% recognition rate in all extreme environments. More advanced vision-based, semantic, or learning-based detectors could further improve the robustness of elevator-mode triggering in such cases. For the sequences with missed detections, we manually publish the Flag_Entry signal to isolate the evaluation of the core estimator from the detector failure. Fig. 10 shows a representative mirrored-cabin example. 
+
+C. Performance in Standard Inertial Environments 
+
+We further evaluate Elevator-LIO on the Hilti 2022 and Hilti 2023 datasets. When the platform is outside an elevator, the elevator-related state blocks and process-noise channels are disabled, and the estimator follows the standard inertial propagation and LiDAR update pipeline. Therefore, this ex-periment examines whether the reformulated LIO subsystem retains general applicability in conventional indoor and out-door scenarios. For this evaluation, we report the absolute translational error RMSE in meters, as summarized in Table IV. The same public dataset sequences and evaluation protocol are used for all compared methods. The symbol × indicates that the corresponding method fails to complete the sequence or produces an invalid trajectory for evaluation. As shown in Table IV, Elevator-LIO remains competi-tive on standard inertial benchmarks. It achieves the best or second-best performance on several sequences, including 
+
+Underground 1 , Underground 4 , 11 Lower Gallery , 21 Outside Building , and 14 Basement 2 , indicating that the proposed mode-dependent design preserves normal LIO behavior in ordinary inertial environments. We also inspect the failure cases of the compared methods and find that narrow staircases and cross-floor transition areas are particularly challenging. For example, in 2022 exp02, VoxelMap fails at around 410 s after the platform moves from a spacious area into a narrow staircase. In the corresponding Hilti 2023 test sequence, it also fails in a narrow staircase region at around 71 s. In exp15, multiple methods fail to pass through the transition stably. These failures are mainly caused by the abrupt shrinkage of the point-cloud distribution in confined spaces, where effective geometric constraints become weaker and repetitive structures such as stair steps, handrails, and walls can introduce scan-matching ambiguities. In contrast, Elevator-LIO maintains a higher local resolu-tion in confined environments through its adaptive front-end, preserving more effective geometric constraints and improving robustness in these challenging transitions. Although Elevator-LIO is not uniformly optimal on all conventional sequences, such as Stair and 07 Long Corridor , the Hilti results suggest that the underlying LIO subsystem still maintains competitive localization accuracy in conventional scenarios, while the adaptive front-end improves robustness in confined transition areas. 
+
+D. Simulation-Based Robustness Analysis 
+
+In real-world environments, the motion state of an elevator itself is difficult to control, making it hard to systematically 15  
+
+> Fig. 9. Representative long-range vertical traversal in the Dormitory se-quences. These sequences evaluate vertical consistency during repeated floor-by-floor elevator travel and direct return to the starting floor.
+
+evaluate different types of model mismatch. We therefore use a customized elevator simulator to evaluate robustness under controlled violations of the modeling assumptions, includ-ing time-varying gravity drift, cabin-axis inclination, initial gravity misalignment, and their combined effect. The small, medium, and large perturbation levels correspond to increasing mismatch magnitudes: the gravity-drift step is set to 0.10 ◦,
+
+0.30 ◦, and 0.80 ◦; the cabin-inclination pitch is set to 0.30 ◦,
+
+1.00 ◦, and 3.00 ◦; and the initial gravity-misalignment angle is set to 0.50 ◦, 1.50 ◦, and 4.00 ◦, respectively. The combined setting applies all three perturbations simultaneously at the corresponding level. As shown in Table V, larger perturbations lead to higher errors, but the error remains bounded under all tested settings. This behavior demonstrates the robustness of the proposed                      
+
+> Fig. 10. A representative failure case of elevator-entry detection in a mirrored cabin. Reflection and multipath effects generate pseudo structures in the point cloud, making a single elevator appear as multiple adjacent cabins, which may cause the distance-threshold-based detector to fail in rare cases. Second-order and even higher-order reflected structures can also be observed in the background. TABLE V RETURN -TO -ORIGIN HEIGHT ERROR eret =|∆zest −∆zgt |UNDER SIMULATED PERTURBATIONS . A LL VALUES ARE IN METERS .
+> Perturbation Type Small Medium Large
+> Time-Varying Gravity Drift 0.012 0.036 0.118 Cabin Inclination Error 0.009 0.028 0.094 Initial Gravity Misalignment 0.015 0.051 0.167 Combined Perturbation 0.024 0.083 0.312
+
+system: even when the real elevator motion slightly deviates from the basic modeling assumptions, the system can still operate stably without divergence. VII. C ONCLUSION 
+
+In this paper, we proposed Elevator-LIO, a robust LiDAR-inertial odometry framework specifically designed to tackle the localization challenges in the typical non-inertial envi-ronment of an operating elevator. By explicitly decoupling the absolute transport motion of the elevator from the rel-ative motion of the robot within the state estimation, and incorporating a zero-state update (including zero-velocity and zero-acceleration constraints) mechanism tailored to the ”stop-and-go” kinematic characteristics of elevators, the proposed system effectively overcomes the drift and divergence issues caused by dynamic model mismatch in conventional LIO under non-inertial frames. Furthermore, a feedback-driven adaptive downsampling strategy ensures the stability of front-end geometric constraints during the drastic spatial scale transitions between open floors and confined elevator cabins. Extensive experiments on 20 real-world sequences covering various challenging conditions, alongside comprehensive sim-ulation evaluations, demonstrate that Elevator-LIO maintains continuous and highly consistent multi-floor localization in scenarios where mainstream baseline methods fail. Despite these promising results, several limitations remain. The current elevator state detector mainly relies on LiDAR-based geometric confinement cues, and may therefore miss detections in non-standard elevators, such as fully mirrored, transparent, or large freight cabins. Future research could integrate visual semantics, building-side IoT signals, or floor-16 
+
+plan priors to build a more generalizable multimodal state-management module. In addition, the current formulation mainly models elevator-induced vertical translation, while rotational and lateral distur-bances are treated as negligible. Extending this framework to more general moving non-inertial carriers, such as subways, buses, ships, and aircraft, is a promising direction for ro-bust localization in real-world moving-base environments. As Elevator-LIO provides a reliable odometry module for cross-floor elevator traversal, integrating it with place recognition and factor-graph optimization back-ends could further enable practical long-term multi-floor navigation. Code, datasets, and the simulator will be released to the community to facilitate further research in non-inertial robotics localization. REFERENCES [1] T. Qin, P. Li, and S. Shen, “VINS-Mono: A robust and versatile monoc-ular visual-inertial state estimator,” IEEE Transactions on Robotics ,vol. 34, no. 4, pp. 1004–1020, 2018. [2] C. Campos, R. Elvira, J. J. G´ omez Rodr´ ıguez, J. M. M. Montiel, and J. D. Tard´ os, “ORB-SLAM3: An accurate open-source library for visual, visual-inertial, and multi-map SLAM,” IEEE Transactions on Robotics ,vol. 37, no. 6, pp. 1874–1890, 2021. [3] Z. Teed and J. Deng, “DROID-SLAM: Deep visual SLAM for monoc-ular, stereo, and RGB-D cameras,” in Advances in Neural Information Processing Systems , 2021. [4] C. Forster, Z. Zhang, M. Gassner, M. Werlberger, and D. Scaramuzza, “SVO: Semidirect visual odometry for monocular and multicamera systems,” IEEE Transactions on Robotics , vol. 33, no. 2, pp. 249–265, 2017. [5] J. Engel, V. Koltun, and D. Cremers, “Direct sparse odometry,” IEEE Transactions on Pattern Analysis and Machine Intelligence , vol. 40, no. 3, pp. 611–625, 2017. [6] T. Shan and B. Englot, “LeGO-LOAM: Lightweight and ground-optimized LiDAR odometry and mapping on variable terrain,” in 2018 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) . IEEE, 2018, pp. 4758–4765. [7] B. Zhou, F. Gao, L. Wang, C. Liu, and S. Shen, “Robust and effi-cient quadrotor trajectory generation for fast autonomous flight,” IEEE Robotics and Automation Letters , vol. 4, no. 4, pp. 3529–3536, 2019. [8] W. Xu and F. Zhang, “FAST-LIO: A fast, robust LiDAR-Inertial odom-etry package by tightly-coupled iterative Kalman filter,” IEEE Robotics and Automation Letters , vol. 6, no. 2, pp. 3317–3324, 2021. [9] W. Xu, Y. Cai, D. He, J. Lin, and F. Zhang, “FAST-LIO2: Fast direct LiDAR-Inertial odometry,” IEEE Transactions on Robotics , vol. 38, no. 4, pp. 2053–2073, 2022. [10] D. He, W. Xu, N. Chen, F. Kong, C. Yuan, and F. Zhang, “Point-LIO: Robust high-bandwidth light detection and ranging inertial odometry,” 
+
+Advanced Intelligent Systems , vol. 5, no. 7, p. 2200459, 2023. [11] Z. Zhao, J. Zhao, and Y. Lou, “Autonomous operation of elevator buttons for multi-floor navigation,” in Proceedings of 2020 Chinese Intelligent Systems Conference . Springer, 2020, pp. 161–170. [12] D. Jung, C. Kim, J.-K. Cho, and S.-W. Kim, “MuNES: Multifloor navi-gation including elevators and stairs,” arXiv preprint arXiv:2402.04535, 2024. [13] D. Troniak, J. Sattar, A. Gupta, J. J. Little, W. Chan, E. Calisgan, E. Croft, and M. Van der Loos, “Charlie rides the elevator: Integrating vision, navigation and manipulation towards multi-floor robot locomo-tion,” in 2013 International Conference on Computer and Robot Vision .IEEE, 2013, pp. 1–8. [14] H. Ye, Y. Chen, and M. Liu, “Tightly coupled 3d LiDAR inertial odometry and mapping,” in 2019 IEEE International Conference on Robotics and Automation (ICRA) , 2019. [15] T. Shan, B. Englot, D. Meyers, W. Wang, C. Ratti, and D. Rus, “LIO-SAM: Tightly-coupled LiDAR inertial odometry via smoothing and mapping,” in 2020 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) , 2020, pp. 5135–5142. [16] K. Li, M. Li, and U. D. Hanebeck, “Towards high-performance solid-state-LiDAR-inertial odometry and mapping,” IEEE Robotics and Au-tomation Letters , vol. 6, no. 3, pp. 5167–5174, 2021. [17] K. Chen, R. Nemiroff, and B. T. Lopez, “Direct LiDAR-Inertial odome-try: Lightweight LIO with continuous-time motion correction,” in 2023 IEEE International Conference on Robotics and Automation (ICRA) ,2023, pp. 3980–3986. [18] Y. Wu, T. Guadagnino, L. Wiesmann, L. Klingbeil, C. Stachniss, and H. Kuhlmann, “LIO-EKF: High frequency LiDAR-inertial odometry using extended Kalman filters,” in 2024 IEEE International Conference on Robotics and Automation (ICRA) , 2024. [19] C. Bai, T. Xiao, Y. Chen, H. Wang, F. Zhang, and X. Gao, “Faster-LIO: Lightweight tightly coupled LiDAR-Inertial odometry using parallel sparse incremental voxels,” IEEE Robotics and Automation Letters ,vol. 7, no. 2, pp. 4861–4868, 2022. [20] Y. Yuan, C. Wu, Y. You, X. Kong, Y. Zhang, and Q. Li, “VoxelMap++: Mergeable voxel mapping method for online LiDAR(-Inertial) odome-try,” arXiv preprint arXiv:2308.02799, 2023. [21] X. Xie, R. Geng, J. Ma, and B. Zhou, “AKF-LIO: LiDAR-inertial odometry with gaussian map by adaptive Kalman filter,” in 2025 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) . IEEE, 2025, pp. 1274–1281. [22] Y. Zhang, Y. Tian, W. Wang, G. Yang, Z. Li, F. Jing, and M. Tan, “RI-LIO: Reflectivity image assisted tightly-coupled LiDAR-inertial odometry,” IEEE Robotics and Automation Letters , vol. 8, no. 3, pp. 1802–1809, 2023. [23] P. Pfreundschuh, H. Oleynikova, C. Cadena, R. Siegwart, and O. Ander-sson, “COIN-LIO: Complementary intensity-augmented LiDAR inertial odometry,” in 2024 IEEE International Conference on Robotics and Automation (ICRA) . IEEE, 2024, pp. 1730–1737. [24] C. Noh, W. Yang, M. Jung, S. Jung, and A. Kim, “GaRLIO: Gravity enhanced radar-LiDAR-inertial odometry,” in 2025 IEEE International Conference on Robotics and Automation (ICRA) , Atlanta, GA, USA, May 2025. [25] J. Yin, A. Li, W. Xi, W. Yu, and D. Zou, “Ground-Fusion: A low-cost ground SLAM system robust to corner cases,” arXiv preprint arXiv:2402.14308, 2024. [26] W. Lee, K. Eckenhoff, Y. Yang, P. Geneva, and G. Huang, “Visual-inertial-wheel odometry with online calibration,” in 2020 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) ,2020, pp. 4559–4566. [27] I. Skog, J.-O. Nilsson, P. H¨ andel, and J. Rantakokko, “Zero-velocity detection—an algorithm evaluation,” IEEE Transactions on Biomedical Engineering , vol. 57, no. 11, pp. 2657–2666, 2010. [28] D. Wisth, M. Camurri, and M. Fallon, “VILENS: Visual, inertial, Li-DAR, and leg odometry for all-terrain legged robots,” IEEE Transactions on Robotics , vol. 39, no. 1, pp. 309–326, 2023. [29] Y. Sun, R. Qiao, X. Ma, and J. Wang, “Leg-KILO: Legged kinematic-inertial-LiDAR odometry with contact-aware pseudo-observations,” 
+
+IEEE Robotics and Automation Letters , vol. 9, no. 2, pp. 1221–1228, 2024. [30] Q. Zhao, M. Li, Y. Shi, X. Chen, Z. Yu, L. Han, Z. Fu, J. Zhang, C. Li, Y. Zhang, and Q. Huang, “LIKO: LiDAR, inertial, and kinematic odometry for bipedal robots,” arXiv preprint arXiv:2404.18047, 2024. [31] H. Zhang, L. Du, S. Bao, J. Yuan, and S. Ma, “LVIO-Fusion: Tightly-coupled LiDAR-visual-inertial odometry and mapping in degenerate environments,” IEEE Robotics and Automation Letters , vol. 9, no. 4, pp. 3783–3790, 2024. [32] H. Wang, X. Zheng, H. Wang, Y. Tao, B. Kong, and Z. Li, “AD-LIO: Adaptive voxel LiDAR-Inertial odometry based on scene degradation factor,” IEEE Internet of Things Journal , 2026. [33] Y. Cai, W. Xu, and F. Zhang, “ikd-Tree: An incremental kd tree for robotic applications,” arXiv preprint arXiv:2102.10808, 2021. [34] C. Yuan, W. Xu, X. Liu, X. Hong, and F. Zhang, “Efficient and prob-abilistic adaptive voxel mapping for accurate online LiDAR odometry,” 
+
+IEEE Robotics and Automation Letters , vol. 7, no. 3, pp. 8518–8525, 2022.

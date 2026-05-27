@@ -1,0 +1,86 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.24585v1/fig-001.webp",
+      "caption": "Fig. 3 Training and Validation Losses. Mean and per-head training (solid black) and validation (dashed red) losses over 10 epochs.",
+      "page": 11,
+      "index": 1,
+      "width": 753,
+      "height": 359
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24585v1/fig-002.webp",
+      "caption": "Fig. 2 Architecture and Training Flow. Input tokens are embedded and passed through a shared backbone that branches into three discount-specific heads, each producing a successor representation prediction. The Residual Block, the main building unit of both backbone and heads, is illustrated top-left. Training targets are computed via a λ-return formulation that bootstraps from the one-hot encodings of all future tokens and a frozen EMA target network, which maintains a slowly updating copy of the live network weights (lock symbols indicate no gradient flow). The model is optimized by minimizing the KL divergence between predictions and targets, summed across all heads. At inference, the true Successor Representation is recovered by a simple rescaling.",
+      "page": 7,
+      "index": 2,
+      "width": 731,
+      "height": 599
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24585v1/fig-003.webp",
+      "caption": "Fig. 10 Clustering quality metrics (ARI and NMI) across SR configurations for the extended set of POS tags. (a) ARI (left) and NMI (right) as a function of the SR decay parameter γ, evaluated on the extended POS tag set. Trends are shown for varying cluster granularities (K), comparing KMeans (solid lines) and BGM (dashed lines). (b) ARI and NMI as a function of cluster count K at fixed γ = 0.2, illustrating how cluster resolution affects the recovery of syntactic structure across the extended vocabulary.",
+      "page": 22,
+      "index": 3,
+      "width": 752,
+      "height": 485
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24585v1/fig-004.webp",
+      "caption": "Fig. 5 Unsupervised Clustering of Successor Representations and Connectivity Structure (NVA, k=3). To assess the geometric structure of the main syntactic categories in embedding space, SRs’ with γ = 0.2 of the 200 most frequent tokens were sampled from each of three part-ofspeech categories (nouns, verbs, and adjectives), yielding a balanced dataset of 600 tokens. a) UMAP projections of token embeddings, colored by KMeans cluster assignment (left), Bayesian Gaussian Mixture (BGM) cluster assignment (center), and ground-truth Part-of-Speech (POS) tags (right), enabling direct visual comparison between unsupervised cluster solutions and known syntactic categories. b) Cluster purity heatmaps for KMeans clusters, showing the raw POS tag frequency per cluster (left) and the fractional POS tag composition per cluster (right), quantifying the degree to which each cluster captures a coherent syntactic category. c) Directed inter-cluster successor representation (SR) connectivity network. Nodes represent KMeans clusters and are colored according to their majority POS tag; directed edges indicate the magnitude of SR connectivity from source to target cluster, with edge thickness proportional to connection strength. d) SR connectivity matrix corresponding to the network in (c). Rows denote source clusters and columns denote target clusters; each entry reports the fraction of total directed SR connectivity from the source to the target cluster.",
+      "page": 14,
+      "index": 4,
+      "width": 750,
+      "height": 839
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24585v1/fig-005.webp",
+      "caption": "Fig. 8 Clustering of Successor Representations (full, k = 13). SRs for γ = 0.2 were extracted for up to 200 of the most frequent tokens per part-of-speech category across 13 categories, yielding a dataset of 1377 tokens in total. (a) UMAP projections of full vocabulary token embeddings, colored by KMeans cluster assignment (left) and POS tags (right). (b) Cluster purity heatmaps evaluating the alignment between the 13 KMeans clusters and POS categories.",
+      "page": 18,
+      "index": 5,
+      "width": 750,
+      "height": 724
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24585v1/fig-006.webp",
+      "caption": "Fig. 4 Emergence of Syntactic Structure in SR Geometry. UMAP projections of SR embeddings for the untrained model (left) and after training (epoch 10, right), colored by ground-truth POS tag. Prior to training, embeddings form a structureless cloud with no systematic POS organisation. a) NVA subset (NOUN, VERB, ADJ): after training, embeddings decompose into three spatially separated regions corresponding to the three POS categories. b Extended vocabulary (13 POS categories): after training, most categories converge into a central region with emergent substructure, while a subset project as isolated peripheral strands; numerals show the most distinct separation.",
+      "page": 13,
+      "index": 6,
+      "width": 752,
+      "height": 602
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24585v1/fig-007.webp",
+      "caption": "Fig. 7 Clustering quality metrics (ARI and NMI) across SR configurations for the NVA subset. ARI and NMI measure the agreement between a clustering solution and the ground-truth POS labels, correcting for chance and label permutation respectively. (a) ARI (left) and NMI (right) as a function of the SR scale parameter γ, evaluated on the NVA (Noun-Verb-Adjective) subset. Trends are shown for varying cluster granularities (K), comparing KMeans (solid lines) and BGM (dashed lines). (b) ARI and NMI as a function of cluster count K at fixed γ = 0.2, illustrating how cluster resolution affects the recovery of prescribed syntactic structure from the restricted NVA vocabulary.",
+      "page": 17,
+      "index": 7,
+      "width": 753,
+      "height": 485
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24585v1/fig-008.webp",
+      "caption": "Fig. 9 Successor representation connectivity within numerical and temporal cluster subnetworks. (a) Directed SR subnetwork restricted to a selection of numerical and temporal clusters. Nodes represent individual KMeans clusters colored by their majority POS tag; directed edges represent inter-cluster transition strengths. (b) SR connectivity matrix corresponding to the subnetwork in (a). The final column (Max External) reports the maximum connectivity from each source cluster to any cluster outside the restricted subset.",
+      "page": 20,
+      "index": 8,
+      "width": 752,
+      "height": 860
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24585v1/fig-009.webp",
+      "caption": "Fig. 1 Figure: TD learning targets for successor representations. 1-Step TD (blue), n-Step TD shown for n = 4 (teal), and TD(λ) (gold) differ in how many future token positions contribute discounted features before bootstrapping and how the individual steps are weighted. They range from a single step to an infinite exponentially-weighted horizon.",
+      "page": 5,
+      "index": 9,
+      "width": 750,
+      "height": 586
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24585v1/fig-010.webp",
+      "caption": "Fig. 6 Unsupervised Clustering of Successor Representations (NVA, k=30). SRs for γ = 0.2 were extracted for a balanced sample of the 200 most frequent tokens per part-of-speech category (nouns, verbs, and adjectives), yielding a dataset of 600 tokens in total. (a) UMAP projections of token embeddings, colored by KMeans cluster assignment (left), BGM cluster assignment (center), and ground-truth POS tags (right). Clusters are aligned across algorithms by maximizing cluster overlap. They receive a base color for their joint majority POS tag, with distinct shades differentiating individual clusters within the same syntactic category to facilitate comparison. (b) Cluster purity heatmaps evaluating the alignment between KMeans clusters and POS categories. The left heatmap shows the raw POS tag frequency across the 30 clusters, and the right heatmap shows the fractional purity, i.e. the proportion of each POS category assigned to each cluster, illustrating the degree of syntactic specialization achieved at higher cluster granularity (K = 30).",
+      "page": 16,
+      "index": 10,
+      "width": 751,
+      "height": 894
+    }
+  ]
+}

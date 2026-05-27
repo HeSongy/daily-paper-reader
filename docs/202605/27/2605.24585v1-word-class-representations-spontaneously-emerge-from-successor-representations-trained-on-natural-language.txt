@@ -1,0 +1,1629 @@
+Title: Word Class Representations Spontaneously Emerge from Successor Representations Trained on Natural Language
+
+URL Source: https://arxiv.org/pdf/2605.24585v1
+
+Published Time: Tue, 26 May 2026 00:44:36 GMT
+
+Number of Pages: 48
+
+Markdown Content:
+# Word Class Representations Spontaneously Emerge from Successor Representations Trained on Natural Language 
+
+## Mathis Immertreu 1,2* , Achim Schilling 2, Thomas Kinfe 2,Patrick Krauss 1,2 
+
+1* Cognitive Computational Neuroscience Group, Friedrich-Alexander-Universit¨ at Erlangen–N¨ urnberg (FAU), Germany. 
+
+2* Mannheim Center for Neuromodulation and Neuroprosthetics (MCNN), University Hospital Mannheim, University Heidelberg, Germany. 
+
+Abstract 
+
+Language models are typically trained to predict the next token in a sequence. Here, we explore an alternative predictive principle derived from reinforcement learning: Successor Representations, which model not the immediate next state but the expected discounted distribution of future states. We transfer this frame-work to natural language and train neural networks to predict, for each word, the distribution of words expected to follow across multiple temporal horizons. In contrast to conventional next-token prediction, this objective learns representa-tions of the long-range transition structure of language. We train a deep residual neural network on WikiText-103 (103 million tokens, 20,000-word vocabulary). The model predicts successor representations at multiple predictive horizons and is optimized by treating SR targets as probability distributions using KL diver-gence rather than direct regression. We show that linguistic structure emerges spontaneously from this predictive objective without explicit supervision or anno-tation of linguistic categories. After training, the representation space develops a clear geometric organization with respect to part-of-speech (POS) categories: ini-tially unstructured representations reorganize into separated regions, with nouns, verbs, and adjectives showing particularly strong separation and recoverability by unsupervised clustering. Cluster agreement with ground-truth POS labels is highest for short predictive horizons and decreases for longer horizons, suggesting a shift from local syntactic regularities toward broader contextual and semantic organization. At finer clustering resolutions, additional interpretable lexical sub-structure emerges. Adjectives decompose into subclasses including scalar, color, 
+
+1 
+
+> arXiv:2605.24585v1 [cs.CL] 23 May 2026 and quantificational modifiers; verbs organize into motion, communication, and outcome-related groups; nouns separate into domains such as temporal expres-sions, measurement units, and media-related concepts. These findings suggest that predictive successor dynamics recover not only broad syntactic categories but also functional and construction-like organization. Overall, our results argue that syntactic categories need not be explicitly encoded or supervised but may emerge as a consequence of predictive sequence learning. More broadly, this work provides, to our knowledge, the first systematic application of successor rep-resentations to natural language and establishes a conceptual bridge between reinforcement learning, linguistics, and cognitive neuroscience.
+> Keywords: Successor Representations, Natural Language Processing, Emergent Linguistic Structure, Part-of-Speech Representations, Representation Learning, Reinforcement Learning
+
+# 1 Introduction 
+
+Modern language models have achieved remarkable success by learning to predict the next token in a sequence. Across architectures ranging from recurrent neural networks to transformers, this predictive objective has become the dominant paradigm for repre-sentation learning in natural language processing. Beyond their practical performance, such models have also become increasingly relevant as computational models of cog-nition and language processing, as they often develop internal structures that align with linguistic and neural phenomena despite receiving only weak supervision from raw text. A recurring observation across machine learning and cognitive science is that struc-tured representations can emerge spontaneously from predictive learning objectives. Neural language models have been shown to develop internal representations related to syntax, semantics, and hierarchical linguistic structure without explicit symbolic encoding of these categories. This raises a broader question: to what extent are linguis-tic categories intrinsic components of language, and to what extent do they emerge as efficient predictive abstractions over sequential structure? Most existing language models formulate prediction as a local problem: given a context, predict the immediate next token. While this objective has proven highly effective, it emphasizes short-range dependencies and does not explicitly represent how future states unfold over extended horizons. In contrast, reinforcement learning offers an alternative predictive framework through Successor Representations (SRs). Originally introduced by Dayan, successor representations decompose prediction into environmental dynamics and reward structure by encoding the expected discounted occupancy of future states under a policy. Rather than predicting what comes next, SRs model what is expected to occur in the future and how often. Although successor representations have been extensively studied in reinforcement learning and have received increasing attention in computational neuroscience as mod-els of predictive coding, planning, and hippocampal representations, their application to natural language remains largely unexplored. Language can itself be viewed as a 2sequential environment in which words define transitions through a high-dimensional state space. From this perspective, the successor representation provides a natural way to describe linguistic structure as the long-term geometry of future transitions rather than immediate co-occurrence. In this work, we transfer successor representations to natural language and investi-gate whether linguistic structure emerges from this predictive objective alone. Instead of training a model to predict the next token, we train neural networks to predict the expected discounted distribution of future words across multiple temporal hori-zons. Concretely, we train a deep residual neural network on WikiText-103 to learn successor representations as probability distributions over future token occupancy. Our central finding is that structured linguistic organization emerges sponta-neously without explicit supervision. After training, the learned representation space develops a pronounced geometric organization with respect to part-of-speech (POS) categories: nouns, verbs, and adjectives become recoverable through unsupervised clustering despite the absence of linguistic labels during training. Increasing cluster granularity reveals additional interpretable substructure, including semantically and functionally coherent lexical subclasses. Furthermore, we observe that the temporal prediction horizon systematically shapes representation geometry: short horizons pre-serve local syntactic regularities most strongly, whereas longer horizons increasingly integrate broader contextual and semantic information. These findings suggest that syntactic categories need not be explicitly encoded or supervised but may arise as emergent consequences of predictive sequence learn-ing. More broadly, our work establishes a conceptual bridge between reinforcement learning, computational linguistics, and cognitive neuroscience and, to our knowl-edge, provides the first systematic application of successor representations to natural language. The main contributions of this work are threefold: First, we introduce successor representations as a predictive framework for natural language modeling. Second, we demonstrate that word class representations emerge spontaneously from successor-based learning without linguistic supervision. Finally, we show that varying predictive horizons reveal a transition from local syntactic organization to broader contextual and semantic structure. 
+
+# 2 Methods 
+
+## 2.1 Successor Representation 
+
+In reinforcement learning, value-based methods such as Q-learning estimate long-term returns by propagating reward information through the Bellman equation [1, 2]. An alternative perspective, introduced by Dayan [3], is to decompose value learning into two components: (i) a predictive model of the environment’s dynamics, and (ii) a reward model. This idea is formalized in the Successor representation (SR), which captures how future states are expected to unfold under a fixed policy, independently of the particular reward function. For a Markov decision process over states s ∈ S under a fixed policy π, the SR 
+
+M (s, s ′) is defined as the expected discounted future occupancy of state s′ when 3starting from s:
+
+M (s, s ′) = Eπ
+
+" ∞X
+
+> t=0
+
+γtI(st+1 = s′) s0 = s
+
+#
+
+, (1) where γ ∈ [0 , 1] is a discount factor and I(·) denotes the indicator function. Intuitively, 
+
+M (s, s ′) quantifies how often (in a discounted sense) the agent is expected to arrive at state s′ in the future when starting from s, thereby encoding the predictive structure of the environment independently of any specific reward function. Thus, the discount factor γ controls the time horizon our SR takes into account. We adopt the arrival SR formulation, as predicting occupancy of future states from the next state onwards is more natural as the current state is already observed and carries no predictive value. This representation yields a simple linear factorization of the value function. For a state-dependent reward function r(s′), the value function can be written as 
+
+v(s) = X
+
+> s′
+
+M (s, s ′) r(s′). (2) Unlike Q-learning, which directly bootstraps on observed rewards, the SR separates dynamics (captured by M ) from rewards (captured by r), enabling efficient transfer across tasks that share the same transition structure but differ in their reward func-tions [4, 5]. This idea can be extended to successor features which predicts feature representation of states instead of pure states [6]. 
+
+## 2.2 Successor Representation Updates 
+
+In practice, the dynamics of the environment are typically unknown, making it impos-sible to compute the successor representation analytically. Moreover, for large or continuous state spaces, we cannot maintain tabular representations and must resort to function approximators such as neural networks. These constraints necessitate a sample-based learning approach. The SR can be learned via temporal difference (TD) learning [7], similar to the classical TD learning algorithm [1]. Let ϕ(st) denote the feature representation (e.g., a one-hot vector encoding which token is observed) of the state at time t, and let α
+
+represent the learning rate. The simplest TD learning is done via a 1-step Bellman update. This method uses bootstrapping, where the successor representation estimate ˆM (st, :) is updated based on the feature observation of the next state ϕ(st+1 ) combined with the agent’s own current estimate of the next state’s successor representation ˆM (st+1 , :), rather than waiting for complete trajectories: ˆM (st, :) ← ˆM (st, :) + α
+
+
+
+ϕ(st+1 ) + γ ˆM (st+1 , :) 
+
+| {z }
+
+> Target
+
+− ˆM (st, :) 
+
+
+
+(3) However, certain domains such as natural language are inherently non-Markovian. To reasonably model dependencies in such environments, the algorithm is extended to n-step updates. Instead of relying solely on the immediate next state, the n-step update 4t t+1 t+2 t+3 t+4 t+5 t+6 t+7        
+
+> 0.0
+> 0.5
+> 1.0
+> Feature Weight (  k 1)
+> tt+1 t+2 t+3 t+4 t+5 t+6 t+7
+> bootstrap
+> = 0.8
+
+1-Step TD t t + 1 + t + 1                 
+
+> tt+1 t+2 t+3 t+4 t+5 t+6 t+7
+> 0.0
+> 0.5
+> 1.0
+> Feature Weight (  k 1)
+> tt+1 t+2 t+3 t+4 t+5 t+6 t+7
+> bootstrap
+> = 0.8, n= 4
+
+4-Step TD tnk = 1      
+
+> k1t+k
+
++ n t + n       
+
+> tt+1 t+2 t+3 t+4 t+5 t+6 t+7
+
+Future Token Position         
+
+> 0.0
+> 0.5
+> 1.0
+> Feature Weight ((  )k 1)
+> tt+1 t+2 t+3 t+4 t+5 t+6 t+7
+> = 0.8, = 0.9
+
+TD( ) Gt = t + 1 + [(1 ) t + 1 + Gt + 1 ]Fig. 1 Figure: TD learning targets for successor representations. 1-Step TD (blue), n-Step TD shown for n = 4 (teal), and TD( λ) (gold) differ in how many future token positions contribute discounted features before bootstrapping and how the individual steps are weighted. They range from a single step to an infinite exponentially-weighted horizon. 
+
+accumulates discounted features over a horizon of n steps and bootstraps from the value at state st+n:ˆGt:t+n =
+
+n−1X
+
+k=0 
+
+γkϕ(st+k+1 ) + γn ˆM (st+n, :) (4) ˆM (st, :) ← ˆM (st, :) + α
+
+ ˆGt:t+n − ˆM (st, :) 
+
+
+
+(5) This approach can be further generalized to TD( λ), which provides a smooth inter-polation between 1-step bootstrapping ( λ = 0) and full Monte Carlo returns ( λ = 1). Since we operate on fixed sequences rather than a stream of online interactions, we compute the λ-return via a backward pass, initialised at the final position as ˆGT −2 = ϕ(sT −1) + γ ˆM (sT −1, :) , (6) 5and recursed backwards as ˆGt = ϕ(st+1 ) + γ
+
+
+
+(1 − λ) ˆM (st+1 , :) + λ ˆGt+1 
+
+
+
+, (7) with λ = 0 recovering the 1-step target and λ = 1 the full Monte Carlo return. An example of how future states are included and weighted before bootstrapping is illustrated in Figure 9. 
+
+## 2.3 Architecture 
+
+Our SR model follows the broad residual network paradigm [8, 9], adapted to a fully-connected setting with a shared trunk and separate output heads per discount factor 
+
+γ predicting the SR based on a single input token. All components are built from a common building block, the ResidualBlock , which applies a two-layer MLP with pre-normalisation and an additive skip connection. Given an input vector x ∈ R512 , each block computes 
+
+x′ = x + W2 GELU( W1 LayerNorm( x) + b1) + b2, (8) where W1, W 2 ∈ R512 ×512 and b1, b2 ∈ R512 are learned weight matrices and bias vectors, respectively. Applying LayerNorm to the input before the first linear trans-formation (pre-norm) yields more stable gradients in deep networks compared to post-norm variants [10], and GELU is preferred over ReLU for its smoother gradi-ent signal [11]. No nonlinearity is applied to the block output prior to the residual addition, preserving unobstructed gradient flow through all layers. The full model begins by mapping each token ID t ∈ { 0, . . . , 19 ,999 } to a learnable 512-dimensional dense vector via an embedding table E ∈ R20000 ×512 . The embedded sequence then passes through a shared backbone of eight ResidualBlocks, yielding a context representation H ∈ RB×80 ×512 that is consumed by all prediction heads. Three independent heads are attached to this shared representation, one for each discount factor γ ∈ { 0.2, 0.5, 0.8}. Each head consists of seven further ResidualBlocks followed by a linear projection Wout ∈ R512 ×20000 as the eighth layer, producing raw logits over the full vocabulary, 
+
+ψγ = Wout BlockStack γ (H) ∈ RB×80 ×20000 . (9) The heads share no parameters with one another, allowing each to specialise for its temporal horizon. This mirrors the increasing scale of place fields along the hippocampal longitudinal axis [4]. To stabilise training, a frozen shadow copy of the entire model is maintained alongside the actively trained parameters. After every gradient update, the shadow parameters θema are updated via 
+
+θema ← α θ ema + (1 − α) θactive , (10) 6xt + 1 : T 1                                   
+
+> Input Token IDs
+> xt,xt+ 1 ,,xT1{0, ,V1}
+> t+ 1 : T1
+> one_hot( xt+ 1 : T1)
+> Embedding (Vd)
+> Backbone
+> 8 × ResidualBlock( d)
+> Head =0.2
+> 7 × ResidualBlock( d)
+> + Linear( dV)
+> + softmax
+> Head =0.5
+> 7 × ResidualBlock( d)
+> + Linear( dV)
+> + softmax
+> Head =0.8
+> 7 × ResidualBlock( d)
+> + Linear( dV)
+> + softmax
+> 0.2 0.5 0.8
+> KL( 0.2 G0.2 )KL( 0.5 G0.5 )KL( 0.8 G0.8 )
+> =KL( G)Inference:
+
+SR = (1 ) 1  
+
+> LayerNorm (d)
+> Linear (dd)
+> GELU
+> Linear (dd)
+
++    
+
+> ema ema + (1 )live
+
+SR ResNet Training Graph 
+
+> xt
+> live
+
+Residual Block   
+
+> xd
+> xout d
+
+EMA Target Network 
+
+> ema
+
+-Return Target G                          
+
+> Boundary (t=T2) :
+> GT2= (1 )T1+ema, T 1
+> General (t<T2) :
+> Gt= (1 )t+ 1
+> +[(1 )ema, t + 1 +Gt+ 1 ]
+
+Fig. 2 Architecture and Training Flow. Input tokens are embedded and passed through a shared backbone that branches into three discount-specific heads, each producing a successor representation prediction. The Residual Block, the main building unit of both backbone and heads, is illustrated top-left. Training targets are computed via a λ-return formulation that bootstraps from the one-hot encodings of all future tokens and a frozen EMA target network, which maintains a slowly updating copy of the live network weights (lock symbols indicate no gradient flow). The model is optimized by minimizing the KL divergence between predictions and targets, summed across all heads. At inference, the true Successor Representation is recovered by a simple rescaling. 
+
+and it is these slowly-moving parameters that supply the bootstrap targets for the TD loss. This prevents the moving-target instability that arises when the model simultaneously updates its own bootstrap targets, analogous to the target network in reinforcement learning (RL) [12, 13]. The architecture is illustrated in Figure 2. 
+
+## 2.4 Training 
+
+We train the SR model on a lowercased version of WikiText-103 [14], a medium-sized corpus (103M tokens) of high-quality Wikipedia articles, using the spaCy tokenizer [15]. The vocabulary consists of the 20,000 most frequent tokens; all remain-ing words are mapped to diversified unknown tags derived from their part-of-speech 7category (e.g., UNK NOUN , UNK VERB ), preserving coarse syntactic structure even for out-of-vocabulary words similar to the ideas of [16]. Rather than a standard mean squared error (MSE) loss, we used Kullback-Leibler (KL) divergence [17], by re-framing the learning objective as matching a probability distribution over future states. Since the unscaled SR sums to 11−γ , we scale the one-hot feature ϕ(st+1 ) by (1 − γ) and replace the raw bootstrap with softmax( ψema ), so that the resulting λ-return target Gt sums to (1 − γ) + γ = 1 and constitutes a valid distribution over the vocabulary. The model outputs are treated as logits, converted to log-probabilities via log softmax , and trained against this normalized target, 
+
+Lγ = DKL 
+
+
+
+Gγ softmax( ψγ )
+
+
+
+, (11) with the total loss L = P 
+
+> γ
+
+Lγ summing over all three heads. The final SR is recov-ered by applying softmax to the logits and rescaling by 11−γ , restoring the expected discounted occupancy interpretation. This formulation is more stable than MSE for large vocabularies, where target magnitudes can vary drastically, and encourages the SR to focus on the relative structure of future visitations rather than their absolute magnitude. Gradients are clipped to unit norm before each optimizer step, and the model is trained with a cosine learning rate schedule with linear warm-up over the first 1,000 steps; all hyperparameters are reported in Table 1 and the training flow is illustrated in Figure 2.                        
+
+> Table 1 Training hyperparameters for the Successor Representation model.
+> Hyperparameter Value
+> Vocabulary size 20,000 Sequence length 80 Hidden size 512 ResNet blocks (trunk) 8ResNet blocks (heads) 8Batch size 160 Learning rate 1×10 −4
+> Min. learning rate 1×10 −6
+> LR scheduler Cosine Warmup steps 1,000 Weight decay 1×10 −5
+> Epochs 10
+> λ0.9 EMA decay α0.999
+
+## 2.5 Preprocessing 
+
+To analyze the structure learned by the SR model, we first construct a part-of-speech (POS) lexicon by processing the WikiText-103 corpus with spaCy’s large English 8model ( en core web lg ). Each token in the vocabulary is assigned its majority POS tag across all occurrences in the corpus, resolving lexical ambiguity (e.g., bank as noun vs. verb) by majority voting. We then extract SRs for up to 200 tokens per part-of-speech category, selecting the most frequent tokens within each category, considering either only nouns, verbs, and adjectives (NVA) or all major POS categories, exclud-ing tags: X, SYM, SPACE, PUNCT, INTJ . Prior to clustering, the high-dimensional SR vectors are denoised and reduced via principal component analysis (PCA) [18, 19], retaining 99.99% of the variance, reducing the influence of spurious dimensions while preserving the dominant structure and reducing computational costs. This led to 600 tokens in the NVA and 1377 tokens considered in the extended set. The token distribution is illustrated in Table 2.                 
+
+> POS Tag Token Count
+> ADJ 200 VERB 200 PROPN 200 ADV 200 NOUN 200 NUM 200 ADP 58 PRON 43 AUX 27 SCONJ 22 DET 13 CCONJ 10 PART 4
+> Total 1,377
+> Table 2 Token counts by POS tag.
+
+## 2.6 Consensus Clustering 
+
+To identify stable structural groupings robust to the choice of K, we employed a variant of consensus clustering [20] over 240 trials per algorithm. Rather than perturbing the sample through resampling as in the original formulation, we perturb the resolution: we draw the base K from the set of 24 prime numbers ranging from 3 to 97, repeating each value ten times with independently sampled random seeds, so that the resulting co-association matrix reflects structure that is robust across scales rather than robust to data perturbation. We ran two disjoint sets of trials using different base clustering algorithms: K-Means [21], which partitions tokens into K clusters by iteratively assigning each token to its nearest centroid, producing compact and geometrically regular partitions; and Bayesian Gaussian mixture models (BGMs), which model the data as a mixture of 9K full-covariance Gaussian components with Dirichlet process priors over compo-nent weights, enabling soft assignments and suppression of superfluous components unsupported by the data. Each set of trials produces its own consensus clustering inde-pendently, yielding two complementary clusterings per target resolution. The former favours hard, spherical boundaries and the latter capturing probabilistic, ellipsoidal structure. Within each set, a co-association matrix is accumulated recording how fre-quently each pair of tokens is assigned to the same cluster across all base cluster-ings. Agglomerative hierarchical clustering with average linkage is then applied to this matrix: starting from singleton clusters, the algorithm iteratively merges the pair of clusters with the highest average pairwise co-association until all tokens are joined into a single cluster. The resulting dendrogram is cut at several tar-get resolutions (K = 3, 10 , 20 , 30 , 40 , 50 , 60 , 80 , 100 for the NVA setting; K =13 , 20 , 40 , 60 , 80 , 100 , 120 , 160 , 200 for the extended setting), enabling simultaneous analysis at multiple levels of granularity. 
+
+## 2.7 Cluster Evaluation 
+
+Clustering quality is assessed against POS tags using three complementary metrics over a clustering C = {C1, . . . , C K } and reference partition L = {L1, . . . , L J } over N
+
+tokens. Purity is the fraction of tokens in a cluster belonging to its majority class, purity( Ck) = 1
+
+|Ck| max  
+
+> j
+
+|Ck ∩ Lj |, (12) and provides an intuitive per-cluster measure of homogeneity, allowing inspection of which clusters align well with POS tags and which do not. To compare clustering quality across different values of K and γ, we employ two global metrics. Normalized Mutual Information (NMI) [22], NMI( C, L) = 2 I(C; L)
+
+H(C) + H(L) , (13) penalizes fragmentation and lies in [0 , 1], but does not correct for chance, so finer partitions can still achieve spuriously elevated scores. Adjusted Rand Index (ARI) [23] corrects for chance agreement under a hypergeometric model, ARI( C, L) = RI − E[RI] max(RI) − E[RI] , (14) yielding a score in [ −1, 1] that is approximately resolution-independent, making it the most reliable basis for comparison across values of K.
+
+## 2.8 Visualization 
+
+For visualization, SR vectors are projected into 2D via uniform manifold approxima-tion and projection (UMAP) [24] ( nneighbors = 15, min dist = 0 .1). UMAP assumes 10 1 2 3 4 5 6 7 8 9 10                              
+
+> Epoch
+> 3.7
+> 3.8
+> 3.9
+> 4.0
+> KL Divergence  Mean Loss
+> Train Mean
+> Val Mean
+> 12345678910
+> Epoch
+> 4.8
+> 5.0
+> Gamma 0.2
+> Train g0.2
+> Val g0.2
+> 12345678910
+> Epoch
+> 4.0
+> 4.1
+> 4.2
+> KL Divergence  Gamma 0.5
+> Train g0.5
+> Val g0.5
+> 12345678910
+> Epoch
+> 2.55
+> 2.60
+> 2.65
+> 2.70
+> Gamma 0.8
+> Train g0.8
+> Val g0.8 Fig. 3 Training and Validation Losses. Mean and per-head training (solid black) and validation (dashed red) losses over 10 epochs.
+
+the data lies on a low-dimensional manifold embedded in the high-dimensional space, constructs a weighted k-nearest neighbor graph whose edge weights reflect manifold connectivity, and optimizes a 2D embedding by minimizing the cross-entropy between the high- and low-dimensional fuzzy graph representations. The nneighbors parameter controls the neighborhood size used during graph construction, trading local against global structure, while min dist governs the minimum distance between points in the embedding, affecting cluster compactness. Clusters are colored by their majority POS tag, with lightness and hue variants distinguishing multiple clusters sharing the same category. 
+
+## 2.9 Transition Networks 
+
+To examine the sequential structure captured by the SR, we compute inter-cluster transition weights Mij as the average normalized SR mass flowing from cluster i to cluster j, and visualize these as both heatmaps and directed graphs. In the graph representation, each cluster forms a node, and edges correspond to the top 3 outgoing transitions with edge width proportional to transition strength. 
+
+# 3 Results 
+
+## 3.1 Training Dynamics and Emergent Embedding Geometry 
+
+Figure 3 illustrates the training and validation KL divergence loss curves across 10 epochs for each output head, alongside the mean loss aggregated over all heads. All configurations exhibit a sharp initial decline in the first epoch, followed by a steady decrease that approaches convergence by epoch 10, suggesting that additional training could yield marginal further improvements. Notably, the training and validation curves 11 remain closely aligned throughout, indicating that the model generalises well without significant overfitting. The per-head loss curves reveal a consistent pattern across all γ values, differing primarily in their baseline KL divergence. Higher γ values correspond to substantially lower absolute losses — γ = 0 .8 converges to approximately 2 .53 (train) and 2 .54 (validation), compared to 3 .97 and 4 .00 for γ = 0 .5, and 4 .64 and 4 .70 for γ = 0 .2— suggesting that heads associated with higher γ values represent easier or more predictable sub-tasks, whose target distributions are more amenable to learning. The mean loss curve summarises this behaviour, declining from Ltrain = 3 .99 to 3 .71 and from Lval = 3 .81 to 3 .75 over the course of training, confirming stable and consistent learning across all heads. Beyond the loss trajectories, the emergence of structure is directly visible in the geometry of the SR embeddings themselves. Figure 4 shows UMAP projections before and after training for both the NVA subset and the extended vocabulary. Prior to training, embeddings occupy a structureless cloud with no systematic organization by POS category, consistent with randomly initialised representations carrying no distri-butional information. After training, the geometry changes substantially. In the NVA case, the three categories separate into spatially distinct regions, indicating that the learned SRs assign systematically different representations to nouns, verbs, and adjec-tives purely on the basis of their successor statistics. In the extended vocabulary, the picture is more complex: most categories converge into a central region with emergent substructure reflecting the overlapping distributional profiles of the included POS cat-egories, while a subset, most notably numerals, project as isolated peripheral strands, consistent with their more uniform and construction-specific successor distributions. The degree of separation varies across categories and is not uniform, suggesting that the embedding space encodes a gradient rather than a discrete categorical structure. The following subsections examine this internal organisation systematically, moving from the coarse three-way NVA structure through increasingly fine-grained sub-class distinctions to the construction-specific transition profiles recoverable at higher cluster resolutions. 
+
+## 3.2 Recovering Basic Syntactic Categories 
+
+The three-way separation visible in Figure 4a) suggests that the SR geometry encodes POS category information recoverable by unsupervised means. To quantify this, we applied KMeans and BGM clustering ( k = 3) to the NVA embeddings at γ = 0 .2, targeting the 600 most frequent nouns, verbs, and adjectives. Both methods confirm that the geometric structure of the SR space closely mirrors syntactic category bound-aries. As shown by the color-coded UMAP projections in Figure 5 a), both KMeans and BGM clustering with k = 3 recover groupings that align well with ground-truth POS tags, and the two methods yield only minor differences in cluster assignment, suggesting the three-cluster solution is robust to the choice of algorithm (full token-level assignments are provided in Appendix A). The confusion matrices between the KMeans clustering and the POS tags in Figure 5 b) further illustrate this. KMeans achieves per-cluster POS purities of 0.89 (C0 → ADJ), 0.91 (C1 → VERB), and 0.85 (C2 → NOUN) with all clusters consisting of around 200 tokens. The coarse three-way 12 7 8 9 10 11 
+
+> 6
+> 7
+> 8
+> 9
+> 10
+> 11
+
+a) Untrained     
+
+> 910 11 12 13
+> 4
+> 3
+> 2
+> 1
+> 0
+> 1
+> 2
+
+Trained       
+
+> NOUN VERB ADJ
+> 56789
+> 3
+> 4
+> 5
+> 6
+> 7
+
+b) Untrained     
+
+> 46810 12
+> 0.0
+> 2.5
+> 5.0
+> 7.5
+> 10.0
+> 12.5
+
+Trained 
+
+> NOUN
+> VERB
+> ADJ
+> ADV
+> PRON
+> ADP
+> DET
+> AUX
+> PROPN
+> NUM
+> CCONJ
+> SCONJ
+> PART
+
+Fig. 4 Emergence of Syntactic Structure in SR Geometry. UMAP projections of SR embed-dings for the untrained model (left) and after training (epoch 10, right), colored by ground-truth POS tag. Prior to training, embeddings form a structureless cloud with no systematic POS organisation. 
+
+a) NVA subset (NOUN, VERB, ADJ): after training, embeddings decompose into three spatially separated regions corresponding to the three POS categories. b Extended vocabulary (13 POS cat-egories): after training, most categories converge into a central region with emergent substructure, while a subset project as isolated peripheral strands; numerals show the most distinct separation. 
+
+structure identified here raises the question of whether the SR space contains further internal organization within each category. The following subsection examines this by increasing cluster resolution to k = 30. Beyond cluster identity, the inter-cluster SR network and connectivity matrix (Figures 5 c),d)) reveal interpretable syntactic transition patterns: adjectives tran-sition predominantly toward nouns (67%) and rarely toward verbs (7%), consistent with the adjective-noun modifier relationship. Verbs distribute their SR mass roughly equally between adjectives (40%) and nouns (47%), with only minor self-connectivity (13%), reflecting that verbs seldom succeed other verbs in natural language. Notably, auxiliary verbs are assigned a dedicated POS tag ( AUX ) in the Universal Depen-dencies tag set and are therefore excluded from the VERB category; the expected 13 10 12 
+
+> 4
+> 3
+> 2
+> 1
+> 0
+> 1
+> 2
+
+a) KMeans    
+
+> C0 C1 C2
+> 10 12
+> 4
+> 3
+> 2
+> 1
+> 0
+> 1
+> 2
+
+BGM    
+
+> C0 C1 C2
+> 10 12
+> 4
+> 3
+> 2
+> 1
+> 0
+> 1
+> 2
+
+POS Tags   
+
+> ADJ NOUN VERB
+
+ADJ NOUN VERB 
+
+POS Tag 
+
+> C0 C1 C2
+> Cluster
+
+b)       
+
+> 178 913
+> 98167
+> 13 183 20
+
+Frequencies 
+
+ADJ NOUN VERB 
+
+POS Tag       
+
+> C0 C1 C2
+> Cluster  0.89 0.04 0.06
+> 0.05 0.04 0.91
+> 0.06 0.85 0.09
+
+Fractions 
+
+c) 
+
+0
+
+1
+
+2
+
+Majority POS 
+
+> ADJ
+> NOUN
+> VERB
+
+0
+
+(ADJ) 
+
+1
+
+(VERB) 
+
+2
+
+(NOUN) 
+
+Target Cluster 
+
+> 0
+> (ADJ)
+> 1
+> (VERB)
+> 2
+> (NOUN)
+> Source Cluster
+
+d)       
+
+> 0.26 0.07 0.67
+> 0.40 0.13 0.47
+> 0.16 0.32 0.52
+
+Fig. 5 Unsupervised Clustering of Successor Representations and Connectivity Struc-ture (NVA, k=3). To assess the geometric structure of the main syntactic categories in embedding space, SRs’ with γ = 0 .2 of the 200 most frequent tokens were sampled from each of three part-of-speech categories (nouns, verbs, and adjectives), yielding a balanced dataset of 600 tokens. a) UMAP projections of token embeddings, colored by KMeans cluster assignment (left), Bayesian Gaussian Mixture (BGM) cluster assignment (center), and ground-truth Part-of-Speech (POS) tags (right), enabling direct visual comparison between unsupervised cluster solutions and known syntactic cat-egories. b) Cluster purity heatmaps for KMeans clusters, showing the raw POS tag frequency per cluster (left) and the fractional POS tag composition per cluster (right), quantifying the degree to which each cluster captures a coherent syntactic category. c) Directed inter-cluster successor repre-sentation (SR) connectivity network. Nodes represent KMeans clusters and are colored according to their majority POS tag; directed edges indicate the magnitude of SR connectivity from source to target cluster, with edge thickness proportional to connection strength. d) SR connectivity matrix corresponding to the network in (c). Rows denote source clusters and columns denote target clusters; each entry reports the fraction of total directed SR connectivity from the source to the target cluster. 
+
+14 auxiliary-to-main-verb transitions consequently do not contribute to the verb clus-ter’s self-connectivity, making the low value all the more interpretable. Nouns show the strongest tendency to transition to verbs (52%), with moderate self-connectivity (32%), consistent with subject–predicate structure. 
+
+## 3.3 Fine-Grained Clustering: Lexical Sub-Classes as Constructional Slots 
+
+Increasing the number of clusters to k = 30 reveals that the coarse three-way ADJ/NOUN/VERB structure identified above is itself composed of finer-grained dis-tributional sub-classes, many of which correspond to recognizable lexical or semantic groupings. Figure 6 a) shows the UMAP projections colored by KMeans and BGM cluster assignment alongside the ground-truth POS labels; at this granularity the embedding space decomposes into a mosaic of localised sub-regions, each correspond-ing to a distinct cluster, while the broad three-way POS topology of the k = 3 solution is preserved. The purity heatmaps in Figure 6 b) quantify this specialisation: the frequency panel (left) shows that most clusters are strongly dominated by a single POS category, and the fraction panel (right) confirms that 24 of 30 clusters reach a majority-category fraction of ≥ 0.8, with 12 of them attaining 1.0. The full token-level assignments for all 30 clusters are listed in Appendix B. The adjective clusters decompose into semantically coherent sub-types: ordinal and rank modifiers ( first, second, third, final ; C0), scalar size adjectives ( large, small, larger, largest ; C5), colour and non-gradable property terms ( white, black, male, female ; C4), and quantifier-like modifiers ( many, several, various, numerous ; C10). Verb clusters similarly separate into distinct event-type classes: motion and change-of-state verbs ( moved, returned, fell, launched ; C13), epistemic and communicative verbs ( said, stated, found, suggested ; C18), and competitive outcome verbs ( won, win, scored ; C12). Noun clusters capture domain-coherent groupings including temporal expressions ( days, months, years, night ; C25), measurement units ( km, ft, mph, mm ;C28), and cultural/media artefacts ( film, album, song, episode ; C24). The qualitative sub-class structure observed here holds at γ = 0 .2 and k = 30, but the degree to which it generalises across SR horizon values and cluster granularities remains to be assessed. The following subsection addresses this systematically. 
+
+## 3.4 Clustering Quality as a Function of SR Horizon and Cluster Granularity 
+
+To assess how well SR embeddings recover syntactic structure across temporal horizon parameter γ and cluster count K, we evaluated ARI and NMI against ground-truth POS labels across a grid of configurations as illustrated in Figure 7. Both ARI and NMI decrease monotonically as γ increases (Figure 7a), regardless of clustering algorithm or K. This pattern is consistent with the interpretation that low-
+
+γ SRs weight immediate successors heavily, preserving local syntactic signal, whereas high-γ SRs integrate over longer contextual windows, blending the distributional signa-tures of different syntactic categories and thereby reducing cluster coherence. Notably, 15 10 12 
+
+4
+
+3
+
+2
+
+1
+
+0
+
+1
+
+2
+
+a) KMeans 
+
+> C0
+> C1
+> C2
+> C3
+> C4
+> C5
+> C6
+> C7
+> C8
+> C9
+> C10
+> C11
+> C12
+> C13
+> C14
+> C15
+> C16
+> C17
+> C18
+> C19
+> C20
+> C21
+> C22
+> C23
+> C24
+> C25
+> C26
+> C27
+> C28
+> C29
+
+10 12 
+
+4
+
+3
+
+2
+
+1
+
+0
+
+1
+
+2
+
+BGM 
+
+> C0
+> C1
+> C2
+> C3
+> C4
+> C5
+> C6
+> C7
+> C8
+> C9
+> C10
+> C11
+> C12
+> C13
+> C14
+> C15
+> C16
+> C17
+> C18
+> C19
+> C20
+> C21
+> C22
+> C23
+> C24
+> C25
+> C26
+> C27
+> C28
+> C29
+
+10 12 
+
+4
+
+3
+
+2
+
+1
+
+0
+
+1
+
+2
+
+POS Tags   
+
+> NOUN VERB ADJ
+
+ADJ NOUN VERB 
+
+POS Tag 
+
+C0 
+
+C1 
+
+C2 
+
+C3 
+
+C4 
+
+C5 
+
+C6 
+
+C7 
+
+C8 
+
+C9 
+
+C10 
+
+C11 
+
+C12 
+
+C13 
+
+C14 
+
+C15 
+
+C16 
+
+C17 
+
+C18 
+
+C19 
+
+C20 
+
+C21 
+
+C22 
+
+C23 
+
+C24 
+
+C25 
+
+C26 
+
+C27 
+
+C28 
+
+C29 
+
+> Cluster
+
+b)                                                             
+
+> 13 10
+> 27 00
+> 16 12
+> 12 02
+> 700
+> 700
+> 15 42
+> 11 00
+> 14 00
+> 224
+> 12 11
+> 42 02
+> 004
+> 1146
+> 2112
+> 3120
+> 005
+> 023
+> 0022
+> 322
+> 0020
+> 0133
+> 338 3
+> 016 0
+> 337 5
+> 114 9
+> 182
+> 460 1
+> 010 0
+> 100
+
+Frequencies 
+
+ADJ NOUN VERB 
+
+POS Tag 
+
+C0 
+
+C1 
+
+C2 
+
+C3 
+
+C4 
+
+C5 
+
+C6 
+
+C7 
+
+C8 
+
+C9 
+
+C10 
+
+C11 
+
+C12 
+
+C13 
+
+C14 
+
+C15 
+
+C16 
+
+C17 
+
+C18 
+
+C19 
+
+C20 
+
+C21 
+
+C22 
+
+C23 
+
+C24 
+
+C25 
+
+C26 
+
+C27 
+
+C28 
+
+C29                                                             
+
+> Cluster
+> 0.93 0.07 0.00
+> 1.00 0.00 0.00
+> 0.84 0.05 0.11
+> 0.86 0.00 0.14
+> 1.00 0.00 0.00
+> 1.00 0.00 0.00
+> 0.71 0.19 0.10
+> 1.00 0.00 0.00
+> 1.00 0.00 0.00
+> 0.25 0.25 0.50
+> 0.86 0.07 0.07
+> 0.95 0.00 0.05
+> 0.00 0.00 1.00
+> 0.02 0.02 0.96
+> 0.13 0.07 0.80
+> 0.12 0.04 0.83
+> 0.00 0.00 1.00
+> 0.00 0.40 0.60
+> 0.00 0.00 1.00
+> 0.43 0.29 0.29
+> 0.00 0.00 1.00
+> 0.00 0.03 0.97
+> 0.07 0.86 0.07
+> 0.00 1.00 0.00
+> 0.07 0.82 0.11
+> 0.04 0.58 0.37
+> 0.09 0.73 0.18
+> 0.06 0.92 0.02
+> 0.00 1.00 0.00
+> 1.00 0.00 0.00
+
+Fractions Fig. 6 Unsupervised Clustering of Successor Representations (NVA, k=30). SRs for γ =0.2 were extracted for a balanced sample of the 200 most frequent tokens per part-of-speech category (nouns, verbs, and adjectives), yielding a dataset of 600 tokens in total. (a) UMAP projections of token embeddings, colored by KMeans cluster assignment (left), BGM cluster assignment (center), and ground-truth POS tags (right). Clusters are aligned across algorithms by maximizing cluster overlap. They receive a base color for their joint majority POS tag, with distinct shades differentiating individual clusters within the same syntactic category to facilitate comparison. (b) Cluster purity heatmaps evaluating the alignment between KMeans clusters and POS categories. The left heatmap shows the raw POS tag frequency across the 30 clusters, and the right heatmap shows the fractional purity, i.e. the proportion of each POS category assigned to each cluster, illustrating the degree of syntactic specialization achieved at higher cluster granularity ( K = 30). 
+
+16 0.2 0.5 0.8 
+
+> Gamma
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> ARI
+
+a)        
+
+> 0.2 0.5 0.8
+> Gamma
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> NMI
+> 020 40 60 80 100
+> Number of Clusters (K)
+> 0.2
+> 0.4
+> 0.6
+> Score
+
+b) 
+
+> Metric
+> ARI
+> NMI
+> Method
+> KMeans
+> BGM
+> K
+> 3
+> 6
+> 10
+> 30
+> 50
+> 100
+> Method
+> KMeans
+> BGM
+
+Fig. 7 Clustering quality metrics (ARI and NMI) across SR configurations for the NVA subset. ARI and NMI measure the agreement between a clustering solution and the ground-truth POS labels, correcting for chance and label permutation respectively. (a) ARI (left) and NMI (right) as a function of the SR scale parameter γ, evaluated on the NVA (Noun-Verb-Adjective) subset. Trends are shown for varying cluster granularities ( K), comparing KMeans (solid lines) and BGM (dashed lines). (b) ARI and NMI as a function of cluster count K at fixed γ = 0 .2, illustrating how cluster resolution affects the recovery of prescribed syntactic structure from the restricted NVA vocabulary. 
+
+both metrics remain substantially above zero across all configurations, indicating that syntactic structure is recoverable from SR geometry even at longer horizons. At fixed γ = 0 .2, ARI and NMI both peak sharply at K = 3 (Figure 7b), with ARI reaching 0 .66, and NMI reaching 0 .59 for both cluster methods, before declining steeply as cluster count increases. This is consistent with the ground-truth label structure: when K matches the number of POS categories in the NVA subset, the clustering solution aligns most closely with the syntactic partition. NMI declines more gradually than ARI and plateaus around 0 .32–0 .33 for large K, reflecting that finer partitions still capture some residual syntactic organization even as exact label recovery degrades. KMeans and BGM perform near-identically across all configurations, suggesting that the geometric signal in SR embeddings, rather than the clustering algorithm, drives performance. Having established the robustness of SR-based category recovery for the three-category NVA case, we now ask whether the same geometric organization extends to a broader and more heterogeneous vocabulary. 17 4 6 8 10 12 
+
+0
+
+2
+
+4
+
+6
+
+8
+
+10 
+
+12 
+
+a) KMeans 
+
+C0 
+
+C1 
+
+C2 
+
+C3 
+
+C4 
+
+C5 
+
+C6 
+
+C7 
+
+C8 
+
+C9 
+
+C10 
+
+C11 
+
+C12 
+
+4 6 8 10 12 
+
+0
+
+2
+
+4
+
+6
+
+8
+
+10 
+
+12 
+
+POS Tags 
+
+NOUN 
+
+VERB 
+
+ADJ 
+
+ADV 
+
+PRON 
+
+ADP 
+
+DET 
+
+AUX 
+
+PROPN 
+
+NUM 
+
+CCONJ 
+
+SCONJ 
+
+PART 
+
+> ADJ
+> ADP
+> ADV
+> AUX
+> CCONJ
+> DET
+> NOUN
+> NUM
+> PART
+> PRON
+> PROPN
+> SCONJ
+> VERB
+
+POS Tag 
+
+C0 
+
+C1 
+
+C2 
+
+C3 
+
+C4 
+
+C5 
+
+C6 
+
+C7 
+
+C8 
+
+C9 
+
+C10 
+
+C11 
+
+C12 
+
+> Cluster
+
+b) 2 1 6 17 0 0 9 0 2 22 2 0 5
+
+2 0 141 10 2 0 2 0 0 8 0 0 4
+
+0 0 11 0 5 0 1 0 0 3 1 15 8
+
+0 0 2 0 0 0 0 0 0 0 0 0 3
+
+7 50 8 0 1 0 7 0 1 0 0 5 137 
+
+7 0 1 0 0 3 1 12 0 1 0 0 1
+
+168 1 9 0 2 10 8 1 1 8 20 0 10 
+
+1 0 2 0 0 0 9 89 0 0 1 0 1
+
+9 0 11 0 0 0 71 0 0 0 94 0 5
+
+0 3 2 0 0 0 15 0 0 0 1 1 9
+
+3 0 7 0 0 0 71 0 0 1 24 0 11 
+
+0 2 0 0 0 0 6 0 0 0 46 0 6
+
+1 1 0 0 0 0 0 98 0 0 11 1 0
+
+Frequencies 
+
+> ADJ
+> ADP
+> ADV
+> AUX
+> CCONJ
+> DET
+> NOUN
+> NUM
+> PART
+> PRON
+> PROPN
+> SCONJ
+> VERB
+
+POS Tag 
+
+C0 
+
+C1 
+
+C2 
+
+C3 
+
+C4 
+
+C5 
+
+C6 
+
+C7 
+
+C8 
+
+C9 
+
+C10 
+
+C11 
+
+C12 
+
+> Cluster
+
+.03 .02 .09 .26 .00 .00 .14 .00 .03 .33 .03 .00 .08 
+
+.01 .00 .83 .06 .01 .00 .01 .00 .00 .05 .00 .00 .02 
+
+.00 .00 .25 .00 .11 .00 .02 .00 .00 .07 .02 .34 .18 
+
+.00 .00 .40 .00 .00 .00 .00 .00 .00 .00 .00 .00 .60 
+
+.03 .23 .04 .00 .00 .00 .03 .00 .00 .00 .00 .02 .63 
+
+.27 .00 .04 .00 .00 .12 .04 .46 .00 .04 .00 .00 .04 
+
+.71 .00 .04 .00 .01 .04 .03 .00 .00 .03 .08 .00 .04 
+
+.01 .00 .02 .00 .00 .00 .09 .86 .00 .00 .01 .00 .01 
+
+.05 .00 .06 .00 .00 .00 .37 .00 .00 .00 .49 .00 .03 
+
+.00 .10 .06 .00 .00 .00 .48 .00 .00 .00 .03 .03 .29 
+
+.03 .00 .06 .00 .00 .00 .61 .00 .00 .01 .21 .00 .09 
+
+.00 .03 .00 .00 .00 .00 .10 .00 .00 .00 .77 .00 .10 
+
+.01 .01 .00 .00 .00 .00 .00 .87 .00 .00 .10 .01 .00 
+
+Fractions Fig. 8 Clustering of Successor Representations (full, k = 13 ). SRs for γ = 0 .2 were extracted for up to 200 of the most frequent tokens per part-of-speech category across 13 categories, yielding a dataset of 1377 tokens in total. (a) UMAP projections of full vocabulary token embeddings, colored by KMeans cluster assignment (left) and POS tags (right). (b) Cluster purity heatmaps evaluating the alignment between the 13 KMeans clusters and POS categories. 
+
+## 3.5 Extended Vocabulary Clustering: Cross-Category Structure at k = 13 
+
+Expanding the analysis to the extended set of POS tags (1377 tokens across 13 POS categories, γ = 0 .2, k = 13) tests whether SR geometry captures syntactic structure beyond the relatively clean NVA case. The UMAP projections in Figure 8a demon-strate that the embedding space retains a broadly organized topology, with several clusters occupying distinct spatial regions that correspond well to ground-truth POS labels. 18 The purity heatmaps in Figure 8b verify that several high-purity clusters persist. C1 is dominated by adverbs (0.83), C6 by adjectives (0.71), and C11 by proper nouns (0.77). The two numeral clusters, C7 and C12, both achieve high purity (0.86 and 0.87 respectively) while capturing a meaningful internal distinction within the numeral category. Specifically, C7 groups bare cardinals and measurement units ( 56, 35, km, ft, million, hundred ), while C12 groups calendar years and month names ( 1960, 1975, April, November ) together with temporal boundary markers ( since, until, late ). Furthermore, several mixed clusters are themselves linguistically interpretable. C2 groups subordinating conjunctions and complementizers ( that, because, although, whether, when ) with reporting verbs ( said, believed, claimed, stated ). This effectively captures the syntagmatic relationship between the verbs that select for propositional complements and the functional items that introduce them. C4 groups prepositions with a large set of past participles ( created, followed, removed, included, found ), a pairing consistent with the shared syntactic environments of passive and prepositional phrases in English. C5 groups quantificational determiners ( several, many, some, most, various ) with a subset of string numerals (two, three, five, four, six), reflecting their shared paradigmatic function as pre-nominal quantity expressions. C8 conflates nouns (0.37) and proper nouns (0.49) to capture geographically and institutionally grounded entities ( area, city, company, force, England, France ). C9 forms a temporally coherent cluster that blends duration and interval nouns ( days, months, weeks, years, night, summer ), aspectual and transitional verbs ( began, started, ended, completed, died, spent ), and temporal prepositions ( before, after, till ). This broad grouping suggests that the geometry organises around semantic-functional domains rather than syntactic categories alone. Finally, C10 and C11 both group common nouns with proper names but reflect distinct registers of Wikitext-103. C10 pairs event and cultural nouns with performer and athlete surnames, while C11 clusters institutional titles with the first names that follow them in biographical prose. C3 is a small cluster of five tokens ( become, became, becoming, formerly, newly ), whose composition suggests convergent successor profiles across inchoative copular verbs and state-boundary adverbs. C0 is the least pure cluster overall (majority PRON at 0.33), aggregating pronouns, adverbs, and modal auxiliaries ( they, often, must, should, never ). Together, these results confirm that SR geometry captures linguistic structure well beyond surface syntactic categories, reflecting the constructional organization of language across a heterogeneous extended token set (see Appendix ?? for full token listings). Whereas the inter-cluster transition structure of the NVA case revealed broad grammatical asymmetries at the level of major word classes, the following subsection examines whether the same transition logic extends to finer-grained constructional dis-tinctions. Specifically, it focuses on the numerical and temporal subnetwork recoverable at k = 120. 19 c37 
+
+Relational 
+
+Preps 
+
+c65 
+
+Numbers 
+
+Mid 
+
+c66 
+
+Numbers 
+
+Date 
+
+c67 
+
+Units 
+
+c117 
+
+Months 
+
+c118 
+
+Years 
+
+late 
+
+c119 
+
+Years 
+
+early 
+
+## a) Majority POS 
+
+ADP 
+
+NOUN 
+
+NUM 
+
+PROPN 
+
+> c37
+> Relational
+> Preps  c65
+> Numbers
+> Mid  c66
+> Numbers
+> Date  c67
+> Units
+> c117
+> Months
+> c118
+> Years
+> late  c119
+> Years
+> early  Max
+> External
+
+Target Cluster 
+
+c65 
+
+Numbers 
+
+Mid 
+
+c66 
+
+Numbers 
+
+Date 
+
+c67 
+
+Units 
+
+c117 
+
+Months 
+
+> Source Cluster
+
+0.13 0.01 0.03 0.26 0.00 0.00 0.00 0.07 
+
+0.09 0.01 0.05 0.10 0.27 0.05 0.02 0.05 
+
+0.10 0.07 0.28 0.10 0.00 0.00 0.00 0.05 
+
+0.03 0.00 0.30 0.00 0.03 0.26 0.13 0.06 
+
+## b) Fig. 9 Successor representation connectivity within numerical and temporal cluster subnetworks. (a) Directed SR subnetwork restricted to a selection of numerical and temporal clusters. Nodes represent individual KMeans clusters colored by their majority POS tag; directed edges represent inter-cluster transition strengths. (b) SR connectivity matrix corresponding to the subnetwork in (a). The final column ( Max External ) reports the maximum connectivity from each source cluster to any cluster outside the restricted subset. 
+
+20 3.6 SR Transition Structure at High Cluster Resolution 
+
+Figure 9 presents a directed SR subnetwork of seven clusters from the k = 120 solution: one adpositional (C37), one nominal (C67), four numeral (C65, C66, C118, C119), and one proper nominal cluster encoding month names (C117). The connectivity pattern reveals that transitions within the subnetwork broadly exceed the Max External baseline, indicating that these tokens preferentially succeed one another in context rather than transitioning into the broader vocabulary. How-ever, the source clusters differ substantially in their target connections and transition strengths. Mid-range numerals (C65: Numbers Mid ) comprise integers spanning roughly 32 to 110. Their outflow is sharply focused, with dominant flow toward units (C67: 0.26) and a secondary transition toward relational prepositions (C37: 0.13), both well exceeding the Max External baseline (0.07). Outflow toward months and all year clusters is uniformly zero. Date-range cardinals (C66: Numbers Date ) comprise integers from 0 to 31. Their outflow contrasts sharply with C65: the dominant transition is toward months (C117: 0.27), well above the Max External baseline (0.05), with moderate self-connectivity (0.05) and secondary flow toward units (C67: 0.10) and relational prepositions (C37: 0.09). Unit expressions (C67: km, ft, mph, mm ) exhibit the most focused outflow pattern, with transitions concentrated on date-range cardinals (C66: 0.28), relational preposi-tions (C37: 0.10), and mid-range numerals (C65: 0.07), all exceeding the Max External baseline (0.05). Outflow toward months and year clusters is effectively zero. Month names (C117) display the richest outflow profile, with strong transitions toward date-range cardinals (C66: 0.30), post-1960 years (C118: 0.26), and pre-1960 years (C119: 0.13), all well above the Max External baseline (0.06). The year-directed transitions show an asymmetry between C118 and C119, with stronger flow toward the more recent cluster. Beyond the numerical subnetwork, several further k = 120 clusters illustrate the distributional specialization recoverable from SR geometry. Modal auxiliaries (C0: 
+
+would, should, could, might, must ) form a coherent pre-verbal cluster, distinct from copular and aspectual auxiliaries (C7: was, is, were, had, been ). Temporal sequence adverbs (C12: then, eventually, finally, subsequently ) form a distinct, isolated cluster. Personal given names (C115) and person-role titles (C116) occupy adjacent but dis-tinct regions, with C116 showing its strongest outflow toward the relational preposition cluster (C37: 0.31) and its second strongest toward C115 (0.11). Taken together, these transition patterns demonstrate that at high cluster res-olution, SR geometry encodes not only the categorical identity of tokens but their sequential and constructional relationships, capturing the internal structure of com-plex expressions such as date phrases, measurement constructions, and biographical naming conventions without explicit supervision. As in the NVA case, it now remains to assess how the broader cross-category structure varies as a function of the SR horizon parameter γ and cluster count k.21 0.2 0.5 0.8 
+
+> Gamma
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> ARI
+
+a)           
+
+> 0.2 0.5 0.8
+> Gamma
+> 0.30
+> 0.35
+> 0.40
+> 0.45
+> 0.50
+> NMI
+> 025 50 75 100 125 150 175 200
+> Number of Clusters (K)
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> Score
+
+b)         
+
+> Metric
+> ARI
+> NMI
+> Method
+> KMeans
+> BGM
+> K
+> 13
+> 20
+> 60
+> 100
+> 120
+> 200
+> Method
+> KMeans
+> BGM Fig. 10 Clustering quality metrics (ARI and NMI) across SR configurations for the extended set of POS tags. (a) ARI (left) and NMI (right) as a function of the SR decay parameter
+> γ, evaluated on the extended POS tag set. Trends are shown for varying cluster granularities ( K), comparing KMeans (solid lines) and BGM (dashed lines). (b) ARI and NMI as a function of cluster count Kat fixed γ= 0 .2, illustrating how cluster resolution affects the recovery of syntactic structure across the extended vocabulary.
+
+## 3.7 Clustering Quality Across SR Configurations: Extended Vocabulary 
+
+As in the NVA case, we assess how cross-category structure varies as a function of the SR horizon parameter γ and cluster count K. Applying the same ARI and NMI analysis to the extended vocabulary illustrated in Figure 10 replicates the qualita-tive trends observed in the NVA subset, while revealing that syntactic structure is harder to recover for the broader token set. As shown in Table 2, the vocabulary is heavily imbalanced: six categories each contribute 200 tokens and together account for approximately 87% of the total, while the remaining seven categories are sparsely represented. Both ARI and NMI decrease monotonically with γ across all values of K and both clustering algorithms (Figure 10a), mirroring the pattern observed in the NVA case. Both metrics remain substantially above zero across all configurations, confirming that the embedding geometry captures genuine syntactic structure well beyond chance. At fixed γ = 0 .2, ARI and NMI exhibit distinct behaviors as a function of K
+
+(Figure 10b). ARI peaks sharply near K = 12–14, reaching 0 .40 (KMeans, K = 14) and 0 .41 (BGM, K = 12), close to the number of POS categories in the extended set, 22 before declining steadily as over-segmentation degrades label recovery. NMI also shows a local peak in the same range, at 0 .49 (KMeans, K = 14) and 0 .50 (BGM, K = 14), but the two methods diverge from there. For BGM, this early peak constitutes the global maximum, after which NMI remains essentially flat, never dropping below 0 .47 across the full range of K. For KMeans, K = 14 is only a local peak; NMI dips only modestly before climbing gradually through a secondary peak at K = 18 (0 .49) and reaching its global maximum of 0 .5 at K = 62, after which it too stabilizes. In both cases, the relative stability of NMI across a wide range of K suggests that the SR embedding space preserves substantial syntactic information regardless of cluster resolution. Together, these results confirm that the SR embedding space encodes syntactic category information across the extended vocabulary. The theoretical implications of this emergent structure, and its relationship to constructionist accounts of word classes and grammatical knowledge, are taken up in the Discussion. 
+
+# 4 Discussion 
+
+## 4.1 Summary of Main Findings 
+
+The central result of this work is that SRs, trained as multi-horizon predictive repre-sentations over a large naturalistic text corpus, spontaneously organise into a geometry that mirrors the hierarchical linguistic structure of language, namely its constructional organisation, without any explicit supervision. Focusing first on the three major categories of nouns, verbs, and adjectives, unsupervised clustering of SR embeddings at γ = 0.2 recovers these categories with per-cluster POS purities of 0.89, 0.91, and 0.85 respectively ( k = 3). The inter-cluster transition network further replicates well-motivated grammatical asym-metries: strong ADJ →NOUN flow (67%) reflects the modifier–head construction; dominant NOUN →VERB connectivity (52%) encodes the subject–predicate template; and minor VERB →VERB self-connectivity (13%) mirrors the rarity of bare main-verb serialisation in English. Extending to k = 30 reveals semantically coherent sub-classes—ordinal modifiers, scalar adjectives, epistemic verbs, temporal nouns— interpretable as distributional signatures of the constructional slots these items habitually occupy. Extending the analysis to the full vocabulary of 1377 tokens across 13 POS cat-egories shows that this structure generalises well beyond the clean three-way NVA case, albeit with greater between-category blurring. At k = 13, high-purity clusters persist for adverbs (C1: 0.83), adjectives (C6: 0.71), and proper nouns (C11: 0.77), while the mixed clusters that do arise are largely interpretable through a construc-tional lens. C2 is a particularly striking case: rather than following any single syntactic category boundary, it groups subordinating conjunctions and complementizers with reporting verbs. This captures the syntagmatic relationship of the clause-embedding construction, linking the verbs that select for propositional complements with the functional items that introduce them. C9 cuts across POS categories entirely, group-ing temporal nouns, aspectual verbs, and temporal prepositions into a single coherent cluster, suggesting the geometry organises around semantic-functional domains rather 23 than syntactic categories alone. C10 and C11 further reveal sensitivity to register and discourse context, distinguishing event and cultural nouns paired with performer surnames from institutional titles paired with the first names that follow them in bio-graphical prose. Particularly striking is the spontaneous separation of numerals into two distinct clusters despite their shared POS tag: C7 groups bare cardinals and mea-surement units ( 56, 35, km, ft, million, hundred ), while C12 groups calendar years and month names ( 1960, 1975, April, November ) alongside temporal boundary mark-ers ( since, until, late ), both achieving high purity (0.86 and 0.87 respectively). The SR has thus implicitly distinguished between bare quantity expressions and temporal reference expressions, a distinction that standard POS tagging collapses entirely. Notably, the organisational principles underlying these clusters vary freely between traditionally syntactic and semantic criteria. The geometry recovers formal category boundaries where they are distributionally sharp, and semantic-functional domains where they are not, reflecting no commitment to the autonomy of syntax that standard POS taxonomies presuppose. This separation sharpens at k = 120, where the numerical subnetwork decomposes into date-range cardinals (C66, integers 0–31), mid-range numerals (C65, roughly 32– 110), month names (C117), and two historically stratified year clusters (C118, C119). Reciprocal month–day transitions (C66 ↔C117: 0.27/0.30) and asymmetric month– year flow (C117 →C118: 0.26 vs. C117 →C119: 0.13) reveal a coherent date-formation subsystem. Within this subsystem, the boundary between date-relevant and date-irrelevant numerals is drawn precisely at 31, the maximum day-of-month value. The stronger flow toward the more recent year cluster (C118: 0.26 vs. C119: 0.13) further reflects the higher frequency with which modern events are cited at full date resolution. Taken across all clustering resolutions, ARI and NMI at γ = 0 .2 confirm this pattern quantitatively. For the NVA subset, both metrics peak sharply at K = 3, with ARI reaching 0 .66 and NMI 0 .59, reflecting a clean three-way partition that closely matches the ground-truth category structure. For the extended vocabulary, ARI peaks near K = 12–14 at 0 .40–0 .41, while NMI plateaus across a broad range of K at approximately 0 .47–0 .50. This gap reflects not only the greater challenge of separating thirteen categories rather than three, but also the inherently fuzzy boundaries between them. At the same time, the broad NMI plateau and the continued emergence of interpretable clusters at higher K suggest that the SRs support additional, finer-grained semantic and constructional substructure that is not captured by standard POS annotations, and therefore not reflected in these metrics. 
+
+## 4.2 Constructions as Lossy Clusters of Memory Traces 
+
+The cluster purity results have a theoretical implication that extends beyond method-ological validation. Together with the ARI and NMI peaks at K = 3, the recovery of groupings closely corresponding to ADJ, NOUN, and VERB indicates that these cat-egories possess a coherent distributional signature implicit in sequential co-occurrence statistics. This is consistent with a constructionist view of word classes, in which cat-egory membership is not an intrinsic lexical property but an emergent consequence of the positional and combinatorial privileges a form repeatedly occupies across con-structions [cf. 25–30]. Crucially, the model spontaneously encodes both dimensions of 24 linguistic organization. It captures the sequential links that bind elements together into constructions (syntagmatic relations) as well as the equivalence classes of items that can substitute into the same structural slots (paradigmatic relations). On this view, the clusters recovered at k = 3 are not merely taxonomic groupings, but reflect distinct distributional niches defined jointly by the positions an item occupies and the transitions it licenses. This interpretation is reinforced by the directional asymmetries in inter-cluster connectivity. The strong ADJ →NOUN flow (60%) aligns with the canonical modifier– head construction, in which adjectives are licensed as dependents but not as heads. The dominant NOUN →VERB transition (56%) reflects the subject–predicate con-struction, the most productive clause-level template in English. Conversely, the near absence of VERB →VERB transitions (1%) corresponds to the lack of a construction in which bare main verbs license a second main verb as their immediate successor. That these typologically well-motivated constraints emerge from sequential statistics alone indicates that the SRs encode not just category structure, but the constructional skeleton of the language [cf. 26, 31–33]. The geometry underlying these patterns supports a stronger claim. Goldberg’s recent formulation defines constructions as emergent clusters of lossy memory traces that align in a high-dimensional space on the basis of shared form, function, and contextual dimensions [34]. The SR space instantiates precisely such a space, and the clusters that emerge from it can be understood as such compressions: each clus-ter summarises a family of partially overlapping usage traces whose shared successor profile reflects the combinatorial privileges conferred by repeated participation in sim-ilar contexts. Under this view, the SR does not merely approximate a pre-existing constructional taxonomy; it provides a computational substrate for the emergence of constructions from usage. Within this framework, the cluster resolution k has a natural interpretation as a compression threshold over memory traces. The k = 3 solution applies the coars-est compression, capturing broad distinctions between nominal, verbal, and adjectival slots. Increasing k lowers this threshold and reveals finer-grained structure: the sub-class distinctions observed at k = 30, such as ordinal adjectives in ranked-list constructions, scalar adjectives in degree constructions, and epistemic verbs in complement-clause constructions, correspond to increasingly specific constructional slots. The embedding space thus encodes not only category membership, but the constructional contexts items inhabit, consistent with usage-based accounts in which lexical representations are stored together with their distributional histories. Each increase in k reveals a deeper layer of this hierarchy, from abstract slot types to item-specific construction families, supporting the view that constructional knowledge emerges from general predictive memory mechanisms applied to sequential structure. 
+
+## 4.3 Construction-Specific Successor Profiles 
+
+If the preceding subsection establishes that SR geometry encodes constructional orga-nization in principle, the mixed clusters in the extended vocabulary analysis ( k = 13) demonstrate this more directly. Several clusters are best understood not as approx-imations of POS categories, but as traces of specific construction families, where 25 grouping is determined by shared successor environments rather than surface category membership. Crucially, the organizational principles these clusters reflect vary freely between traditionally syntactic and semantic criteria: the geometry recovers formal category boundaries where they are distributionally sharp, and semantic-functional domains where they are not, reflecting no commitment to the autonomy of syntax that standard POS taxonomies presuppose. This is precisely what usage-based accounts predict: a system abstracting structure from sequential experience should arrive at representations organized around the constructions that unite form and meaning in actual use, rather than the formal categories imposed on top of them. In this view, the mixed clusters are not categorization errors, but precise representations of the slot-and-filler architecture that defines the constructicon. By grouping items according to their shared transitional profiles, the model captures both the horizontal, syntagmatic templates that dictate how elements are combined into larger symbolic assemblies, and the vertical, paradigmatic classes of lexical items licensed to fill those specific semantic-functional slots. Cluster C2, which groups subordinating conjunctions and complementizers with reporting verbs, aligns with the complement-clause construction, encoding the syn-tagmatic relationship where these verbs select precisely these items as successors. C5, grouping quantificational determiners with certain numerals, reflects their shared paradigmatic function as nominal pre-modifiers. C9, blending temporal nouns, aspec-tual verbs, and temporal prepositions, captures a semantic-functional domain defined by temporality rather than any syntactic category. In each case, the grouping is opaque from a categorical perspective but coherent in constructional terms. The division of the numeral category illustrates this particularly clearly. Bare cardi-nals and measurement units (C7) and calendar years with month names (C12) occupy distinct constructional slots and are accordingly separated in the SR space. At higher resolution ( k = 120), this distinction develops into a structured subsystem: recip-rocal month–day transitions encode the bidirectional [DD MONTH] /[MONTH DD] 
+
+construction; transitions from months to years encode the [MONTH YEAR] construc-tion; and the boundary between date-relevant and irrelevant numerals aligns precisely with the maximum day-of-month value, without any explicit supervision. The isolation of measurement expressions from this subsystem further confirms that the geometry tracks constructional function rather than surface category. A similar pattern appears in the distinction between person-role titles (C116) and given names (C115). The dominant transitions from titles to relational prepositions relates to the [TITLE of NP] construction, while transitions to name clusters encode the appositive [TITLE NAME] construction. That these patterns emerge from succes-sor statistics alone indicates that the SR space captures fine-grained slot distinctions within lexical domains. Ultimately, these results confirm that the SR space encodes the full slot-and-filler architecture predicted by usage-based accounts. By abstract-ing both syntagmatic combinatorial rules and paradigmatic equivalence classes from sequential experience, the model provides a concrete computational substrate for the emergence of grammar. 26 4.4 Neurally Plausible Acquisition of Constructional Knowledge 
+
+The preceding subsections establish that SR geometry encodes constructional orga-nization across multiple levels of resolution, from the broad privileges of major word classes down to the internal structure of specific constructions. The theoretical frame-work used to interpret these results—constructions as emergent clusters of lossy memory traces—carries an implicit claim about the biological substrate of this process. If constructions are memory traces, then the system responsible for their forma-tion is, in the first instance, a memory system, and a remaining question is whether the learning mechanism proposed here is consistent with what is known about such systems. The hippocampus is precisely the structure implicated in the formation, consolida-tion, and organisation of episodic and semantic memory traces [35], and is known to build cognitive maps of the environment [36]. The SR framework was originally pro-posed as a model of these hippocampal maps, extending the cognitive map concept by proposing that place cells encode not current location but anticipated future states [4]. Empirical support for SR-like representations in the brain has since been reported in neuroimaging studies [37–39], strengthening the case that the computational principles formalised here have a genuine neural realization. Understanding how the SR is acquired in the brain is an important open question, and temporal difference learning with eligibility traces, or TD( λ), offers a plausible mechanism. Computationally, TD algorithms efficiently learn SRs [7]. Biologically, spike-timing-dependent plasticity in spiking neural networks corresponds algorithmi-cally to TD( λ) learning to form predictive maps [40]. Behaviorally, TD( λ) updating rule helps explain trial-by-trial sequence learning in humans [41]. Thus, modelling SR learning via TD( λ) is well supported by computational, biological, and behavioral evidence. Token-level SRs can then be understood as an analogous predictive map of linguis-tic space: just as place cells compress trajectories of spatial experience into a predictive map of the environment, SRs compress trajectories of linguistic experience into a geometry that reflects the constructional structure of the language. The clusters that emerge from this compression are, in Goldberg’s terms, precisely the lossy memory traces that constructions are. The resulting representations are not purely syntactic or semantic, but organized around constructions that integrate both, consistent with usage-based accounts of grammar. Crucially, this structure is acquired with striking efficiency. Training loss declines sharply within the first epoch, with only marginal gains thereafter, indicating that the dominant constructional regularities are extracted after minimal exposure. This pattern aligns with usage-based theories of rapid generalization from limited input [42], and is consistent with neuro-scientific accounts of rapid unsupervised structure learning in the hippocampal-entorhinal system [43], standing in stark contrast to the prolonged training regimes typical of contemporary large language models. Taken together, these findings support a unifying hypothesis: constructional knowl-edge is not a specialized linguistic module, but an instance of a more general predictive 27 memory system operating over structured sequences. If constructions are lossy com-pressions of usage traces stored in memory, the SR may serve as a computational bridge between the constructional organization of language and the neuro-scientific accounts of the memory system in which that organization is grounded. 
+
+## 4.5 The Problem of Clustering Resolution and Temporal Horizon 
+
+A practical limitation of the current framework is the absence of a principled criterion for selecting the appropriate clustering resolution k or the temporal horizon γ. Both parameters govern fundamentally different aspects of representational granularity, and their interaction has substantial consequences for what structure is recovered. The γ parameter controls the temporal depth of the SR: low values weight imme-diate successors heavily and preserve local syntactic signal, yielding high POS purity; high values integrate over longer contextual windows, blending the distributional sig-natures of different categories and reducing cluster coherence, though potentially encoding discourse-level or semantic structure that local representations obscure. This monotonic decrease in POS purity with γ is observed consistently across all cluster counts and both algorithms, suggesting that higher γ does not simply encode differ-ent structure but encodes structure at a coarser syntactic grain which could relate to higher-level features such as thematic roles or information structure, but at the cost of categorical distinctiveness. Whether the blurring of distributional signatures at high 
+
+γ reflects genuine structural overlap between categories or simply a loss of represen-tational resolution is an open question that future work with richer evaluation tasks would need to address. The cluster count k similarly lacks a theoretically motivated stopping crite-rion. The current analysis relies on qualitative interpretability at selected values (k = 3 , 13 , 30 , 120) and quantitative purity metrics as proxies for structural valid-ity. A more principled approach might employ information-theoretic model selection, the Bayesian evidence computed by BGM, or held-out prediction tasks that measure whether a given clustering level supports downstream generalization. The observation that BGM and KMeans converge at low k but diverge at higher granularities, with KMeans achieving marginally higher purity at large k, is itself informative: it sug-gests that the coarse structure of the SR space is robust to algorithmic choice, while finer subdivisions are more sensitive to the clustering objective. A systematic model selection framework capable of simultaneously optimizing k, γ, and the clustering cri-terion would constitute a significant methodological advance and a possible direction for future work. 
+
+## 4.6 Polysemy, Context-Sensitivity, and the Limits of Type-Level Representations 
+
+A fundamental limitation shared by SR analyses reported here is the inability to distinguish between distinct senses of a surface form. The SR of a token is estimated by averaging across all its corpus occurrences. This collapses multiple distinct usage patterns, and with them potentially multiple distinct constructional roles, into a single 28 point in embedding space. This conflation of polysemy with distributional centrality is a known issue in distributional semantics more broadly [44–46], but it is particularly consequential for the constructional interpretation advanced here, where the claim is that distinct positional privileges should occupy distinct regions of the representational space. The practical implications are visible in several of the mixed clusters described above. Past participles and prepositions are co-assigned in cluster C4 of the k = 13 extended vocabulary analysis, plausibly because their type-level SRs likely conflate passive, relative clause, and adjectival participial contexts that differ structurally but share enough surface successors to appear similar in aggregate. More pointedly, case-collapsed forms like may (modal vs. proper noun) or since (temporal vs. causal) cannot be disambiguated without access to the local context. This is not merely a tokenisation problem: it reflects a principled limitation of type-level representations for a goal that ultimately requires token-level, contextualised inference. Addressing this limitation will require a shift to contextualised SR estimation, in which the successor representation of a token is conditioned on the preceding context rather than averaged across contexts. Several architectures are natural candidates for this extension, including transformer-based models, recurrent networks, sliding win-dow approaches, and accumulating the predecessors in a similar way to our SRs targets, each offering different trade-offs between computational efficiency and the depth of contextual conditioning. Crucially, contextualised estimation may also rehabilitate the higher γ configurations that underperformed in the type-level setting: where averag-ing across contexts blurs distinct constructional roles, conditioning on local context may instead allow high-γ representations to capture genuine long-range structural dependencies that are simply invisible to context-insensitive averaging. 
+
+## 4.7 Emergent Niches and a Distributional Methodology for Typology 
+
+The recovery of broad word-class structure from SR geometry carries a methodological implication that extends well beyond the present English-language model. Typological linguistics has long recognized the danger of imposing traditional, often Eurocentric grammatical conventions onto diverse languages [47, 48]. Because our unsupervised approach demonstrates that structural categories can be discovered directly from sequential statistics, it offers a powerful alternative: a data-driven tool for cross-linguistic analysis that organically maps a language’s true emergent categories without requiring any prior commitment to traditional taxonomies. This data-driven potential is consistent with a strand of thinking in both typo-logical linguistics and computational cognitive science that treats linguistic structure not as an innate constraint but as a convergent outcome of the same learning pres-sures applied to structurally similar statistical environments [49–51]. Under this view, the fact that ADJ, NOUN, and VERB emerge from SR clustering without any prior commitment to these categories is not surprising: they correspond to the most stable and productive distributional niches in the structure of English. Rather than treat-ing these specific classes as universal templates, the present results provide a concrete computational demonstration of this convergence mechanism. They raise the broader 29 conjecture that the spontaneous formation of structural categories is a stable phe-nomenon that emerges independently of the specific architecture, training regime, or substrate in which prediction is implemented, whether biological or artificial. When restricted to the specific statistical environment of English, the emergence of NOUN, VERB, and ADJ takes on a particularly striking character. Because the model recovers these categories so robustly without explicit supervision, they can be understood as Platonic attractors within the language’s specific distributional space. That is, for a language with English’s particular typological profile, these three cat-egories represent mathematically optimal, highly stable representational states. Any sufficiently powerful predictive system—whether biological or artificial—navigating this specific linguistic environment is inevitably drawn to these structural solutions. They emerge not because they are universal constraints on all human language, but because they are the inescapable topological attractors of this particular grammar’s sequential dynamics. HERE we can tell more about the other evidence from your previous studies and elaborate on platonic attractors 
+
+## 4.8 Relation to Predictive Coding and Towards Multiscale Planning 
+
+The theoretical framing of the present work connects naturally to the predictive coding account of cortical function and the free-energy principle [52, 53]. Under this frame-work, the brain is understood as a hierarchical inference engine that continuously generates and updates predictions about incoming sensory data, with higher cortical levels encoding increasingly abstract and temporally extended predictions. The multi-head SR architecture shares the core commitment to prediction as the organising principle of representation: each γ head encodes expected future context at a different temporal horizon, together spanning multiple timescales of sequential structure. The present work has examined these heads independently, however, and makes no claim about how their representations should be integrated and weighted across timescales, a question that future work would need to address before a closer architectural parallel to predictive coding can be drawn. This open question points toward a broader possibility: that the hierarchical struc-ture of the SR embedding space could serve as a substrate for multiscale planning in language production. Under predictive coding, action is not merely reactive but anticipatory, the motor system fulfils top-down predictions rather than responding to bottom-up error signals alone. In psycholinguistics, it is well established that an anal-ogous principle governs language production: speakers do not select words sequentially in isolation [54], but rather pre-activate hierarchical plans in which abstract frames constrain slot-level lexical choice before articulation begins [55 ? –57]. However, formalizing this dynamic, anticipatory process within the theoretical framework of Construction Grammar has remained a challenge. The SR transition structure provides a concrete, mathematical mechanism to bridge this gap. It is well-suited to support exactly this kind of planning: it encodes not merely which clusters follow which, but the full probability mass over expected successors at multiple levels of granularity simultaneously. The date-formation subnetwork at k = 120 illustrates 30 this concretely, a production system operating over this space could commit to a 
+
+[MONTH YEAR] frame at the coarse level and then use the fine-grained transition probabilities to constrain the selection of a specific month name and year token in sequence, propagating structural commitments downward from abstract template to concrete lexical instantiation. Realizing this vision in full requires several advances beyond the scope of the present work. The representations must be made contextualised rather than type-level, so that production plans are sensitive to the specific discourse context rather than averaged distributional profiles. A mechanism for the bidirectional use of the SR must be specified — not only predicting what follows, but using predicted successors to actively constrain what should be produced next. And a principled account of how multiple γ heads are weighted and coordinated in real-time sequential production remains to be developed. These are substantive open problems, but the present results provide an encouraging demonstration that the representational substrate required for such a system is, in principle, learnable from corpus statistics alone and that the same predictive objective that gives rise to interpretable constructional structure may also be sufficient to support its productive use. 
+
+## 4.9 Predicting Creativity 
+
+Beyond showing how syntax emerges, SR-based cognitive maps provide a rigor-ous framework to model linguistic creativity. In usage-based linguistics, creativity is not random deviation, but the structured extension of established patterns. While F-creativity covers conventional productivity, E-creativity involves stretching the constructicon through mechanisms like conceptual blending [58, 59]. Herbst’s collo-creativity [60] highlights a specific instance of this, where speakers insert highly unexpected lexical fillers into familiar constructional slots. The theoretical challenge in analyzing these extensions lies in distinguishing delib-erate, creative deviations from unintelligible errors. As recent usage-based models emphasize, successful creativity relies on violating local conventions while maintain-ing enough global structural coherence for the listener to infer the speaker’s creative intent [61–63]. The SR framework operationalizes this exact dynamic by modeling creativity as a scale-dependent violation. In our model, a collo-creative utterance—such as an unex-pected lexical filler—corresponds to a drop in SR transition weights to near-zero at a fine-grained, item-specific level (such as k=120). However, the utterance remains structurally coherent because the transition still aligns with the robust, higher-order expectations of a coarse-grained constructional supercluster (such as k=13). The numerical and temporal subnetwork illustrates this clearly. A conventional phrase like ”on the 28th of March” carries high SR probability mass at fine-grained res-olutions because it respects the established boundaries of a 31-day month. Conversely, an anomalous phrase like ”on the 32nd of March” exhibits near-zero probability at the fine-grained level, violating the local lexical constraint. Yet, because ”32” is part of the same expected supercluster of numerals at coarser resolutions, the overarching syntactic and constructional frame is preserved. 31 This multi-granular alignment provides a topological metric for the theoretical distinction between errors and innovation. The SR space maps the structural expecta-tion landscape, quantifying exactly how and where a rule is broken. Ultimately, while the transition geometry captures the precise structural nature of the deviation, it is the pragmatic context and communicative intent that determine whether a mathe-matically low-probability transition is processed as a mistake or a deliberate act of creativity. 
+
+## 4.10 Limitations and Future Directions 
+
+Several limitations of the current study should be noted explicitly. The training cor-pus (Wikitext-103) is a relatively homogeneous, encyclopaedic text collection, and it remains to be seen whether the same structural regularities emerge from more typologically or register-diverse corpora, or from child-directed speech more directly relevant to acquisition. The model architecture and vocabulary size are modest by contemporary standards, and while this motivates the biological plausibility argument for efficiency, it also limits the depth of sub-class structure that can be recovered. Future work should examine whether SR-based representations trained on richer or more diverse corpora yield a correspondingly richer constructional hierarchy, and whether the date-formation and title–name subnetworks described here generalize across genres. The conflation of polysemous forms under type-level representations has been noted above as methodological priority. A further important direction is the direct valida-tion of SR-based constructional clusters against neural data: if these representations provide a genuine model of hippocampal cognitive maps for linguistic sequences, the cluster structure and transition connectivity should make testable predictions about representational similarity in the brain during language processing, which fMRI and electrophysiology studies can evaluate. Grounding the computational model described here in such empirical evidence is the most direct path toward a fully validated neuro-computational theory of constructional knowledge. A further important direction is the direct validation of SR-based representations against neural data: if the SRs themselves provide a genuine model of hippocampal cognitive maps for linguistic sequences, both the raw representational geometry encoded in the SR vectors and the constructional cluster structure and transition connectivity derived from them should make testable predictions about neural representational structure during language processing. Rep-resentational similarity analysis [64] offers one principled method for this comparison, aligning the pairwise similarity structure of SR-based representations with that of neu-ral responses measured by fMRI or electrophysiology. Grounding the computational model described here in such empirical evidence is the most direct path toward a fully validated neuro-computational theory of constructional knowledge. 
+
+Acknowledgements. 
+
+# References 
+
+[1] Barto, A.G.: Reinforcement learning: An introduction. by richard’s sutton. SIAM Rev 6(2), 423 (2021) 32 [2] Mnih, V., Kavukcuoglu, K., Silver, D., Graves, A., Antonoglou, I., Wierstra, D., Riedmiller, M.: Playing atari with deep reinforcement learning. arXiv preprint arXiv:1312.5602 (2013) [3] Dayan, P.: Improving generalization for temporal difference learning: The succes-sor representation. Neural computation 5(4), 613–624 (1993) [4] Stachenfeld, K.L., Botvinick, M.M., Gershman, S.J.: The hippocampus as a predictive map. Nature neuroscience 20 (11), 1643–1653 (2017) [5] Gershman, S.J.: The successor representation: its computational logic and neural substrates. Journal of Neuroscience 38 (33), 7193–7200 (2018) [6] Barreto, A., Dabney, W., Munos, R., Hunt, J.J., Schaul, T., Hasselt, H.P., Silver, D.: Successor features for transfer in reinforcement learning. Advances in neural information processing systems 30 (2017) [7] Russek, E.M., Momennejad, I., Botvinick, M.M., Gershman, S.J., Daw, N.D.: Predictive representations can link model-based reinforcement learning to model-free mechanisms. PLoS computational biology 13 (9), 1005768 (2017) [8] He, K., Zhang, X., Ren, S., Sun, J.: Deep residual learning for image recogni-tion. In: Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, pp. 770–778 (2016) [9] He, K., Zhang, X., Ren, S., Sun, J.: Identity mappings in deep residual networks. In: European Conference on Computer Vision, pp. 630–645 (2016). Springer [10] Xiong, R., Yang, Y., He, D., Zheng, K., Zheng, S., Xing, C., Zhang, H., Lan, Y., Wang, L., Liu, T.: On layer normalization in the transformer architecture. In: International Conference on Machine Learning, pp. 10524–10533 (2020). PMLR [11] Hendrycks, D., Gimpel, K.: Gaussian error linear units (gelus). arXiv preprint arXiv:1606.08415 (2016) [12] Mnih, V., Kavukcuoglu, K., Silver, D., Rusu, A.A., Veness, J., Bellemare, M.G., Graves, A., Riedmiller, M., Fidjeland, A.K., Ostrovski, G., et al. : Human-level control through deep reinforcement learning. nature 518 (7540), 529–533 (2015) [13] Haarnoja, T., Zhou, A., Hartikainen, K., Tucker, G., Ha, S., Tan, J., Kumar, V., Zhu, H., Gupta, A., Abbeel, P., et al.: Soft actor-critic algorithms and applications. arXiv preprint arXiv:1812.05905 (2018) [14] Merity, S., Xiong, C., Bradbury, J., Socher, R.: Pointer sentinel mixture models. arXiv preprint arXiv:1609.07843 (2016) [15] Honnibal, M., Montani, I., Van Landeghem, S., Boyd, A.: spacy: Industrial-strength natural language processing in python (2020) https://doi.org/10.5281/ 33 zenodo.1212303 [16] Petrov, A.A., Dosher, B.A., Lu, Z.-L.: Perceptual learning without feedback in non-stationary contexts: Data and model. Vision research 46 (19), 3177–3197 (2006) [17] Kullback, S., Leibler, R.A.: On information and sufficiency. The annals of mathematical statistics 22 (1), 79–86 (1951) [18] Pearson, K.: Liii. on lines and planes of closest fit to systems of points in space. The London, Edinburgh, and Dublin philosophical magazine and journal of science 2(11), 559–572 (1901) [19] Hotelling, H.: Analysis of a complex of statistical variables into principal components. Journal of educational psychology 24 (6), 417 (1933) [20] Monti, S., Tamayo, P., Mesirov, J., Golub, T.: Consensus clustering: a resampling-based method for class discovery and visualization of gene expression microarray data. Machine learning 52 (1), 91–118 (2003) [21] Bishop, C.M., Nasrabadi, N.M.: Pattern Recognition and Machine Learning vol. 4. Springer, ??? (2006) [22] Strehl, A., Ghosh, J.: Cluster ensembles—a knowledge reuse framework for com-bining multiple partitions. Journal of machine learning research 3(Dec), 583–617 (2002) [23] Hubert, L., Arabie, P.: Comparing partitions. Journal of classification 2(1), 193– 218 (1985) [24] McInnes, L., Healy, J., Melville, J.: Umap: Uniform manifold approximation and projection for dimension reduction. arXiv preprint arXiv:1802.03426 (2018) [25] Croft, W.: Radical Construction Grammar: Syntactic Theory in Typological Perspective. OUP Oxford, ??? (2001) [26] Bybee, J.: Language, Usage and Cognition. Cambridge University Press, ??? (2010) [27] Hopper, P.: Emergent grammar. In: Annual Meeting of the Berkeley Linguistics Society, pp. 139–157 (1987) [28] Goldberg, A.E.: Constructions: A Construction Grammar Approach to Argument Structure. University of Chicago Press, ??? (1995) [29] Goldberg, A.E.: Constructions at Work: The Nature of Generalization in Lan-guage. OUP Oxford, ??? (2006) 34 [30] Hoffmann, T., Trousdale, G.: The Oxford Handbook of Construction Grammar. Oxford University Press, ??? (2013) [31] Bybee, J.: Word frequency and context of use in the lexical diffusion of phonet-ically conditioned sound change. Language variation and change 14 (3), 261–290 (2002) [32] Diessel, H.: The Grammar Network. Cambridge University Press, ??? (2019) [33] Diessel, H., Dabrowska, E., Divjak, D.: Usage-based construction grammar. Cognitive linguistics 2, 50–80 (2019) [34] Goldberg, A.E.: Explain Me This: Creativity, Competition, and the Partial Productivity of Constructions. Princeton University Press, ??? (2019) [35] Eichenbaum, H.: A cortical–hippocampal system for declarative memory. Nature reviews neuroscience 1(1), 41–50 (2000) [36] Tolman, E.C.: Cognitive maps in rats and men. Psychological review 55 (4), 189 (1948) [37] Ekman, M., Kusch, S., Lange, F.P.: Successor-like representation guides the pre-diction of future events in human visual cortex and hippocampus. elife 12 , 78904 (2023) [38] Garvert, M.M., Dolan, R.J., Behrens, T.E.: A map of abstract relational knowledge in the human hippocampal–entorhinal cortex. elife 6, 17086 (2017) [39] Brunec, I.K., Momennejad, I.: Predictive representations in hippocampal and prefrontal hierarchies. Journal of Neuroscience 42 (2), 299–312 (2022) [40] Bono, J., Zannone, S., Pedrosa, V., Clopath, C.: Learning predictive cognitive maps with spiking neurons during behavior and replays. Elife 12 , 80671 (2023) [41] Kahn, A.E., Bassett, D.S., Daw, N.D.: Trial-by-trial learning of successor rep-resentations in human behavior. PLoS computational biology 21 (11), 1013696 (2025) [42] Tomasello, M.: Constructing a Language: A Usage-based Theory of Language Acquisition. [43] Kumaran, D., Hassabis, D., McClelland, J.L.: What learning systems do intel-ligent agents need? complementary learning systems theory updated. Trends in cognitive sciences 20 (7), 512–534 (2016) [44] Camacho-Collados, J., Pilehvar, M.T.: From word to sense embeddings: A survey on vector representations of meaning. Journal of Artificial Intelligence Research 
+
+63 , 743–788 (2018) 35 [45] Erk, K., Pad´ o, S.: A structured vector space model for word meaning in con-text. In: Proceedings of the 2008 Conference on Empirical Methods in Natural Language Processing, pp. 897–906 (2008) [46] Fonteyn, L.: Varying abstractions: a conceptual vs. distributional view on prepositional polysemy. Glossa: a journal of general linguistics 6(1) (2021) [47] Wierzbicka, A.: Imprisoned in English: The Hazards of English as a Default Language. Oxford University Press, ??? (2013) [48] Haspelmath, M.: Comparative concepts and descriptive categories in crosslinguis-tic studies. Language 86 (3), 663–687 (2010) https://doi.org/10.1353/lan.2010. 0021 [49] Christiansen, M.H., Chater, N.: Language as shaped by the brain. Behavioral and brain sciences 31 (5), 489–509 (2008) [50] Kirby, S., Griffiths, T., Smith, K.: Iterated learning and the evolution of language. Current opinion in neurobiology 28 , 108–114 (2014) [51] Christiansen, M.H., Chater, N.: The language faculty that wasn’t: a usage-based account of natural language recursion. Frontiers in Psychology 6, 1182 (2015) [52] Friston, K.: The free-energy principle: a unified brain theory? Nature reviews neuroscience 11 (2), 127–138 (2010) [53] Clark, A.: Whatever next? predictive brains, situated agents, and the future of cognitive science. Behavioral and brain sciences 36 (3), 181–204 (2013) [54] Lashley, K.S., et al. : The Problem of Serial Order in Behavior vol. 21. Bobbs-Merrill Oxford, ??? (1951) [55] Garrett, M.F.: The analysis of sentence production. In: Psychology of Learning and Motivation vol. 9, pp. 133–177. Elsevier, ??? (1975) [56] Bock, J.K.: Syntactic persistence in language production. Cognitive psychology 
+
+18 (3), 355–387 (1986) [57] Dell, G.S.: A spreading-activation theory of retrieval in sentence production. Psychological review 93 (3), 283 (1986) [58] Sampson, G., Hinton, M.: Two ideas of creativity. Evidence, experiment and argument in linguistics and philosophy of language, 15–26 (2016) [59] Fauconnier, G., Turner, M.: Conceptual blending, form and meaning. Recherches en communication 19 , 57–86 (2003) [60] Herbst, T.: Collo-creativity and blending: Recognizing creativity requires lexical 36 storage in constructional slots. Zeitschrift f¨ ur Anglistik und Amerikanistik 66 (3), 309–328 (2018) [61] Uhrig, P.: Creative intentions—the fine line between ‘creative’and ‘wrong’. Cognitive Semiotics 13 (1), 20202027 (2020) [62] Uhrig, P.: I don’t want to go all yoko ono on you. Zeitschrift f¨ ur Anglistik und Amerikanistik 66 (3), 295–308 (2018) [63] Hoffmann, T.: The 5c model of linguistic creativity: Construction grammar as a cognitive theory of verbal creativity. Journal of Foreign Languages and Cultures 
+
+8(1), 139–154 (2024) [64] Kriegeskorte, N., Mur, M., Bandettini, P.A.: Representational similarity analysis-connecting the branches of systems neuroscience. Frontiers in systems neuro-science 2, 249 (2008) 
+
+# Appendix A Cluster Token Assignments: γ = 0 .2, NVA, k = 3 
+
+Cluster 0 : same, new, use, own, particular, other, s, known, separate, such, form, individual, level, associated, similar, current, first, possible, key, important, related, limited, whole, previous, larger, additional, real, original, different, single, standard, active, available, common, future, minor, remaining, successful, traditional, indepen-dent, create, certain, regular, full, subsequent, notable, potential, popular, third, complete, main, specific, range, local, unknown, recent, various, number, true, major, strong, powerful, clear, significant, entire, wide, special, second, modern, poor, over-all, multiple, numerous, primary, prominent, several, high, american, mixed, official, complex, open, european, smaller, contemporary, century, last, commercial, fourth, older, critical, using, free, many, early, difficult, international, top, initial, famous, direct, national, chinese, small, living, good, great, final, greatest, next, secret, large, right, best, long, higher, fifth, canadian, better, few, indian, largest, provide, histori-cal, russian, white, german, professional, japanese, french, daily, body, opening, 20th, increased, private, heavy, short, dead, low, italian, soviet, light, seventh, total, annual, female, highest, sixth, foreign, black, military, double, average, polish, bad, natural, 19th, hard, big, positive, roman, central, federal, greater, latin, western, personal, cul-tural, ancient, middle, public, native, male, anti, human, dark, armed, social, civil, political, legal, economic, medical, physical, nuclear, senior, lower, severe, imperial, yellow, southern, religious, naval, electric, maximum, estimated, upper, financial, 1st 
+
+Cluster 1 : created, removed, followed, addition, worked, included, made, taken, put, done, introduced, given, found, seen, allowed, added, used, see, revealed, saw, involved, including, making, return, served, claimed, performed, returned, held, suggested, support, offered, appeared, reported, brought, called, said, recorded, estab-lished, led, way, compared, wanted, stated, take, described, noted, turned, came, placed, discovered, believed, formed, produced, leave, shows, ran, released, raised, 37 took, developed, leaving, wrote, run, changed, carried, taking, announced, make, give, present, gave, opened, following, supported, designed, saying, selected, moved, order, ordered, replaced, inspired, keep, find, allow, thought, based, required, lost, pass, takes, sent, left, awarded, provided, signed, include, working, featured, come, run-ning, includes, launched, composed, intended, played, passed, appear, built, playing, considered, planned, issued, went, directed, appears, lead, hit, met, going, caused, pro-posed, leading, published, fell, responsible, decided, go, sold, features, member, forced, moving, get, do, destroyed, arrived, received, joined, failed, named, know, captured, extended, agreed, won, written, killed, help, according, able, felt, win, told, runs, entered, asked, old, helped, winning, former, became, become, appointed, praised, got, reached, damaged, remains, unable, prime, ranked, becoming, nearby, located, remained, scored, defeated, born, t, suffered, fellow, married 
+
+Cluster 2 : time, work, place, events, days, position, part, event, group, result, life, line, history, years, day, end, site, company, games, success, role, development, period, project, list, set, case, months, example, release, show, hours, area, weeks, series, point, performance, works, rest, center, times, region, version, year, beginning, office, house, members, play, studio, men, production, start, game, man, stage, country, town, force, action, track, system, field, story, band, campaign, latter, month, power, scene, build-ing, side, film, station, team, post, book, shot, career, war, base, island, record, week, season, service, minutes, tour, control, others, half, death, match, world, party, points, school, bridge, design, children, song, crew, score, command, magazine, home, cast, attack, people, title, head, players, review, night, women, album, construction, fire, division, style, songs, started, ended, name, characters, episode, ground, areas, com-pleted, battle, writing, victory, family, coast, age, forces, ship, front, cut, training, recording, state, damage, music, broadcast, fight, sound, road, player, class, having, art, chart, close, m, ships, live, father, offensive, likely, c, began, radio, government, guns, football, college, land, summer, love, character, square, operation, finished, con-tinued, population, h, league, aircraft, air, least, fighting, media, law, feet, video, son, mother, much, police, fleet, sea, championship, television, species, troops, re, died, northwest, storm, km, late, wife, miles, route, president, spent, ft, water, critics, comic, rear, mm, mph, musical, hurricane 38 Appendix B Cluster Token Assignments: γ = 0 .2, NVA, k = 30 
+
+Cluster 0 : fourth, third, fifth, second, seventh, sixth, first, next, last, final, 20th, 19th, opening, 1st 
+
+Cluster 1 : russian, french, german, italian, chinese, polish, american, soviet, cana-dian, indian, japanese, european, local, independent, national, international, foreign, military, roman, civil, federal, imperial, professional, naval, private, senior, armed 
+
+Cluster 2 : known, modern, prominent, century, traditional, contemporary, older, popular, famous, native, unknown, ancient, powerful, living, western, latin, central, southern, anti 
+
+Cluster 3 : higher, high, low, average, increased, total, lower, highest, overall, maximum, greater, estimated, middle, upper 
+
+Cluster 4 : white, black, dead, male, female, yellow, dark 
+
+Cluster 5 : larger, large, small, smaller, largest, entire, whole 
+
+Cluster 6 : level, single, s, standard, wide, long, range, open, full, short, complete, right, light, double, body, hard, top, free, heavy, big, electric 
+
+Cluster 7 : political, economic, social, cultural, legal, religious, historical, financial, personal, public, medical 
+
+Cluster 8 : previous, subsequent, recent, new, future, current, original, successful, official, regular, initial, early, annual, daily 
+
+Cluster 9 : use, using, create, form, such, associated, provide, available 
+
+Cluster 10 : other, several, various, numerous, many, multiple, few, certain, individual, different, separate, additional, remaining, number 
+
+Cluster 11 : particular, similar, same, possible, important, specific, related, key, own, significant, real, common, potential, limited, minor, primary, strong, critical, poor, difficult, true, clear, good, active, notable, main, complex, major, direct, special, greatest, better, mixed, commercial, positive, great, best, bad, natural, secret, physical, human, severe, nuclear 
+
+Cluster 12 : won, win, winning, scored 
+
+Cluster 13 : removed, ran, moved, held, returned, formed, opened, came, carried, raised, served, return, run, built, left, leave, destroyed, leaving, placed, fell, turned, reported, arrived, established, passed, went, lost, pass, launched, come, running, cap-tured, sold, hit, moving, going, runs, issued, located, reached, go, damaged, extended, entered, caused, killed, nearby, suffered 
+
+Cluster 14 : intended, decided, wanted, able, order, allowed, unable, failed, required, agreed, planned, forced, help, helped, proposed 
+
+Cluster 15 : led, joined, replaced, named, met, selected, signed, sent, appointed, supported, member, awarded, according, told, asked, ordered, former, defeated, leading, fellow, old, born, married, ranked 
+
+Cluster 16 : become, became, becoming, remained, remains 
+
+Cluster 17 : get, got, t, way, do 
+
+Cluster 18 : said, stated, revealed, believed, thought, saying, found, shows, sug-gested, noted, seen, done, see, appeared, claimed, discovered, appears, felt, considered, know, appear, announced 39 Cluster 19 : addition, support, involved, responsible, present, lead, prime 
+
+Cluster 20 : take, give, making, given, put, taking, made, offered, make, took, gave, taken, takes, brought, find, saw, provided, allow, keep, received 
+
+Cluster 21 : created, included, introduced, followed, performed, produced, includ-ing, described, featured, worked, added, used, recorded, inspired, compared, composed, includes, wrote, called, developed, include, released, based, designed, features, pub-lished, directed, following, changed, working, playing, written, played, praised 
+
+Cluster 22 : work, members, life, case, result, role, group, example, history, oth-ers, children, works, men, times, period, man, project, list, people, characters, women, development, death, latter, party, players, father, name, family, war, world, son, mother, likely, age, having, fight, player, law, wife, much, critics, president, re 
+
+Cluster 23 : event, games, match, season, events, team, success, tour, career, campaign, championship, victory, points, league, football, action 
+
+Cluster 24 : performance, show, film, release, series, game, book, version, song, story, album, play, writing, music, songs, studio, episode, scene, production, band, magazine, video, recording, stage, track, cast, style, design, title, record, review, shot, score, sound, broadcast, character, art, television, love, live, comic, radio, media, chart, musical 
+
+Cluster 25 : days, months, weeks, beginning, years, hours, month, time, day, year, start, started, week, ended, minutes, completed, began, night, finished, continued, summer, died, spent, late 
+
+Cluster 26 : end, place, part, point, set, position, half, post, head, cut, close 
+
+Cluster 27 : line, area, site, company, force, region, island, center, rest, building, station, town, base, field, bridge, system, service, ground, house, ship, forces, power, areas, construction, office, command, division, control, coast, fire, attack, side, country, front, crew, ships, land, training, battle, damage, road, aircraft, home, state, school, air, fleet, guns, government, sea, troops, class, population, offensive, square, operation, police, northwest, college, fighting, water, species, storm, rear, hurricane 
+
+Cluster 28 : feet, km, ft, mph, m, h, miles, c, mm, route 
+
+Cluster 29 : least 
+
+# Appendix C Cluster Token Assignments: γ = 0 .2, Extended, k = 13 
+
+Cluster 0 : them, else, him, myself, you, ourselves, t, should, ’d, here, yourself, peo-ple, everything, will, we, forever, characters, not, would, anything, me, herself, might, someone, men, shall, man, do, there, does, something, did, anyone, i, players, chil-dren, must, could, just, whoever, ’ll, appears, nothing, ’re, women, get, can, everyone, got, appear, really, ve, somebody, ll, god, am, able, love, exactly, anybody, may, ta, everybody, ago, hasn, unable 
+
+Cluster 1 : also, actually, itself, themselves, indeed, therefore, apparently, even, sometimes, yet, be, nevertheless, nonetheless, likewise, consequently, often, initially, occasionally, it, simultaneously, otherwise, instead, already, probably, merely, others, possibly, simply, rather, himself, frequently, thus, been, still, well, being, certainly, 40 once, were, rarely, have, then, had, essentially, either, again, partly, reportedly, is, pre-viously, always, usually, they, perhaps, similarly, was, likely, are, having, subsequently, ultimately, he, who, mostly, traditionally, commonly, eventually, regularly, never, has, generally, soon, solely, easily, normally, typically, now, entirely, largely, specifically, effectively, consistently, quickly, she, increasingly, finally, originally, naturally, properly, remains, equally, literally, clearly, ever, potentially, truly, recently, primarily, mainly, longer, directly, personally, deliberately, immediately, suddenly, partially, completely, rapidly, extensively, briefly, constantly, successfully, permanently, currently, histori-cally, too, fully, virtually, quite, somewhat, significantly, seriously, much, physically, almost, widely, temporarily, repeatedly, far, closely, heavily, poorly, badly, slowly, offi-cially, gradually, slightly, considerably, exclusively, critically, thereby, species, strongly, greatly, more, severely, less, unusually, remained, re, publicly, locally, politically, com-mercially, fairly, nearly, predominantly, formally, very, positively, highly, actively, extremely, steadily, deeply, accidentally, relatively, unsuccessfully, pretty 
+
+Cluster 2 : that, though, however, because, but, although, furthermore, where, if, said, and, believed, whether, when, why, wherein, thought, saying, hence, which, additionally, whenever, notably, neither, nor, unless, stated, while, afterwards, how, both, so, what, whilst, whom, meanwhile, afterward, claimed, felt, name, especially, know, particularly, young 
+
+Cluster 3 : become, became, becoming, formerly, newly 
+
+Cluster 4: out, up, apart, of, for, created, followed, down, removed, as, on, included, aside, with, addition, from, including, introduced, to, put, except, part, place, over, found, involved, made, used, seen, than, called, see, added, making, allowed, given, saw, taken, through, back, off, behind, worked, return, compared, away, result, support, suggested, done, established, revealed, returned, described, example, recorded, brought, held, into, discovered, reported, led, formed, placed, in, whereas, served, include, performed, developed, raised, leave, take, by, known, leaving, pro-duced, noted, offered, following, about, supported, turned, includes, along, present, upon, taking, carried, make, based, give, took, appeared, allow, replaced, keep, opened, ran, released, towards, gave, wanted, came, around, like, besides, alongside, changed, moved, inspired, designed, onto, beyond, find, left, ordered, unlike, lost, selected, toward, wrote, required, running, provided, featured, e.g., at, outside, awarded, within, sent, takes, launched, built, due, working, caused, above, composed, signed, intended, considered, proposed, between, planned, responsible, passed, notwithstanding, under, amongst, inside, come, issued, using, moving, destroyed, prior, played, during, play-ing, among, hit, leading, against, closer, directed, despite, forced, captured, published, across, extended, joined, via, features, went, versus, fell, named, arrived, entered, close, sold, going, received, go, old, according, failed, below, decided, killed, help, for-mer, reached, written, continued, throughout, agreed, nearby, damaged, near, helped, praised, aboard, without, located, ranked, amidst, defeated, opposite, suffered, amid, fellow, vs. 
+
+Cluster 5 : two, three, five, four, six, seven, several, eight, nine, few, twelve, ten, many, other, twenty, all, numerous, thirty, number, various, remaining, some, multiple, these, those, most 41 Cluster 6 : ’s, same, new, own, s, use, the, particular, or, form, whose, such, one, earlier, first, their, individual, separate, level, any, current, similar, associated, possible, kind, another, whole, key, only, single, real, previous, limited, no, original, important, its, plus, related, standard, his, additional, larger, successful, future, active, full, third, common, available, create, different, complete, our, regular, minor, independent, tra-ditional, subsequent, popular, true, clear, second, enough, potential, unknown, strong, certain, powerful, cut, special, notable, range, recent, entire, poor, local, main, over-all, her, specific, wide, this, whatever, american, official, last, major, open, fourth, high, significant, modern, century, primary, mixed, complex, every, european, promi-nent, free, good, english, contemporary, critical, regardless, commercial, difficult, older, worldwide, famous, final, international, great, early, initial, next, top, chinese, direct, each, right, national, smaller, secret, living, long, greatest, fifth, best, small, australian, better, canadian, british, a, white, large, russian, french, african, german, japanese, higher, body, indian, non, dead, provide, professional, opening, 20th, daily, spanish, chief, short, historical, largest, italian, private, increased, little, seventh, low, heavy, soviet, prime, female, black, light, sixth, pre, annual, greek, double, per, bad, total, highest, my, your, military, polish, further, average, overseas, big, an, hard, foreign, 19th, green, grand, positive, roman, personal, natural, latin, federal, greater, public, male, dark, anti, cultural, ancient, human, native, blue, civil, red, armed, deep, musi-cal, legal, political, social, allied, christian, medical, economic, brown, senior, physical, imperial, nuclear, severe, yellow, lower, super, religious, royal, naval, electric, hot, maximum, financial, 1st 
+
+Cluster 7 : 56, 35, 44, 57, 39, 32, 20, 62, 85, 15, 33, 65, 16, 22, 48, 25, 43, 13, 58, 42, 66, 9, 14, 6, 12, 45, 8, 41, 46, 70, 26, 60, 10, 53, 80, 28, 30, 23, 75, 51, 17, 27, 24, 55, 54, 36, 7, 37, 76, 5, 90, 52, 21, 95, 34, 38, 40, 50, 11, 19, 18, 47, 29, 4, 110, 31, 49, 3, 2, 120, 250, 64, 150, 1, 400, 200, 300, 100, 800, 700, 600, 500, 0, 000, approximately, c, million, hundred, feet, thousand, km, least, ft, billion, m, h, mm, mi, °, miles, mph, estimated, roughly 
+
+Cluster 8 : area, city, africa, line, canada, company, region, island, europe, town, india, site, wales, australia, america, center, britain, position, territory, england, scot-land, china, france, rest, park, group, hall, force, islands, coast, station, country, germany, house, service, kingdom, mexico, run, society, bridge, bank, elsewhere, build-ing, states, cross, point, empire, office, hill, field, division, japan, base, association, ii, army, areas, florida, airport, republic, west, system, command, forces, bay, state, side, district, war, united, north, department, corps, south, london, texas, abroad, school, york, set, union, pass, construction, forth, power, drive, east, council, party, california, museum, street, home, virginia, control, ship, ground, campaign, road, club, county, attack, front, iii, river, university, washington, academy, railway, land, training, bat-tle, fire, church, government, half, head, annually, crew, manchester, congress, pacific, college, uk, brigade, regiment, damage, infantry, runs, ships, northwest, navy, chicago, family, creek, atlantic, angeles, court, michigan, battalion, ocean, squadron, class, boston, st., fleet, sea, parliament, air, machine, troops, square, population, act, lake, aircraft, northeast, oxford, guns, forward, us, police, operation, eastward, los, lead, offensive, northward, studios, ashore, law, fighting, san, depression, route, mountain, 42 highway, water, storm, southern, western, central, offshore, eastern, middle, northern, rear, aft, upper, hurricane 
+
+Cluster 9 : days, months, weeks, years, day, beginning, hours, time, month, year, start, ended, end, week, started, before, after, minutes, completed, ahead, announced, began, night, shortly, till, finished, summer, died, spent, mid, en 
+
+Cluster 10 : work, games, together, event, performance, events, show, series, release, success, version, life, history, play, game, role, list, alone, records, film, respec-tively, times, works, project, case, book, shows, studio, development, story, hers, band, jones, way, song, scene, smith, production, stage, magazine, songs, period, cast, episode, album, record, action, track, career, tour, title, members, season, writing, order, onwards, match, team, review, score, u.s., music, shot, soundtrack, race, award, awards, design, post, johnson, recording, latter, world, williams, style, twice, death, jackson, broadcast, points, d, later, star, grant, video, character, box, player, art, sound, fight, victory, thereafter, win, x, chart, media, screen, live, football, radio, age, television, league, entertainment, cup, conference, rock, b, championship, winning, comic, won, critics, co, yard, scored 
+
+Cluster 11 : son, captain, paul, thomas, father, john, george, manager, director, michael, david, edward, c., richard, james, charles, peter, william, scott, robert, martin, henry, president, a., lieutenant, mary, j., governor, mark, secretary, king, met, tom, wife, minister, member, sir, chris, prince, don, jack, lord, queen, al, van, mother, asked, saint, o, st, told, v., general, married, appointed, fort, de, born, la, und 
+
+Cluster 12 : 1960, 1955, 1959, 1957, 1968, 1971, 1972, 1975, 1965, 1962, 1963, 1958, 1961, 1949, 1986, 1950, 1974, 1977, 1990, 1954, 1970, 1989, 1969, 1966, 1964, 1982, 1951, 1979, 1976, 1952, 1946, 1983, 1973, 1992, 1967, 1956, 1978, 1987, 1937, 1947, 1936, 1991, 1981, 1994, 1995, 1932, 1999, 1988, 1933, 1938, 1984, 1993, 1980, 1996, 1953, 1934, 1985, 1926, 1997, 1945, 2002, 1998, 1940, 1921, 1920, 2001, 1930, 2004, 1939, 2005, 1915, 1927, 2003, 1910, 1913, 2006, 1944, 2007, 1917, 1941, 1919, 1948, 1914, 1942, 2014, 1912, 2008, 2000, 2009, 1943, 1916, 2012, 2010, 2011, 2013, 2015, 1918, 2016, april, june, november, october, july, february, january, december, march, september, august, since, until, late 
+
+# Appendix D Cluster Token Assignments: γ = 0 .2, Extended, k = 120 
+
+Cluster 0 : would, should, could, might, shall, will, must, can, did, not, does, able, unable, do, may 
+
+Cluster 1 : here, appears, appear, there, ago, exactly 
+
+Cluster 2 : men, people, women, children, players, man 
+
+Cluster 3 : myself, else, them, you, everything, ourselves, yourself, him, someone, me, ’d, anything, forever, t, herself, we, something, somebody, characters, anyone, whoever, ’re, really, everyone, nothing, just, ve, i, everybody, got, anybody, ’ll, get, love, god, am, ll, hasn, ta 43 Cluster 4 : mostly, solely, primarily, partly, mainly, largely, entirely, similarly, essentially, exclusively, specifically, extensively, partially, heavily, predominantly, his-torically, poorly, widely, completely, fully, strongly, closely, critically, commercially, locally, positively 
+
+Cluster 5 : significantly, considerably, slightly, greatly, much, severely 
+
+Cluster 6 : very, extremely, quite, too, equally, unusually, fairly, rather, somewhat, less, more, increasingly, truly, highly, relatively, pretty, politically, deeply 
+
+Cluster 7 : be, been, were, being, was, is, had, previously, already, are, have, having, has, once, originally, now, recently, remains, currently, remained 
+
+Cluster 8 : almost, either, well, virtually, nearly, far, species 
+
+Cluster 9: often, occasionally, sometimes, frequently, rarely, usually, always, normally, typically, merely, commonly, still, otherwise, regularly, generally, consis-tently, traditionally, easily, naturally, clearly, constantly, properly, longer, potentially, deliberately, physically, actively 
+
+Cluster 10 : actually, indeed, also, therefore, nonetheless, nevertheless, conse-quently, probably, itself, apparently, likewise, himself, yet, themselves, certainly, it, others, even, thus, who, he, simply, initially, possibly, reportedly, they, perhaps, she, likely, never, literally, ever 
+
+Cluster 11 : seriously, badly 
+
+Cluster 12 : eventually, subsequently, again, then, finally, quickly, soon, simul-taneously, instead, ultimately, immediately, effectively, briefly, suddenly, successfully, temporarily, rapidly, gradually, repeatedly, personally, slowly, permanently, officially, thereby, directly, formally, publicly, steadily, re, accidentally, unsuccessfully 
+
+Cluster 13 : afterwards, afterward, meanwhile, whom, name 
+
+Cluster 14 : young 
+
+Cluster 15 : particularly, especially 
+
+Cluster 16 : that, though, because, however, although, but, furthermore, if, where, whether, believed, said, and, why, wherein, when, thought, hence, saying, which, when-ever, unless, nor, neither, additionally, how, stated, while, notably, so, both, what, whilst, felt 
+
+Cluster 17 : know 
+
+Cluster 18 : claimed 
+
+Cluster 19 : became, become, becoming 
+
+Cluster 20 : newly, formerly 
+
+Cluster 21 : continued, planned 
+
+Cluster 22 : following, during, prior 
+
+Cluster 23 : used, created, added, made, making, given, make, provided, required, offered, developed, using, designed, based, proposed, received 
+
+Cluster 24 : apart, involved, aside, reported, seen, found, upon, than, due, about, discovered, caused, support, responsible, amidst, without, amid, suffered 
+
+Cluster 25 : result, suggested, addition, example, noted, revealed, notwithstand-ing, considered, despite, find, keep 
+
+Cluster 26 : known 
+
+Cluster 27 : performed, produced, worked, recorded, featured, wrote, appeared, composed, released, done, played, published, features, written, playing 44 Cluster 28 : present, part 
+
+Cluster 29 : arrived, leaving, moved, returned, captured, destroyed, left, formed, leave, built, placed, located, reached, damaged, killed, aboard 
+
+Cluster 30 : going, go, come 
+
+Cluster 31 : up, out, down, taken, place, back, removed, put, ran, away, held, off, take, took, came, taking, return, opened, carried, served, raised, turned, lost, running, established, changed, fell, went, takes, launched, passed, moving, working, extended, issued, sold, hit, close, closer 
+
+Cluster 32 : sent, signed, selected, ordered, awarded 
+
+Cluster 33 : to, wanted, allowed, decided, intended, helped, help, forced, agreed, failed 
+
+Cluster 34 : former, fellow, old, leading 
+
+Cluster 35 : with, including, included, as, alongside, for, called, behind, by, whereas, described, followed, include, compared, introduced, saw, replaced, see, except, unlike, like, led, besides, supported, gave, inspired, give, against, named, includes, brought, allow, e.g., directed, amongst, versus, joined, among, according, under, praised, defeated, opposite, ranked, vs. 
+
+Cluster 36 : below, above 
+
+Cluster 37 : from, of, through, into, on, in, over, towards, around, along, toward, within, across, onto, outside, at, between, near, via, beyond, entered, inside, nearby, throughout 
+
+Cluster 38 : six, five, eight, four, three, seven, nine, twelve, two, ten, twenty, thirty, number, remaining 
+
+Cluster 39 : many, several, other, few, numerous, various, some, these, all, multiple, most, those 
+
+Cluster 40 : chief 
+
+Cluster 41 : prime 
+
+Cluster 42 : french, british, russian, german, spanish, italian, chinese, polish, amer-ican, english, australian, indian, canadian, japanese, african, european, soviet, local, independent, greek, roman, foreign, national, international, overseas, military, allied, imperial, professional, civil, federal, private, native, naval, christian, royal, senior, latin, armed 
+
+Cluster 43 : grand 
+
+Cluster 44 : 20th, 19th, 1st 
+
+Cluster 45 : third, fourth, second, fifth, one, first, next, seventh, sixth, last, another, single, every, final, each, per, opening, top, pre 
+
+Cluster 46 : only 
+
+Cluster 47 : cut, long, short, open, double, hard, right, light, big, electric, super 
+
+Cluster 48 : white, blue, red, black, green, yellow, brown, dead, dark, hot 
+
+Cluster 49 : body 
+
+Cluster 50 : large, larger, smaller, small, largest 
+
+Cluster 51 : use, form, or, create, available, plus, provide 
+
+Cluster 52 : high, level, higher, low, limited, increased, average, wide, overall, range, total, standard, highest, maximum, greater, heavy, lower, daily, free, deep 45 Cluster 53 : previous, new, earlier, the, original, subsequent, current, future, recent, successful, early, official, regular, entire, traditional, annual 
+
+Cluster 54 : female, male, unknown, living, powerful 
+
+Cluster 55 : contemporary, modern, century, famous, prominent, older, popular, ancient, anti 
+
+Cluster 56 : political, economic, social, cultural, legal, religious, historical, finan-cial, public, medical 
+
+Cluster 57 : musical 
+
+Cluster 58 : associated, such, mixed 
+
+Cluster 59 : similar, specific, particular, same, possible, any, related, important, significant, certain, key, different, individual, separate, potential, common, additional, no, minor, primary, main, critical, complex, active, strong, major, notable, initial, direct, special, commercial, positive, physical, natural, further, non, human, severe, nuclear 
+
+Cluster 60 : this, whole, complete, full, a, an 
+
+Cluster 61 : ’s, own, whose, his, their, our, s, her, my, your, real, its, true, personal, great, greatest, secret 
+
+Cluster 62 : good, kind, better, whatever, poor, difficult, enough, clear, bad, regardless, best, little 
+
+Cluster 63 : worldwide 
+
+Cluster 64 : 400, 300, 500, 800, 600, 250, 700, 200, 150, 000, 100, 120, thousand, hundred, million, billion 
+
+Cluster 65 : 56, 44, 57, 46, 62, 43, 33, 39, 58, 66, 55, 42, 41, 35, 54, 53, 51, 32, 37, 48, 85, 45, 76, 65, 38, 70, 36, 34, 47, 80, 75, 52, 60, 40, 90, 95, 50, 110, 49, 64 
+
+Cluster 66 : 22, 14, 16, 15, 17, 13, 26, 8, 27, 28, 12, 23, 9, 21, 19, 6, 24, 20, 7, 11, 25, 29, 10, 18, 5, 4, 30, 31, 3, 2, 1, 0 
+
+Cluster 67 : feet, km, ft, mi, mph, m, h, c, miles, °, approximately, mm, roughly 
+
+Cluster 68 : least 
+
+Cluster 69 : estimated 
+
+Cluster 70 : st., machine 
+
+Cluster 71 : control 
+
+Cluster 72 : base, front, ground, drive, side, field, fire, power, cross, forward, air, square, rear, water, aft 
+
+Cluster 73 : training, offensive 
+
+Cluster 74 : class 
+
+Cluster 75 : set, forth, lead 
+
+Cluster 76 : head, half 
+
+Cluster 77 : run, pass, runs, point 
+
+Cluster 78 : attack, battle, rest, fighting, operation 
+
+Cluster 79 : line, bridge, station, road, building, park, airport, site, railway, center, street, hill, construction, highway, route 
+
+Cluster 80 : system 
+
+Cluster 81 : storm, hurricane, depression 
+
+Cluster 82 : island, area, islands, region, areas, coast, bay, river, creek, ocean, sea, pacific, land, atlantic, damage, lake, ashore, offshore, mountain, population 46 Cluster 83 : upper, middle 
+
+Cluster 84 : south, east, north, northwest, west, northeast, eastern, southern, northern, western, northward, eastward, central 
+
+Cluster 85 : corps, forces, brigade, force, army, battalion, infantry, regiment, squadron, division, troops, fleet, ships, command, ship, navy, aircraft, crew, guns, police 
+
+Cluster 86 : ii, war, campaign, group, abroad, position, iii 
+
+Cluster 87 : europe, africa, britain, canada, india, australia, france, germany, china, america, scotland, japan, kingdom, england, states, wales, territory, mexico, united, republic, country, elsewhere, empire, annually, uk, us 
+
+Cluster 88 : council, society, government, congress, company, party, association, office, parliament, department, court, service, union, act, law, family 
+
+Cluster 89 : city, town, hall, york, london, university, school, academy, college, house, chicago, county, angeles, district, boston, florida, virginia, california, texas, washington, state, michigan, bank, manchester, club, museum, church, home, oxford, los, studios 
+
+Cluster 90 : san 
+
+Cluster 91 : days, months, weeks, years, hours, beginning, month, day, time, year, start, ended, week, started, end, before, after, minutes, completed, announced, began, shortly, night, till, finished, died, summer, spent 
+
+Cluster 92 : ahead 
+
+Cluster 93 : mid 
+
+Cluster 94 : en 
+
+Cluster 95 : smith, jones, johnson, williams, jackson, hers, grant, members 
+
+Cluster 96 : thereafter, later, twice 
+
+Cluster 97 : won, winning, scored 
+
+Cluster 98 : event, games, season, match, team, career, championship, win, cup, race, tour, league, points, awards, conference, award, victory, football, record, score, chart, yard 
+
+Cluster 99 : player 
+
+Cluster 100 : d, b, x 
+
+Cluster 101 : co, post 
+
+Cluster 102 : performance, film, show, release, game, series, book, version, story, song, music, album, studio, play, soundtrack, writing, songs, production, scene, band, episode, magazine, video, track, stage, style, recording, cast, design, action, title, sound, review, broadcast, character, screen, art, television, box, live, star, comic, radio, media, rock, entertainment 
+
+Cluster 103 : work, events, history, works, success, life, development, records, list, project, times 
+
+Cluster 104 : world 
+
+Cluster 105 : critics 
+
+Cluster 106 : u.s., alone, latter 
+
+Cluster 107 : age 
+
+Cluster 108 : order 
+
+Cluster 109 : period, death 47 Cluster 110 : onwards, respectively, role, case 
+
+Cluster 111 : together, way 
+
+Cluster 112 : shot, fight 
+
+Cluster 113 : shows 
+
+Cluster 114 : met, asked, told, appointed, born 
+
+Cluster 115 : john, thomas, richard, george, james, william, david, paul, robert, edward, michael, peter, charles, henry, c., scott, j., a., martin, mary, mark, tom, chris, jack, don, sir, lord, van 
+
+Cluster 116 : son, father, director, president, manager, captain, member, secretary, minister, governor, king, lieutenant, wife, prince, queen, saint, mother, al, st, o, general, married, de, v., fort, la, und 
+
+Cluster 117 : october, june, july, december, april, november, january, september, february, august, march, until, since, late 
+
+Cluster 118 : 1986, 1997, 1995, 1996, 1999, 1990, 1994, 1989, 2002, 1983, 1998, 1992, 2004, 1993, 1988, 1987, 2005, 2003, 1984, 2006, 2007, 2001, 1982, 1991, 1979, 1985, 1977, 1975, 2009, 1972, 1971, 1978, 1981, 2008, 1976, 1968, 2014, 1980, 2011, 1974, 2010, 1970, 2013, 1969, 2012, 1973, 1966, 1958, 1967, 2015, 2000, 2016 
+
+Cluster 119 : 1937, 1936, 1946, 1949, 1938, 1932, 1947, 1955, 1933, 1934, 1940, 1957, 1926, 1951, 1921, 1952, 1950, 1961, 1956, 1939, 1915, 1913, 1959, 1963, 1930, 1919, 1945, 1920, 1914, 1965, 1960, 1912, 1917, 1944, 1916, 1953, 1910, 1941, 1962, 1964, 1954, 1942, 1943, 1927, 1948, 1918 48

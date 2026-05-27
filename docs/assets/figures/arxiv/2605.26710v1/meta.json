@@ -1,0 +1,62 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.26710v1/fig-001.webp",
+      "caption": "Fig. 4: Study layout in the two scenarios: Frontal Approach (right) and Blind Corner (left). Three of the 4 tasks (1, 2, and 3) follow the trajectory marked with black, while task 4 (and 4′) follow the one in gray (more details in Table I). Blue color represents the robot and human at the start of their interaction, while orange at the end of their interaction for Task 4 (and 4′).",
+      "page": 6,
+      "index": 1,
+      "width": 860,
+      "height": 318
+    },
+    {
+      "url": "assets/figures/arxiv/2605.26710v1/fig-002.webp",
+      "caption": "Fig. 5: Photos from the research setting. Robot and faces blurred due to confidentiality.",
+      "page": 6,
+      "index": 2,
+      "width": 526,
+      "height": 400
+    },
+    {
+      "url": "assets/figures/arxiv/2605.26710v1/fig-003.webp",
+      "caption": "TABLE II: Items for subjective measurement",
+      "page": 6,
+      "index": 3,
+      "width": 525,
+      "height": 237
+    },
+    {
+      "url": "assets/figures/arxiv/2605.26710v1/fig-004.webp",
+      "caption": "Fig. 6: Subjective evaluation on safety, smoothness, and politeness across Frontal Approach and Blind Corner scenarios.",
+      "page": 7,
+      "index": 4,
+      "width": 914,
+      "height": 452
+    },
+    {
+      "url": "assets/figures/arxiv/2605.26710v1/fig-005.webp",
+      "caption": "Fig. 7: Comparison of movement efficiency across four behaviors, measured by relative travel time compared to a perparticpant control walking speed.",
+      "page": 7,
+      "index": 5,
+      "width": 329,
+      "height": 469
+    },
+    {
+      "url": "assets/figures/arxiv/2605.26710v1/fig-006.webp",
+      "caption": "Fig. 2: System diagram of proposed navigation system. Images from fisheye cameras and point clouds from LiDAR are input to a navigation system which uses the data to perform person detection. Person detections are input to the global planner which also uses a pre-computed lane vector field to proactively change lanes in the presence of people.",
+      "page": 3,
+      "index": 6,
+      "width": 529,
+      "height": 272
+    },
+    {
+      "url": "assets/figures/arxiv/2605.26710v1/fig-007.webp",
+      "caption": "Fig. 3: PLC behavior during hallway encounter. The top image shows the robot and the human at the start of the interaction, and the following ones shows the state as the time progresses. The current poses of the robot and the human are marked in gray, their past trajectories with thick green-blue lines and the robot’s planned trajectory is displayed with a thin orange line. The trajectory of the person stops when they move past the camera of the robot, as the robot no longer detects their position. The grid resolution is 1m.",
+      "page": 5,
+      "index": 7,
+      "width": 529,
+      "height": 472
+    }
+  ]
+}

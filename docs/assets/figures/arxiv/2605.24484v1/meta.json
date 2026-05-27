@@ -1,0 +1,158 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.24484v1/fig-001.webp",
+      "caption": "Table 22: List of licenses for the codes and datasets we used in this work.",
+      "page": 43,
+      "index": 1,
+      "width": 822,
+      "height": 240
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24484v1/fig-002.webp",
+      "caption": "Table 17: Controlled comparison on symmetric variants with URS retrained on the same training problems as SPACE.",
+      "page": 38,
+      "index": 2,
+      "width": 827,
+      "height": 743
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24484v1/fig-003.webp",
+      "caption": "Table 7: Problem representations for 12 seen routing problems in our experiments.",
+      "page": 26,
+      "index": 3,
+      "width": 814,
+      "height": 227
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24484v1/fig-004.webp",
+      "caption": "Table 10: Detailed description of each component in UDR.",
+      "page": 29,
+      "index": 4,
+      "width": 814,
+      "height": 287
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24484v1/fig-005.webp",
+      "caption": "Table 18: Controlled comparison on asymmetric variants with URS retrained on the same training problems as SPACE.",
+      "page": 39,
+      "index": 5,
+      "width": 827,
+      "height": 693
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24484v1/fig-006.webp",
+      "caption": "Table 12: Detailed results on single-depot VRPs.",
+      "page": 34,
+      "index": 6,
+      "width": 827,
+      "height": 1216
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24484v1/fig-007.webp",
+      "caption": "Table 21: Detailed ablation results for Weight-Decomposed Adaptive Decoding.",
+      "page": 42,
+      "index": 7,
+      "width": 825,
+      "height": 583
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24484v1/fig-008.webp",
+      "caption": "Table 13: Detailed results on multi-depot VRPs.",
+      "page": 35,
+      "index": 8,
+      "width": 827,
+      "height": 987
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24484v1/fig-009.webp",
+      "caption": "Table 9: Problem representations of 52 unseen asymmetric VRP variants for zero-shot generalization.",
+      "page": 28,
+      "index": 9,
+      "width": 818,
+      "height": 835
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24484v1/fig-010.webp",
+      "caption": "Table 3: Zero-shot generalization on 24 unseen VRPs.",
+      "page": 8,
+      "index": 10,
+      "width": 827,
+      "height": 513
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24484v1/fig-011.webp",
+      "caption": "Table 2: Performance comparison on the 12 VRP variants used in SPACE training.",
+      "page": 8,
+      "index": 11,
+      "width": 827,
+      "height": 339
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24484v1/fig-012.webp",
+      "caption": "Table 19: Detailed ablation results for Bidirectional Fréchet Representation.",
+      "page": 40,
+      "index": 12,
+      "width": 824,
+      "height": 698
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24484v1/fig-013.webp",
+      "caption": "Table 16: Results on large-scale CVRPLIB instances (Set-XXL) [33] (N ∈ [3000, 7000]).",
+      "page": 36,
+      "index": 13,
+      "width": 740,
+      "height": 319
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24484v1/fig-014.webp",
+      "caption": "Table 15: Results on large-scale CVRPLIB instances (Set-X) [32] (N ∈ [500, 1000]).",
+      "page": 36,
+      "index": 14,
+      "width": 822,
+      "height": 523
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24484v1/fig-015.webp",
+      "caption": "Table 11: The hyperparameter settings of SPACE.",
+      "page": 32,
+      "index": 15,
+      "width": 406,
+      "height": 458
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24484v1/fig-016.webp",
+      "caption": "Table 20: Detailed ablation results for the number of pivots in BFR.",
+      "page": 41,
+      "index": 16,
+      "width": 825,
+      "height": 827
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24484v1/fig-017.webp",
+      "caption": "Table 8: Problem representations of 46 unseen symmetric VRP variants for zero-shot generalization.",
+      "page": 27,
+      "index": 17,
+      "width": 814,
+      "height": 744
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24484v1/fig-018.webp",
+      "caption": "Figure 3: The validation curves of URS trained w/o ACVRPBTW (denoted as URS-Original) and w. ACVRPBTW (denoted as URS-Extended).",
+      "page": 37,
+      "index": 18,
+      "width": 815,
+      "height": 196
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24484v1/fig-019.webp",
+      "caption": "Figure 2: Overview of our SPACE framework, illustrated on the (A)CVRPBTW instances. By leveraging a unified bidirectional Fréchet representation coupled with a weight-decomposed adaptive decoding mechanism, SPACE achieves robust cross-problem zero-shot generalization across both symmetric and asymmetric VRPs, particularly remarkable in asymmetric scenarios.",
+      "page": 5,
+      "index": 19,
+      "width": 826,
+      "height": 343
+    }
+  ]
+}

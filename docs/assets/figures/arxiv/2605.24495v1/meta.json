@@ -1,0 +1,94 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.24495v1/fig-001.webp",
+      "caption": "Fig. 7. Representative qualitative comparison in a real-world elevator scenario. The proposed Elevator-LIO achieves successful multi-floor localization. In contrast, Point-LIO shows a Type-I failure, where elevator motion is largely ignored and point clouds from different floors are incorrectly overlaid, while FAST-LIO2 shows a Type-II failure with strong pose inconsistency and eventual divergence.",
+      "page": 11,
+      "index": 1,
+      "width": 529,
+      "height": 588
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24495v1/fig-002.webp",
+      "caption": "Fig. 9. Representative long-range vertical traversal in the Dormitory sequences. These sequences evaluate vertical consistency during repeated floorby-floor elevator travel and direct return to the starting floor.",
+      "page": 15,
+      "index": 2,
+      "width": 500,
+      "height": 942
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24495v1/fig-003.webp",
+      "caption": "Fig. 10. A representative failure case of elevator-entry detection in a mirrored cabin. Reflection and multipath effects generate pseudo structures in the point cloud, making a single elevator appear as multiple adjacent cabins, which may cause the distance-threshold-based detector to fail in rare cases. Secondorder and even higher-order reflected structures can also be observed in the background.",
+      "page": 15,
+      "index": 3,
+      "width": 529,
+      "height": 242
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24495v1/fig-004.webp",
+      "caption": "Fig. 1. Conceptual illustration of Elevator-LIO. a: cross-floor robotic navigation requires continuous localization while the robot is transported by an elevator. b: inside the elevator cabin, the robot operates in a moving non-inertial frame, where the IMU captures motion affected by elevator transport, whereas the LiDAR observes cabin-relative geometry. Elevator-LIO addresses this sensing inconsistency by decoupling the robot-relative state from the elevator transport state. c: a representative real-world result showing continuous trajectory estimation and globally consistent multi-floor mapping across elevator traversal.",
+      "page": 2,
+      "index": 4,
+      "width": 1076,
+      "height": 388
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24495v1/fig-005.webp",
+      "caption": "Fig. 4. Mode-dependent activation patterns of the error-state transition matrix Fx,k and the noise injection matrix Fw,k . In non-inertial mode, the elevatorrelated coupling and transport-state blocks are enabled, whereas in inertial mode these elevator-related blocks are disabled.",
+      "page": 7,
+      "index": 5,
+      "width": 529,
+      "height": 231
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24495v1/fig-006.webp",
+      "caption": "TABLE IV ABSOLUTE TRANSLATIONAL ERRORS (RMSE, METERS) ON HILTI DATASET",
+      "page": 14,
+      "index": 6,
+      "width": 1064,
+      "height": 352
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24495v1/fig-007.webp",
+      "caption": "Fig. 2. Qualitative comparison of the handheld data collection sequence. The left column illustrates the first-person view alongside our sensor suite, capturing the complete trajectory with two consecutive revisits. The middle column shows that Elevator-LIO maintains continuous and geometrically consistent crossfloor localization. The local zoom-in views in (a)–(f) sequentially highlight our motion process. In (a) and (d), the robot undergoes aggressive motion inside the elevator, yet Elevator-LIO can still accurately separate and estimate the true motion components. Further experiments demonstrate that the baseline methods fail to maintain reliable localization even when the robot remains stationary inside the elevator.",
+      "page": 3,
+      "index": 7,
+      "width": 1076,
+      "height": 625
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24495v1/fig-008.webp",
+      "caption": "Fig. 8. Representative large-scale real-world elevator sequences in the experimental dataset. This category emphasizes cross-floor mapping consistency over long trajectories in large multi-floor environments. Insets show representative elevator regions and local trajectory details. The numbers in the lower-right corners indicate the final world-frame positions of the corresponding trajectories.",
+      "page": 13,
+      "index": 8,
+      "width": 1022,
+      "height": 1348
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24495v1/fig-009.webp",
+      "caption": "Fig. 3. Overview of the proposed Elevator-LIO framework. The system consists of pre-processing, elevator mode management, state estimation, and mapping.",
+      "page": 4,
+      "index": 9,
+      "width": 1076,
+      "height": 398
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24495v1/fig-010.webp",
+      "caption": "TABLE III TERMINAL VERTICAL ERRORS OF ELEVATOR-LIO VARIANTS.",
+      "page": 12,
+      "index": 10,
+      "width": 1076,
+      "height": 637
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24495v1/fig-011.webp",
+      "caption": "Fig. 5. Entry and exit trigger managers for elevator mode switching. Flag_Entry is triggered by the sharp drop of the LiDAR depth metric, and Flag_Exit is triggered by the variance pattern of the vertical motion during an elevator transition.",
+      "page": 9,
+      "index": 11,
+      "width": 529,
+      "height": 354
+    }
+  ]
+}

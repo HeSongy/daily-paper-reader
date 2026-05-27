@@ -1,0 +1,110 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.25170v1/fig-001.webp",
+      "caption": "Figure 5: (a) Validation losses of a GPF policy and a baseline static policy trained under identical parameters for the Atari task. Both policies are neural networks based on Expected SARSA. (b) Validation losses of a GPF network and a baseline static neural network trained under identical parameters for the CIFAR image classification task. (c) The eigenvalue spectra for the weights of the GPF network from the CIFAR image recognition task follow the Marchenko-Pastur distribution, maintaining the hypothesis of Pennington & Worah (2017).",
+      "page": 25,
+      "index": 1,
+      "width": 826,
+      "height": 229
+    },
+    {
+      "url": "assets/figures/arxiv/2605.25170v1/fig-002.webp",
+      "caption": "Table 7: GPF Agent",
+      "page": 25,
+      "index": 2,
+      "width": 392,
+      "height": 381
+    },
+    {
+      "url": "assets/figures/arxiv/2605.25170v1/fig-003.webp",
+      "caption": "Figure 1: Conceptualization of a Grow-Prune-Freeze (GPF) neural network.",
+      "page": 2,
+      "index": 3,
+      "width": 826,
+      "height": 344
+    },
+    {
+      "url": "assets/figures/arxiv/2605.25170v1/fig-004.webp",
+      "caption": "Figure 2: Q-learning vs Expected SARSA in Olfactory Navigation",
+      "page": 7,
+      "index": 4,
+      "width": 829,
+      "height": 574
+    },
+    {
+      "url": "assets/figures/arxiv/2605.25170v1/fig-005.webp",
+      "caption": "Table 3: GPF Network Hyperparameters for Plume Task",
+      "page": 22,
+      "index": 5,
+      "width": 656,
+      "height": 404
+    },
+    {
+      "url": "assets/figures/arxiv/2605.25170v1/fig-006.webp",
+      "caption": "Table 2: Hyperparameters for the plume navigation GPF agent.",
+      "page": 22,
+      "index": 6,
+      "width": 486,
+      "height": 464
+    },
+    {
+      "url": "assets/figures/arxiv/2605.25170v1/fig-007.webp",
+      "caption": "Table 4: Evaluation success rate and network state throughout training. 4500 episodes were established as the limit in order to timebox experiments. (G = grow event; P = prune event)",
+      "page": 23,
+      "index": 7,
+      "width": 614,
+      "height": 350
+    },
+    {
+      "url": "assets/figures/arxiv/2605.25170v1/fig-008.webp",
+      "caption": "Figure 3: GPF Expected SARSA training curve on the plume navigation task. The orange dotted lines denote the success rate of the baseline agent; the solid blue line denotes that of the GPF agent. Dashed green lines mark grow events; purple annotations show the fraction of weights retained by each prune pass. The red dot marks the best checkpoint. The bottom access indicates layer count.",
+      "page": 8,
+      "index": 8,
+      "width": 829,
+      "height": 408
+    },
+    {
+      "url": "assets/figures/arxiv/2605.25170v1/fig-009.webp",
+      "caption": "Table 8: GPF Autoregressive Model",
+      "page": 27,
+      "index": 9,
+      "width": 418,
+      "height": 404
+    },
+    {
+      "url": "assets/figures/arxiv/2605.25170v1/fig-010.webp",
+      "caption": "Figure 6: (a) Training loss of the GPT-2 baseline; training parameters were identical to the GPF variant below. (b) The validation loss shows steady convergence over training, even while growing and pruning its own parameters. (c) The GPF reached the maximum number of layers at around 2500 epochs and kept training. (d) The pruning ratio over each adaptation event shows that the number of weights pruned is much higher at the beginning of training, but tapers as eigenvalues stabilize.",
+      "page": 27,
+      "index": 10,
+      "width": 829,
+      "height": 637
+    },
+    {
+      "url": "assets/figures/arxiv/2605.25170v1/fig-011.webp",
+      "caption": "Table 5: GPF Classifier Hyperparameters",
+      "page": 24,
+      "index": 11,
+      "width": 648,
+      "height": 380
+    },
+    {
+      "url": "assets/figures/arxiv/2605.25170v1/fig-012.webp",
+      "caption": "Table 6: GPF Classifier",
+      "page": 24,
+      "index": 12,
+      "width": 392,
+      "height": 331
+    },
+    {
+      "url": "assets/figures/arxiv/2605.25170v1/fig-013.webp",
+      "caption": "Figure 4: The federated learning mechanism for the Sigma olfaction-vision-language model.",
+      "page": 9,
+      "index": 13,
+      "width": 829,
+      "height": 506
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.24782v1/fig-001.webp",
+      "caption": "Figure 2. Static Fidelity (Qstat) and Regime Degradation: Normalized absolute error (ξstat) of state estimation across diverse VFM architectures, stratified by intensity. A consistent performance gap is observed across all model families: the Intense regime exhibits significantly higher median errors and variance compared to the Moderate regime. This confirms the Visual Saturation hypothesis, where representations struggle to resolve fine-grained intensity differences in the high-intensity tail due to feature saturation.",
+      "page": 6,
+      "index": 1,
+      "width": 986,
+      "height": 212
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24782v1/fig-002.webp",
+      "caption": "Figure 9. PCA exemplar visualization of the first principal component (PC1) of DINOv3 latent representation.",
+      "page": 26,
+      "index": 2,
+      "width": 1000,
+      "height": 1317
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24782v1/fig-003.webp",
+      "caption": "Figure 6. Supervised pixel baseline. Predicted versus target pressure for a ResNet-18 trained from scratch and evaluated on held-out intense storms (Pc < 980 hPa). In the intense regime, a supervised pixel-space model achieves a normalized mean and median absolute error of 0.4 and 0.3 respectively, indicating that pressure remains statistically predictable from imagery despite increasing uncertainty.",
+      "page": 21,
+      "index": 3,
+      "width": 480,
+      "height": 263
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24782v1/fig-004.webp",
+      "caption": "Figure 1. The Perception-Physics Paradox: (a) In intense regimes (Pc < 980 hPa), visually near-identical cyclones (e.g., 905 vs. 915 hPa) exhibit indistinguishable eye and cloud structures, causing vision models to map them to similar latent states and fail to resolve physically meaningful pressure differences. (b) Visually salient temporal changes (e.g., cloud expansion) can induce large predicted intensity shifts even when the true physical evolution is negligible (true ∆Pc = 0 hPa vs. predicted ∆Pc > 30 hPa).(c) Cross-agency evaluation—training on all but one meteorological agency and testing on the held-out agency—shows strong out-of-distribution performance, suggesting robust visual generalization. (d) Despite this perceptual robustness, latent representations collapse along critical physical axes in intense regimes, demonstrating that perceptual generalization alone does not guarantee physically meaningful representation structure.",
+      "page": 2,
+      "index": 4,
+      "width": 958,
+      "height": 380
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24782v1/fig-005.webp",
+      "caption": "Figure 4. Failure Mode Analysis: DINOv3-base representations collapse in intense regimes. (a) PC1 varies systematically with pressure in moderate regimes, but this variation compresses in intense regimes, indicating reduced latent resolution of physically meaningful intensity differences. (b) Effective dimensionality drops in intense pressure bins, showing that within-bin variation concentrates into fewer latent directions. (c) Mean pairwise feature spread decreases in the same regime, showing that physically distinct storms are mapped closer together in latent space.",
+      "page": 7,
+      "index": 5,
+      "width": 649,
+      "height": 204
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24782v1/fig-006.webp",
+      "caption": "Figure 8. Dynamic Coherence gap using the aggregated spatial mean of spatial tokens. The coherence error increases with storm intensity, mirroring the behavior observed with CLS-based representations.",
+      "page": 22,
+      "index": 6,
+      "width": 483,
+      "height": 384
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24782v1/fig-007.webp",
+      "caption": "Figure 7. Static Fidelity error using the aggregated spatial mean of all spatial tokens. As in Fig. 2, performance degrades consistently in intense regimes.",
+      "page": 22,
+      "index": 7,
+      "width": 986,
+      "height": 212
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24782v1/fig-008.webp",
+      "caption": "Figure 10. Manifold inconsistency. Wind–pressure relationships stratified by latitude. (A) Ground truth: Physical constraints imply that low-latitude storms (< 15◦) require higher winds to sustain the same pressure deficit than high-latitude storms (> 25◦), producing a clear separation (∆V ≈ 15 kt) in the intense regime. (B) Model prediction: The model partially recovers the directional trend but underestimates the magnitude of ∆Vm, indicating a violation of manifold consistency.",
+      "page": 27,
+      "index": 8,
+      "width": 787,
+      "height": 429
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24782v1/fig-009.webp",
+      "caption": "Figure 5. Dataset inspection: Per-agency distributions of minimum central pressure Pc (left) and maximum sustained wind speed Vm (right) in the TC-BENCH dataset. While pressure distributions are broadly consistent across agencies, wind speed exhibits noticeable variability due to differences in averaging conventions (e.g., 1-minute vs. 10-minute winds), underscoring the greater robustness of pressure as a cross-agency physical indicator.",
+      "page": 20,
+      "index": 9,
+      "width": 899,
+      "height": 566
+    }
+  ]
+}

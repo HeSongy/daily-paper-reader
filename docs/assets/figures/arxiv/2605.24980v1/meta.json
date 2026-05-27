@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.24980v1/fig-001.webp",
+      "caption": "Fig. 2: Partial trajectory results (50 s-80 s) for the GPSonly and GPS+2PL cases using LS and FGO, compared with ground truth. For readability, only the final 30 s of the experiment are shown.",
+      "page": 2,
+      "index": 1,
+      "width": 370,
+      "height": 356
+    }
+  ]
+}
