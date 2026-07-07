@@ -1,0 +1,62 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2607.03338v1/fig-001.webp",
+      "caption": "Fig. 4: Attitude RMSE averaged over all trajectories and IMU grades, without initial accelerometer bias offset.",
+      "page": 5,
+      "index": 1,
+      "width": 462,
+      "height": 464
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03338v1/fig-002.webp",
+      "caption": "Fig. 2: Statistical Monte Carlo performance results showing total position RMSE and standard deviation per trajectory across IMU grades, without initial accelerometer bias offset.",
+      "page": 5,
+      "index": 2,
+      "width": 872,
+      "height": 412
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03338v1/fig-003.webp",
+      "caption": "Fig. 3: Position, Velocity, and attitude errors and respective 3σ uncertainty for a 90-minute straight flight (Trajectory 10) comparing the closed- and open-loop filters using a tactical grade IMU.",
+      "page": 5,
+      "index": 3,
+      "width": 462,
+      "height": 375
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03338v1/fig-004.webp",
+      "caption": "TABLE II: Position, velocity, and attitude sub-matrices of the linearized error state kinematics",
+      "page": 4,
+      "index": 4,
+      "width": 1014,
+      "height": 344
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03338v1/fig-005.webp",
+      "caption": "Fig. 5: Accelerometer and Gyroscope bias estimates with 3σ uncertainty for a 30min straight trajectory (07), comparing tacticalgrade IMU without and with a constant initial accelerometer bias.",
+      "page": 6,
+      "index": 5,
+      "width": 462,
+      "height": 312
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03338v1/fig-006.webp",
+      "caption": "Fig. 6: Total position RMSE and standard deviation per trajectory for the shorter trajectories with initial accelerometer bias offset across IMU grades.",
+      "page": 6,
+      "index": 6,
+      "width": 462,
+      "height": 304
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03338v1/fig-007.webp",
+      "caption": "TABLE I: Notation",
+      "page": 2,
+      "index": 7,
+      "width": 512,
+      "height": 486
+    }
+  ]
+}

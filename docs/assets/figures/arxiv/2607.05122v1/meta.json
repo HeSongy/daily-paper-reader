@@ -1,0 +1,70 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2607.05122v1/fig-001.webp",
+      "caption": "Fig. 4. The normalised mean error for each waypoint for the base prediction (model = omnivla-base).",
+      "page": 4,
+      "index": 1,
+      "width": 508,
+      "height": 375
+    },
+    {
+      "url": "assets/figures/arxiv/2607.05122v1/fig-002.webp",
+      "caption": "Fig. 5. The overall mean distance error for each model/goal modality.",
+      "page": 4,
+      "index": 2,
+      "width": 508,
+      "height": 393
+    },
+    {
+      "url": "assets/figures/arxiv/2607.05122v1/fig-003.webp",
+      "caption": "Fig. 2. The mean error for each waypoint for the base prediction (model = omnivla-base).",
+      "page": 4,
+      "index": 3,
+      "width": 507,
+      "height": 375
+    },
+    {
+      "url": "assets/figures/arxiv/2607.05122v1/fig-004.webp",
+      "caption": "TABLE II TABLE OF ALL THE LANGUAGE GOALS FOR EACH SEGMENT AND THEIR CORRESPONDING SEGMENT ID AND STARTING SECOND IN THE GRAND TOUR EPISODE ETH-2.",
+      "page": 7,
+      "index": 4,
+      "width": 576,
+      "height": 558
+    },
+    {
+      "url": "assets/figures/arxiv/2607.05122v1/fig-005.webp",
+      "caption": "TABLE I PER-WAYPOINT PREDICTION ERROR (METERS) BY GROUNDING TYPE, DISAGGREGATED BY INSTRUCTION LENGTH. (VALUES SHOW MEAN EUCLIDEAN DISTANCE FROM PREDICTED TO GROUND-TRUTH WAYPOINTS. SHORT INSTRUCTIONS (13 SEGMENTS) INCLUDE ATOMIC INSTRUCTIONS SUCH AS “TURN LEFT”; LONG INSTRUCTIONS (6 SEGMENTS) ARE DESCRIPTIVE NAVIGATION GOALS. BEST-PERFORMING GROUNDING CONDITION PER ROW IS BOLDED.)",
+      "page": 5,
+      "index": 5,
+      "width": 525,
+      "height": 252
+    },
+    {
+      "url": "assets/figures/arxiv/2607.05122v1/fig-006.webp",
+      "caption": "Fig. 6. Mean error per segment vs instruction length of that segment (model = omnivla-finetuned-cast).",
+      "page": 5,
+      "index": 6,
+      "width": 502,
+      "height": 377
+    },
+    {
+      "url": "assets/figures/arxiv/2607.05122v1/fig-007.webp",
+      "caption": "Fig. 7. The mean error for each segment by trajectory type, stops and stair segments removed (model = omnivla-base).",
+      "page": 5,
+      "index": 7,
+      "width": 508,
+      "height": 372
+    },
+    {
+      "url": "assets/figures/arxiv/2607.05122v1/fig-008.webp",
+      "caption": "Fig. 1. Overview of the proposed segmentation-based visual grounding and goal augmentation method. SegFormer produces real-time semantic segmentation to identify traversable (green) and non-traversable (red) regions. These overlays are used to augment both current observation and goals, which are then passed to the VLA policy to produce trajectories τ1 and τ2.",
+      "page": 2,
+      "index": 8,
+      "width": 993,
+      "height": 493
+    }
+  ]
+}

@@ -1,0 +1,689 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-07T21:51:52.682988+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 15,
+    "deep_cap": 6,
+    "deep_selected": 6,
+    "quick_candidates": 24,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2607.03920v1",
+      "source": "arxiv",
+      "title": "LH-AVLN: A Benchmark for Long-Horizon Audio-Visual-Language Navigation",
+      "abstract": "Embodied navigation is moving toward long-horizon missions, yet existing long-horizon benchmarks are largely acoustically silent, and audio-visual navigation tasks typically focus on a single goal. We introduce LH-AVLN, a benchmark for Long-Horizon Audio-Visual-Language Navigation that combines multi-goal mission execution, heterogeneous goal specifications, and persistent spatialized acoustic cues. In LH-AVLN, an agent receives a global mission of two to four goals specified by category, language description, or reference image, and navigates with RGB-D observations, pose, and binaural audio in indoor 3D environments. The benchmark supports both ordered and unordered missions, where alternating goal-associated sounds can guide non-line-of-sight search but may also become distractors as mission progress changes. We further develop PAG-Nav, a training-free reference agent that maintains a temporal uniform semantic map and performs progressive goal-state planning, using sound for search while reserving completion for visual-semantic verification. Experiments show that existing vision-language, memory-based, and audio-visual agents struggle to complete full LH-AVLN missions, and that PAG-Nav provides a stronger diagnostic baseline while leaving substantial room for future progress.",
+      "authors": [
+        "Rufeng Chen",
+        "Yue Chang",
+        "Zili Shao",
+        "Zhaofan Zhang",
+        "Hechang Chen",
+        "Hui Xiong",
+        "Sihong Xie"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-07-04T15:25:25+00:00",
+      "link": "https://arxiv.org/pdf/2607.03920v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "long-horizon audio-visual-language navigation benchmark",
+      "llm_evidence_cn": "长程视听觉语言导航基准",
+      "llm_evidence": "长程视听觉语言导航基准",
+      "canonical_evidence": "长程视听觉语言导航基准",
+      "llm_tldr_en": "LH-AVLN is a new benchmark for long-horizon embodied navigation using multi-modal cues in 3D environments.",
+      "llm_tldr_cn": "LH-AVLN 是一个针对 3D 环境中利用多模态线索进行长程具身导航的新基准。",
+      "llm_tldr": "LH-AVLN 是一个针对 3D 环境中利用多模态线索进行长程具身导航的新基准。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.04541v1",
+      "source": "arxiv",
+      "title": "CRISP: A Spatiotemporal Camera-Radar Backbone for Driving via Forecasting-Based World-Model Pretraining",
+      "abstract": "Camera-radar (CR) fusion is a practical sensing configuration for autonomous driving, but existing models are typically trained with task-specific supervision, limiting reusable representation learning. We present CRISP, a spatiotemporal CR backbone pretrained through forecasting-based representation learning. Given historical multi-view images and radar sweeps, CRISP learns a unified bird's-eye-view (BEV) representation by predicting future LiDAR point clouds. LiDAR is used only as privileged supervision during pretraining; the deployed model requires only camera and radar. To make forecasting-based pretraining effective for CR fusion, CRISP introduces an enhanced radar encoder, radar-enhanced temporal self-attention, and multimodal feature rendering with modality innovation gating. These components inject radar range and Doppler cues into BEV temporal propagation and allow BEV tokens to selectively incorporate camera and radar evidence. Experiments on nuScenes show that CRISP improves long-horizon point cloud forecasting and transfers effectively to downstream tasks, including 3D detection, tracking, online mapping, motion forecasting, future occupancy prediction, and planning, suggesting that predictive CR pretraining is a promising path toward scalable driving representations under practical sensor configurations. The project website is https://umfieldrobotics.github.io/CRISP.",
+      "authors": [
+        "Jingyu Song",
+        "Yi Liu",
+        "Katherine A. Skinner"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG",
+        "cs.RO"
+      ],
+      "published": "2026-07-05T23:07:45+00:00",
+      "link": "https://arxiv.org/pdf/2607.04541v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "forecasting-based world-model pretraining for autonomous driving",
+      "llm_evidence_cn": "基于预测的世界模型预训练用于自动驾驶",
+      "llm_evidence": "基于预测的世界模型预训练用于自动驾驶",
+      "canonical_evidence": "基于预测的世界模型预训练用于自动驾驶",
+      "llm_tldr_en": "CRISP uses forecasting-based world-model pretraining to learn unified BEV representations for autonomous driving.",
+      "llm_tldr_cn": "CRISP通过基于预测的世界模型预训练，学习用于自动驾驶的统一鸟瞰图表示。",
+      "llm_tldr": "CRISP通过基于预测的世界模型预训练，学习用于自动驾驶的统一鸟瞰图表示。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "世界模型的结构与在自主系统中的应用",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.03146v1",
+      "source": "arxiv",
+      "title": "Exp2VLA: Enabling Vision-Language-Action for Drone Navigation from Expert Demonstrations",
+      "abstract": "Vision-language-action (VLA) models open a new path toward intuitive robot control by directly linking perception, language, and action in a single end-to-end framework. Yet for UAVs, practical adoption remains difficult because existing solutions are either computationally heavy or insufficiently capable in complex environments. In this work, we propose a practical expert-distillation pipeline (Exp2VLA) for language-conditioned drone navigation. The core idea is to distill expert behavior, obtained from reinforcement learning, teleoperation, or other controllers, into training data that can be used to fine-tune compact VLA models. This allows existing control strategies to be transferred into a unified language-guided navigation model, reducing manual system integration and lowering the barrier for deploying new robot behaviors. Experiments in both sim-to-sim and simulation-in-the-loop settings across multi-object scenes show that the fine-tuned models can handle varied semantic commands and generalize to unseen target compositions. The proposed framework demonstrates how expert-policy distillation can help mechatronic systems move from specialized control modules toward more flexible and reusable robot intelligence.",
+      "authors": [
+        "Van Huyen Dang",
+        "Kabilesh Rajendran",
+        "Erdi Sayar",
+        "Erdal Kayacan"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-07-03T09:37:48+00:00",
+      "link": "https://arxiv.org/pdf/2607.03146v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "vision-language-action for drone navigation in complex environments",
+      "llm_evidence_cn": "复杂环境下的无人机视觉-语言-动作导航",
+      "llm_evidence": "复杂环境下的无人机视觉-语言-动作导航",
+      "canonical_evidence": "复杂环境下的无人机视觉-语言-动作导航",
+      "llm_tldr_en": "Proposes Exp2VLA to distill expert behaviors into compact models for language-guided drone navigation.",
+      "llm_tldr_cn": "提出Exp2VLA，将专家行为蒸馏到紧凑模型中，用于语言引导的无人机导航。",
+      "llm_tldr": "提出Exp2VLA，将专家行为蒸馏到紧凑模型中，用于语言引导的无人机导航。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.03792v1",
+      "source": "arxiv",
+      "title": "From Region Arrival to Instance-Level Grounding in Vision-and-Language Navigation",
+      "abstract": "Vision-and-Language Navigation (VLN) agents may satisfy conventional success criteria while still failing to establish reliable object-level grounding, because current evaluation protocols mainly reward stopping within a 3-meter radius and largely ignore the agent's final orientation and target visibility. We formalize this limitation as the Last-3-Meter Grounding Gap and introduce three instance-centric metrics to quantify proximity precision, target visibility, and final-view grounding. To mitigate this gap, we propose REALM (Region-to-Entity Alignment for Last-3-Meter Navigation), a plug-and-play, architecture-agnostic refinement module that decouples fine-grained target approaching from long-horizon navigation. REALM uses a visibility-aware stopping strategy to reduce premature termination and improve final viewpoint alignment. We further construct REVERIE-AIM, which provides object-instance-level goals and 180K short-horizon training samples for final-stage target approaching. Extensive evaluations across four diverse VLN backbones show that REALM consistently improves proximity precision and visual grounding success, demonstrating its broad applicability.",
+      "authors": [
+        "Xiangyu Shi",
+        "Ruoxi Yang",
+        "Wei Tao",
+        "Jiwen Zhang",
+        "Yanyuan Qiao",
+        "Qi Wu"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV"
+      ],
+      "published": "2026-07-04T09:44:57+00:00",
+      "link": "https://arxiv.org/pdf/2607.03792v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Vision-and-Language Navigation agents and instance-level grounding metrics",
+      "llm_evidence_cn": "视觉语言导航智能体与实例级定位指标",
+      "llm_evidence": "视觉语言导航智能体与实例级定位指标",
+      "canonical_evidence": "视觉语言导航智能体与实例级定位指标",
+      "llm_tldr_en": "Proposes REALM to improve fine-grained target grounding in vision-and-language navigation tasks.",
+      "llm_tldr_cn": "提出REALM模块以改进视觉语言导航任务中的细粒度目标定位。",
+      "llm_tldr": "提出REALM模块以改进视觉语言导航任务中的细粒度目标定位。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.04426v1",
+      "source": "arxiv",
+      "title": "ACE-Brain-0.5: A Unified Embodied Foundational Model for Physical Agentic AI",
+      "abstract": "Embodied AI is moving from isolated perception or action modules toward physical agents that understand, plan under goals, act through robot bodies, monitor progress, and improve from experience. Existing systems address this loop only in parts: end-to-end policies generate actions but often lack spatial reasoning, planning, and execution assessment, while robot-agent systems orchestrate tools or specialists but do not learn a shared representation. This fragmentation limits general Physical Agentic AI. We present ACE-Brain-0.5, a unified embodied foundation model that organizes robot intelligence into five coupled functions: spatial perception, decision making, embodied interaction, self-monitoring, and self-improvement. Built on ACE-Brain-0, which established spatial intelligence as a shared scaffold across robot platforms, ACE-Brain-0.5 extends an understanding-centric model into a closed-loop foundation model. A single 8B backbone instantiates the first four functions: grounding objects and affordances, reasoning over 3D and egocentric spatial relations, decomposing instructions into subgoals, generating navigation and manipulation actions, and estimating progress for verification and recovery. To unify these capabilities without cross-task interference, we introduce SSR+, which extends Scaffold-Specialize-Reconcile with a Reactivate stage after task-vector merging. The fifth function, self-improvement, is realized by a companion framework that updates external execution state, including task schemas, spatial memory, and failure-recovery cases, from rollouts. Across fifteen benchmarks, ACE-Brain-0.5 improves over ACE-Brain-0 on 14 of 18 spatial perception and grounding benchmarks, achieves competitive navigation and manipulation performance, and provides strong progress estimation in ID and OOD settings. Together, these results mark an early step toward general Physical Agentic AI.",
+      "authors": [
+        "ACE-Brain Team",
+        ":",
+        "Ziyang Gong",
+        "Haoming Gu",
+        "Zehang Luo",
+        "Tianyi Zhang",
+        "Tao Tao",
+        "Yixiao Chi",
+        "Zhe Liu",
+        "Lingsi Zhu",
+        "Jingyuan Liu",
+        "Anke Tang",
+        "Songze Li",
+        "Yilun Kong",
+        "Ningjing Liu",
+        "Tianyu Zhu",
+        "Yunpeng Qing",
+        "Shuang Luo",
+        "Xiang Liu",
+        "Shi Fu",
+        "Dawei Nie",
+        "Sixiang Liu",
+        "Zhexi Wen",
+        "Feng Pan",
+        "Xiaofeng Wang",
+        "Zhi Hou",
+        "Chunxiao Liu",
+        "Xue Yang",
+        "Junchi Yan",
+        "Hengshuang Zhao",
+        "Dacheng Tao",
+        "Xiaogang Wang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-07-05T17:43:06+00:00",
+      "link": "https://arxiv.org/pdf/2607.04426v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "unified embodied foundation model for spatial perception and decision making",
+      "llm_evidence_cn": "用于空间感知和决策的统一具身基础模型",
+      "llm_evidence": "用于空间感知和决策的统一具身基础模型",
+      "canonical_evidence": "用于空间感知和决策的统一具身基础模型",
+      "llm_tldr_en": "A unified embodied foundation model integrating spatial perception, decision making, and self-improvement.",
+      "llm_tldr_cn": "一种集成了空间感知、决策制定和自我改进的统一具身智能基础模型。",
+      "llm_tldr": "一种集成了空间感知、决策制定和自我改进的统一具身智能基础模型。",
+      "llm_tags": [
+        "query:navwm:composite"
+      ],
+      "matched_query_tag": "query:navwm:composite",
+      "matched_query_text": "Papers central to 隐空间、导航与世界模型相关论文检索, especially work that connects or combines: 研究隐空间表示及其在智能系统中的作用; 智能体在复杂环境中的导航策略与学习方法; 世界模型的结构与在自主系统中的应用; 探索表示学习在构建世界模型与导航中的运用; 基于隐空间表示的规划与决策模型; 空间表示与认知映射的算法及模型; 检索关于隐空间表示在世界模型和导航中的研究论文; 寻找利用世界模型进行强化学习或规划的最新研究; 探索智能体如何利用隐空间进行导航与环境理解.",
+      "matched_requirement_id": "req-composite-navwm",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.05122v1",
+      "source": "arxiv",
+      "title": "Green for Go, Red for No: Visual Grounding via Semantic Segmentation for VLA Navigation Policies",
+      "abstract": "Vision-language-action (VLA) models enable robot navigation from natural language and visual goals, but remain susceptible to perceptual distractions and ambiguous scene interpretations. This paper presents the first empirical evaluation of visual grounding for VLA navigation policies. We propose a real-time segmentation-based grounding method that highlights traversable areas in green and non-traversable areas in red using SegFormer. Two variants are evaluated: observation-only segmentation and joint observation-goal augmentation. Using OmniVLA on the Grand Tour dataset, we show that visual grounding reduces the mean waypoint error by 27-44% at the farthest waypoint, depending on the instruction length. The benefits are greater for long instructions than for short instructions, and grounding provides little improvement for image goals. Normalized error analysis indicates that grounding primarily acts as a trajectory length regularizer, reducing the predicted path length by 30% without improving per-unit-distance reasoning. Our results indicate that visual grounding offers a simple, computationally inexpensive method to improve VLA navigation without model retraining, although it cannot compensate for missing training signals in out-of-distribution instructions.",
+      "authors": [
+        "Adrian Szvoren",
+        "Dimitrios Kanoulas",
+        "Nilufer Tuptuk"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-07-06T14:11:27+00:00",
+      "link": "https://arxiv.org/pdf/2607.05122v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "visual grounding for VLA navigation policies in complex environments",
+      "llm_evidence_cn": "复杂环境下VLA导航策略的视觉接地",
+      "llm_evidence": "复杂环境下VLA导航策略的视觉接地",
+      "canonical_evidence": "复杂环境下VLA导航策略的视觉接地",
+      "llm_tldr_en": "Evaluates visual grounding via semantic segmentation to improve robot navigation in vision-language-action models.",
+      "llm_tldr_cn": "通过语义分割评估视觉接地，以提高视觉-语言-动作模型中的机器人导航性能。",
+      "llm_tldr": "通过语义分割评估视觉接地，以提高视觉-语言-动作模型中的机器人导航性能。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.02907v1",
+      "source": "arxiv",
+      "title": "ProLaViT: Learning Progressive Latent Visual Thoughts in Structured Latent Space",
+      "abstract": "Multimodal Large Language Models (MLLMs) have achieved remarkable progress but still struggle with complex visual reasoning tasks requiring multi-step perception and logical deduction. While explicit visual generation incurs prohibitive computational costs, existing latent approaches often rely on external experts or lack rigorous cognitive logic. In this paper, we introduce ProLaViT (Progressive Latent Visual Thought), a framework empowering MLLMs to perform structured visual derivation in the continuous latent space. Unlike works dependent on heterogeneous external models, ProLaViT leverages an endogenous self-distillation mechanism, utilizing the model's own visual encoder to supervise latent thoughts. To facilitate this, we construct a scalable programmatic synthesis pipeline enabling the model to internalize algorithmic precision without inference time tools. We design two reasoning paradigms: (1) Coarse-to-Fine Causal Chain for spatial tasks, guiding attention from global context to local targets. (2) Dialectical Reasoning Chain for logical tasks, incorporating counter-factual thinking for verification. Furthermore, we propose a Distance-Weighted Diversity Loss to impose topology-aware constraints, preventing feature degeneration by enforcing semantic distinctiveness. Extensive experiments demonstrate that ProLaViT outperforms baselines on vision-centric benchmarks, achieving superior accuracy and interpretability with high efficiency.",
+      "authors": [
+        "Peiming Li",
+        "Yifan Wang",
+        "Xiaotian Zhang",
+        "Zhiyuan Hu",
+        "Shiyu Li",
+        "Zheng Wei",
+        "Yang Tang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL"
+      ],
+      "published": "2026-07-03T03:14:11+00:00",
+      "link": "https://arxiv.org/pdf/2607.02907v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "structured visual derivation in continuous latent space",
+      "llm_evidence_cn": "在连续隐空间中进行结构化视觉推导",
+      "llm_evidence": "在连续隐空间中进行结构化视觉推导",
+      "canonical_evidence": "在连续隐空间中进行结构化视觉推导",
+      "llm_tldr_en": "ProLaViT enables MLLMs to perform multi-step visual reasoning within a structured latent space via self-distillation.",
+      "llm_tldr_cn": "ProLaViT 通过自蒸馏机制使多模态大模型能够在结构化隐空间中进行多步视觉推理。",
+      "llm_tldr": "ProLaViT 通过自蒸馏机制使多模态大模型能够在结构化隐空间中进行多步视觉推理。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "研究隐空间表示及其在智能系统中的作用",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2607.02884v1",
+      "source": "arxiv",
+      "title": "Continuous-Time Gaussian Belief Trees for Motion Planning",
+      "abstract": "We address sampling-based motion planning for continuous-time stochastic systems under process and measurement uncertainty, with probabilistic guarantees on safety and performance. The robot dynamics are modeled as a continuous-time linear stochastic differential equation, while sensor measurements arrive at discrete time instants. We derive an offline hybrid belief propagation model in which the belief evolves according to continuous-time ODEs between measurements and undergoes discrete Kalman filter update jumps at measurement times. To ensure safety, we introduce a belief-barrier-function-based safety checker for segment-level probabilistic verification. This enables the planner to certify safety over entire continuous trajectory segments and detect inter-sample chance-constraint violations that are missed by conventional node-based checks. Together, these components provide a principled framework for sampling-based belief planning that accounts for both continuous-time uncertainty propagation and continuous-time safety requirements. We integrate the method with RRT and SST planners and evaluate it across multiple benchmark environments. The results show that the proposed method achieves high success rates and robust enforcement of chance constraints, including in narrow-passage scenarios where discrete-time counterparts fail due to missed inter-sample unsafe behavior.",
+      "authors": [
+        "Rayan Mazouz",
+        "Qi Heng Ho",
+        "Zachary N. Sunberg",
+        "Morteza Lahijanian"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-07-03T02:29:42+00:00",
+      "link": "https://arxiv.org/pdf/2607.02884v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "belief trees for motion planning under uncertainty",
+      "llm_evidence_cn": "不确定性下的运动规划信念树",
+      "llm_evidence": "不确定性下的运动规划信念树",
+      "canonical_evidence": "不确定性下的运动规划信念树",
+      "llm_tldr_en": "This paper proposes Gaussian Belief Trees for safe sampling-based motion planning in continuous-time systems.",
+      "llm_tldr_cn": "本文提出了高斯信念树，用于连续时间系统下基于采样的安全运动规划。",
+      "llm_tldr": "本文提出了高斯信念树，用于连续时间系统下基于采样的安全运动规划。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.01605v1",
+      "source": "arxiv",
+      "title": "pykci: A Compact Urban Knowledge Graph for Semantic and Spatial Queries using LLMs",
+      "abstract": "CityGML, the OGC standard for modeling, storage, and exchange of semantic 3D city models, describes urban objects with detailed semantics, geometry, and topology. Yet this richness is difficult to query directly: CityGML's XML encoding is designed for exchange rather than analysis, and relational mappings expose it through schemas requiring expert knowledge. We present pykci (Python Knowledge Graph for Cities), an open-source system that transforms CityGML 2.0 datasets into a compact urban knowledge graph in Neo4j and makes it queryable in natural language. The graph schema covers all thematic feature modules of CityGML 2.0 across all levels of detail and is spatially indexed with an R-tree for efficient geometric retrieval. A complete end-to-end Python pipeline ingests CityGML datasets into the knowledge graph, exports them to OGC 3D Tiles for interactive visualization, and supports lossless round-trip export of all content back to CityGML. For querying, the graph is paired with a large language model through a model-agnostic text-to-Cypher mechanism: the graph schema is supplied as context, and the model translates natural-language questions into Cypher queries executed against the graph. We evaluate both a locally running open-weight model, which keeps sensitive city data on-premise, and a state-of-the-art commercial model for the most demanding spatial and semantic queries. Answers are grounded in exact city data rather than the model's parametric memory, reducing hallucination and providing auditable provenance for every response. We demonstrate the system on open-government CityGML LoD2 datasets from Hamburg, Germany, including complex semantic and spatial queries such as identifying roof surfaces suitable for greening. pykci enables urban planners, GIS practitioners, and citizens to interact with semantic 3D city models without expertise in query languages and database schemas.",
+      "authors": [
+        "Huynh Duc An Son Nguyen",
+        "Lukas Arzoumanidis",
+        "Youness Dehbi"
+      ],
+      "primary_category": "cs.DB",
+      "categories": [
+        "cs.DB"
+      ],
+      "published": "2026-07-02T02:07:54+00:00",
+      "link": "https://arxiv.org/pdf/2607.01605v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "spatial queries and geometric retrieval in urban knowledge graphs",
+      "llm_evidence_cn": "城市知识图谱中的空间查询与几何检索",
+      "llm_evidence": "城市知识图谱中的空间查询与几何检索",
+      "canonical_evidence": "城市知识图谱中的空间查询与几何检索",
+      "llm_tldr_en": "pykci transforms 3D city models into knowledge graphs for semantic and spatial queries using LLMs.",
+      "llm_tldr_cn": "pykci将3D城市模型转换为知识图谱，利用大模型支持语义和空间查询。",
+      "llm_tldr": "pykci将3D城市模型转换为知识图谱，利用大模型支持语义和空间查询。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "空间表示与认知映射的算法及模型",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.02977v1",
+      "source": "arxiv",
+      "title": "Function-Space Diffusion for Motion Planning",
+      "abstract": "Diffusion-based motion planners have demonstrated strong performance in generating diverse and high-quality robot trajectories in cluttered environments with multiple feasible solutions. However, existing approaches typically operate on fixed-length waypoint sequences, making the learned model resolution-dependent, thereby preventing zero-shot generalization across resolutions. In this work, we propose Function-Space Diffusion for Motion Planning (FSD-MP), a diffusion-based motion planner that models trajectories as continuous functions and performs diffusion directly in function space, achieving discretization-invariant trajectory generation. We define a mode-wise forward process in the spectral domain, driven by Gaussian noise with a Matérn-type covariance, and parameterize the reverse process with a boundary-compatible Discrete Sine Transform-based Fourier Neural Operator (DST-FNO) that preserves start-goal constraints across resolutions. We evaluate FSD-MP on 2D point robot and 7-DoF Franka manipulator planning benchmarks. Our method achieves competitive planning performance at the training resolution and generalizes zero-shot across resolutions up to 16$\\times$ higher, preserving consistent planning behavior without retraining. These results demonstrate that function-space diffusion provides an effective framework for discretization-invariant motion planning.",
+      "authors": [
+        "Zinuo Chang",
+        "Yipu Chen",
+        "Byoungwoo Park",
+        "Hongzhe Yu",
+        "Yongxin Chen"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-07-03T05:36:07+00:00",
+      "link": "https://arxiv.org/pdf/2607.02977v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "diffusion-based motion planning in function space",
+      "llm_evidence_cn": "函数空间中基于扩散的运动规划",
+      "llm_evidence": "函数空间中基于扩散的运动规划",
+      "canonical_evidence": "函数空间中基于扩散的运动规划",
+      "llm_tldr_en": "Introduces FSD-MP, a diffusion-based motion planner that operates in continuous function space for trajectories.",
+      "llm_tldr_cn": "引入FSD-MP，一种在连续函数空间中运行的基于扩散的运动规划器。",
+      "llm_tldr": "引入FSD-MP，一种在连续函数空间中运行的基于扩散的运动规划器。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "基于隐空间表示的规划与决策模型",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2607.03182v1",
+      "source": "arxiv",
+      "title": "AnchorVLA: Bridging Discrete Decisions and Continuous Trajectories for Vision-Language-Action Planning",
+      "abstract": "Autonomous driving planning requires translating navigation intent, traffic rules, dynamic interactions, and language instructions into executable continuous trajectories. Vision-Language-Action models have been introduced into driving planning to improve long-tail generalization, commonsense reasoning, high-level semantic understanding, and explainability. However, existing VLA planners mainly follow planning-head-based trajectory prediction or full-trajectory autoregressive generation. The former only weakly constrains continuous trajectory generation with VLA reasoning, while the latter relies on long sequences of low-information-density coordinate tokens, making semantic-action alignment difficult and leading to discretization errors and inefficient inference. To address these limitations, we propose AnchorVLA, a hierarchical decision-anchored VLA planning framework that uses trajectory-pattern anchors as an explicit interface between high-level VLA reasoning and continuous trajectory execution. Specifically, Decision-as-Anchor Representation represents behavior-level driving decisions with anchor tokens, each encoding an entire local motion pattern rather than a single coordinate point. Decision-Anchored Residual Flow then generates fine-grained continuous trajectories in the selected anchor-defined residual space, capturing multi-modal execution refinements after high-level decision making. By reasoning over compact and semantically meaningful anchors instead of autoregressively generating waypoint sequences, AnchorVLA preserves LLM-based decision making while improving inference efficiency, semantic-action alignment, and continuous generation flexibility. Experiments on the Bench2Drive closed-loop benchmark show that AnchorVLA achieves a state-of-the-art Success Rate of 77.28 and a competitive Driving Score of 89.92.",
+      "authors": [
+        "Qi Liu",
+        "Yabei Li",
+        "Hongsong Wang",
+        "Heng Zhang",
+        "Lei He"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-07-03T10:38:30+00:00",
+      "link": "https://arxiv.org/pdf/2607.03182v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Vision-Language-Action planning for navigation intent and continuous trajectories",
+      "llm_evidence_cn": "用于导航意图和连续轨迹的视觉-语言-动作规划",
+      "llm_evidence": "用于导航意图和连续轨迹的视觉-语言-动作规划",
+      "canonical_evidence": "用于导航意图和连续轨迹的视觉-语言-动作规划",
+      "llm_tldr_en": "Introduces AnchorVLA to bridge discrete decisions and continuous trajectories in vision-language-action driving planning.",
+      "llm_tldr_cn": "引入AnchorVLA，在视觉-语言-动作驾驶规划中衔接离散决策与连续轨迹。",
+      "llm_tldr": "引入AnchorVLA，在视觉-语言-动作驾驶规划中衔接离散决策与连续轨迹。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索表示学习在构建世界模型与导航中的运用",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.03624v1",
+      "source": "arxiv",
+      "title": "RADIO1D: Elastic Representations for Condensed Vision Modeling",
+      "abstract": "This paper challenges the assumption that vision-language models (VLMs) require fixed patch-based 2D vision features. Analyzing fine-tuned vision encoders, we find that representations become increasingly abstract and less spatially coherent during VLM training. Notably, models trained with image-text alignment (such as SigLIP2) develop a small number of specialized tokens that effectively summarize global image content. Building on this, we introduce RADIO1D, which compresses images into a compact, variable-length 1D token sequence using multi-teacher knowledge distillation and an autoencoder design. The resulting representations exhibit strong hierarchical summarization, enabling accurate scene understanding - even with a single token - and support improved composition-aware image retrieval. In VLMs, RADIO1D provides flexible accuracy-efficiency tradeoffs through adjustable token counts, delivering competitive performance on diverse multimodal benchmarks with lower computational overhead and better accuracy.",
+      "authors": [
+        "Greg Heinrich",
+        "Mike Ranzinger",
+        "Collin McCarthy",
+        "Natan Bagrov",
+        "Eugene Khvedchenya",
+        "Bryan Catanzaro",
+        "Jan Kautz",
+        "Andrew Tao",
+        "Pavlo Molchanov"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-07-03T22:58:54+00:00",
+      "link": "https://arxiv.org/pdf/2607.03624v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "abstract representations for scene understanding",
+      "llm_evidence_cn": "用于场景理解的抽象表示",
+      "llm_evidence": "用于场景理解的抽象表示",
+      "canonical_evidence": "用于场景理解的抽象表示",
+      "llm_tldr_en": "Introduces elastic 1D token sequences for condensed vision modeling and hierarchical scene understanding.",
+      "llm_tldr_cn": "引入了用于压缩视觉建模和分层场景理解的弹性一维令牌序列表示。",
+      "llm_tldr": "引入了用于压缩视觉建模和分层场景理解的弹性一维令牌序列表示。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "探索表示学习在构建世界模型与导航中的运用",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.03338v1",
+      "source": "arxiv",
+      "title": "Closed-loop vs. Open-loop Kalman Filter Architectures in Airborne Aided Inertial Navigation",
+      "abstract": "Closed-loop (or feedback) error-state Kalman filters with their relatives and offspring are the state-of-the-art in modern aided inertial navigation research. Estimated inertial navigation system (INS) errors are continually fed back to the INS to correct the nominal system state before subsequent predictions. Conversely, in safety-critical aeronautical applications, open-loop (or feedforward) systems are an undisputed standard, where the inertial mechanization is strictly decoupled to allow for operational independence and fault isolation of computing units. We assess the performance impacts of this architectural choice beyond qualitative system-safety justifications using a standard inertial mechanization in geodetic coordinates and direct position aiding. Simulations using a variety of inertial sensor error characteristics, ranging from consumer to navigation grade systems, showcase the trade-off between smooth information fusion for high-end IMUs using an open-loop filter and the inherent long-term stability of the closed-loop architecture.",
+      "authors": [
+        "Antonia Hager",
+        "Torleiv H. Bryne"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "eess.SY"
+      ],
+      "published": "2026-07-03T13:55:17+00:00",
+      "link": "https://arxiv.org/pdf/2607.03338v1",
+      "tags": [
+        "keyword:NavWM",
+        "query:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "airborne aided inertial navigation and Kalman filters",
+      "llm_evidence_cn": "机载辅助惯性导航与卡尔曼滤波",
+      "llm_evidence": "机载辅助惯性导航与卡尔曼滤波",
+      "canonical_evidence": "机载辅助惯性导航与卡尔曼滤波",
+      "llm_tldr_en": "Evaluates closed-loop vs open-loop Kalman filter architectures for safety-critical airborne inertial navigation.",
+      "llm_tldr_cn": "评估了安全关键型机载惯性导航中闭环与开环卡尔曼滤波架构的性能。",
+      "llm_tldr": "评估了安全关键型机载惯性导航中闭环与开环卡尔曼滤波架构的性能。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2607.03211v1",
+      "source": "arxiv",
+      "title": "Derivations of Error-State Kalman Filter Kinematics for Globally Applicable Aided Inertial Navigation Systems",
+      "abstract": "Global navigation systems require state estimation algorithms that handle Earth's curvature, Earth's rotation, and gravitational variations. These factors can typically be neglected in local navigation algorithms for robots, drones, etc. In classical error-state Kalman Filtering (ESKF) the error state dynamics are trajectory-dependent. Invariant ESKFs utilize Lie Group symmetries to represent the error, which can render error propagation trajectory-independent for group-affine systems. Choosing between a standard filter (where position and velocity errors are defined additively in the navigation frame), a left-invariant filter (where errors are represented in the body frame) and a right-invariant filter (where errors are represented in the navigation/world frame) depends on system dynamics and sensor configuration. This note presents the mathematical formulas for four classical and invariant ESKFs for globally applicable aided inertial navigation systems. It is intended to serve as a systematic reference for comparison and implementation.",
+      "authors": [
+        "Antonia Hager",
+        "Torleiv H. Bryne"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "eess.SY"
+      ],
+      "published": "2026-07-03T11:26:24+00:00",
+      "link": "https://arxiv.org/pdf/2607.03211v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "state estimation for globally applicable aided inertial navigation systems",
+      "llm_evidence_cn": "全球适用辅助惯性导航系统的状态估计",
+      "llm_evidence": "全球适用辅助惯性导航系统的状态估计",
+      "canonical_evidence": "全球适用辅助惯性导航系统的状态估计",
+      "llm_tldr_en": "Derives error-state Kalman filter kinematics for robust global navigation and state estimation.",
+      "llm_tldr_cn": "推导了误差状态卡尔曼滤波运动学，用于鲁棒的全球导航和状态估计。",
+      "llm_tldr": "推导了误差状态卡尔曼滤波运动学，用于鲁棒的全球导航和状态估计。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.03699v1",
+      "source": "arxiv",
+      "title": "Lost in Time? Continuous Symmetry and Identifiability in Aided Inertial Navigation with Unknown Measurement Delays",
+      "abstract": "In many multisensor systems, measurements from different sensors are subject to unknown relative time delays. Accurate state estimation requires that delays be accounted for and, when possible, calibrated online. We consider the case of aided navigation, where measurements from a single aiding sensor are subject to an unknown but constant delay relative to the inertial measurement stream, and study the identifiability of the resulting system. Critically, identifiability depends not only on the temporal structure of the measurements, but also on the shape of the vehicle trajectory: some trajectories are sufficiently informative to support unique recovery of the delay and the navigation state, while others are not. Using the special Galilean group, we characterize these uninformative (or degenerate) trajectories and relate them to a continuous symmetry of the delayed measurement model, providing geometric insight into identifiability failures. We show that the class of trajectories for which identifiability fails is larger than previously reported, and connect our characterization to the familiar linearized, Jacobian-based analysis. Although our development is motivated by aided navigation, the underlying ideas apply more broadly to estimation problems on Lie groups with delayed measurements.",
+      "authors": [
+        "Jonathan Kelly",
+        "Phone Thiha Kyaw",
+        "Mattew Giamou"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "eess.SY"
+      ],
+      "published": "2026-07-04T04:16:31+00:00",
+      "link": "https://arxiv.org/pdf/2607.03699v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "state estimation and navigation state recovery in aided inertial navigation",
+      "llm_evidence_cn": "辅助惯性导航中的状态估计与导航状态恢复",
+      "llm_evidence": "辅助惯性导航中的状态估计与导航状态恢复",
+      "canonical_evidence": "辅助惯性导航中的状态估计与导航状态恢复",
+      "llm_tldr_en": "Analyzes identifiability and state estimation in aided inertial navigation with unknown measurement delays.",
+      "llm_tldr_cn": "分析了存在未知测量延迟的辅助惯性导航中的可辨识性与状态估计。",
+      "llm_tldr": "分析了存在未知测量延迟的辅助惯性导航中的可辨识性与状态估计。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.03349v1",
+      "source": "arxiv",
+      "title": "PedestrianDiffusion: Multimodal Generative Denoising and Dense State Estimation for Inertial Navigation",
+      "abstract": "The accuracy of consumer-grade inertial navigation is bottlenecked by the stochastic noise of Micro-Electro-Mechanical Systems (MEMS). Traditional deterministic neural architectures often succumb to ``estimation jittering,'' sacrificing high-frequency kinematic fidelity for numerical stability. We propose PedestrianDiffusion, a multimodal spectral-domain generative framework reformulating dense 6D state estimation as a continuous conditional denoising process. By operating in the frequency domain, our formulation bounds the spectral covariance, acting as a mathematical preconditioner to stabilize the reverse diffusion trajectory. Furthermore, we introduce a zero-shot semantic conditioning mechanism leveraging vision-language embeddings as categorical priors to generalize across heterogeneous sensor noise profiles. To address the computational intractability of generative tracking, we deploy a single-step deterministic probability flow ODE solver ($T=1$). This yields high-capacity asynchronous batch trajectory refinement, establishing the viability of generative architectures for asynchronous batch trajectory refinement on edge hardware. Extensive evaluations on the OxIOD, RIDI, RoNIN, and TLIO benchmarks demonstrate that PedestrianDiffusion achieves state-of-the-art performance, exhibiting unprecedented robustness to impulse perturbations and coupled 6D kinematic drift. This work provides a rigorous algorithmic blueprint for next-generation Neural Inertial Measurement Units (N-IMUs).",
+      "authors": [
+        "I-Hao Lu",
+        "Dongsoo Han"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-07-03T14:04:30+00:00",
+      "link": "https://arxiv.org/pdf/2607.03349v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "generative denoising for dense state estimation in inertial navigation",
+      "llm_evidence_cn": "惯性导航中用于密集状态估计的生成式去噪",
+      "llm_evidence": "惯性导航中用于密集状态估计的生成式去噪",
+      "canonical_evidence": "惯性导航中用于密集状态估计的生成式去噪",
+      "llm_tldr_en": "PedestrianDiffusion uses a generative framework for dense state estimation to improve inertial navigation accuracy.",
+      "llm_tldr_cn": "PedestrianDiffusion采用生成式框架进行密集状态估计，以提高惯性导航的精度。",
+      "llm_tldr": "PedestrianDiffusion采用生成式框架进行密集状态估计，以提高惯性导航的精度。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2607.03407v1",
+      "source": "arxiv",
+      "title": "Optimal mean-time path planning for unmanned underwater vehicles: a Hamilton-Jacobi approach",
+      "abstract": "Unmanned underwater vehicles (UUV) integrate ocean forecasts with path planning algorithms in order to identify energy- or time-minimizing paths that enable mission completion. Typically, a well-defined deterministic ocean forecast is assumed to be available for path planning; however, in practice, different ocean forecasts can disagree. In this paper, we extend previous work on deterministic optimal path planning to identify optimal mean-time paths when presented with an ensemble of possible ocean forecasts. In particular, we formulate a system of time-independent Hamilton-Jacobi partial differential equations that incorporates forecast uncertainty and yields the optimal mean reachability travel time and the necessary controls to find the associated optimal path. An efficient numerical solution of this system of PDEs is obtained through an extension of the Fast Sweeping Method; verification and benchmarking results are provided. Additional numerical examples illustrate the impact uncertainty can have on the optimal path; in particular, these results demonstrate that the vehicle's optimal path can deviate significantly from the deterministic optimal paths associated with the individual ensemble members.",
+      "authors": [
+        "Jonathan Valyou",
+        "Jeremy Brandman",
+        "Sanghyun Lee"
+      ],
+      "primary_category": "math.OC",
+      "categories": [
+        "math.OC"
+      ],
+      "published": "2026-07-03T15:12:35+00:00",
+      "link": "https://arxiv.org/pdf/2607.03407v1",
+      "tags": [
+        "keyword:NavWM"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "path planning for unmanned underwater vehicles in uncertain environments",
+      "llm_evidence_cn": "不确定环境下的水下无人航行器路径规划",
+      "llm_evidence": "不确定环境下的水下无人航行器路径规划",
+      "canonical_evidence": "不确定环境下的水下无人航行器路径规划",
+      "llm_tldr_en": "Develops a Hamilton-Jacobi approach for optimal path planning of underwater vehicles under forecast uncertainty.",
+      "llm_tldr_cn": "开发了一种汉密尔顿-雅可比方法，用于预测不确定性下的水下航行器最优路径规划。",
+      "llm_tldr": "开发了一种汉密尔顿-雅可比方法，用于预测不确定性下的水下航行器最优路径规划。",
+      "llm_tags": [
+        "query:navwm"
+      ],
+      "matched_query_tag": "query:navwm",
+      "matched_query_text": "智能体在复杂环境中的导航策略与学习方法",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

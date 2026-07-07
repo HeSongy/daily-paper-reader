@@ -1,0 +1,166 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2607.03407v1/fig-001.webp",
+      "caption": "Fig. 13: Example 3b: Quiver plot snapshots in time of a left moving dimensionalized counterclockwise vortex ocean model and a right moving model over the same spatial domain Ω.",
+      "page": 25,
+      "index": 1,
+      "width": 775,
+      "height": 513
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03407v1/fig-002.webp",
+      "caption": "Fig. 15: Example 3b: Two deterministic paths (purple and black) each with a different left or right moving dimensionalized counterclockwise vortex and the mean uncertainty path (red) from (0 km, 0 km) to (50 km, 50 km) with p(1) = p(2) = 0.5 on top of the contour plot of u in 103 seconds.",
+      "page": 26,
+      "index": 2,
+      "width": 471,
+      "height": 354
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03407v1/fig-003.webp",
+      "caption": "Fig. 14: Example 3b: The contour plots for the solutions u, T1, and T2 in 103 seconds given a left moving dimensionalized counterclockwise vortex ocean model or a right moving model.",
+      "page": 26,
+      "index": 3,
+      "width": 777,
+      "height": 220
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03407v1/fig-004.webp",
+      "caption": "Fig. 9: Example 2: The maximum error between successive sweep sets of u, T1, and T2 under Sweep Until Convergence Alternating Lax-Friedrich’s Fast Sweeping (SUCALFFS) and Single Sweep Set Alternating Lax-Friedrich’s Fast Sweeping (SSSA-LFFS) for the ensemble of va and vb from Setup 1 until stopping criteria is achieved.",
+      "page": 21,
+      "index": 4,
+      "width": 471,
+      "height": 354
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03407v1/fig-005.webp",
+      "caption": "Fig. 4: Travel direction setup in 2D",
+      "page": 7,
+      "index": 5,
+      "width": 771,
+      "height": 240
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03407v1/fig-006.webp",
+      "caption": "Fig. 19: Example 4b: The contour plots for the solutions u, T1, T2, T3, T4, and T5 in 103 seconds for 5-member ensemble with greater heterogeneity.",
+      "page": 29,
+      "index": 6,
+      "width": 775,
+      "height": 480
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03407v1/fig-007.webp",
+      "caption": "Fig. 20: Example 4b: Mean uncertainty path (red) and five deterministic paths each with respect to only one ocean current model vc,i for i = 1, · · · , 5 on top of the contour of u in 103 seconds considering 5 ocean current models with greater heterogeneity.",
+      "page": 29,
+      "index": 7,
+      "width": 471,
+      "height": 354
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03407v1/fig-008.webp",
+      "caption": "Fig. 10: Example 3a: Contour plots of the reachability times u, T1, and T2 in 103 seconds.",
+      "page": 22,
+      "index": 8,
+      "width": 777,
+      "height": 224
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03407v1/fig-009.webp",
+      "caption": "Fig. 11: Example 3a: Two deterministic paths (purple and black) and the mean uncertainty path (red) from (5 km, 5 km) to (1 km, 0.5 km) on top of contour of u in 103 seconds.",
+      "page": 23,
+      "index": 9,
+      "width": 471,
+      "height": 354
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03407v1/fig-010.webp",
+      "caption": "Fig. 18: Example 4b: Quiver plot of perturbed ocean current models over the same spatial domain Ω.",
+      "page": 28,
+      "index": 10,
+      "width": 735,
+      "height": 562
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03407v1/fig-011.webp",
+      "caption": "Fig. 6: A single set of sweeps on a given two dimensional domain",
+      "page": 13,
+      "index": 11,
+      "width": 687,
+      "height": 558
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03407v1/fig-012.webp",
+      "caption": "Fig. 1: Deterministic path planning",
+      "page": 4,
+      "index": 12,
+      "width": 536,
+      "height": 241
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03407v1/fig-013.webp",
+      "caption": "Fig. 8: Example 1: (left) Two deterministic paths (green and black) each with the same linear-in-time ocean current and the mean uncertainty path (red) from xS = (5 km, 5 km) to xE = (1 km, 0.5 km) plotted on the contour of u in 103 seconds for fixed mesh size; (right) Illustration of the convergence rate for SSSA-LFFS.",
+      "page": 19,
+      "index": 13,
+      "width": 752,
+      "height": 298
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03407v1/fig-014.webp",
+      "caption": "Fig. 7: Illustration of the overall algorithm",
+      "page": 17,
+      "index": 14,
+      "width": 738,
+      "height": 249
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03407v1/fig-015.webp",
+      "caption": "Fig. 16: Example 4a: The contour plots for the solutions u, T1, T2, T3, T4, and T5 in 103 seconds for 5-member ensemble of constant currents.",
+      "page": 27,
+      "index": 15,
+      "width": 775,
+      "height": 493
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03407v1/fig-016.webp",
+      "caption": "Fig. 17: Example 4a: Mean uncertainty path (red) and deterministic paths on top of the contour of u in 103 seconds considering 5 ocean current models.",
+      "page": 27,
+      "index": 16,
+      "width": 602,
+      "height": 418
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03407v1/fig-017.webp",
+      "caption": "Fig. 12: Example 3a: The mean uncertainty path under different probabilities.",
+      "page": 24,
+      "index": 17,
+      "width": 706,
+      "height": 917
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03407v1/fig-018.webp",
+      "caption": "Fig. 22: Example 5: Two deterministic paths (purple and black) and the mean uncertainty path (red) from (5 km, 5 km) to (1 km, 0.5 km) on top of contour of u in 103 seconds.",
+      "page": 31,
+      "index": 18,
+      "width": 471,
+      "height": 354
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03407v1/fig-019.webp",
+      "caption": "Fig. 21: Example 5: Contour plots of the reachability times u, T1, and T2 in 103 seconds.",
+      "page": 31,
+      "index": 19,
+      "width": 775,
+      "height": 225
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03407v1/fig-020.webp",
+      "caption": "Fig. 3: Path planning with uncertainty: (a) for each ocean model in our ensemble, deterministic path planning identifies a path that minimizes the vehicle’s travel-time; (b) the optimal mean-time path from xS to xE minimizes the mean travel-time of the vehicle; this path is potentially distinct from the family of deterministic optimal paths displayed in (a).",
+      "page": 5,
+      "index": 20,
+      "width": 508,
+      "height": 384
+    }
+  ]
+}

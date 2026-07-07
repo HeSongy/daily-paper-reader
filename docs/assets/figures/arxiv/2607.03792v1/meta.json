@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2607.03792v1/fig-001.webp",
+      "caption": "Figure 1: Existing evaluation rewards stopping near a target viewpoint, but object grounding requires a final viewpoint where the referred object is actually visible and localizable.",
+      "page": 2,
+      "index": 1,
+      "width": 824,
+      "height": 410
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03792v1/fig-002.webp",
+      "caption": "Table 1: Comparison with existing embodied navigation datasets. Our dataset is the first to combine all four desirable properties.",
+      "page": 7,
+      "index": 2,
+      "width": 706,
+      "height": 369
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03792v1/fig-003.webp",
+      "caption": "Table 2: Plug-in fine-grained navigation module performance on REVERIE-AIM (val-unseen). Standard VLN metrics are fixed per backbone and shown in parentheses beside each backbone name. Bold = best in group; underline = second best.",
+      "page": 9,
+      "index": 3,
+      "width": 826,
+      "height": 633
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03792v1/fig-004.webp",
+      "caption": "Figure 2: An overview of the REALM framework. The pipeline comprises three decoupled stages: (i) Navigation: πnav follows instruction I (e.g., “Go to the living room and water the flowers on the table.”) and stops at sTnav ; (ii) Refinement: πref repositions the agent to sTref where the target is proximate and visible; (iii) Grounding: a BERT-based extractor yields a target phrase r̂, passed to OWLv2 for bounding box prediction. The refinement module is plug-and-play across arbitrary VLN backbones.",
+      "page": 5,
+      "index": 4,
+      "width": 806,
+      "height": 393
+    }
+  ]
+}

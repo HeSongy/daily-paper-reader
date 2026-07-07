@@ -1,0 +1,534 @@
+Title: Closed-loop vs. Open-loop Kalman Filter Architectures in Airborne Aided Inertial Navigation
+
+URL Source: https://arxiv.org/pdf/2607.03338v1
+
+Published Time: Tue, 07 Jul 2026 01:01:46 GMT
+
+Number of Pages: 6
+
+Markdown Content:
+This work has been submitted and accepted to the IEEE for publication. Copyright may be transferred without notice, after which this version may no longer be accessible. 
+
+# Closed-loop vs. Open-loop Kalman Filter Architectures in Airborne Aided Inertial Navigation 
+
+Antonia Hager ∗† and Torleiv H. Bryne †∗Airbus Central Research and Technology, Taufkirchen, Germany 
+
+> †
+
+Department of Engineering Cybernetics, Norwegian University of Science and Technology, Trondheim, Norway 
+
+Abstract — Closed-loop (or feedback) error-state Kalman fil-ters (ESKFs) with their relatives and offspring are the state-of-the-art in modern aided inertial navigation research. Esti-mated inertial navigation system (INS) errors are continually fed back to the INS to correct the nominal system state before subsequent predictions. Conversely, in safety-critical aeronautical applications, open-loop (or feedforward) systems are an undisputed standard, where the inertial mechanization is strictly decoupled to allow for operational independence and fault isolation of computing units. We assess the performance impacts of this architectural choice beyond qualitative system-safety justifications using a standard inertial mechanization in geodetic coordinates and direct position aiding. Simulations using a variety of inertial sensor error characteristics, ranging from consumer to navigation grade systems, showcase the trade-off between smooth information fusion for high-end IMUs using an open-loop filter and the inherent long-term stability of the closed-loop architecture. 
+
+I. I NTRODUCTION 
+
+Modern aerospace and robotic autonomous systems re-quire highly robust, continuous, and reliable positioning capabilities. Although Global Navigation Satellite Systems (GNSSs) provide absolute positioning, their vulnerability to signal attenuation, jamming, or spoofing results in a reliance on an INS as the primary means of navigation, supported by other information sources [1]. INS rely on an inertial mea-surement unit (IMU) with accelerometers and gyroscopes to provide position, velocity, and attitude predictions via mathematical integration of kinematic equations [2], [3]. A well-known fundamental limitation of inertial navigation is that deterministic and stochastic sensor errors are integrated through the navigation equations, causing the estimation error to grow unbounded over time [2], [4]. To limit INS drift, multi-sensor data fusion is deployed within an integrated navigation architecture, utilizing com-plementary sensor measurements from alternative position-ing, navigation and timing (PNT) sources such as barometers, radio signals (GNSS, DME, VOR), or the magnetic field [5], [6]. In the state-of-the-art academic literature, these integrated systems are predominantly formulated using a closed-loop architecture, where state corrections and sensor bias errors estimated by the filter are continuously fed back to correct the system’s full state [1]. This architectural paradigm has further evolved into invariant and equivariant filtering frameworks, which utilize Lie-group error definitions in the body frame to achieve state-independent uncertainty propa-gation and guaranteed local consistency [7]–[9]. Currently, there is an architectural divergence between safety-critical airborne platforms and modern autonomous unmanned systems. Commercial airliners, transport aircraft, and other large, fast-moving, passenger-carrying platforms typically utilize high-end navigation-grade IMUs [2, Ch. 4]. Because these high-end sensors exhibit very low bias and bias instability, industrial aerospace implementations favor open-loop (feedforward) architectures [5], [10], [11]. In this configuration, the primary dead-reckoning computations run on independent hardware to meet safety regulations, while an external estimation processor models system errors without feeding corrections back into the integration loop. This isolation ensures that even if a sensor anomaly or filter divergence occurs within an auxiliary positioning filter, the primary inertial reference position remains intact. In contrast, small-scale autonomous systems, such as un-manned aerial vehicles (UAVs) or robotic platforms, oper-ate under tighter size, weight, power, and cost constraints. These platforms are restricted to lower-grade micro-electro-mechanical systems (MEMS) IMUs with more significant bias instabilities [12]. To maintain the stability of the nav-igation solution, these systems typically use a closed-loop architecture, in which estimated errors and sensor bias errors are continuously injected back into the full state of the navigation system [2, Ch. 14]. Alternative PNT solutions are used for smaller, highly dynamic, autonomous flying vehicles where navigation-grade hardware is not standard. Selecting an optimal filter archi-tecture requires balancing the hardware constraints of lower-grade sensors against architectural isolation for platform safety. Despite textbook descriptions detailing both configu-rations [4, Ch. 6], [2, Ch. 14], direct one-to-one comparisons that isolate the impact of this architectural choice within identical coordinate spaces remain sparse in the literature. For example, [13] compared a total state (direct) and an error state (indirect) feedback filter, but did not study open-loop filters. Understanding the structural trade-offs between open- and closed-loop filters is important to determine the appropriate filter architecture for a given platform, depending on available IMU quality and safety requirements. 
+
+A. Main contributions 
+
+We address this gap in the literature by presenting a one-to-one comparative analysis of an open- and a closed-loop navigation filter with position updates. To isolate the structural behavior of the error propagation loops, both con-figurations use an identical mathematical baseline: a 15-state 
+
+> arXiv:2607.03338v1 [cs.RO] 3 Jul 2026
+
+TABLE I: Notation                                                                       
+
+> Symbol Description
+> {i},{e},{b},
+> {n},{g}
+> Sub-/superscripts for inertial, ECEF-, body-, NED and geodetic coordinate frames
+> x,p, ... Vector quantities denoted by bold lowercase letters
+> F,W, ... Matrix quantities denoted by bold uppercase letters
+> p,v,ϑPosition, velocity, and attitude vectors
+> μ, λ, h Latitude, longitude, and ellipsoidal altitude,
+> μ∈[−π/ 2, π/ 2] ,λ∈(−π, π ],h∈R1
+> Rnb Rotation matrix from {b}to {n}frame
+> qnb Unit quaternion from {b}to {n}frame
+> R0Equatorial radius R0= 6 378 137 .0 m
+> f,eFlattening f= 1 /298 .257223563 and first eccen-tricity e=f(2 −f)of the reference ellipsoid
+> RM,RNEarth’s Meridial and Normal Radius
+> ωie Earth’s rotation rate ωie = 7 .292 115 ×10 −5rad /s
+> gnGravitational acceleration in NED frame
+> am,ωmAcceleration and angular rate measured by IMU
+> ηa,ηωAngular rate and acceleration measurement noise
+> ab,ωbAccelerometer and gyroscope bias
+> ηab,ηωbAccelerometer and gyroscope bias errors
+> x,δxNominal state, Error state
+> ˆR,ˆx, δ ˆx, ... Estimated quantities
+
+ESKF with navigation-frame (or, correspondingly, world-frame in robotics) estimation errors. We evaluate these feed-forward and feedback implementations for various IMU error specifications and describe the operational boundaries sep-arating aerospace software standards from feedback-based navigation filter algorithms predominant in recent literature. 
+
+B. Outline 
+
+Section II establishes the coordinate frames and mathe-matical notation used throughout this manuscript. Section III describes the 3-D inertial navigation equations and their error-state formulations in geodetic coordinates. Section IV-A details the structural differences between the closed- and the open-loop architecture. In Section V we present the results of our comparative simulations under diverse IMU noise characteristics ranging from consumer to navigation-grade systems. Finally, Section VI summarizes our core findings and presents closing remarks regarding platform-specific architectural selection. II. P RELIMINARIES 
+
+The navigation frame {n} is defined as the right-handed local tangent frame with its origin aligned with the vehicle’s body frame {b}, and its axis pointing to geographic North-East-Down (NED) directions. Global position is expressed in geodetic coordinates, pg = μ λ h⊤. Latitude and lon-gitude are measured in radians, and altitude is expressed in meters above the WGS-84 ellipsoid surface. The definitions of the variables are given in Table I. Superscripts define the coordinate system in which a quantity is expressed. III. G EODETIC NAVIGATION EQUATIONS 
+
+The nominal 3-D state of a vehicle is described by a position in geodetic coordinates, pg , and its velocity vnnb and attitude quaternion qnb resolved in the local NED-frame, 
+
+x = pg⊤ vn⊤ 
+
+> nb
+
+q⊤
+
+> nb
+
+⊤ . (1) The quaternion is related to the 3D rotation vector ϑ by 
+
+q(ϑ) = 
+
+ cos( ϑ/ 2) sin( ϑ/ 2) ϑ/ϑ 
+
+
+
+≈
+
+> ∥ϑ∥2≪1
+
+ 1 
+
+> 12
+
+ϑ
+
+
+
+. (2) 
+
+A. Nominal State Kinematics 
+
+The kinematics of the nominal state are used in the closed-loop filter to propagate the measurement-corrected nominal state. We use the discretized inertial equations in geodetic coordinates resumed in the following. The discretization time step is denoted by ∆t := ∆tk−1,k = tk − tk−1. The ellipsoidal radii of curvature, cf. Table I, and navigation-frame transport rates are updated via: 
+
+RN = R0
+
+q
+
+1 − e2 sin 2(μ)
+
+, RM = R0(1 − e2)(1 − e2 sin 2(μ)) 1.5 ,
+
+(3) 
+
+ωnie = ωie cos( μ) 0 −ωie sin( μ)T , (4) 
+
+ωnen =
+
+h vE  
+
+> RN+h
+
+− vN  
+
+> RM+h
+
+− vE tan( μ) 
+
+> RN+h
+
+iT
+
+, (5) where ωnin = ωnie + ωnen .
+
+Attitude: The attitude quaternion qnb is integrated using the incremental rotation quaternions qnk−1 
+
+> nk
+
+and qbk 
+
+> bk−1
+
+:
+
+qnb, k = qnk−1 
+
+> nk
+
+⊗ qnb, k −1 ⊗ qbk 
+
+> bk−1
+
+, (6) where qnk−1 
+
+> nk
+
+= exp( −∆t ωnin ), and qbk 
+
+> bk−1
+
+= exp(∆ t ωbib ).
+
+Velocity: The velocity is updated using the current specific force aneb in the navigation frame: 
+
+aneb = Rnb f bib − S(2 ωnie + ωnen )vk−1 + gnb ,
+
+vk = vk−1 + aneb ∆t. (7) The navigation-frame gravity gnb = gnb (μ, λ ) is calculated as in [2, Ch. 2.4.7]. 
+
+Position: We use a second-order trapezoidal integration scheme to update the geodetic position vector pgi :
+
+μk = μk−1 + ∆t
+
+2(vn,k + vn,k −1)
+
+RM + hk−1
+
+, (8) 
+
+λk = λk−1 + ∆t
+
+2(ve,k + ve,k −1)(RN + hk−1) cos( μk−1) , (9) 
+
+hk = hk−1 − ∆t
+
+2 (vd,k + vd,k −1). (10) 
+
+B. Error State Kinematics 
+
+The error state is defined as 
+
+δx ≜ δpg⊤ δvn⊤ 
+
+> nb
+
+δϑn⊤ 
+
+> nb
+
+ab⊤ 
+
+> b
+
+ωb⊤
+
+> b
+
+⊤ , (11) where the attitude (error) is now represented as a rotation vector δϑnnb instead of a quaternion qnb (ϑn⊤ 
+
+> nb
+
+).The error-state kinematics are the linearized global inertial navigation equations in geodetic coordinates, given by: 
+
+δ ˙x = F δx + Gw (12) where 
+
+F =
+
+
+
+Fpp Fpv 03×3 03×3 03×3
+
+Fvp Fvv −S(Rnb f bib ) Rnb 03×3
+
+Fϑp Fϑv Fϑϑ 03×3 −Rnb 
+
+03×3 03×3 03×3 −pabI3 03×3
+
+03×3 03×3 03×3 03×3 −pωbI3
+
+
+
+G =
+
+
+
+03 03 03 03
+
+Rnb 03 03 03
+
+03 −Rnb 03 03
+
+03 03 I3 03
+
+03 03 03 I3
+
+ ,
+
+with Fpv = diag 
+
+ 1  
+
+> RM+h
+
+, 1(RN +h) cos( μ) , −1
+
+
+
+. The remain-ing sub-matrices are summarized in Table II. 
+
+IMU Bias Dynamics: The accelerometer and gyroscope biases that are part of the error state are modeled with a discrete-time first-order Gauss-Markov process: 
+
+ab 
+
+> b,k
+
+= ab
+
+> b,k −1
+
+e−∆t p ab , ωb 
+
+> b,k
+
+= ωb
+
+> b,k −1
+
+e−∆t p ωb , (13) with inverse time constants p⋆ = 1 /τ ⋆ and bias process driving noises ηb 
+
+> ab
+
+∼ N (0, σab), ηb 
+
+> ωb
+
+∼ N (0, σωb).
+
+C. Measurement Updates 
+
+We employ a loosely coupled filter where a position measurement is used for aiding, e.g. derived from a GNSS signal or other positioning means. The filter receives it as a position measurement in the navigation frame. The error state 
+
+δx gets updated sequentially for every new measurement using the standard Kalman filter update equations 
+
+Wk = Pk|k−1H⊤ 
+
+> k
+
+(HkPk|k−1H⊤ 
+
+> k
+
++ Rk)−1 (14) 
+
+δ ˆxk = Wk(y − h( ˆ xk|k−1)) (15) 
+
+Pk = ( I15 − W H k)Pk|k−1. (16) As the filter’s errors are defined in the navigation frame, the measurement equation and corresponding Jacobian become 
+
+y = h(x) + wp = pnnb + wp
+
+H = ∂x
+
+∂δ x = I3×3 03×3 03×3 03×3 03×3
+
+ . (17) Due to the linearity of the position error. The position mea-surement is subject to white Gaussian noise w ∼ N (0 , σ2
+
+> p
+
+).IV. O PEN - AND CLOSED -LOOP ARCHITECTURES 
+
+Both architectures share the same dynamic model for the error state and the same measurement updates. The error state covariance update is the standard ESKF covariance formula 
+
+Pk|k−1 = Φk−1Pk−1Φ⊤ 
+
+> k−1
+
++ Qd, (18) where the discrete transition matrix Φk−1 and the pro-cess noise covariance Qd are obtained by discretizing system (12) and the spectral density matrix Qc =diag( σ2 
+
+> F
+
+, σ2 
+
+> ω
+
+, σ2 
+
+> Fb
+
+, σ2
+
+> ωb
+
+) using Van Loan’s formula [14]. The Qc matrix is tuned according to the respective IMU specifications. The open and closed-loop architectures differ in how corrections of the error state are applied to the nominal state, and consecutively in their nominal state evolution. Since the correction of the nominal state relies on the linearity approximation, the differences between feedback and open-loop corrections impact the applicability of one or the other architecture for different use cases. 
+
+A. Open-loop corrections 
+
+The filter is based on a drifting dead-reckoning solution 
+
+xINS = [ pg⊤
+
+> INS
+
+, vn⊤
+
+> nb, INS
+
+, q⊤
+
+> nb, INS
+
+]⊤, that is maintained outside the state estimation loop. The error state, δx, is initialized to zero and propagated using 
+
+δ ˆxk|k−1 = Φk−1 · δ ˆxk−1. (19) It grows unbounded over time without a reset to zero, as opposed to the repeating reset of the error state in closed-loop filtering. Its covariance stays contained by the measurement updates. The final nominal state estimate is calculated as a composition of the INS-state and the state error: 
+
+ˆx = xINS ⊕ δ ˆx. (20) Hence, in the open-loop architecture, the kinematically inte-grated navigation states ( pg
+
+> INS
+
+, vnnb, INS , qnb, INS ) are corrected externally for output or filtering, but the internal error state of the filter remains without reset. The bias corrections are directly propagated in the error state estimate during (19) via the rotation matrices in the upper right part of the F matrix. The state correction vector maps as: 
+
+ˆpgk =
+
+
+
+μINS ,k |k−1 + δ ˆμk
+
+λINS ,k |k−1 + δˆλk
+
+hINS ,k |k−1 + δˆhk
+
+ (21) 
+
+ˆvnnb,k −1 = vnnb, INS ,k |k−1 + δ ˆvnnb,k (22) 
+
+ˆqnb,k = ˆ q(δϑk) ⊗ qnb, INS ,k |k−1, (23) where (2) is used to convert the navigation-frame (world) attitude error vector to an error quaternion. Notice that the sensor biases remain isolated ( ab 
+
+> b,k −1
+
+= ab
+
+> b,k |k−1
+
+). The nominal estimate is the final output of the filter. It is further used in (17) to obtain the predicted measurement for the update and to propagate the error state using (19), but it is not propagated itself. With this, the filter continuously maintains three states: the INS solution, the error state, and the nominal state for the output. 
+
+B. Closed-loop corrections 
+
+The nominal state is propagated according to (6), (7) and (10) using the uncorrected inertial measurements f bm and 
+
+ωbm. The error state covariance propagtion via (12) uses the bias-corrected measurements ˆf bib and ˆωbib , and the estimated rotation ˆRnb . Using the uncorrected measurements for the propagation step avoids double-integration of the biases that remain solely in the error state. The measurement update in Section III-C is performed on the error state. Then, in the closed-loop architecture, only the estimated kinematic errors are fed back directly to update the total system state. Once injected, the position, velocity, and attitude error states are reset to zero, resulting in (19) TABLE II: Position, velocity, and attitude sub-matrices of the linearized error state kinematics                                                                                                                                                             
+
+> Fvp =
+> 
+> −vE
+> 
+> 2ωie cos μ+vE
+> (RN+h) cos 2μ
+> 
+> 0v2
+> Etan μ−vNvD
+> (RM+h)2
+> 2ωie (vNcos μ−vDsin μ) + vNvE
+> (RN+h) cos 2μ0−vEvNtan μ+vD
+> (RN+h)2
+> 2ωie vEsin μ0v2
+> N
+> (RM+h)2+v2
+> E
+> (RN+h)2
+> Fϑp =
+> 
+> −ωie sin μ0−v2
+> E
+> (RN+h)2
+> 00vN
+> (RM+h)2
+> −ωie cos μ−vE
+> (RN+h) cos 2μ0vEtan μ
+> (RN+h)2
+> 
+> Fvv =
+> 
+> vD
+> RM+h−2
+> 
+> ωie sin μ+vEtan μRN+h
+> vN
+> RM+h
+> 2ωie sin μ+vEtan μRN+hvNtan μ+vD
+> RN+h2ωie cos μ+vE
+> RN+h
+> −2vN
+> RM+h−2
+> 
+> ωie cos μ+vE
+> RN+h
+> 
+> 0
+> Fϑv =
+> 
+> 01
+> RM+h0
+> −1
+> RM+h000−tan μRN+h0
+> 
+> Fpp =
+> 
+> 00−vN
+> (RM+h)2
+> vEtan μ
+> (RN+h) cos μ0−vE
+> (RN+h)2 cos μ
+> 000
+> Fϑϑ =
+> 
+> 0−ωie sin μ−vEtan μRN+hvN
+> RM+h
+> ωie sin μ+vEtan μRN+h0ωie cos μ+vE
+> RN+h
+> −vN
+> RM+h−ωie cos μ−vE
+> RN+h0
+> 
+
+evaluating to zero. The state correction vector is formulated as: 
+
+ˆpgk =
+
+
+
+ˆμk|k−1 + δ ˆμk
+
+ˆλk|k−1 + δˆλk
+
+ˆhk|k−1 + δˆhk
+
+ (24) 
+
+ˆvnnb,k −1 = ˆ vnnb,k |k−1 + δ ˆvnnb,k (25) 
+
+ˆqnb,k = ˆ q(δϑk) ⊗ ˆqnb,k |k−1. (26) The bias dynamics can evolve either in the INS or in the error state. Using the latter, the parts of (19) related to bias are non-zero. Using the former, the bias correction is included in the propagation of the nominal state directly by the correction of the position error. The nominal and error states of position, velocity, and attitude are represented in the same coordinate frame. V. S IMULATION SETUP AND RESULTS 
+
+The two filters are evaluated across diverse trajectories ranging from 5 to 95 min to assess short- and long-term performance. The dataset comprises highly dynamic flight profiles with an average velocity of 100 km /h, illustrated in Fig. 1, and two straight flights along a geodetic path, lasting 30 and 90 min at a cruise velocity of 350 km /h, with a periodic attitude excitation of ±5◦ with a 100 s period to maintain system observability. Performance is compared over 50 Monte Carlo (MC) runs per configuration, sweeping across consumer-, tactical, and navigation-grade sensor noise profiles as detailed in Table III. Both IMU data and absolute position measurements in geographical coordinates are sampled at 20 Hz . Position observations are corrupted by zero-mean white Gaussian noise with a standard deviation of 1 m , projected into latitude and longitude components. The initial state covariance for the accelerometer bias is identical across all sensor grades. A run is interrupted when the position error exceeds 500 m 
+
+or the filter becomes highly inconsistent. To examine robust-ness against unmodeled deterministic initialization errors, a separate set of trials introduces a constant initial acceleration bias offset of 0.5 m /s2 across all grades. While this is not representative of calibrated navigation-grade instruments, it isolates the filters’ structural convergence properties. An overview of the resulting position errors under zero initial bias is shown in Fig. 2. A performance crossover 
+
+Fig. 1: 3-D profiles of the dynamic trajectories; straight paths 
+
+{07,10 } are not shown. 
+
+TABLE III: IMU noise parameters for consumer, tactical, and navigation sensor grades. 
+
+IMU Parameter Consumer Tactical Navigation VRW m/s3⁄2
+
+ 1.31 × 10 −2 3.3 × 10 −4 10 −12 
+
+Acc bias σab
+
+m/s2 1.15 × 10 −1 9.81 × 10 −3 10 −5
+
+Acc bias pab [s] 300 3600 3600 ARW rad /s1⁄2
+
+ 2.30 × 10 −3 3.6361 × 10 −5 10 −7
+
+Gyro bias σωb [rad /s] 9.81 × 10 −3 4.8481 × 10 −6 10 −8
+
+Gyro bias pωb [s] 300 3600 3600 
+
+between the two architectures is apparent. When INS drift is low – this includes both higher-grade IMU and shorter time horizons – the open-loop filter systematically outperforms its closed-loop counterpart. In our simulation, the boundary where open-loop filter performance degrades compared to closed-loop filtering is between the shorter (Trajectories 01-06 are < 30 min ), and longer (Trajectories 07-11 are 
+
+> 30 min ) flight path simulations using tactical-grade IMU. This short-term stability of the open-loop system stems from the structural decoupling of the error state propagation. Noise entering the position updates cannot directly couple into the inertial integration. Conversely, for lower-grade IMUs, the open-loop trajectory begins diverging within a few minutes across most profiles, and eventually for all grades at a long enough time horizon, leading to growing position errors towards the end of the path, as exemplarily shown in Fig. 3 for one flight path. The error injection in the closed-loop filter Fig. 2: Statistical Monte Carlo performance results showing total position RMSE and standard deviation per trajectory across IMU grades, without initial accelerometer bias offset. 
+
+Fig. 3: Position, Velocity, and attitude errors and respective 3σ
+
+> uncertainty for a 90-minute straight flight (Trajectory 10) comparing the closed- and open-loop filters using a tactical grade IMU.
+
+mitigates this by avoiding the error of the nominal state from growing rapidly from the start. However, this feedback loop penalizes navigation-grade sensors over short horizons: The feedback filter exhibits statistical inconsistency and minor bias wandering, as the injection of noisy position updates can perturb the narrow inertial integration predictions. Because both filters evaluate their state transition matrices using the corrected state estimate, this performance differ-ence is not driven by a linearization discrepancy as such, but by the fact that the small-error assumption underlying the linearization of the state dynamics gets violated when the drift accumulates in the open-loop filter. The feedback filter, in contrast, avoids error growth and operates within the linear regime. It sacrifices high-frequency decoupling to continuously mitigate nominal state error growth, leading to long-term bounded stability at the expense of short-term noise amplification. Notably, dynamic flight profiles amplify integration errors, impacting particularly the open-loop architecture, as evidenced by the comparably larger position errors in Trajectories 03 and 05 across consumer 
+
+Fig. 4: Attitude RMSE averaged over all trajectories and IMU grades, without initial accelerometer bias offset. 
+
+and tactical grades in Fig. 2. Fig. 4 compares the averaged attitude errors across all trajectories. The closed-loop filter results in better roll and pitch estimates across consumer and tactical IMUs. The yaw estimate is, however, more sensitive to disturbances from noisy updates due to the low observability of heading, confirming that feedforward architectures can better preserve heading integrity with good-enough sensors. Introducing an unknown constant initial bias offset empha-sizes these architectural trade-offs. As illustrated in Fig. 5, the unmodeled initialization error triggers an instability in the open-loop filter. Because the feedforward architecture lacks a reset path, it maintains false short-term stability until amplifying the uncorrected offset into divergence. This filter failure appears early in our simulations, which is why long horizons (Trajectories 08–11) are entirely omitted from the results in Fig. 6. In contrast, the closed-loop filter Fig. 5: Accelerometer and Gyroscope bias estimates with 3σ
+
+uncertainty for a 30 min straight trajectory (07), comparing tactical-grade IMU without and with a constant initial accelerometer bias. 
+
+Fig. 6: Total position RMSE and standard deviation per trajectory for the shorter trajectories with initial accelerometer bias offset across IMU grades. 
+
+directly isolates the initial offset, allows the state estimates to converge smoothly, and maintains bounded estimates. The convergence behavior shows the well-known depen-dence on the observability of the trajectory profile. For straight flights, even the closed-loop filter takes longer to re-solve the accelerometer bias due to unobservable directions, whereas dynamic maneuvers accelerate state observability. Conversely, the shorter dynamic trajectories delay the visible symptoms of the initial offset in the open-loop filter. VI. C ONCLUSION 
+
+This paper presented a systematic comparison of open-loop (feedforward) and closed-loop (feedback) error-state Kalman filtering architectures for airborne navigation, com-paring their performance across various IMU grades, trajec-tory profiles, and with initialization constraints. Although textbooks describe both architectures conceptually, our re-sults provide a foundation for architecture selection based on a trade-off in error propagation. We demonstrated how open-loop systems preserve the measurement filtering and heading integrity of high-end hardware by isolating the inertial integration from measurement noise, whereas closed-loop architectures are mandatory to prevent divergence when using lower-grade sensors. Beyond validating these known sensor boundaries, our analysis shows how structural coupling effects are sensitive to vehicle dynamics and initialization errors. Introducing an unknown initial bias reduces the stable runtime of the open-loop filter. Furthermore, when using navigation-grade IMUs, closed-loop feedback can provide a perturbation, causing minor bias wandering and degrading heading accuracy. For constrained autonomous platforms with lower-grade hardware, closed-loop filtering is necessary. Conversely, for safety-critical platforms equipped with high-end sensors, there are good reasons to preserve open-loop architectures not only to enforce fault isolation, but to maximize short-to-middle-term estimation accuracy. Long-term stability can also be obtained by occasional resets. Although the extremes of the hardware spectrum unambiguously lead to the respec-tive choices, this work provides a framework for navigation architects evaluating ambiguous design boundaries where the optimal choice is not immediately obvious. ACKNOWLEDGMENT 
+
+We would like to thank Philip Lillelund for valuable discussions on the open-loop implementation, and Mathieu Brunot and Tor Arne Johansen for proof-reading. We ac-knowledge the use of Google Gemini and Claude in editing this manuscript and programming the simulation. REFERENCES [1] D. Engelsman and I. Klein, “Information-aided inertial navigation: A review,” IEEE Transactions on Instrumentation and Measurement ,vol. 72, pp. 1–18, 2023. [2] P. D. Groves, Principles of GNSS, Intertial, and Multisensor Integrated Navigation Systems . Artech House, 2 ed., 2013. [3] D. Titterton and J. Weston, Strapdown Inertial Navigation Technology .IET, 2004. [4] P. Maybeck, “Stochastic models, estimation, and control, volume 1,” in Mathematics in Science and Engineering , vol. 141, Academic Press, 1979. [5] A. Canciani and J. Raquet, “Airborne Magnetic Anomaly Navigation,”

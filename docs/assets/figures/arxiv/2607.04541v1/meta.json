@@ -1,0 +1,78 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2607.04541v1/fig-001.webp",
+      "caption": "Fig. 1. Overview of the motivation of CRISP. We use low-cost camera-radar inputs for inference, while leveraging LiDAR as privileged supervision during pretraining to learn a transferable multimodal driving backbone.",
+      "page": 1,
+      "index": 1,
+      "width": 529,
+      "height": 375
+    },
+    {
+      "url": "assets/figures/arxiv/2607.04541v1/fig-002.webp",
+      "caption": "Fig. 3. Radar-enhanced temporal self-attention. The calibrated radar BEV feature F rad t primes the input BEV query Q (l−1)",
+      "page": 6,
+      "index": 2,
+      "width": 485,
+      "height": 544
+    },
+    {
+      "url": "assets/figures/arxiv/2607.04541v1/fig-003.webp",
+      "caption": "Fig. 5. Label-efficiency of CRISP pretraining on nuScenes 3D detection. We train the same BEVFormer-CRISP detection model for 12 epochs using 1/4, 1/2, and the full nuScenes training split. The scratch baseline uses the same FCOS3D-pretrained camera encoder but does not use CRISP backbone pretraining. CRISP improves both NDS and mAP across all data scales, with clear gains in the low-label regime.",
+      "page": 11,
+      "index": 3,
+      "width": 517,
+      "height": 367
+    },
+    {
+      "url": "assets/figures/arxiv/2607.04541v1/fig-004.webp",
+      "caption": "Fig. 8. Failure case analysis for future world-geometry prediction. We show the front camera views at the current frame (0s) and future timestamps for visualization only; future images are not provided to the model. On the right, predicted point clouds are compared with ground truth. This scene requires reasoning about a traffic light that is small and difficult to observe from the input images: the highlighted vehicle remains stopped for the red light, while the road ahead is visually open. CRISP predicts the vehicle geometry more accurately than the CO ViDAR baseline at early horizons, but its prediction begins to drift after 2s. This suggests that, when high-level traffic-signal intent is ambiguous, the forecasting model may rely more on learned motion priors from pretraining than on the underlying traffic-control state.",
+      "page": 15,
+      "index": 4,
+      "width": 1076,
+      "height": 621
+    },
+    {
+      "url": "assets/figures/arxiv/2607.04541v1/fig-005.webp",
+      "caption": "Fig. 4. Multimodal feature rendering. Camera and radar cross-attention branches produce residual innovations, which are selectively admitted by the Modality Innovation Gate (MIG). The pre-attention BEV query is preserved through the residual path.",
+      "page": 7,
+      "index": 5,
+      "width": 512,
+      "height": 301
+    },
+    {
+      "url": "assets/figures/arxiv/2607.04541v1/fig-006.webp",
+      "caption": "Fig. 7. Qualitative comparison between CRISP and ViDAR for future world-geometry prediction. We show the front camera views at the current frame (0s) and future timestamps for visualization only; future images are not provided to the model. On the right, predicted point clouds are compared with ground truth, where CRISP better preserves the scene geometry over time. In this example, the CO ViDAR baseline propagates an erroneous structure from a billboard region, while CRISP maintains more reliable geometry.",
+      "page": 14,
+      "index": 6,
+      "width": 1076,
+      "height": 621
+    },
+    {
+      "url": "assets/figures/arxiv/2607.04541v1/fig-007.webp",
+      "caption": "Fig. 6. Qualitative comparison between CRISP and ViDAR for future world-geometry prediction in a low-light scene. We show the front camera views at the current frame (0s) and future timestamps for visualization only; future images are not provided to the model. On the right, predicted point clouds are compared with ground truth. In this example, the CO ViDAR baseline loses the forward vehicle over time and exhibits large spatial drift, while CRISP maintains a more accurate prediction of the vehicle trajectory. This illustrates the benefit of radar motion cues for forecasting dynamic objects under challenging illumination, which is important for downstream trajectory evaluation and safe planning around leading vehicles.",
+      "page": 13,
+      "index": 7,
+      "width": 1076,
+      "height": 621
+    },
+    {
+      "url": "assets/figures/arxiv/2607.04541v1/fig-008.webp",
+      "caption": "TABLE I. Point cloud forecasting on nuScenes following the ViDAR protocol [23]. We report Chamfer Distance (CD) for future timestamps from 0.5s to 3.0s. The best result is shown in bold and the second-best result is underlined. † indicates a language-augmented world model [50] with an LLMbased component and additional text supervision, which is different from the sensor-only pretraining setting of the other listed methods.",
+      "page": 9,
+      "index": 8,
+      "width": 525,
+      "height": 294
+    },
+    {
+      "url": "assets/figures/arxiv/2607.04541v1/fig-009.webp",
+      "caption": "Fig. 2. Overview of CRISP. Historical multi-view images and aggregated radar observations are encoded into a shared CR BEV backbone. Radar first passes through ego-aware radar encoding, then enters the backbone through radar-enhanced temporal propagation and multimodal feature rendering. During pretraining, a future occupancy decoder is supervised by future LiDAR; during downstream finetuning, only the pretrained CR backbone is retained.",
+      "page": 5,
+      "index": 9,
+      "width": 1076,
+      "height": 577
+    }
+  ]
+}

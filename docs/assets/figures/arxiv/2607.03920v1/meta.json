@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2607.03920v1/fig-001.webp",
+      "caption": "Figure 1: Overview of LH-AVLN. An agent receives a global task with heterogeneous goals specified by category, language description, or reference image, and navigates with RGB-D observations, pose, and binaural audio. Goal-associated sounds can guide non-line-of-sight search, but alternating cues from unfinished goals may become distractors as the mission state changes. LH-AVLN requires target-instance disambiguation, persistent cross-modal memory, and visual-semantic verification under both ordered and unordered multi-goal missions.",
+      "page": 2,
+      "index": 1,
+      "width": 769,
+      "height": 414
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03920v1/fig-002.webp",
+      "caption": "Table 1: Long-horizon and multi-goal benchmarks usually omit acoustic cues, while audio-visual navigation benchmarks typically evaluate a single navigation objective. LH-AVLN combines multistage task execution, heterogeneous goal specifications, and alternating goal-associated acoustic cues. Cat., Txt., and Img. denote category, text, and image goals.",
+      "page": 3,
+      "index": 2,
+      "width": 818,
+      "height": 268
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03920v1/fig-003.webp",
+      "caption": "Figure 2: Benchmark construction and statistics of LH-AVLN. (a) Goal cues are constructed from visually validated target instances, including reference images and language descriptions. (b) Reference path lengths cover a broad range of ordered and unordered missions with two to four goals. (c) Episodes contain diverse goal counts and modality compositions.",
+      "page": 4,
+      "index": 3,
+      "width": 824,
+      "height": 191
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03920v1/fig-004.webp",
+      "caption": "Figure 3: Overview of PAG-Nav. (Left) The agent receives heterogeneous goal specifications and RGB-D, audio, and pose observations. (Middle) PAG-Nav maintains a uniform semantic map. (Right) A task-conditioned planner switches among exploration, partial matching, and confirmation.",
+      "page": 5,
+      "index": 4,
+      "width": 760,
+      "height": 327
+    }
+  ]
+}

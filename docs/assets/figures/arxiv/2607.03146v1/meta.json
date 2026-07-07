@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2607.03146v1/fig-001.webp",
+      "caption": "Fig. 1. Overview of the proposed Exp2VLA pipeline. Expert policies in Isaac Lab generate demonstration rollouts, which are converted into a dataset for fine-tuning a vision-language-action model. At inference time, the fine-tuned model takes RGB observations and language commands as input and produces control actions for drone navigation. We evaluate the resulting policy in both sim-to-sim and simulation-in-the-loop (SITL) settings.",
+      "page": 1,
+      "index": 1,
+      "width": 484,
+      "height": 283
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03146v1/fig-002.webp",
+      "caption": "TABLE II PER-DIMENSION STATISTICS OF OBSERVATION STATES AND ACTION COMMANDS FOR DATASET 1 AND DATASET 2. VALUES WITH MAGNITUDE BELOW 10−6 ARE REPORTED AS 0.",
+      "page": 3,
+      "index": 2,
+      "width": 509,
+      "height": 267
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03146v1/fig-003.webp",
+      "caption": "Fig. 2. The Exp2VLA pipeline consists of three stages: (1) collecting expert demonstrations in Isaac Lab and converting them into the LeRobot format, (2) fine-tuning a VLA model via imitation learning, and (3) deploying the fine-tuned models in closed loop for language-conditioned drone navigation in sim-to-sim.",
+      "page": 4,
+      "index": 3,
+      "width": 990,
+      "height": 346
+    }
+  ]
+}

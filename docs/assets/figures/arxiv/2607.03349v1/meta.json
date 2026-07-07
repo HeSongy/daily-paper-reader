@@ -1,0 +1,70 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2607.03349v1/fig-001.webp",
+      "caption": "TABLE I PERFORMANCE COMPARISON ON RONIN DATASETS IN 3D SPACE. VALUES ARE REPORTED AS MEAN ± STANDARD DEVIATION. BOLD INDICATES THE BEST PERFORMANCE. ATE AND RTE (LOWER IS BETTER); TLR AND MCS (CLOSER TO 1 IS BETTER).",
+      "page": 6,
+      "index": 1,
+      "width": 1076,
+      "height": 361
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03349v1/fig-002.webp",
+      "caption": "TABLE II SOTA QUANTITATIVE EVALUATION ON RONIN IN 2D SPACE. COMPARISON AGAINST SPECIALIZED 2D BASELINES ON BOTH SEEN AND UNSEEN ENVIRONMENTS. WE PROJECT OUR PD FROM 3D PREDICTIONS TO 2D FOR FAIRNESS. NOTE THAT BASELINES ONLY OUTPUT VELOCITY (v⃗), WHEREAS OUR METHOD PRODUCES BOTH VELOCITY AND ANGULAR VELOCITY (v⃗, ω⃗). BOLD VALUES INDICATE THE BEST PERFORMANCE IN EACH COLUMN.",
+      "page": 7,
+      "index": 2,
+      "width": 1076,
+      "height": 262
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03349v1/fig-003.webp",
+      "caption": "Fig. 1. The overall process of the PedestrianDiffusion model.",
+      "page": 3,
+      "index": 3,
+      "width": 529,
+      "height": 529
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03349v1/fig-004.webp",
+      "caption": "Fig. 2. Natural language prompt templates used for CLIP encoding. We serialize metadata into structured sentences to generate semantic embeddings for each dataset. “Example 1” illustrates a known configuration from the RIDI dataset, while “Example 2” demonstrates the template for unknown or unannotated scenarios. We iterate through all attribute combinations to prevent overfitting, using an “unknown” token as a fallback for unseen domains during inference.",
+      "page": 3,
+      "index": 4,
+      "width": 529,
+      "height": 292
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03349v1/fig-005.webp",
+      "caption": "TABLE IV COMPUTATIONAL COMPLEXITY AND EFFICIENCY BENCHMARKS. HARDWARE PERFORMANCE EVALUATED USING FP32 PRECISION. BY CONSOLIDATING METRICS, WE CONTRAST ABSOLUTE PROCESSING COSTS AGAINST AMORTIZED PER-FRAME EFFICIENCY, HIGHLIGHTING THE GENERATION DENSITY OF OUR DIFFUSION MODEL OVER LONG SEQUENTIAL OUTPUTS (N = 100).",
+      "page": 8,
+      "index": 5,
+      "width": 1076,
+      "height": 303
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03349v1/fig-006.webp",
+      "caption": "Fig. 3. The figures illustrate the inference steps VS. metrics performance across datasets. The green area is the optimal range for the DPM-Solver++ scheduler 20–25 steps.",
+      "page": 8,
+      "index": 6,
+      "width": 1076,
+      "height": 504
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03349v1/fig-007.webp",
+      "caption": "TABLE VI DETAILED STATISTICS FOR THE OXIOD, RIDI, RONIN, AND TLIO DATASETS. SEQ: NUMBER OF SEQUENCES, SAMPLES: NUMBER OF SAMPLES (WINDOWS). PERCENTAGES IN PARENTHESES REPRESENT THE CONTRIBUTION OF EACH DATASET TO THE COMBINED HYBRID DATASET.",
+      "page": 12,
+      "index": 7,
+      "width": 1076,
+      "height": 198
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03349v1/fig-008.webp",
+      "caption": "Fig. 4. t-SNE visualization of raw spectrum for RIDI user profiles. The plot demonstrates that semantically similar profiles (e.g., “handheld” and “handheld speed”) cluster closely in the embedding space.",
+      "page": 9,
+      "index": 8,
+      "width": 529,
+      "height": 756
+    }
+  ]
+}

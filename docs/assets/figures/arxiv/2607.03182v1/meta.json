@@ -1,0 +1,62 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2607.03182v1/fig-001.webp",
+      "caption": "Figure 3: Illustration of Decision-Anchored Residual Flow (DARF). The global trajectory space is decomposed into multiple local trajectory-pattern subspaces, each represented by a trajectorypattern anchor ak. Given a selected anchor, the target trajectory is represented as τgt = ak + r, where r is the continuous residual defined by the anchor. DARF performs flow matching in the corresponding anchor-defined residual space, enabling fine-grained continuous execution while preserving consistency with the selected behavior-level anchor.",
+      "page": 6,
+      "index": 1,
+      "width": 790,
+      "height": 343
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03182v1/fig-002.webp",
+      "caption": "Figure 4: Qualitative visualization of AnchorVLA. Each case contains three rows: the CoT-based driving decision, the trajectory-pattern anchor predicted by the anchor-decision model, and the final trajectory refined by Decision-Anchored Residual Flow (DARF). The visualization shows that the predicted trajectory-pattern anchors capture high-level driving behaviors, while DARF refines the corresponding continuous trajectories in the anchor-defined residual space.",
+      "page": 15,
+      "index": 2,
+      "width": 826,
+      "height": 595
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03182v1/fig-003.webp",
+      "caption": "Figure 1: Comparison of autonomous driving planning paradigms. (a) End-to-end planners unify perception, prediction, mapping, and planning within a single network to reduce information loss across modular interfaces. (b) Planning-head-based VLA planners use VLM/LLM features with an independent planning head. (c) Autoregressive VLA planners discretize trajectories into waypoint tokens and generate them sequentially. (d) AnchorVLA represents high-level VLA decisions as trajectory-pattern anchors and generates continuous trajectories in the corresponding anchor-defined residual space.",
+      "page": 2,
+      "index": 3,
+      "width": 790,
+      "height": 241
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03182v1/fig-004.webp",
+      "caption": "Table 1: Comparison with existing methods on Bench2Drive closed-loop metrics. “VLA” indicates whether the method uses a vision-language-action model or language-conditioned reasoning for planning, and “Generative Planning” indicates whether the method adopts a generative trajectory modeling strategy such as diffusion, flow matching, or related probabilistic generation.",
+      "page": 8,
+      "index": 4,
+      "width": 818,
+      "height": 420
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03182v1/fig-005.webp",
+      "caption": "Table 2: Comparison with existing methods on Bench2Drive multi-ability evaluation.",
+      "page": 9,
+      "index": 5,
+      "width": 702,
+      "height": 387
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03182v1/fig-006.webp",
+      "caption": "Figure 2: Overview of the proposed AnchorVLA framework. The model encodes language, vision, and navigation inputs with a pre-trained Qwen2-0.5B backbone, and represents high-level VLA decisions as trajectory-pattern anchors. We instantiate Decision-as-Anchor Representation (DAAR) with two anchor-decision modeling methods: (a) query-based modeling and (b) autoregressive modeling. Given the selected anchors, (c) Decision-Anchored Residual Flow (DARF) generates continuous trajectories in the corresponding anchor-defined residual spaces and predicts confidence scores for final trajectory selection. (d) The full pipeline bridges high-level VLA reasoning and continuous trajectory generation through the trajectory-pattern anchor interface.",
+      "page": 5,
+      "index": 6,
+      "width": 790,
+      "height": 522
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03182v1/fig-007.webp",
+      "caption": "Figure 5: Failure case analysis of AnchorVLA. We show three representative failure modes: offroute planning, mismatch with the language instruction, and residual refinement deviation. Since DARF refines trajectories within the anchor-defined residual space, inaccurate anchor predictions may propagate to the final trajectory. In addition, noisy residual estimation may introduce local geometric deviations, leading to suboptimal planning results.",
+      "page": 16,
+      "index": 7,
+      "width": 826,
+      "height": 294
+    }
+  ]
+}
