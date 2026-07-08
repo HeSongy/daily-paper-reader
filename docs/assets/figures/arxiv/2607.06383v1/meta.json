@@ -1,0 +1,54 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2607.06383v1/fig-001.webp",
+      "caption": "Fig. 6. Representative moment of the hailing behavior (left), along with the corresponding LiDAR-based map used for obstacle avoidance (center) and the onboard RGB-D camera view (right). The top left frame shows an example of the hailing gesture used to start the hailing behavior.",
+      "page": 10,
+      "index": 1,
+      "width": 725,
+      "height": 475
+    },
+    {
+      "url": "assets/figures/arxiv/2607.06383v1/fig-002.webp",
+      "caption": "Fig. 1. Front and back view of the original Genny Zero platform.",
+      "page": 3,
+      "index": 2,
+      "width": 725,
+      "height": 350
+    },
+    {
+      "url": "assets/figures/arxiv/2607.06383v1/fig-003.webp",
+      "caption": "Fig. 3. Representative snapshots of the gesture-based people-following behavior. The top-left image shows the follow me gesture used to trigger people following, while the bottom-right image shows the stop gesture used to stop the Genny Zero platform.",
+      "page": 8,
+      "index": 3,
+      "width": 679,
+      "height": 567
+    },
+    {
+      "url": "assets/figures/arxiv/2607.06383v1/fig-004.webp",
+      "caption": "Fig. 2. 3D, front and side views of the modified Genny Zero platform equipped with the LiDAR and RGB-D sensors, along with the laptop used for sensor acquisition and the navigation controller. The sensors’ FOV are highlighted in red for the ZED 2i and blue for the Robosense Airy LiDAR.",
+      "page": 4,
+      "index": 4,
+      "width": 725,
+      "height": 279
+    },
+    {
+      "url": "assets/figures/arxiv/2607.06383v1/fig-005.webp",
+      "caption": "Fig. 4. Representative snapshots of the people-following behavior in a constrained environment, including door crossing and corridor navigation.",
+      "page": 9,
+      "index": 5,
+      "width": 725,
+      "height": 258
+    },
+    {
+      "url": "assets/figures/arxiv/2607.06383v1/fig-006.webp",
+      "caption": "Fig. 5. Top-down view of the trajectories recorded during the constrained indoor navigation experiment. The red trajectory represents Genny Zero, while the green trajectory represents the tracked user.",
+      "page": 9,
+      "index": 6,
+      "width": 502,
+      "height": 403
+    }
+  ]
+}

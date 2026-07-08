@@ -1,0 +1,46 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2607.00254v1/fig-001.webp",
+      "caption": "Figure 3: Overview of Strategy PM. A one-time training phase (left) labels a small uniform sample with the reward model and trains a decision-tree proxy on surface features, calibrating a variance threshold 𝜎th and a score threshold 𝜏 . At inference (right), the proxy scores all 𝑁 candidates per prompt; when calibrated as reliable, the variance gate skips uninformative prompts at zero oracle cost, and the candidate filter forwards only high-scoring survivors to the reward model for the final top-𝑘 selection.",
+      "page": 6,
+      "index": 1,
+      "width": 494,
+      "height": 556
+    },
+    {
+      "url": "assets/figures/arxiv/2607.00254v1/fig-002.webp",
+      "caption": "Figure 1: Illustration of rejection sampling as a SQL query in the LLM post-training recipe.",
+      "page": 2,
+      "index": 2,
+      "width": 506,
+      "height": 377
+    },
+    {
+      "url": "assets/figures/arxiv/2607.00254v1/fig-003.webp",
+      "caption": "Figure 2: Illustration of an analytical query involving AI agents as a User Defined Function (UDF).",
+      "page": 2,
+      "index": 3,
+      "width": 506,
+      "height": 492
+    },
+    {
+      "url": "assets/figures/arxiv/2607.00254v1/fig-004.webp",
+      "caption": "Figure 5: Strategy AQP: estimated relative error vs. number of sampling rounds for all eight queries. 𝑝 denotes the natural positive-label rate. The y-axis is the 95% confidence interval half-width divided by the current sample mean; circles mark the adaptive stopping point, where the half-width no longer decreases significantly. Under balanced distributions, the half-width has dropped below 10% by the stopping point. Under the natural distribution, small-table cases (Q13, Q54) reach their stopping point at a similar number of rounds but with a half-width still far above 10%, so Strategy AQP alone may be unreliable and should be complemented by Strategy PM only when the proxy is reliable.",
+      "page": 10,
+      "index": 4,
+      "width": 1054,
+      "height": 398
+    },
+    {
+      "url": "assets/figures/arxiv/2607.00254v1/fig-005.webp",
+      "caption": "Figure 6: Strategy PM aggregate error vs. training sample percentage under the natural label distribution. Shaded regions show the 25th–75th percentile range across 100 repeated trials. On 5 out of 8 queries (Q7, Q52, Q53, Q55, Q56), the proxy reduces aggregate error below 10% as training samples increase, while the fallback rate decreases—indicating the DT gains confidence and handles more records without oracle calls. Q54 is a boundary case: error decreases slowly but the fallback rate remains high (∼60%), as the DT lacks sufficient discriminative features. For Q13, the predictive task is intrinsically hard for the decision tree: the DT assigns high confidence incorrectly, leading to persistent aggregate error despite low fallback rate.",
+      "page": 10,
+      "index": 5,
+      "width": 1054,
+      "height": 514
+    }
+  ]
+}

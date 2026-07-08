@@ -1,0 +1,78 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2607.03558v1/fig-001.webp",
+      "caption": "Table 1: 14-way zero-shot VQA on UCF-Crime. KSD Bridge and ASP evaluated on 1,150 held-out chunks. The Cross-Manifold Probe (Observation Tensor → KSD Bridge → ASP) is evaluated on the 1,193-chunk validation set. ASP dominates KSD Bridge across all tasks despite consuming hallucinated futures. The Cross-Manifold Probe’s collapse to random chance demonstrates ASP is a horizon-specific operator (Section 3.5).",
+      "page": 7,
+      "index": 1,
+      "width": 867,
+      "height": 294
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03558v1/fig-002.webp",
+      "caption": "Table 2: Cross-Dataset Evaluation. Comparison of in-distribution (UCF) vs. OOD (XD) metrics, evaluating the KSD Bridge (v8) and ASP (v9). Anticipation Advantage measured at Tonset.",
+      "page": 7,
+      "index": 2,
+      "width": 752,
+      "height": 192
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03558v1/fig-003.webp",
+      "caption": "Table 5: Label-permutation null distribution (N=1000, chance ≈ 1/14 ≈ 7.1%). Observed Track 2 accuracy is ∼ 4× the null mean at all active horizons.",
+      "page": 10,
+      "index": 3,
+      "width": 666,
+      "height": 189
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03558v1/fig-004.webp",
+      "caption": "Table 6: Full hyperparameter table for KSD Bridge and ASP training.",
+      "page": 14,
+      "index": 4,
+      "width": 740,
+      "height": 425
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03558v1/fig-005.webp",
+      "caption": "Figure 1: The Latent Clarity Hypothesis: conceptual geometry and empirical validation. (a) Observation states (sobs) are dispersed on the semantic manifold (S2047) because the underlying Observation Tensors ingest aleatoric noise (motion blur, occlusion, camera shake) at the kinematic peak. (b) Anticipation embeddings (ssharp) cluster tightly near the text anchor because V-JEPA 2’s temporal predictor discards stochastic residuals, retaining only the predictable physical trajectory. (c) UMAP projection (cosine metric) [9] of a subset of real Semantic Latent States on UCF-Crime (n=429 obs, n=429 ant, n=50 CMP, 14 anchors, drawn from the 1,193-chunk validation set). While Anticipation embeddings maintain consistently higher 2048-D cosine similarity to anchors (yielding superior zero-shot accuracy), UMAP prioritizes local topology, revealing that Observation (red) and Anticipation (green) embeddings occupy geometrically distinct sub-manifolds. Text anchors (blue stars) form an isolated modality cluster. Cross-Manifold Probe points (orange) land completely in the Anticipation region, confirming the ASP acts as a horizon-specific translation operator (∆) rather than a generic denoiser—an Asymmetric Geometric Overshoot that explains the 7.3% accuracy collapse (Section 3.5).",
+      "page": 3,
+      "index": 5,
+      "width": 842,
+      "height": 342
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03558v1/fig-006.webp",
+      "caption": "Table 3: Per-Category VQA Accuracy (Q1) across Manifolds. Actual results from the validation caches for Observation (sobs), Anticipation (ssharp), and the Cross-Manifold Probe (sobs → ASP). All values are Q1 zero-shot accuracy. The collapse of these categories in the CMP columns confirms the topological separation of the Anticipation and Observation sub-manifolds within the Shared Semantic Hypersphere. UCF results are In-Distribution; XD results are OOD Transfer.",
+      "page": 8,
+      "index": 6,
+      "width": 657,
+      "height": 446
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03558v1/fig-007.webp",
+      "caption": "Figure 2: The Consolidated PULS Architecture and Training Strategy. Raw video frames are encoded by the frozen V-JEPA 2 ViT-L. (a) Left Track (Observation): The context and target tokens form the Observation Tensor, yielding the observation embedding sobs. During ASP training, this track acts as the frozen teacher. (a) Right Track (Anticipation): The Temporal Predictor hallucinates Ẑfut. The Anticipation Tensor yields a blurred state, which the trainable ASP (student) sharpens into ssharp. Objective: A Symmetric InfoNCE loss (purple) explicitly distills the student’s output toward the teacher’s target, ensuring both tracks converge onto the Shared Qwen Hypersphere (S2047). The Cross-Manifold Probe (dashed red line) explicitly misroutes the observation embedding into the ASP, triggering geometric collapse. Right panel (b): Three-stage training recipe — ➀ unconditional caption alignment, ➁ query-conditioned VQA fine-tuning (both with SALT noise and frozen Qwen teacher), and ➂ ASP sharpening via frozen teacher distillation (τ=0.07, batch 1024).",
+      "page": 4,
+      "index": 7,
+      "width": 827,
+      "height": 534
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03558v1/fig-008.webp",
+      "caption": "Table 4: Triple-Track Lead-Time on UCF-Crime (561 videos). Track 2 decays monotonically as the anticipatory horizon extends, saturating cleanly at 0% in the calm zone, while Track 1 is horizon-invariant — the signature of scene-bias classification.",
+      "page": 9,
+      "index": 8,
+      "width": 726,
+      "height": 225
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03558v1/fig-009.webp",
+      "caption": "Figure 3: Triple-Track Lead-Time Protocol. (a) UCF-Crime: Track 2 (gated) decays monotonically as the horizon extends and saturates at 0% in the calm zone (T−3s), while Track 1 (ungated) is flat — the signature of scene-bias classification. Peak +8.9pp gated–context advantage at T−0.5s. (b) XD-Violence (no retraining): Track 1 collapses to 2.2% (below 7-class chance of 14.3%) due to distribution shift, while gated Track 2 recovers to 38–41%, demonstrating that the L1-surprise gate compensates for OOD scene bias. Peak gated–context advantage +4.5pp at T−1.5s.",
+      "page": 9,
+      "index": 9,
+      "width": 717,
+      "height": 315
+    }
+  ]
+}

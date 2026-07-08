@@ -1,0 +1,78 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2607.05906v1/fig-001.webp",
+      "caption": "Table 4: Few-shot object classification on ModelNet40. We report the average accuracy (%) and standard deviation (%) of 10 independent experiments. † denotes reproduced results under our implementation. Bold denotes the best result among Gaussian-representation methods.",
+      "page": 21,
+      "index": 1,
+      "width": 710,
+      "height": 370
+    },
+    {
+      "url": "assets/figures/arxiv/2607.05906v1/fig-002.webp",
+      "caption": "Fig. 1. Motivation and overview of GaussFusion. Compared with basic masked Gaussian modeling, GaussFusion introduces image-text semantic alignment and GSHM masking to select salient, spatially coherent Gaussian regions, improving local structure learning and semantic transferability.",
+      "page": 3,
+      "index": 2,
+      "width": 710,
+      "height": 404
+    },
+    {
+      "url": "assets/figures/arxiv/2607.05906v1/fig-003.webp",
+      "caption": "Table 2: Object classification on clean ModelNet datasets. Input indicates the representation used by each method. Overall accuracy (%) is reported. † denotes reproduced results under our implementation.",
+      "page": 18,
+      "index": 3,
+      "width": 718,
+      "height": 450
+    },
+    {
+      "url": "assets/figures/arxiv/2607.05906v1/fig-004.webp",
+      "caption": "Fig. 2. Overall framework of GaussFusion. GaussFusion generates Gaussian tokens from 3D splats and applies Gaussian Salience-guided Multi-scale Hole Masking (GSHM) to local Gaussian groups. Visible Gaussian tokens are combined with learnable image and text tokens in a multimodal encoder. The decoder reconstructs masked Gaussian groups, while frozen image and text encoders provide cross-modal supervision for learning transferable 3D representations.",
+      "page": 8,
+      "index": 4,
+      "width": 710,
+      "height": 404
+    },
+    {
+      "url": "assets/figures/arxiv/2607.05906v1/fig-005.webp",
+      "caption": "Fig. 5. Qualitative comparison of part segmentation results on ShapeNetPart. Different colors represent predicted semantic parts. Compared with Gaussian-MAE, GaussFusion produces more spatially coherent predictions and clearer part boundaries, particularly for thin structures and geometrically complex regions.",
+      "page": 19,
+      "index": 5,
+      "width": 710,
+      "height": 331
+    },
+    {
+      "url": "assets/figures/arxiv/2607.05906v1/fig-006.webp",
+      "caption": "Fig. 4. Visualization of feature distributions. The t-SNE plots compare the feature embeddings of Gaussian-MAE and GaussFusion after pre-training and after fine-tuning on ModelNet40 and ScanObjectNN. Different colors represent different object categories.",
+      "page": 17,
+      "index": 6,
+      "width": 677,
+      "height": 429
+    },
+    {
+      "url": "assets/figures/arxiv/2607.05906v1/fig-007.webp",
+      "caption": "Fig. 6. Ablation study on masking ratio and multimodal loss weights. (a) shows the effect of GSHM masking ratios on ScanObjectNN OBJ-BG. (b) shows the effect of image and text loss weights, with the best accuracy of 88.98% at λimg = λtext = 1.",
+      "page": 24,
+      "index": 7,
+      "width": 677,
+      "height": 316
+    },
+    {
+      "url": "assets/figures/arxiv/2607.05906v1/fig-008.webp",
+      "caption": "Table 3: Part segmentation results on the ShapeNetPart dataset. We report the mean IoU across all part categories mIoUC (%) and the mean IoU across all instances mIoUI (%), as well as the IoU (%) for each category. † denotes reproduced results under our implementation.",
+      "page": 20,
+      "index": 8,
+      "width": 716,
+      "height": 431
+    },
+    {
+      "url": "assets/figures/arxiv/2607.05906v1/fig-009.webp",
+      "caption": "Table 1: Object classification on ScanObjectNN. Overall accuracy (%) is reported. † denotes reproduced results under our implementation.",
+      "page": 16,
+      "index": 9,
+      "width": 722,
+      "height": 450
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2607.03485v1/fig-001.webp",
+      "caption": "Fig. 4. Reconstruction of the LF pathway and the combined LF+HF pathways across f1, f5, f12 and f17 during the time window from 11:18:30 to 11:20:00 using the SINDy-SENDAI architecture. When an interarea oscillation is excited, the LF pathway alone already provides an accurate reconstruction of the dominant dynamics, while the addition of the HF pathway further refines the full estimation.",
+      "page": 7,
+      "index": 1,
+      "width": 1071,
+      "height": 217
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03485v1/fig-002.webp",
+      "caption": "Fig. 1. SINDy-SENDAI architecture. The framework consists of two pathways. The LF pathway takes the s(t) observed measurements (from X1(t) to Xh(t)) as input and outputs the reconstruction of the dominant low-frequency dynamics, denoted as X̂LF (t), for all the sensors. By integrating the SINDy module, this pathway effectively captures the LF behavior and identifies a dynamical model f(z) in the latent space. The HF pathway, instead, receives as input the residuals computed as the difference between the original sensor measurements s(t) and the LF reconstruction X̂LF (t). By combining the LF and HF pathways, SINDy-SENDAI reconstructs the complete set of sensor signals, both observed and unobserved, yielding the final output X̂(t).",
+      "page": 3,
+      "index": 2,
+      "width": 1028,
+      "height": 644
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03485v1/fig-003.webp",
+      "caption": "Fig. 8. PMU measurements of the normal grid operation in March 2021.",
+      "page": 8,
+      "index": 3,
+      "width": 490,
+      "height": 280
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03485v1/fig-004.webp",
+      "caption": "Fig. 6. One-minute forecast of the LF pathway across f1, f5, f12 and f17. The SINDy model accurately reproduces the system dynamics during the first 30 seconds, after which errors gradually accumulate, leading to divergence from the true trajectory.",
+      "page": 8,
+      "index": 4,
+      "width": 1071,
+      "height": 217
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03485v1/fig-005.webp",
+      "caption": "Fig. 10. RMSE [Hz] and Gain [%] between LF and LF+HF for all the PMUs reconstructions in March 2021.",
+      "page": 9,
+      "index": 5,
+      "width": 512,
+      "height": 243
+    }
+  ]
+}

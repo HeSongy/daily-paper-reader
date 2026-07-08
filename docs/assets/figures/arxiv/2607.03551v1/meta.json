@@ -1,0 +1,86 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2607.03551v1/fig-001.webp",
+      "caption": "Figure 4. t-SNE projection of NN embeddings from the model zoo, obtained by mean-pooling token representations. Colors indicate the dataset each model was trained on. Left: Trained without alignment, where dataset alignment is not explicitly enforced, resulting in substantial overlap between NN embeddings. Right: Trained with the proposed alignment, where models trained on the same dataset form more compact and clearly separated clusters.",
+      "page": 6,
+      "index": 1,
+      "width": 492,
+      "height": 302
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03551v1/fig-002.webp",
+      "caption": "Table 10. Datasets used for model-zoo construction and OOD evaluation. “Instances” are reported as train/val counts.",
+      "page": 15,
+      "index": 2,
+      "width": 452,
+      "height": 1045
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03551v1/fig-003.webp",
+      "caption": "Figure 2. The proposed methods differ from other data prompting techniques in WSL. (a) While TANS (Jeong et al., 2021) trains with a contrastive objective on encoded model weights and dataset characteristics, the method aims to retrieve known nearest neighbour models. (b) In contrast, D2NWG (Bedionita et al., 2025b) trains a generative model able to sample novel weights following a conditioned projection from a dataset space to the frozen weight space representation. (c) WeightCLIP proposes to train a weight space representation with a contrastive objective on both model weights and dataset characteristics to learn an aligned weight space representation using the dataset as a semantic reference frame, improving prompting, navigation, and refinement capabilities of the learned representation.",
+      "page": 2,
+      "index": 3,
+      "width": 1017,
+      "height": 244
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03551v1/fig-004.webp",
+      "caption": "Figure 5. Latent-space navigation via dataset prompt interpolation. We linearly interpolate between dataset prompts from two distinct datasets (cactus aerial → ct images), map each interpolated prompt to a NN latent representation, and decode it. The plot shows downstream accuracy of the generated models on both datasets as a function of the interpolation coefficient t, revealing a smooth trade-off in performance between the two datasets.",
+      "page": 7,
+      "index": 4,
+      "width": 492,
+      "height": 290
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03551v1/fig-005.webp",
+      "caption": "Table 8. Dataset-to-model generation on CNN models under the same evaluation protocol as Tab. 3. Given an OOD dataset prompt, each method predicts a full token sequence of a model and decodes it. We report test accuracy (%) after 0, 1, and 10 epochs of fine-tuning on the target dataset (mean±std over seeds). Where LM denotes the linear mapper and MBM denotes the memory-bank mapper.",
+      "page": 14,
+      "index": 5,
+      "width": 767,
+      "height": 337
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03551v1/fig-006.webp",
+      "caption": "Figure 6. Classification accuracy from window aggregated token representations for ResNet models using linear classifiers, with the individual results as well as a rolling average shown. Results are broadly consistent across positions, supporting our token-level supervision.",
+      "page": 14,
+      "index": 6,
+      "width": 454,
+      "height": 283
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03551v1/fig-007.webp",
+      "caption": "Figure 3. After training, the process to generate and refine models weights is done as following: a data encoder dθ encodes a subset of the dataset into an data embedding eD (the data prompt) into the aligned latent space. This data embedding is mapped to a sequence of model embeddings Z from which model weights W are decoded using the decoder hψ of the trained autoencoder. This newly generated NN is used to evaluated a small set of data samples during test-time. The resulting loss L is backpropagated through the decoder hψ to refine the position of model embeddings Z leading to an improved version of decoded model weights W .",
+      "page": 3,
+      "index": 7,
+      "width": 1017,
+      "height": 235
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03551v1/fig-008.webp",
+      "caption": "Figure 8. Model–dataset cosine similarity matrix induced by the aligned latent space after triangulation. Rows correspond to dataset embeddings and columns to the token embeddings. Strong diagonal structure indicates consistent alignment between models and their originating datasets, with limited off-diagonal confusion primarily between semantically overlapping datasets.",
+      "page": 18,
+      "index": 8,
+      "width": 1119,
+      "height": 973
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03551v1/fig-009.webp",
+      "caption": "Table 3. Dataset-to-model generation on ResNet18 models. Given an OOD dataset prompt, each method predicts a full token sequence of a model and decodes it. We report test accuracy (%) after 0, 1, and 10 epochs of fine-tuning on the target dataset (mean±std over seeds). Where LM denotes the linear mapper and MBM denotes the memory-bank mapper.",
+      "page": 8,
+      "index": 9,
+      "width": 881,
+      "height": 513
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03551v1/fig-010.webp",
+      "caption": "Table 11. Model zoo training hyperparameters.",
+      "page": 16,
+      "index": 10,
+      "width": 429,
+      "height": 302
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2607.03692v2/fig-001.webp",
+      "caption": "Figure 6. Supervised PIEFS: Gram error ∥C − I∥2F vs. test accuracy. All dataset–metric variants (circles = OFF, squares = DIAG, triangles = TROTTER) achieve high accuracy; orthogonality quality does not limit performance under supervision.",
+      "page": 11,
+      "index": 1,
+      "width": 492,
+      "height": 367
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03692v2/fig-002.webp",
+      "caption": "Figure 7. Unsupervised PIEFS: Gram error ∥C − I∥2F vs. test accuracy. Learnable-metric variants (squares, triangles) attain lower Gram error yet lower accuracy than OFF (circles), revealing the metric-degeneracy effect described in App. C.",
+      "page": 11,
+      "index": 2,
+      "width": 492,
+      "height": 366
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03692v2/fig-003.webp",
+      "caption": "Figure 2. Leading learned coordinate maps ϕ1, ϕ2, ϕ3 (spectral view). Each panel shows one coordinate map ϕj(x1, x2) as a heatmap; dots are validation points colored by class. Unlike Fig. 1, no decision-boundary contour is overlaid: these are the raw learned coordinates, showing the dominant mode ϕ1 (absent from Fig. 1) and the progression to higher modes. PIEFS-off, same representative replicate as in Fig. 1.",
+      "page": 7,
+      "index": 3,
+      "width": 641,
+      "height": 408
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03692v2/fig-004.webp",
+      "caption": "Table 1. Training components used in the reported experiments.",
+      "page": 4,
+      "index": 4,
+      "width": 485,
+      "height": 372
+    },
+    {
+      "url": "assets/figures/arxiv/2607.03692v2/fig-005.webp",
+      "caption": "Figure 1. Classifier geometry induced by PIEFS coordinates. Columns 1–2 show ϕ2 and ϕ3 on Two Moons and Circles (PIEFS-off, one seed). Column 3 shows the signed classifier margin (linear-readout logit) pulled back to the input plane (x1, x2). Figure 2 shows the corresponding individual coordinate heatmaps for the same replicate.",
+      "page": 5,
+      "index": 5,
+      "width": 700,
+      "height": 450
+    }
+  ]
+}

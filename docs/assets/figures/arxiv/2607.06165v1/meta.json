@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2607.06165v1/fig-001.webp",
+      "caption": "Figure 5: Direction Estimation under Stationary and Mobile Operation. Top: stationary robot with moving target, (· · · ) is the target trajectory. Bottom: moving robot with stationary target. In each frame, (→) denotes the spherical directional prediction, (→) the ERP-based VLM baseline, and (□) the accumulated directional belief field. ⃝ = Target, and (→) denotes the Ground Truth.",
+      "page": 6,
+      "index": 1,
+      "width": 773,
+      "height": 287
+    },
+    {
+      "url": "assets/figures/arxiv/2607.06165v1/fig-002.webp",
+      "caption": "Table 1: Results for Active Visual Search on HOS and OSRBench. Best accuracy in bold and second-best underlined.",
+      "page": 7,
+      "index": 2,
+      "width": 523,
+      "height": 270
+    },
+    {
+      "url": "assets/figures/arxiv/2607.06165v1/fig-003.webp",
+      "caption": "Figure 2: Qualitative results for Waypoint Following task. (a) Initial target-direction estimate. (b) Directional estimates after viewpoint changes during waypoint following. Qwen2.5-VL + EAGOR (⋄) consistently preserves the target direction under agent motion, whereas the centroid (⃝) and grid-based (□) baselines drift due to accumulated ERP interpolation errors.",
+      "page": 3,
+      "index": 3,
+      "width": 772,
+      "height": 180
+    },
+    {
+      "url": "assets/figures/arxiv/2607.06165v1/fig-004.webp",
+      "caption": "Figure 3: Overview of EAGOR framework. See main texts of Sec.3 for details.",
+      "page": 4,
+      "index": 4,
+      "width": 778,
+      "height": 245
+    }
+  ]
+}

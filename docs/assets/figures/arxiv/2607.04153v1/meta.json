@@ -1,0 +1,110 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2607.04153v1/fig-001.webp",
+      "caption": "Table 3: Ablation experiments on block size and mask strategy. When the block size is set to 1, we add a unique mask for each state, denoted as MPRspatial. When the block size is set to 8, all states use the same mask, denoted as MPRtime. For other block size settings, corresponding spatial-temporal masking strategies are applied.",
+      "page": 6,
+      "index": 1,
+      "width": 594,
+      "height": 242
+    },
+    {
+      "url": "assets/figures/arxiv/2607.04153v1/fig-002.webp",
+      "caption": "Figure 3: Ablation experiments of mask ratio, predictor depth and sequence length. The result of each model is averaged over 3 random seeds.",
+      "page": 6,
+      "index": 2,
+      "width": 1081,
+      "height": 305
+    },
+    {
+      "url": "assets/figures/arxiv/2607.04153v1/fig-003.webp",
+      "caption": "Table 8: An overview of hyper-parameters in DMControl experiments.",
+      "page": 15,
+      "index": 3,
+      "width": 948,
+      "height": 794
+    },
+    {
+      "url": "assets/figures/arxiv/2607.04153v1/fig-004.webp",
+      "caption": "Figure 4: Ablation experiments on action token, R , mean squared loss, and masking features.",
+      "page": 7,
+      "index": 4,
+      "width": 517,
+      "height": 260
+    },
+    {
+      "url": "assets/figures/arxiv/2607.04153v1/fig-005.webp",
+      "caption": "Table 7: Ablation experiments on action token, R , mean squared loss, and masking features. MPR-a denotes adding action tokens to the model, MPR-r denotes R = 2. MPR-ra denotes adding action tokens based on MPR-r. MPR-s represents changing the model’s loss function to mean squared loss. MPR-sa represents adding action tokens based on MPR-s. MPR-sr denotes setting R = 2 based on MPR-s, MPR-sra denotes adding action token sequences based on MPR-sr, MPR-fea represents masking features.",
+      "page": 14,
+      "index": 5,
+      "width": 1044,
+      "height": 228
+    },
+    {
+      "url": "assets/figures/arxiv/2607.04153v1/fig-006.webp",
+      "caption": "Figure 1: The framework of model MPR involves masking the original observation sequence in both spatial and temporal dimensions, followed by encoding the images into feature sequences using an online encoder. We introduce a prediction decoder to predict and reconstruct missing information in the feature sequences augmented with positional information within the latent space. The network is guided to learn effective representations through a similarity-based distance loss function. The target encoder weights are the moving average (EMA) of the context encoder weights. R represents the number of times the sequence is replicated.",
+      "page": 3,
+      "index": 6,
+      "width": 490,
+      "height": 585
+    },
+    {
+      "url": "assets/figures/arxiv/2607.04153v1/fig-007.webp",
+      "caption": "Figure 2: Examples of the original observation sequence, along with their corresponding mask sequences, as well as the context sequence (Aug(Mask)) and target sequence after image augmentation.",
+      "page": 3,
+      "index": 7,
+      "width": 464,
+      "height": 381
+    },
+    {
+      "url": "assets/figures/arxiv/2607.04153v1/fig-008.webp",
+      "caption": "Table 5: Ablation experiments of predictive decoder depth. We report the specific results on DMControl-100k based on 3 random seeds.",
+      "page": 13,
+      "index": 8,
+      "width": 594,
+      "height": 242
+    },
+    {
+      "url": "assets/figures/arxiv/2607.04153v1/fig-009.webp",
+      "caption": "Table 6: Ablation experiments of sequence length. Results are based on 3 random seeds.",
+      "page": 13,
+      "index": 9,
+      "width": 584,
+      "height": 242
+    },
+    {
+      "url": "assets/figures/arxiv/2607.04153v1/fig-010.webp",
+      "caption": "Table 1: Comparison results (mean± std) on the DMControl-100k and DMControl-500k benchmarks.",
+      "page": 4,
+      "index": 10,
+      "width": 1044,
+      "height": 451
+    },
+    {
+      "url": "assets/figures/arxiv/2607.04153v1/fig-011.webp",
+      "caption": "Figure 5: The framework of MPR on Atari games.",
+      "page": 12,
+      "index": 11,
+      "width": 656,
+      "height": 910
+    },
+    {
+      "url": "assets/figures/arxiv/2607.04153v1/fig-012.webp",
+      "caption": "Table 2: Comparison on the Atari-100k benchmark. The MPR results are averaged across 10 seeds, each seed for 100 episodes; the results of SimPLe, CURL, DrQ, SPR, MLR and CoIT are taken from their report results.",
+      "page": 5,
+      "index": 12,
+      "width": 940,
+      "height": 586
+    },
+    {
+      "url": "assets/figures/arxiv/2607.04153v1/fig-013.webp",
+      "caption": "Table 9: An overview of hyper-parameters in Atari experiments.",
+      "page": 16,
+      "index": 13,
+      "width": 636,
+      "height": 1005
+    }
+  ]
+}

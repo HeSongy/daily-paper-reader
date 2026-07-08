@@ -6,73 +6,86 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-07
-- 运行时间：2026-07-07 21:55:32 UTC
+- 最新运行日期：2026-07-08
+- 运行时间：2026-07-08 21:42:32 UTC
 - 运行状态：成功
-- 本次总论文数：17
-- 精读区：6
+- 本次总论文数：21
+- 精读区：10
 - 速读区：11
 
 ### 今日简报（AI）
-今天共追踪 17 篇前沿论文，重点精读了长时程视听语言导航与自动驾驶世界模型两大方向。  
-最值得关注的是《LH-AVLN》提出长时程 Audio-Visual-Language Navigation 基准，以及《CRISP》将摄像头与雷达结合做预测式世界模型预训练，体现多模态智能体与自动驾驶感知融合正在加速。  
-下一步建议重点关注“多模态 + 长时序推理”与“世界模型驱动决策”两条主线，可优先阅读导航、机器人和自动驾驶相关工作。
-- 详情：[/202607/07/README](/202607/07/README)
+- 今日共生成 21 篇推荐（精读 10 篇，速读 11 篇）
+- 精读：《Latent Clarity: Bridging World-Model Kinematics to Semantic Manifolds for Video Anomaly Anticipation》（10.0/10）, 《Learning Task-Sufficient World Models by Synergizing Agentic Exploration and Structured Modeling》（10.0/10）
+- 速读：《G$^2$TAM: Geometry Grounded Track Anything Model》（8.0/10）, 《SiamJEPA: On the Role of Siamese Student Encoders in JEPA》（8.0/10）, 《Mask-based Predictive Representations for Reinforcement Learning》（8.0/10）
+- 这些结果覆盖了当下较热的方向，建议先看精读区论文的关键问题与方法。
+- 详情：[/202607/08/README](/202607/08/README)
 
 ### 精读区论文标签
-1. [LH-AVLN: A Benchmark for Long-Horizon Audio-Visual-Language Navigation](/202607/07/2607.03920v1-lh-avln-a-benchmark-for-long-horizon-audio-visual-language-navigation)  
+1. [Latent Clarity: Bridging World-Model Kinematics to Semantic Manifolds for Video Anomaly Anticipation](/202607/08/2607.03558v1-latent-clarity-bridging-world-model-kinematics-to-semantic-manifolds-for-video-anomaly-anticipation)  
    标签：评分：10.0/10、query:navwm
-   evidence：长程视听觉语言导航基准
-2. [CRISP: A Spatiotemporal Camera-Radar Backbone for Driving via Forecasting-Based World-Model Pretraining](/202607/07/2607.04541v1-crisp-a-spatiotemporal-camera-radar-backbone-for-driving-via-forecasting-based-world-model-pretraining)  
+   evidence：隐空间中的连续语义世界模型流水线
+2. [Learning Task-Sufficient World Models by Synergizing Agentic Exploration and Structured Modeling](/202607/08/2607.04409v1-learning-task-sufficient-world-models-by-synergizing-agentic-exploration-and-structured-modeling)  
    标签：评分：10.0/10、query:navwm
-   evidence：基于预测的世界模型预训练用于自动驾驶
-3. [Exp2VLA: Enabling Vision-Language-Action for Drone Navigation from Expert Demonstrations](/202607/07/2607.03146v1-exp2vla-enabling-vision-language-action-for-drone-navigation-from-expert-demonstrations)  
-   标签：评分：9.0/10、query:navwm
-   evidence：复杂环境下的无人机视觉-语言-动作导航
-4. [From Region Arrival to Instance-Level Grounding in Vision-and-Language Navigation](/202607/07/2607.03792v1-from-region-arrival-to-instance-level-grounding-in-vision-and-language-navigation)  
-   标签：评分：9.0/10、query:navwm
-   evidence：视觉语言导航智能体与实例级定位指标
-5. [ACE-Brain-0.5: A Unified Embodied Foundational Model for Physical Agentic AI](/202607/07/2607.04426v1-ace-brain-05-a-unified-embodied-foundational-model-for-physical-agentic-ai)  
-   标签：评分：9.0/10、query:navwm
+   evidence：利用具有任务特定隐空间表示的世界模型进行想象中的学习与规划
+3. [ACE-Brain-0.5: A Unified Embodied Foundational Model for Physical Agentic AI](/202607/08/2607.04426v1-ace-brain-05-a-unified-embodied-foundational-model-for-physical-agentic-ai)  
+   标签：评分：10.0/10、query:navwm
    evidence：用于空间感知和决策的统一具身基础模型
-6. [Green for Go, Red for No: Visual Grounding via Semantic Segmentation for VLA Navigation Policies](/202607/07/2607.05122v1-green-for-go-red-for-no-visual-grounding-via-semantic-segmentation-for-vla-navigation-policies)  
+4. [TRISTAR: Triple-Signal Stair Recognition and Vision-Only Indoor Navigation for Search-and-Rescue Micro-UAVs](/202607/08/2607.03818v1-tristar-triple-signal-stair-recognition-and-vision-only-indoor-navigation-for-search-and-rescue-micro-uavs)  
    标签：评分：9.0/10、query:navwm
-   evidence：复杂环境下VLA导航策略的视觉接地
+   evidence：用于自主搜救微型无人机的纯视觉室内导航框架
+5. [LangLoc: "Tell Me What You See"](/202607/08/2607.05077v1-langloc-tell-me-what-you-see)  
+   标签：评分：9.0/10、query:navwm
+   evidence：基于自然语言描述的细粒度室内定位与导航
+6. [Image2Sim: Scaling Embodied Navigation via Generative Neural Simulator](/202607/08/2607.05765v1-image2sim-scaling-embodied-navigation-via-generative-neural-simulator)  
+   标签：评分：9.0/10、query:navwm
+   evidence：通过生成式神经模拟器扩展具身导航，用于3D空间推理
+7. [EAGOR: Embodied Reasoning in Omni-direction](/202607/08/2607.06165v1-eagor-embodied-reasoning-in-omni-direction)  
+   标签：评分：9.0/10、query:navwm
+   evidence：自我中心坐标系导航与方向推理
+8. [Towards Real-World Applications with an Autonomous Powered Wheelchair](/202607/08/2607.06383v1-towards-real-world-applications-with-an-autonomous-powered-wheelchair)  
+   标签：评分：9.0/10、query:navwm
+   evidence：复杂现实环境中的自主感知与导航
+9. [Hypothesis-driven Model Expansion under Uncertainty for Open-World Robot Planning](/202607/08/2607.06501v1-hypothesis-driven-model-expansion-under-uncertainty-for-open-world-robot-planning)  
+   标签：评分：9.0/10、query:navwm
+   evidence：更新机器人规划的抽象世界模型假设
+10. [UniLM-Nav: A Unified Framework for Zero-Shot Last-Mile Navigation](/202607/08/2607.06537v1-unilm-nav-a-unified-framework-for-zero-shot-last-mile-navigation)  
+   标签：评分：9.0/10、query:navwm
+   evidence：复杂移动操作任务中零样本最后一公里导航的统一框架
 
 ### 速读区论文标签
-1. [ProLaViT: Learning Progressive Latent Visual Thoughts in Structured Latent Space](/202607/07/2607.02907v1-prolavit-learning-progressive-latent-visual-thoughts-in-structured-latent-space)  
+1. [G$^2$TAM: Geometry Grounded Track Anything Model](/202607/08/2607.03789v1-g2tam-geometry-grounded-track-anything-model)  
    标签：评分：8.0/10、query:navwm
-   evidence：在连续隐空间中进行结构化视觉推导
-2. [Function-Space Diffusion for Motion Planning](/202607/07/2607.02977v1-function-space-diffusion-for-motion-planning)  
+   evidence：利用空间对齐的几何表示作为隐式记忆进行几何接地跟踪
+2. [SiamJEPA: On the Role of Siamese Student Encoders in JEPA](/202607/08/2607.04044v1-siamjepa-on-the-role-of-siamese-student-encoders-in-jepa)  
    标签：评分：8.0/10、query:navwm
-   evidence：函数空间中基于扩散的运动规划
-3. [Closed-loop vs. Open-loop Kalman Filter Architectures in Airborne Aided Inertial Navigation](/202607/07/2607.03338v1-closed-loop-vs-open-loop-kalman-filter-architectures-in-airborne-aided-inertial-navigation)  
+   evidence：用于隐空间表示学习的联合嵌入预测架构（JEPA）
+3. [Mask-based Predictive Representations for Reinforcement Learning](/202607/08/2607.04153v1-mask-based-predictive-representations-for-reinforcement-learning)  
    标签：评分：8.0/10、query:navwm
-   evidence：机载辅助惯性导航与卡尔曼滤波
-4. [PedestrianDiffusion: Multimodal Generative Denoising and Dense State Estimation for Inertial Navigation](/202607/07/2607.03349v1-pedestriandiffusion-multimodal-generative-denoising-and-dense-state-estimation-for-inertial-navigation)  
-   标签：评分：8.0/10、query:navwm
-   evidence：惯性导航中用于密集状态估计的生成式去噪
-5. [Continuous-Time Gaussian Belief Trees for Motion Planning](/202607/07/2607.02884v1-continuous-time-gaussian-belief-trees-for-motion-planning)  
+   evidence：利用序列信息进行强化学习的预测性表示学习
+4. [Xiaomi-GUI-0 Technical Report](/202607/08/2606.31410v2-xiaomi-gui-0-technical-report)  
    标签：评分：7.0/10、query:navwm
-   evidence：不确定性下的运动规划信念树
-6. [AnchorVLA: Bridging Discrete Decisions and Continuous Trajectories for Vision-Language-Action Planning](/202607/07/2607.03182v1-anchorvla-bridging-discrete-decisions-and-continuous-trajectories-for-vision-language-action-planning)  
+   evidence：用于导航和任务完成的GUI智能体
+5. [PIEFS: Physics-Informed Eigenfunction Features with Learnable Scaling](/202607/08/2607.03692v2-piefs-physics-informed-eigenfunction-features-with-learnable-scaling)  
    标签：评分：7.0/10、query:navwm
-   evidence：用于导航意图和连续轨迹的视觉-语言-动作规划
-7. [Derivations of Error-State Kalman Filter Kinematics for Globally Applicable Aided Inertial Navigation Systems](/202607/07/2607.03211v1-derivations-of-error-state-kalman-filter-kinematics-for-globally-applicable-aided-inertial-navigation-systems)  
+   evidence：具有谱归纳偏置的神经表示学习框架
+6. [LAMBDA: A Low-Altitude Multimodal Base Dataset for UAV Sensing and Communication](/202607/08/2607.03826v1-lambda-a-low-altitude-multimodal-base-dataset-for-uav-sensing-and-communication)  
    标签：评分：7.0/10、query:navwm
-   evidence：全球适用辅助惯性导航系统的状态估计
-8. [Optimal mean-time path planning for unmanned underwater vehicles: a Hamilton-Jacobi approach](/202607/07/2607.03407v1-optimal-mean-time-path-planning-for-unmanned-underwater-vehicles-a-hamilton-jacobi-approach)  
+   evidence：用于无人机运动和感知轨迹的多模态数据集
+7. [Superwind and navigation of least time on Riemannian manifolds](/202607/08/2607.04452v1-superwind-and-navigation-of-least-time-on-riemannian-manifolds)  
    标签：评分：7.0/10、query:navwm
-   evidence：不确定环境下的水下无人航行器路径规划
-9. [pykci: A Compact Urban Knowledge Graph for Semantic and Spatial Queries using LLMs](/202607/07/2607.01605v1-pykci-a-compact-urban-knowledge-graph-for-semantic-and-spatial-queries-using-llms)  
+   evidence：利用芬斯勒几何在黎曼流形上进行最短时间导航
+8. [GaussFusion: Towards Multimodal 3D Gaussian Pretraining](/202607/08/2607.05906v1-gaussfusion-towards-multimodal-3d-gaussian-pretraining)  
+   标签：评分：7.0/10、query:navwm
+   evidence：用于几何与外观表示学习的3D高斯泼溅技术
+9. [Query-Centric Optimization of AI Workflows via Approximate Query Processing and Proxy Models](/202607/08/2607.00254v1-query-centric-optimization-of-ai-workflows-via-approximate-query-processing-and-proxy-models)  
    标签：评分：6.0/10、query:navwm
-   evidence：城市知识图谱中的空间查询与几何检索
-10. [RADIO1D: Elastic Representations for Condensed Vision Modeling](/202607/07/2607.03624v1-radio1d-elastic-representations-for-condensed-vision-modeling)  
+   evidence：通过代理模型和近似查询处理优化智能体推理任务
+10. [Data-Driven Discovery of Multiscale Power System Oscillation Governing Equations Using SINDy-SENDAI](/202607/08/2607.03485v1-data-driven-discovery-of-multiscale-power-system-oscillation-governing-equations-using-sindy-sendai)  
    标签：评分：6.0/10、query:navwm
-   evidence：用于场景理解的抽象表示
-11. [Lost in Time? Continuous Symmetry and Identifiability in Aided Inertial Navigation with Unknown Measurement Delays](/202607/07/2607.03699v1-lost-in-time-continuous-symmetry-and-identifiability-in-aided-inertial-navigation-with-unknown-measurement-delays)  
+   evidence：在隐空间中结合模块以识别系统动力学的控制方程
+11. [WeightCLIP: Aligning Datasets and Models for Weight Space Learning](/202607/08/2607.03551v1-weightclip-aligning-datasets-and-models-for-weight-space-learning)  
    标签：评分：6.0/10、query:navwm
-   evidence：辅助惯性导航中的状态估计与导航状态恢复
+   evidence：在隐空间中学习神经网络权重的表示
 
 
 <div class="dpr-home-promo-card">
